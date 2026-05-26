@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.8.24 Class Page Clean + Auto Update Notice：移除班級頁手動加入提示，內建版本更新彈窗 -->
+    <!-- 電子手冊 Pro v1.8.25 RCHW AdSense Auto Ads：主程式加入 AdSense Auto Ads，保留原有登入及功課功能 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -10,6 +10,10 @@
       gtag('js', new Date());
       gtag('config', 'G-8VCPLTE2QT');
     </script>
+
+    <!-- Google AdSense Auto Ads：主程式 rchw/index.html 已啟用；審核 Ready 後才會正式顯示 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4156749891284054"
+         crossorigin="anonymous"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -20,8 +24,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.8.24-class-page-clean-update-notice">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.8.24-class-page-clean-update-notice"; console.log("電子手冊 Pro v1.8.24-class-page-clean-update-notice loaded");</script>
+    <meta name="ehandbook-version" content="v1.8.25-rchw-adsense-auto-ads">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.8.25-rchw-adsense-auto-ads"; console.log("電子手冊 Pro v1.8.25-rchw-adsense-auto-ads loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -208,7 +212,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.8.24-class-page-clean-update-notice',
+                version: 'v1.8.25-rchw-adsense-auto-ads',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -307,21 +311,23 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.8.24-class-page-clean-update-notice',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.8.25-rchw-adsense-auto-ads',
             title: '電子手冊已更新',
             summary: [
-                '班級廣播頁面已清走手動加入提示，只保留功課內容和狀態。',
-                '學生登入後會自動補領應收廣播功課，不需要再按任何加入或補領按鈕。',
-                '新版會內建更新彈窗，之後部署新版時可自動向用戶顯示更新內容。'
-            ].join('\n'),
+                '主程式 rchw/index.html 已加入 Google AdSense Auto Ads 程式碼。',
+                'Google 登入、Email 登入、功課列表、班級廣播和管理員功能沒有改動。',
+                '廣告只有在 AdSense 網站審核完成並允許顯示後，才會正式出現。'
+            ].join('
+'),
             guide: [
-                '管理員照常發放廣播功課。',
-                '學生打開主頁或班級廣播頁即可查看功課。',
-                '下次更新只需要更新程式內的版本資訊，用戶開頁會自動看到更新說明。'
-            ].join('\n'),
+                '部署後先測試登入是否正常。',
+                '再檢查主頁、功課列表、班級頁和設定頁是否能正常開啟。',
+                '如果 Auto Ads 顯示位置不理想，可回 AdSense 後台調低廣告數量或排除部分頁面。'
+            ].join('
+'),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-05-26T22:45:00+08:00',
+            publishedAt: '2026-05-27T01:20:00+08:00',
             source: 'built-in'
         };
 
@@ -822,7 +828,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.8.21</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.8.25</div>
                             </div> 
                         </div> 
                     </div> 
@@ -4310,11 +4316,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.8.24-class-page-clean-update-notice | based-on-uploaded-v1.8.17 | google-auth-flow-rebuilt | original-functions-preserved -->
-    <!-- ehandbook-build: v1.8.24-class-page-clean-update-notice -->
+<!-- VERSION_CHECK: v1.8.25-rchw-adsense-auto-ads | based-on-uploaded-v1.8.17 | google-auth-flow-rebuilt | original-functions-preserved -->
+    <!-- ehandbook-build: v1.8.25-rchw-adsense-auto-ads -->
 </body>
 </html>
 
 <!-- ehandbook_v1.8.24_class_page_clean_update_notice: class page manual status removed; built-in update popup added. -->
 
-<!-- v1.8.24-class-page-clean-update-notice: students auto-claim broadcast assignments on login; no class page manual join controls. -->
+<!-- v1.8.25-rchw-adsense-auto-ads: students auto-claim broadcast assignments on login; no class page manual join controls. -->
