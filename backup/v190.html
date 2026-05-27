@@ -24,8 +24,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.9.0-public-personal-assign-fullbase">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.9.0-public-personal-assign-fullbase"; console.log("電子手冊 Pro v1.9.0-public-personal-assign-fullbase loaded");</script>
+    <meta name="ehandbook-version" content="v1.9.0-public-personal-assign-fullbase-fix1">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.9.0-public-personal-assign-fullbase-fix1"; console.log("電子手冊 Pro v1.9.0-public-personal-assign-fullbase-fix1 loaded");</script>
 
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
@@ -316,7 +316,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.0-public-personal-assign-fullbase',
+                version: 'v1.9.0-public-personal-assign-fullbase-fix1',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -415,7 +415,7 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.9.0-public-personal-assign-fullbase',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.9.0-public-personal-assign-fullbase-fix1',
             title: '電子手冊 Pro 公眾個人版已更新',
             summary: [
                 '以完整 v1.8.28 主程式為底升級，檔案不再使用簡化版。',
@@ -423,15 +423,13 @@
                 '首次登入可選擇學生或老師；老師需要提交申請並由管理員批准。',
                 '管理員可以勾選學生姓名指定派發功課；老師批准後可以用學生 Email 派發功課。',
                 '舊學生入口、學生通知與學生導航已從新版介面移除，底部導航改為首頁、功課、時間表、設定。'
-            ].join('
-'),
+            ].join('\n'),
             guide: [
                 '部署後先測試 Email 註冊與 Email 認證流程。',
                 '再測試首次登入身份選擇、老師申請、管理員批准老師。',
                 '測試管理員指定學生派發功課，以及老師用 Email 派發功課。',
                 '確認主頁、功課、時間表、設定與科目管理仍然正常。'
-            ].join('
-'),
+            ].join('\n'),
             audience: 'all',
             popupEnabled: true,
             publishedAt: '2026-05-27T18:20:00+08:00',
