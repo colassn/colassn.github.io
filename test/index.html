@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.9.0 Polished Interaction UI：點擊回饋、柔和切頁、iOS 設定頁、完成動畫 -->
+    <!-- 電子手冊 Pro v1.9.1 Light Motion Performance：保留手感、降低過度動畫、提升切頁流暢度 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -24,8 +24,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.9.0-polished-interaction-ui">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.9.0-polished-interaction-ui"; console.log("電子手冊 Pro v1.9.0-polished-interaction-ui loaded");</script>
+    <meta name="ehandbook-version" content="v1.9.1-light-motion-performance">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.9.1-light-motion-performance"; console.log("電子手冊 Pro v1.9.1-light-motion-performance loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -1611,6 +1611,122 @@
             transition: none !important;
         }
 
+
+        /* v1.9.1 Light Motion Performance: reduce heavy motion, keep instant touch feedback */
+        .page-transition-shell {
+            will-change: opacity, transform !important;
+            transition: opacity 88ms ease, transform 88ms ease !important;
+            filter: none !important;
+            contain: layout style paint !important;
+        }
+        .page-transition-shell.is-switching {
+            opacity: 0.96 !important;
+            transform: translate3d(0, 1px, 0) !important;
+            filter: none !important;
+            pointer-events: none;
+        }
+        .page-content-layer {
+            animation: none !important;
+            transform: translate3d(0,0,0) !important;
+            will-change: auto !important;
+        }
+        .animate-item {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        :where(button:not(:disabled), [role="button"], .tap-feedback):active {
+            transform: translate3d(0, 1px, 0) scale(0.986) !important;
+            transition-duration: 80ms !important;
+        }
+        .pressable-card,
+        .settings-action-tile,
+        .settings-studio-row,
+        .soft-confirm-actions button,
+        .theme-swatch-button,
+        .completion-button {
+            transition-duration: 110ms !important;
+            transition-timing-function: ease-out !important;
+        }
+        .pressable-card {
+            transition-property: transform, background-color, border-color, opacity !important;
+        }
+        .pressable-card:active,
+        .settings-action-tile:active,
+        .settings-studio-row:active {
+            transform: translate3d(0,1px,0) scale(0.994) !important;
+        }
+        .pressable-card::after,
+        .settings-action-tile::after,
+        .settings-studio-row::after {
+            display: none !important;
+        }
+        .theme-swatch-button.is-selected::before {
+            animation: none !important;
+            box-shadow: 0 0 0 3px rgba(var(--theme-rgb-a), 0.10) !important;
+        }
+        .task-card {
+            will-change: opacity, transform !important;
+        }
+        .task-card::before,
+        .task-card.task-completing::before {
+            display: none !important;
+        }
+        .task-card.task-completing {
+            animation: taskCompleteFast 168ms ease-out both !important;
+        }
+        @keyframes taskCompleteFast {
+            0% { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+            100% { opacity: 0; transform: translate3d(0,2px,0) scale(0.992); }
+        }
+        .completion-button.is-completed .complete-burst {
+            animation: none !important;
+            opacity: 0 !important;
+        }
+        .soft-toast-shell {
+            transition: opacity 150ms ease, transform 150ms ease !important;
+            transform: translate3d(-50%, -6px, 0) scale(0.992) !important;
+        }
+        .soft-toast-shell.is-visible {
+            transform: translate3d(-50%, 0, 0) scale(1) !important;
+        }
+        .soft-confirm-backdrop {
+            animation-duration: 120ms !important;
+        }
+        .soft-confirm-sheet,
+        .dialog-animate,
+        .modal-animate {
+            animation-duration: 140ms !important;
+        }
+        .transition-all {
+            transition-property: background-color, border-color, color, opacity, transform !important;
+            transition-duration: 110ms !important;
+        }
+        html.page-switching .app-liquid-canvas,
+        html.page-switching .app-liquid-canvas::before,
+        html.page-switching .app-liquid-canvas::after,
+        html.page-switching .animate-blob,
+        html.page-switching .liquid-island-track::after {
+            animation: none !important;
+        }
+        @media (max-width: 768px) {
+            .app-liquid-canvas,
+            .app-liquid-canvas::before,
+            .app-liquid-canvas::after,
+            .animate-blob,
+            .liquid-island-track::after,
+            .theme-swatch-button.is-selected::before {
+                animation: none !important;
+            }
+            .app-liquid-canvas > .fixed.inset-0.z-0.pointer-events-none .animate-blob {
+                filter: blur(64px) saturate(104%) !important;
+                opacity: 0.07 !important;
+            }
+            .liquid-island-blob {
+                transition-duration: 220ms !important;
+            }
+        }
+
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -1698,7 +1814,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.0-polished-interaction-ui',
+                version: 'v1.9.1-light-motion-performance',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -1797,21 +1913,21 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.9.0-polished-interaction-ui',
-            title: '電子手冊 Pro v1.9.0 已更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.9.1-light-motion-performance',
+            title: '電子手冊 Pro v1.9.1 已更新',
             summary: [
-                '全站按鈕、設定列、功課卡片加入即時點擊回饋。',
-                '頁面切換、Modal、Toast 改成更柔和嘅 App 式動畫。',
-                '設定頁、主題色選擇同功課完成狀態加入更細緻嘅互動效果。'
+                '保留全站點擊回饋，但移除過度動畫同重型掃光。',
+                '頁面切換改成極短低位移過渡，減少卡頓。',
+                '設定頁、Toast、Modal、完成功課動畫全部改為輕量版。'
             ].join(String.fromCharCode(10)),
             guide: [
-                '部署後請先確認登入頁版本顯示 v1.9.0。',
+                '部署後請先確認登入頁版本顯示 v1.9.1。',
                 '登入後快速切換主頁、時間表、設定，應該即按即有反應。',
-                '完成一項功課，卡片應有縮放、掃光同剔號彈入動畫。'
+                '完成一項功課，卡片只做短促淡出，唔再做大幅掃光。'
             ].join(String.fromCharCode(10)),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-05-28T02:18:00+08:00',
+            publishedAt: '2026-05-28T02:42:00+08:00',
             source: 'built-in'
         };
 
@@ -4558,9 +4674,9 @@
                     else commit();
 
                     requestAnimationFrame(() => {
-                        navigationTimerRef.current = setTimeout(finishPageSwitch, 130);
+                        navigationTimerRef.current = setTimeout(finishPageSwitch, 56);
                     });
-                }, 90);
+                }, 24);
             }, [appMode, finishPageSwitch, viewMode]);
 
             const navItems = useMemo(() => {
@@ -4904,8 +5020,8 @@
             const closeNotification = () => setNotification(prev => ({ ...prev, isOpen: false }));
             const handleNotificationConfirm = () => { if (notification.onConfirm) notification.onConfirm(); closeNotification(); };
             
-            const handleFilterChange = (f) => { setIsListVisible(false); setTimeout(() => { setFilterSubject(f); setIsListVisible(true); }, 200); };
-            const handleSortChange = (newSort) => { setIsListVisible(false); setTimeout(() => { setSortOption(newSort); setIsListVisible(true); }, 200); };
+            const handleFilterChange = (f) => { setIsListVisible(false); setTimeout(() => { setFilterSubject(f); setIsListVisible(true); }, 64); };
+            const handleSortChange = (newSort) => { setIsListVisible(false); setTimeout(() => { setSortOption(newSort); setIsListVisible(true); }, 64); };
 
             const handleNameSetupSave = async (name) => { 
                 if (!user) return;
@@ -5308,7 +5424,7 @@
                     setTimeout(async () => { 
                         try { await updateDoc(doc(db, "users", user.uid, "items", id), { completed: true }); } catch (e) {} 
                         setExitingIds(prev => prev.filter(eid => eid !== id)); 
-                    }, 520); 
+                    }, 168); 
                 } else { 
                     updateDoc(doc(db, "users", user.uid, "items", id), { completed: false }).catch(()=>{}); 
                 } 
@@ -5690,7 +5806,7 @@
                                                             const subjectStyle = subjects.find(s => s.name === item.subject)?.color || 'bg-slate-100 text-slate-600 border-slate-200';
                                                             
                                                             return (
-                                                                <div key={item.id} style={{ animationDelay: `${index * 0.05}s` }} className={`animate-item task-card pressable-card glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl p-5 shadow-sm border border-white/40 transition-all hover:shadow-md hover:-translate-y-0.5 group ${isExiting ? 'task-completing scale-95 opacity-0' : ''}`}>
+                                                                <div key={item.id} style={{ animationDelay: `0ms` }} className={`animate-item task-card pressable-card glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl p-5 shadow-sm border border-white/40 transition-all hover:shadow-md hover:-translate-y-0.5 group ${isExiting ? 'task-completing scale-95 opacity-0' : ''}`}>
                                                                     <div className="flex items-start gap-4">
                                                                         {/* Snappy Checkbox Animation */}
                                                                         <button type="button" aria-label={isCompleted ? '已完成' : '標記完成'} onClick={() => handleToggle(item.id, item.completed)} className={`completion-button tap-feedback mt-0.5 w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-200 ${isCompleted ? 'is-completed bg-emerald-500 border-emerald-500 text-white shadow-[0_8px_18px_rgba(16,185,129,0.24)]' : 'border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50 hover:border-emerald-400 dark:hover:border-emerald-500'}`}>
@@ -5958,11 +6074,11 @@
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.9.0-polished-interaction-ui | liquid-island | frameless-header | ios-settings | original-functions-preserved -->
-    <!-- ehandbook-build: v1.9.0-polished-interaction-ui -->
+<!-- VERSION_CHECK: v1.9.1-light-motion-performance | liquid-island | frameless-header | ios-settings | original-functions-preserved -->
+    <!-- ehandbook-build: v1.9.1-light-motion-performance -->
 </body>
 </html>
 
 <!-- ehandbook_v1.8.45_beautiful_liquid_gradient: Flowing app background, blended Liquid Glass island, refined visual harmony; v1.8 functions preserved. -->
 
-<!-- v1.9.0-polished-interaction-ui: Polished interaction UI, unified touch feedback, softer modal/toast, completion animation; original functions preserved. -->
+<!-- v1.9.1-light-motion-performance: lighter transitions, faster touch feedback, reduced background/task animations; original functions preserved. -->
