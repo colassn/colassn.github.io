@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.8.39-hotfix1 Login Only：登入頁移除多餘文案，只保留品牌與登入入口，保留 v1.8 系列完整功能 -->
+    <!-- 電子手冊 Pro v1.8.40 App Dock + Settings：優化底部靈動島切換、主頁資訊框及設定頁排版，保留 v1.8 系列完整功能 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -24,8 +24,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.8.39-hotfix1-login-only-ui">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.8.39-hotfix1-login-only-ui"; console.log("電子手冊 Pro v1.8.39-hotfix1-login-only-ui loaded");</script>
+    <meta name="ehandbook-version" content="v1.8.40-hotfix1-app-dock-settings-ui">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.8.40-hotfix1-app-dock-settings-ui"; console.log("電子手冊 Pro v1.8.40-hotfix1-app-dock-settings-ui loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -178,6 +178,55 @@
             -webkit-tap-highlight-color: transparent;
         }
         .dynamic-island-scroll::-webkit-scrollbar { display: none; }
+
+
+        .app-dock-shell {
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(26px) saturate(165%);
+            -webkit-backdrop-filter: blur(26px) saturate(165%);
+            box-shadow: 0 24px 70px rgba(15,23,42,0.18), 0 8px 26px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.78);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .dark .app-dock-shell {
+            background: rgba(15,23,42,0.82);
+            box-shadow: 0 24px 70px rgba(0,0,0,0.48), 0 8px 26px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        .app-dock-shell::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: 1.85rem;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(255,255,255,0.58), transparent 45%, rgba(15,23,42,0.04));
+        }
+        .app-dock-button {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .app-dock-button:active { transform: translateY(1px) scale(0.96); }
+        .app-top-status {
+            background: rgba(255,255,255,0.84);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            box-shadow: 0 20px 60px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.72);
+        }
+        .dark .app-top-status {
+            background: rgba(15,23,42,0.82);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.07);
+        }
+        .settings-panel-clean {
+            background: rgba(255,255,255,0.84);
+            backdrop-filter: blur(18px) saturate(145%);
+            -webkit-backdrop-filter: blur(18px) saturate(145%);
+            box-shadow: 0 18px 56px rgba(15,23,42,0.07), inset 0 1px 0 rgba(255,255,255,0.66);
+        }
+        .dark .settings-panel-clean {
+            background: rgba(15,23,42,0.80);
+            box-shadow: 0 18px 56px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
 
         .folio-login-surface {
             background:
@@ -338,7 +387,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.8.39-hotfix1 Google 登入穩定版啟動保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.8.40-hotfix1 Google 登入穩定版啟動保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -416,7 +465,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.8.39-hotfix1-login-only-ui',
+                version: 'v1.8.40-hotfix1-app-dock-settings-ui',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -515,21 +564,21 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.8.39-hotfix1-login-only-ui',
-            title: '電子手冊 Pro v1.8.39-hotfix1 已更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.8.40-hotfix1-app-dock-settings-ui',
+            title: '電子手冊 Pro v1.8.40-hotfix1 已更新',
             summary: [
-                '登入頁已移除多餘品牌文案，只保留必要登入入口。',
-                '畫面改為更簡潔集中，減少左側大字與介紹內容。',
-                '保留原有 Google 登入、Email 登入、註冊、忘記密碼與所有主程式功能。'
-            ].join('\n'),
+                '底部靈動島已加強觸控反應，頁面切換更直接。',
+                '主頁上方資訊框改成更清楚的手機 App 狀態列排版。',
+                '設定頁已重新整理，減少卡片堆疊，保留實用入口與個人化設定。'
+            ].join(String.fromCharCode(10)),
             guide: [
-                '部署後請先確認登入頁底部顯示 v1.8.39-hotfix1。',
-                '再測試 Google 登入、Email 登入、註冊及忘記密碼。',
-                '登入後檢查主頁、班級、時間表及後台入口正常。'
-            ].join('\n'),
+                '部署後請先確認登入頁底部顯示 v1.8.40-hotfix1。',
+                '登入後測試底部靈動島：主頁、班級、時間表、歷史、設定應一按切換。',
+                '再檢查主頁資訊框、設定頁、班級及後台入口是否正常。'
+            ].join(String.fromCharCode(10)),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-05-27T23:39:00+08:00',
+            publishedAt: '2026-05-28T00:40:00+08:00',
             source: 'built-in'
         };
 
@@ -584,7 +633,7 @@
             if (code === 'auth/operation-not-supported-in-this-environment' || code === 'auth/web-storage-unsupported') return '這個瀏覽器不支援彈出式登入，請用 Chrome / Safari 開啟，或再按一次讓系統改用跳轉登入。';
             if (code === 'auth/unauthorized-domain') return '此網站網域尚未加入 Firebase 授權網域，請由網站負責人更新 Firebase Authentication 授權網域設定。';
             if (code === 'auth/operation-not-allowed') return 'Firebase 尚未開啟 Google 或 Email 登入方式，請由網站負責人檢查登入設定。';
-            if (code === 'auth/argument-error') return 'Google 登入參數錯誤。已改為 v1.8.39-hotfix1 登入流程；請重新部署此檔案並清除快取。';
+            if (code === 'auth/argument-error') return 'Google 登入參數錯誤。已改為 v1.8.40 登入流程；請重新部署此檔案並清除快取。';
             return (mode === 'reset' ? '重設密碼失敗：' : mode === 'register' ? '註冊失敗：' : '登入失敗：') + (error?.message || code || '請稍後再試');
         };
 
@@ -1040,7 +1089,7 @@
                                 )}
                             </div>
 
-                            <div className="mt-4 text-center text-[10px] font-black text-slate-400/80 dark:text-slate-600 select-none">v1.8.39-hotfix1</div>
+                            <div className="mt-4 text-center text-[10px] font-black text-slate-400/80 dark:text-slate-600 select-none">v1.8.40-hotfix1</div>
                         </section>
                     </main>
                 </div>
@@ -2895,7 +2944,11 @@
         }
 
         function NavItem({ id, icon, label, active, onClick, t }) {
+            const lastPressRef = useRef(0);
             const handlePress = (event) => {
+                const now = Date.now();
+                if (now - lastPressRef.current < 260) return;
+                lastPressRef.current = now;
                 try {
                     event.preventDefault();
                     event.stopPropagation();
@@ -2905,21 +2958,21 @@
             return (
                 <button
                     type="button"
+                    onPointerUp={handlePress}
+                    onTouchEnd={handlePress}
                     onClick={handlePress}
                     aria-label={label}
                     aria-current={active ? 'page' : undefined}
-                    className={`relative flex items-center justify-center h-12 sm:h-13 rounded-[1.35rem] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden select-none active:scale-[0.94] ${active ? `min-w-[88px] sm:min-w-[112px] px-3.5 sm:px-4 text-white shadow-lg shadow-indigo-500/20` : 'w-12 sm:w-13 px-0 text-slate-500 hover:text-slate-800 hover:bg-white/70 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/80'}`}
-                    style={{ touchAction: 'manipulation' }}
+                    className={`app-dock-button relative flex flex-col items-center justify-center h-[58px] min-w-[58px] sm:min-w-[72px] px-2 rounded-[1.35rem] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${active ? 'text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                 >
-                    {active && <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient}`}></div>}
-                    {active && <div className="absolute inset-0 bg-white/10"></div>}
-                    <span className="relative z-10 flex items-center justify-center rounded-2xl transition-transform duration-300">
-                        <Icon name={icon} className={`w-5 h-5 shrink-0 transition-transform duration-300 ${active ? 'scale-110' : ''}`} />
+                    {active && <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient} shadow-lg shadow-indigo-500/25`}></div>}
+                    {active && <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.30),transparent_55%)]"></div>}
+                    {!active && <div className="absolute inset-0 bg-white/0 dark:bg-slate-800/0 transition-colors duration-200 group-hover:bg-white/70"></div>}
+                    <span className={`relative z-10 flex items-center justify-center w-7 h-7 rounded-2xl transition-transform duration-300 ${active ? 'scale-105' : ''}`}>
+                        <Icon name={icon} className="w-5 h-5 shrink-0" />
                     </span>
-                    <span className={`relative z-10 font-black text-[13px] whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${active ? 'max-w-[90px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>
-                        {label}
-                    </span>
-                    {active && <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-1 rounded-full bg-white/65"></span>}
+                    <span className={`relative z-10 mt-0.5 text-[10px] sm:text-[11px] font-black tracking-tight transition-all duration-300 ${active ? 'opacity-100' : 'opacity-80'}`}>{label}</span>
+                    {active && <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-5 h-1 rounded-full bg-white/70"></span>}
                 </button>
             );
         }
@@ -2948,192 +3001,156 @@
             const displayName = userProfile?.displayName || user?.displayName || '學生';
             const email = user?.email || userProfile?.email || '';
             const initial = String(displayName || email || 'E').trim().charAt(0).toUpperCase();
+            const themeEntries = Object.entries(THEME_CONFIG);
             const layoutOptions = [
-                { value: 'normal', label: '完整模式', desc: '顯示主頁卡片、時間表、輸入欄同任務列表', icon: 'layout-dashboard' },
-                { value: 'minimal', label: '極簡模式', desc: '只保留重要卡片同任務列表，主頁更乾淨', icon: 'minimize-2' },
-                { value: 'custom', label: '自定義', desc: '自己決定主頁每個區塊是否顯示', icon: 'sliders-horizontal' }
+                { value: 'normal', label: '完整', icon: 'layout-dashboard' },
+                { value: 'minimal', label: '極簡', icon: 'minimize-2' },
+                { value: 'custom', label: '自訂', icon: 'sliders-horizontal' }
             ];
             const customBlocks = [
-                { key: 'cards', label: '狀態卡片', desc: '今日急件、明日預告、測驗考試統計', icon: 'columns-3' },
-                { key: 'timetable', label: '即時課堂', desc: '顯示目前課節、倒數及下一節', icon: 'calendar-clock' },
-                { key: 'input', label: '新增功課欄', desc: '主頁直接新增功課或測驗', icon: 'square-pen' },
-                { key: 'list', label: '任務列表', desc: '顯示個人手冊功課列表', icon: 'list-checks' }
+                { key: 'cards', label: '狀態卡片', icon: 'columns-3' },
+                { key: 'timetable', label: '即時課堂', icon: 'calendar-clock' },
+                { key: 'input', label: '新增欄', icon: 'square-pen' },
+                { key: 'list', label: '任務列表', icon: 'list-checks' }
             ];
-            const advancedOptions = [
-                { key: 'largeText', label: '大字體模式', desc: 'iPad 同手機閱讀更舒服，適合長時間使用', icon: 'text' },
-                { key: 'reduceMotion', label: '減少動畫', desc: '降低過場動畫，頁面操作更穩定', icon: 'wind' },
-                { key: 'cleanGlass', label: '清晰玻璃模式', desc: '降低磨砂透明度，文字更清楚', icon: 'glass-water' },
-                { key: 'comfortSpacing', label: '舒適間距', desc: '設定卡片與文字呼吸感更強', icon: 'move-horizontal' },
-                { key: 'smartHints', label: '智能提示', desc: '保留過期、時間表等使用提示', icon: 'sparkles' },
-                { key: 'focusFirst', label: '專注優先', desc: '主頁更重視今日任務與待辦事項', icon: 'target' }
+            const experienceOptions = [
+                { key: 'largeText', label: '大字體', desc: '閱讀更舒服', icon: 'text', defaultOn: false },
+                { key: 'reduceMotion', label: '減少動畫', desc: '操作更穩定', icon: 'wind', defaultOn: false },
+                { key: 'cleanGlass', label: '清晰玻璃', desc: '文字更清楚', icon: 'glass-water', defaultOn: false },
+                { key: 'comfortSpacing', label: '舒適間距', desc: '版面更鬆動', icon: 'move-horizontal', defaultOn: false },
+                { key: 'smartHints', label: '智能提示', desc: '保留實用提醒', icon: 'sparkles', defaultOn: true },
+                { key: 'focusFirst', label: '專注優先', desc: '重視今日任務', icon: 'target', defaultOn: false }
             ];
-            const quickActionOptions = [
-                { key: 'showClassShortcut', label: '班級廣播快捷', desc: '在設定頁快速查看班級廣播', icon: 'school-2' },
-                { key: 'showNotificationShortcut', label: '通知快捷', desc: '在設定頁快速打開通知中心', icon: 'bell' },
-                { key: 'showSubjectShortcut', label: '科目快捷', desc: '方便快速進入科目管理', icon: 'book-marked' },
-                { key: 'showAccountShortcut', label: '帳號操作', desc: '顯示登出與帳號相關操作', icon: 'user-cog' }
-            ];
-            const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout[key] });
-            const handleAdvancedToggle = (key) => setAdvancedPrefs({ ...advancedPrefs, [key]: !advancedPrefs?.[key] });
-            const themeEntries = Object.entries(THEME_CONFIG);
-
-            const SettingSection = ({ title, desc, icon, children, right }) => (
-                <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
-                    <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
-                        <div className="flex items-start gap-3 min-w-0">
-                            <div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name={icon} className="w-5 h-5" /></div>
-                            <div className="min-w-0">
-                                <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white">{title}</h3>
-                                <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{desc}</p>
-                            </div>
+            const setAdvancedValue = (key, value) => setAdvancedPrefs({ ...(advancedPrefs || {}), [key]: value });
+            const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout?.[key] });
+            const readAdvanced = (opt) => opt.defaultOn ? advancedPrefs?.[opt.key] !== false : advancedPrefs?.[opt.key] === true;
+            const ToggleRow = ({ icon, label, desc, enabled, onClick }) => (
+                <button type="button" onClick={onClick} aria-pressed={!!enabled} className="w-full px-4 py-3 rounded-2xl flex items-center justify-between gap-4 bg-white/74 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700 transition-all active:scale-[0.99] text-left">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${enabled ? `bg-gradient-to-br ${t.gradient} text-white` : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}><Icon name={icon} className="w-4.5 h-4.5" /></div>
+                        <div className="min-w-0">
+                            <div className="font-black text-sm text-slate-800 dark:text-white truncate">{label}</div>
+                            {desc && <div className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-0.5 truncate">{desc}</div>}
                         </div>
-                        {right}
                     </div>
-                    <div className="p-5 sm:p-6">{children}</div>
-                </section>
+                    <div className={`w-12 h-7 rounded-full relative shrink-0 transition-colors ${enabled ? 'bg-slate-950 dark:bg-white' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                        <span className={`absolute top-[3px] w-5 h-5 rounded-full shadow-sm transition-all ${enabled ? 'left-[24px] bg-white dark:bg-slate-950' : 'left-[4px] bg-white'}`}></span>
+                    </div>
+                </button>
             );
+            const ActionButton = ({ icon, label, desc, onClick, tone = 'slate' }) => {
+                const tones = {
+                    slate: 'bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-200',
+                    indigo: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300',
+                    emerald: 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300',
+                    orange: 'bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-800 text-orange-700 dark:text-orange-300',
+                    red: 'bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-800 text-red-700 dark:text-red-300'
+                };
+                return (
+                    <button type="button" onClick={onClick} className={`p-4 rounded-3xl border text-left transition-all hover:-translate-y-0.5 active:scale-[0.98] ${tones[tone] || tones.slate}`}>
+                        <Icon name={icon} className="w-5 h-5 mb-3" />
+                        <div className="font-black text-sm">{label}</div>
+                        <div className="text-[11px] font-bold opacity-65 mt-1 leading-relaxed">{desc}</div>
+                    </button>
+                );
+            };
 
             return (
-                <div className="settings-page-stable max-w-3xl mx-auto pb-10 space-y-5 sm:space-y-6">
-                    <div className="relative overflow-hidden rounded-[2.25rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
-                        <div className="absolute -top-20 -right-16 w-56 h-56 rounded-full bg-cyan-300/20 blur-3xl"></div>
-                        <div className="absolute bottom-0 left-16 w-60 h-32 rounded-full bg-violet-300/20 blur-3xl"></div>
-                        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 items-end">
-                            <div className="flex items-start gap-4 min-w-0">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
-                                <div className="min-w-0 pt-1">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.8.39-hotfix1
-                                    </div>
-                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
-                                    <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
+                <div className="settings-page-stable max-w-3xl mx-auto pb-10 space-y-4 sm:space-y-5">
+                    <section className="settings-panel-clean rounded-[2rem] border border-white/70 dark:border-slate-800 overflow-hidden">
+                        <div className="p-5 sm:p-6 flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-4 min-w-0">
+                                <div className={`w-14 h-14 rounded-[1.35rem] bg-gradient-to-br ${t.gradient} text-white flex items-center justify-center font-black text-xl shadow-lg shadow-indigo-500/20 shrink-0`}>{initial}</div>
+                                <div className="min-w-0">
+                                    <div className="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.18em]">Settings</div>
+                                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white truncate">{displayName}</h2>
+                                    <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 truncate">{email || '電子手冊 Pro'}</p>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">廣播功課</div>
-                                    <div className="text-sm font-black mt-1">登入補領功課</div>
-                                </div>
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">通知</div>
-                                    <div className="text-sm font-black mt-1">{unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '全部已讀'}</div>
+                            <span className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-black text-slate-500 dark:text-slate-400">v1.8.40-hotfix1</span>
+                        </div>
+                    </section>
+
+                    <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <ActionButton icon="bell" label="通知" desc={unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '查看中心'} onClick={onOpenNotifications} tone="orange" />
+                        <ActionButton icon="school-2" label="班級" desc="查看廣播" onClick={onGoClass} tone="emerald" />
+                        <ActionButton icon="palette" label="外觀" desc="主題與顏色" onClick={onOpenAppearance} tone="indigo" />
+                        <ActionButton icon="book-marked" label="科目" desc="管理顏色" onClick={onOpenSubjects} tone="slate" />
+                    </section>
+
+                    <section className="settings-panel-clean rounded-[2rem] border border-white/70 dark:border-slate-800 overflow-hidden">
+                        <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800">
+                            <div className="flex items-center gap-3">
+                                <div className={`w-10 h-10 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center`}><Icon name="paintbrush" className="w-5 h-5" /></div>
+                                <div>
+                                    <h3 className="font-black text-slate-900 dark:text-white">外觀與主頁</h3>
+                                    <p className="text-xs font-bold text-slate-400 dark:text-slate-500 mt-0.5">集中整理最常用嘅顯示設定。</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <SettingSection title="外觀個人化" desc="調整主題色、深色模式同整體介面密度，令電子手冊更貼合你嘅使用習慣。" icon="palette" right={<button type="button" onClick={onOpenAppearance} className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-700">進階外觀</button>}>
-                        <div className="space-y-5">
+                        <div className="p-5 sm:p-6 space-y-5">
+                            <ToggleRow icon="moon" label="深色模式" desc="降低夜間刺眼感" enabled={isDarkMode} onClick={() => setIsDarkMode(!isDarkMode)} />
                             <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">主題顏色</div>
-                                <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
-                                    {themeEntries.map(([key, config]) => (
-                                        <button key={key} type="button" onClick={() => setThemeColor(key)} className={`rounded-[1.25rem] p-2 border transition-all active:scale-95 ${themeColor === key ? `${config.lightBg} ${config.border} shadow-md scale-[1.02]` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:scale-[1.02]'}`}>
-                                            <div className={`w-full h-10 rounded-xl bg-gradient-to-br ${config.gradient} mb-2`}></div>
-                                            <div className={`text-[11px] font-black ${themeColor === key ? config.text : 'text-slate-400'}`}>{config.name}</div>
+                                <div className="text-xs font-black text-slate-400 dark:text-slate-500 mb-3 uppercase tracking-[0.16em]">主題色</div>
+                                <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+                                    {themeEntries.map(([key, cfg]) => (
+                                        <button key={key} type="button" onClick={() => setThemeColor(key)} className={`h-12 rounded-2xl border transition-all active:scale-95 flex items-center justify-center ${themeColor === key ? 'border-slate-900 dark:border-white shadow-md' : 'border-slate-200 dark:border-slate-700'}`} title={cfg.name}>
+                                            <span className={`w-7 h-7 rounded-xl bg-gradient-to-br ${cfg.gradient}`}></span>
                                         </button>
                                     ))}
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <button type="button" onClick={() => setIsDarkMode(false)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${!isDarkMode ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="sun" className="w-5 h-5" /><div><div className="font-black text-sm">淺色模式</div><div className="text-[11px] font-bold opacity-75">乾淨清爽</div></div></button>
-                                <button type="button" onClick={() => setIsDarkMode(true)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${isDarkMode ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="moon" className="w-5 h-5" /><div><div className="font-black text-sm">深色模式</div><div className="text-[11px] font-bold opacity-75">夜晚護眼</div></div></button>
-                            </div>
-                        </div>
-                    </SettingSection>
-
-                    <SettingSection title="主頁排版設計" desc="像真正 App 設定一樣，自行決定主頁要完整、極簡，還是逐項開關。" icon="layout-template">
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                {layoutOptions.map(opt => (
-                                    <button key={opt.value} type="button" onClick={() => setLayoutMode(opt.value)} className={`p-4 rounded-[1.5rem] border text-left transition-all active:scale-95 ${layoutMode === opt.value ? `${t.lightBg} ${t.border} ${t.text} shadow-md` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300 hover:border-slate-300'}`}>
-                                        <Icon name={opt.icon} className="w-5 h-5 mb-3" />
-                                        <div className="font-black text-sm">{opt.label}</div>
-                                        <div className="text-[11px] font-bold opacity-70 mt-1 leading-relaxed">{opt.desc}</div>
-                                    </button>
-                                ))}
-                            </div>
-                            <div className={`rounded-[1.75rem] border p-4 transition-all ${layoutMode === 'custom' ? 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50/60 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700 opacity-75'}`}>
-                                <div className="flex items-center justify-between gap-3 mb-3">
-                                    <div>
-                                        <div className="font-black text-sm text-slate-800 dark:text-white">自定義主頁區塊</div>
-                                        <div className="text-[11px] font-bold text-slate-400">選擇「自定義」後，以下開關會套用到主頁。</div>
-                                    </div>
+                            <div>
+                                <div className="text-xs font-black text-slate-400 dark:text-slate-500 mb-3 uppercase tracking-[0.16em]">主頁顯示</div>
+                                <div className="grid grid-cols-3 gap-2 p-1.5 rounded-[1.35rem] bg-slate-100/90 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800">
+                                    {layoutOptions.map(opt => (
+                                        <button key={opt.value} type="button" onClick={() => setLayoutMode(opt.value)} className={`py-3 rounded-2xl text-xs font-black transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 ${layoutMode === opt.value ? `bg-white dark:bg-slate-800 ${t.text} shadow-sm` : 'text-slate-500 dark:text-slate-400'}`}>
+                                            <Icon name={opt.icon} className="w-3.5 h-3.5" />{opt.label}
+                                        </button>
+                                    ))}
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            </div>
+                            {layoutMode === 'custom' && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     {customBlocks.map(block => (
-                                        <button key={block.key} type="button" onClick={() => { setLayoutMode('custom'); handleCustomToggle(block.key); }} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${customLayout[block.key] ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                                            <div className="flex items-start gap-3 min-w-0">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${customLayout[block.key] ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={block.icon} className="w-4 h-4" /></div>
-                                                <div><div className="font-black text-sm text-slate-800 dark:text-white">{block.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{block.desc}</div></div>
-                                            </div>
-                                            <div className={`w-12 h-7 rounded-full relative shrink-0 transition-all ${customLayout[block.key] ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow transition-all ${customLayout[block.key] ? 'left-[24px]' : 'left-[4px]'}`}></span></div>
-                                        </button>
+                                        <ToggleRow key={block.key} icon={block.icon} label={block.label} enabled={customLayout?.[block.key] !== false} onClick={() => handleCustomToggle(block.key)} />
                                     ))}
                                 </div>
+                            )}
+                        </div>
+                    </section>
+
+                    <section className="settings-panel-clean rounded-[2rem] border border-white/70 dark:border-slate-800 overflow-hidden">
+                        <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center`}><Icon name="sparkles" className="w-5 h-5" /></div>
+                            <div>
+                                <h3 className="font-black text-slate-900 dark:text-white">使用體驗</h3>
+                                <p className="text-xs font-bold text-slate-400 dark:text-slate-500 mt-0.5">少啲卡片，集中用列表開關。</p>
                             </div>
                         </div>
-                    </SettingSection>
+                        <div className="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {experienceOptions.map(opt => {
+                                const enabled = readAdvanced(opt);
+                                return <ToggleRow key={opt.key} icon={opt.icon} label={opt.label} desc={opt.desc} enabled={enabled} onClick={() => setAdvancedValue(opt.key, !enabled)} />;
+                            })}
+                        </div>
+                    </section>
 
-                    <SettingSection title="高級體驗自定義" desc="微調動畫、文字、玻璃效果同快捷入口，令 iPad / 手機使用更貼近你習慣。" icon="sliders-horizontal">
-                        <div className="space-y-5">
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">體驗開關</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {advancedOptions.map(opt => {
-                                        const actualEnabled = opt.key === 'smartHints' ? advancedPrefs?.smartHints !== false : advancedPrefs?.[opt.key] === true;
-                                        return (
-                                            <button key={opt.key} type="button" onClick={() => handleAdvancedToggle(opt.key)} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${actualEnabled ? `${t.lightBg} ${t.border}` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                                                <div className="flex items-start gap-3 min-w-0">
-                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${actualEnabled ? `bg-gradient-to-br ${t.gradient} text-white` : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={opt.icon} className="w-4 h-4" /></div>
-                                                    <div><div className="font-black text-sm text-slate-800 dark:text-white">{opt.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{opt.desc}</div></div>
-                                                </div>
-                                                <div className={`w-11 h-6 rounded-full relative shrink-0 transition-all ${actualEnabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white shadow transition-all ${actualEnabled ? 'left-[21px]' : 'left-[3px]'}`}></span></div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">快捷入口顯示</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {quickActionOptions.map(opt => {
-                                        const enabled = advancedPrefs?.[opt.key] !== false;
-                                        return (
-                                            <button key={opt.key} type="button" onClick={() => handleAdvancedToggle(opt.key)} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${enabled ? 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 opacity-75'}`}>
-                                                <div className="flex items-start gap-3 min-w-0">
-                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${enabled ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={opt.icon} className="w-4 h-4" /></div>
-                                                    <div><div className="font-black text-sm text-slate-800 dark:text-white">{opt.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{opt.desc}</div></div>
-                                                </div>
-                                                <div className={`w-11 h-6 rounded-full relative shrink-0 transition-all ${enabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white shadow transition-all ${enabled ? 'left-[21px]' : 'left-[3px]'}`}></span></div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
+                    <section className="settings-panel-clean rounded-[2rem] border border-white/70 dark:border-slate-800 p-4 sm:p-5 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-10 h-10 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 flex items-center justify-center shrink-0"><Icon name="log-out" className="w-5 h-5" /></div>
+                            <div className="min-w-0">
+                                <div className="font-black text-slate-900 dark:text-white">帳號</div>
+                                <div className="text-xs font-bold text-slate-400 dark:text-slate-500 truncate">切換或重新登入</div>
                             </div>
                         </div>
-                    </SettingSection>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <SettingSection title="通知與提醒" desc="管理通知中心、未讀提醒同版本更新資訊。" icon="bell-ring" right={unreadNotificationCount > 0 ? <span className="px-2.5 py-1 rounded-full bg-red-500 text-white text-[10px] font-black">{unreadNotificationCount}</span> : null}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showNotificationShortcut !== false && <button type="button" onClick={onOpenNotifications} className="p-4 rounded-2xl bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="bell" className="w-5 h-5 text-orange-500 mb-2" /><div className="font-black text-sm text-orange-700 dark:text-orange-300">打開通知中心</div><div className="text-[11px] font-bold text-orange-600/70 dark:text-orange-200/70 mt-1">查看廣播、更新、過期功課</div></button>}
-                                {advancedPrefs?.showClassShortcut !== false && <button type="button" onClick={onGoClass} className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school-2" className="w-5 h-5 text-emerald-500 mb-2" /><div className="font-black text-sm text-emerald-700 dark:text-emerald-300">查看班級廣播</div><div className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-200/70 mt-1">查看老師發放的功課</div></button>}
-                            </div>
-                        </SettingSection>
-                        <SettingSection title="科目與帳號" desc="管理科目顏色、帳戶操作及登出。" icon="user-cog">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showSubjectShortcut !== false && <button type="button" onClick={onOpenSubjects} className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school" className="w-5 h-5 text-indigo-500 mb-2" /><div className="font-black text-sm text-indigo-700 dark:text-indigo-300">科目管理</div><div className="text-[11px] font-bold text-indigo-600/70 dark:text-indigo-200/70 mt-1">自訂科目、排序、顏色</div></button>}
-                                {advancedPrefs?.showAccountShortcut !== false && <button type="button" onClick={onLogout} className="p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="log-out" className="w-5 h-5 text-red-500 mb-2" /><div className="font-black text-sm text-red-700 dark:text-red-300">登出帳號</div><div className="text-[11px] font-bold text-red-600/70 dark:text-red-200/70 mt-1">切換或重新登入</div></button>}
-                            </div>
-                        </SettingSection>
-                    </div>
+                        <button type="button" onClick={onLogout} className="px-4 py-3 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 font-black text-xs border border-red-100 dark:border-red-800 active:scale-95 transition-all">登出</button>
+                    </section>
                 </div>
             );
         }
 
-        
-function App() {
+        function App() {
             const [user, setUser] = useState(null);
             const [authLoading, setAuthLoading] = useState(true);
             const [firebaseReadyTick, setFirebaseReadyTick] = useState(() => window.__EHANDBOOK_FIREBASE_READY__ ? 1 : 0);
@@ -3241,7 +3258,7 @@ function App() {
                 const loadingScreen = document.getElementById('loading-screen');
                 window.__EHANDBOOK_RENDERED__ = true;
                 if (loadingScreen) { loadingScreen.classList.add('hidden-loader'); setTimeout(() => loadingScreen.remove(), 500); }
-                // v1.8.39-hotfix1: 已保留登入功能；廣播功課發放後即時派發。
+                // v1.8.40: 已保留登入功能；廣播功課發放後即時派發。
             }, []);
 
             useEffect(() => {
@@ -4113,40 +4130,36 @@ function App() {
 
                     <div className="max-w-[1200px] mx-auto relative z-10 transition-all duration-500">
                         {viewMode !== 'admin' && (
-                        <header className="mb-7 sm:mb-8 max-w-3xl mx-auto modern-topbar border border-white/60 dark:border-white/10 px-3.5 sm:px-4 py-3.5 rounded-[2.25rem] overflow-hidden">
-                            <div className="flex items-center justify-between gap-3 sm:gap-4">
-                                <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-[1.618]">
-                                    <div className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-[1.35rem] flex items-center justify-center bg-gradient-to-br ${t.gradient} text-white shadow-xl shadow-indigo-500/20 shrink-0 overflow-hidden`}>
-                                        <div className="absolute inset-0 bg-white/12"></div>
-                                        <div className="absolute -right-4 -top-4 w-10 h-10 rounded-full bg-white/25 blur-xl"></div>
-                                        <Icon name={viewMode === 'settings' ? "sliders-horizontal" : viewMode === 'timetable' || viewMode === 'timetable_edit' ? "calendar-clock" : viewMode === 'history' ? "timer" : appMode === 'class' ? "school" : "book-open"} className="relative z-10 w-6 h-6" />
+                        <header className="mb-6 sm:mb-8 max-w-3xl mx-auto app-top-status border border-white/70 dark:border-white/10 px-4 sm:px-5 py-4 rounded-[2rem] overflow-hidden">
+                            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-4">
+                                <div className={`relative w-13 h-13 sm:w-14 sm:h-14 rounded-[1.45rem] flex items-center justify-center bg-gradient-to-br ${t.gradient} text-white shadow-xl shadow-indigo-500/20 shrink-0 overflow-hidden`}>
+                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_20%,rgba(255,255,255,0.32),transparent_45%)]"></div>
+                                    <Icon name={viewMode === 'settings' ? "sliders-horizontal" : viewMode === 'timetable' || viewMode === 'timetable_edit' ? "calendar-clock" : viewMode === 'history' ? "timer" : appMode === 'class' ? "school" : "book-open"} className="relative z-10 w-6 h-6" />
+                                </div>
+                                <div className="min-w-0">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <h1 className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white leading-tight tracking-tight truncate">
+                                            {viewMode === 'settings' ? '設定' : viewMode === 'timetable' ? '時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '歷史' : appMode === 'class' ? '班級' : '今日'}
+                                        </h1>
+                                        <span className={`hidden sm:inline-flex px-2.5 py-1 rounded-full text-[10px] font-black border ${t.lightBg} ${t.border} ${t.text}`}>{appMode === 'class' ? '班級模式' : '個人模式'}</span>
                                     </div>
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex items-center gap-2 min-w-0">
-                                            <h1 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white leading-tight tracking-tight truncate">
-                                                {viewMode === 'settings' ? '應用程式設定' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '歷史紀錄' : appMode === 'class' ? '班級廣播' : '學生小幫手'}
-                                            </h1>
-                                            <span className="hidden sm:inline-flex px-2 py-1 rounded-full bg-slate-900/5 dark:bg-white/10 text-[10px] font-black text-slate-400 dark:text-slate-500 border border-white/50 dark:border-white/10">v1.8.39-hotfix1</span>
-                                        </div>
-                                        <div className="mt-1.5 flex items-center gap-2 overflow-x-auto scrollbar-hide text-[11px] font-black text-slate-500 dark:text-slate-400">
-                                            <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/70 dark:bg-slate-800/70 border border-white/60 dark:border-slate-700/70"><Icon name="calendar-days" className="w-3.5 h-3.5" />{globalNow.toLocaleDateString('zh-HK', { month: 'numeric', day: 'numeric', weekday: 'short' })}</span>
-                                            <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/70 dark:bg-slate-800/70 border border-white/60 dark:border-slate-700/70"><Icon name="clock-3" className="w-3.5 h-3.5" />{formatTimeStr(globalNow)}</span>
-                                            <span className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${t.lightBg} ${t.border} ${t.text}`}><Icon name={appMode === 'class' ? 'school' : 'sparkles'} className="w-3.5 h-3.5" />{appMode === 'class' ? '班級模式' : '個人模式'}</span>
-                                        </div>
+                                    <div className="mt-1.5 flex items-center gap-1.5 overflow-x-auto scrollbar-hide text-[11px] font-black text-slate-500 dark:text-slate-400">
+                                        <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70"><Icon name="calendar-days" className="w-3.5 h-3.5" />{globalNow.toLocaleDateString('zh-HK', { month: 'numeric', day: 'numeric', weekday: 'short' })}</span>
+                                        <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70"><Icon name="clock-3" className="w-3.5 h-3.5" />{formatTimeStr(globalNow)}</span>
+                                        <span className="hidden sm:inline-flex shrink-0 px-2.5 py-1 rounded-full bg-slate-100/70 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/60">v1.8.40-hotfix1</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0">
                                     {viewMode === 'timetable' && (
-                                        <button type="button" onClick={() => setViewMode('timetable_edit')} className="h-11 px-3 rounded-2xl font-black text-xs bg-white/80 dark:bg-slate-800/80 text-indigo-600 dark:text-indigo-300 hover:bg-white border border-white/70 dark:border-slate-700 shadow-sm transition-all active:scale-95 flex items-center gap-2"><Icon name="book-open" className="w-4 h-4" /><span className="hidden sm:inline">編輯</span></button>
+                                        <button type="button" onClick={() => setViewMode('timetable_edit')} className="h-11 w-11 sm:w-auto sm:px-3 rounded-2xl font-black text-xs bg-slate-950 dark:bg-white text-white dark:text-slate-950 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"><Icon name="book-open" className="w-4 h-4" /><span className="hidden sm:inline">編輯</span></button>
                                     )}
                                     <button
                                         type="button"
                                         onClick={() => setIsNotificationCenterOpen(true)}
-                                        className={`relative h-11 min-w-11 px-3 rounded-2xl border shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2 ${unreadNotificationCount > 0 ? 'bg-orange-500 text-white border-orange-400 shadow-orange-200/60 dark:shadow-orange-900/30' : 'bg-white/80 dark:bg-slate-800/80 text-slate-500 dark:text-slate-300 border-white/70 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700'}`}
+                                        className={`relative h-11 w-11 rounded-2xl border shadow-sm transition-all active:scale-95 flex items-center justify-center ${unreadNotificationCount > 0 ? 'bg-orange-500 text-white border-orange-400 shadow-orange-200/60 dark:shadow-orange-900/30' : 'bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200/70 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700'}`}
                                         title="通知中心"
                                     >
                                         <Icon name="bell" className="w-4 h-4" />
-                                        <span className="hidden sm:inline text-xs font-black">通知</span>
                                         {unreadNotificationCount > 0 && (
                                             <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-white dark:border-slate-900 leading-none">{unreadNotificationCount > 9 ? '9+' : unreadNotificationCount}</span>
                                         )}
@@ -4439,13 +4452,13 @@ function App() {
                         )}
                     </div>
 
-                    <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 dynamic-island-shell rounded-[2rem] px-2 py-2 border border-white/70 dark:border-white/10 z-[100] flex items-center justify-between gap-1.5 sm:gap-2 max-w-[calc(100%-1rem)] sm:max-w-[720px] overflow-x-auto dynamic-island-scroll">
+                    <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 app-dock-shell rounded-[2rem] px-2 py-2 border border-white/70 dark:border-white/10 z-[100] flex items-center justify-between gap-1.5 sm:gap-2 max-w-[calc(100%-1rem)] sm:max-w-[760px] overflow-x-auto dynamic-island-scroll relative">
                         <NavItem icon="book-open" label="主頁" active={viewMode === 'current' && appMode === 'personal'} onClick={() => { setViewMode('current'); setAppMode('personal'); setIsListVisible(true); }} t={t} />
                         <NavItem icon="school" label="班級" active={viewMode === 'current' && appMode === 'class'} onClick={() => { setViewMode('current'); setAppMode('class'); setIsListVisible(true); }} t={t} />
-                        <NavItem icon="calendar-clock" label="時間表" active={viewMode === 'timetable' || viewMode === 'timetable_edit'} onClick={() => { setViewMode('timetable'); setIsListVisible(true); }} t={t} />
+                        <NavItem icon="calendar-clock" label="時間表" active={viewMode === 'timetable' || viewMode === 'timetable_edit'} onClick={() => { setViewMode('timetable'); setAppMode('personal'); setIsListVisible(true); }} t={t} />
                         <NavItem icon="timer" label="歷史" active={viewMode === 'history'} onClick={() => { setViewMode('history'); setAppMode('personal'); setIsListVisible(true); }} t={t} />
                         <NavItem icon="sliders-horizontal" label="設定" active={viewMode === 'settings'} onClick={() => { setViewMode('settings'); setAppMode('personal'); setIsListVisible(true); }} t={t} />
-                        {isAdmin && ( <><div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div><NavItem icon="shield" label="後台" active={viewMode === 'admin'} onClick={() => setViewMode('admin')} t={t} /></> )}
+                        {isAdmin && ( <><div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div><NavItem icon="shield" label="後台" active={viewMode === 'admin'} onClick={() => { setViewMode('admin'); setIsListVisible(true); }} t={t} /></> )}
                     </div>
 
                     {editingItem && <EditModal item={editingItem} onClose={() => setEditingItem(null)} onSave={handleUpdateItem} triggerAlert={triggerAlert} triggerConfirm={triggerConfirm} subjects={subjects} />}
@@ -4588,11 +4601,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.8.39-hotfix1-login-only-ui | login-only | custom-switches | modern-island | original-functions-preserved -->
-    <!-- ehandbook-build: v1.8.39-hotfix1-login-only-ui -->
+<!-- VERSION_CHECK: v1.8.40-hotfix1-app-dock-settings-ui | app-dock | mobile-header | clean-settings | original-functions-preserved -->
+    <!-- ehandbook-build: v1.8.40-hotfix1-app-dock-settings-ui -->
 </body>
 </html>
 
-<!-- ehandbook_v1.8.39_hotfix1_login_only: login page reduced to brand and sign-in only; custom switches and modern Dynamic Island; v1.8 functions preserved. -->
+<!-- ehandbook_v1.8.40_app_dock_settings: App Dock touch response, mobile-style top info bar, cleaner Settings page; v1.8 functions preserved. -->
 
-<!-- v1.8.39-hotfix1-login-only-ui: minimal login-only page; students auto-claim broadcast assignments on login; no extra class-page controls added. -->
+<!-- v1.8.40-hotfix1-app-dock-settings-ui: App Dock and Settings UI polish; students auto-claim broadcast assignments on login; no extra class-page controls added. -->
