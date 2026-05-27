@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.8.45 Beautiful Liquid Gradient：主題色流動背景、設定頁重整、全站動畫過渡 -->
+    <!-- 電子手冊 Pro v1.9.0 Polished Interaction UI：點擊回饋、柔和切頁、iOS 設定頁、完成動畫 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -24,8 +24,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.8.45-beautiful-liquid-gradient">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.8.45-beautiful-liquid-gradient"; console.log("電子手冊 Pro v1.8.45-beautiful-liquid-gradient loaded");</script>
+    <meta name="ehandbook-version" content="v1.9.0-polished-interaction-ui">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.9.0-polished-interaction-ui"; console.log("電子手冊 Pro v1.9.0-polished-interaction-ui loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -1291,6 +1291,326 @@
                 radial-gradient(circle at 56% 62%, rgba(var(--theme-rgb-c),0.12), transparent 48%) !important;
         }
 
+
+        /* v1.9.0 Polished Interaction UI Patch: faster page switching, lighter transition cost */
+        .page-transition-shell {
+            will-change: opacity, transform;
+            transform: translate3d(0,0,0);
+            transition:
+                opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+                filter 180ms cubic-bezier(0.22, 1, 0.36, 1);
+            contain: layout style;
+        }
+        .page-transition-shell.is-switching {
+            opacity: 0.18;
+            transform: translate3d(0, 8px, 0) scale(0.992);
+            filter: saturate(0.96);
+            pointer-events: none;
+        }
+        .page-content-layer {
+            animation: pageLayerIn 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+            transform: translate3d(0,0,0);
+            will-change: opacity, transform;
+        }
+        @keyframes pageLayerIn {
+            from { opacity: 0; transform: translate3d(0, 8px, 0) scale(0.994); }
+            to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+        }
+        html.page-switching .app-liquid-canvas,
+        html.page-switching .app-liquid-canvas::before,
+        html.page-switching .app-liquid-canvas::after,
+        html.page-switching .animate-blob,
+        html.page-switching .liquid-island-track::after {
+            animation-play-state: paused !important;
+        }
+        html.page-switching .glass-card,
+        html.page-switching .stat-card-modern,
+        html.page-switching .settings-studio-card,
+        html.page-switching .settings-studio-row {
+            transition-duration: 140ms !important;
+        }
+        .liquid-island-track,
+        .liquid-island-blob,
+        .liquid-island-item,
+        .liquid-island-content {
+            transform: translate3d(0,0,0);
+            backface-visibility: hidden;
+        }
+        .liquid-island-track {
+            contain: layout paint style;
+        }
+        .liquid-island-blob {
+            will-change: transform;
+        }
+        .liquid-island-item {
+            will-change: transform, color;
+        }
+        @media (max-width: 640px) {
+            html.page-switching .app-liquid-canvas > .fixed.inset-0.z-0.pointer-events-none .animate-blob {
+                filter: blur(76px) saturate(108%) !important;
+                opacity: 0.08 !important;
+            }
+            .page-transition-shell.is-switching {
+                opacity: 0.28;
+                transform: translate3d(0, 6px, 0) scale(0.995);
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .page-transition-shell,
+            .page-content-layer {
+                transition: none !important;
+                animation: none !important;
+                transform: none !important;
+            }
+        }
+
+
+        /* v1.9.0 Polished Interaction UI: unified touch feedback, softer modal/toast, task completion micro-animation */
+        :where(button, [role="button"], .tap-feedback, .pressable-card, .settings-action-tile, .settings-studio-row) {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        :where(button, [role="button"], .tap-feedback, .pressable-card):not(:disabled) {
+            backface-visibility: hidden;
+            transform: translate3d(0,0,0);
+        }
+        :where(button:not(:disabled), [role="button"], .tap-feedback):active {
+            transform: translate3d(0,1px,0) scale(0.976);
+        }
+        .pressable-card {
+            position: relative;
+            overflow: hidden;
+            transform: translate3d(0,0,0);
+            transition:
+                transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 220ms ease,
+                border-color 220ms ease,
+                background-color 220ms ease,
+                opacity 260ms ease;
+        }
+        .pressable-card:active {
+            transform: translate3d(0,1px,0) scale(0.992);
+        }
+        .pressable-card::after,
+        .settings-action-tile::after,
+        .settings-studio-row::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border-radius: inherit;
+            background: radial-gradient(circle at 50% 50%, rgba(var(--theme-rgb-a), 0.14), transparent 56%);
+            opacity: 0;
+            transform: scale(0.94);
+            transition: opacity 260ms ease, transform 260ms ease;
+        }
+        .pressable-card:active::after,
+        .settings-action-tile:active::after,
+        .settings-studio-row:active::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .settings-studio-row,
+        .settings-action-tile {
+            position: relative;
+            overflow: hidden;
+        }
+        .settings-studio-card:hover {
+            box-shadow: 0 22px 62px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.76);
+        }
+        .dark .settings-studio-card:hover {
+            box-shadow: 0 24px 66px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.07);
+        }
+        .theme-swatch-button {
+            position: relative;
+            border-radius: 999px;
+            min-height: 42px;
+            transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), filter 240ms ease;
+        }
+        .theme-swatch-button:active { transform: scale(0.92); }
+        .theme-swatch-button.is-selected::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: 999px;
+            border: 2px solid rgba(var(--theme-rgb-a), 0.62);
+            box-shadow: 0 0 0 4px rgba(var(--theme-rgb-a), 0.10), 0 10px 22px rgba(var(--theme-rgb-a), 0.14);
+            animation: selectedSwatchPulse 1800ms ease-in-out infinite;
+        }
+        @keyframes selectedSwatchPulse {
+            0%, 100% { transform: scale(1); opacity: 0.88; }
+            50% { transform: scale(1.045); opacity: 0.62; }
+        }
+        .settings-switch[data-on="true"] span { transform: translateX(20px); }
+        .settings-switch span { will-change: transform; }
+        .task-card {
+            isolation: isolate;
+            will-change: transform, opacity;
+        }
+        .task-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            background:
+                linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.34) 42%, transparent 72%),
+                radial-gradient(circle at 12% 10%, rgba(var(--theme-rgb-b),0.10), transparent 38%);
+            opacity: 0;
+            transform: translateX(-32%);
+            transition: opacity 220ms ease;
+            z-index: 0;
+        }
+        .task-card > * { position: relative; z-index: 1; }
+        .task-card.task-completing {
+            animation: taskCompleteOut 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .task-card.task-completing::before {
+            opacity: 1;
+            animation: taskCompleteSweep 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes taskCompleteSweep {
+            from { transform: translateX(-42%); }
+            to { transform: translateX(48%); }
+        }
+        @keyframes taskCompleteOut {
+            0% { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+            45% { opacity: 1; transform: translate3d(0,-2px,0) scale(0.988); }
+            100% { opacity: 0; transform: translate3d(0,10px,0) scale(0.962); }
+        }
+        .completion-button {
+            position: relative;
+            overflow: hidden;
+            transition:
+                transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+                background-color 220ms ease,
+                border-color 220ms ease,
+                box-shadow 220ms ease;
+        }
+        .completion-button:active { transform: scale(0.88); }
+        .completion-button .complete-burst {
+            position: absolute;
+            inset: -7px;
+            border-radius: 999px;
+            border: 2px solid rgba(16,185,129,0.36);
+            opacity: 0;
+            transform: scale(0.45);
+            pointer-events: none;
+        }
+        .completion-button.is-completed .complete-burst {
+            animation: completeBurst 460ms ease-out both;
+        }
+        @keyframes completeBurst {
+            0% { opacity: 0.85; transform: scale(0.45); }
+            100% { opacity: 0; transform: scale(1.55); }
+        }
+        .completion-button svg { filter: drop-shadow(0 1px 0 rgba(255,255,255,0.18)); }
+        .soft-toast-shell {
+            position: fixed;
+            left: 50%;
+            top: calc(env(safe-area-inset-top, 0px) + 16px);
+            z-index: 9999;
+            transform: translate3d(-50%, -18px, 0) scale(0.96);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 360ms ease, transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .soft-toast-shell.is-visible {
+            opacity: 1;
+            transform: translate3d(-50%, 0, 0) scale(1);
+        }
+        .soft-toast-card {
+            min-width: min(86vw, 320px);
+            max-width: min(90vw, 440px);
+            padding: 12px 16px;
+            border-radius: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 850;
+            letter-spacing: -0.01em;
+            border: 1px solid rgba(255,255,255,0.58);
+            background: rgba(15,23,42,0.78);
+            color: #fff;
+            backdrop-filter: blur(24px) saturate(170%);
+            -webkit-backdrop-filter: blur(24px) saturate(170%);
+            box-shadow: 0 18px 54px rgba(15,23,42,0.22), inset 0 1px 0 rgba(255,255,255,0.20);
+        }
+        .soft-toast-card.is-success { background: rgba(15,23,42,0.78); }
+        .soft-toast-card.is-error { background: rgba(220,38,38,0.86); }
+        .dark .soft-toast-card.is-success {
+            background: rgba(248,250,252,0.88);
+            color: #0f172a;
+            border-color: rgba(255,255,255,0.40);
+        }
+        .soft-modal-backdrop {
+            background: rgba(15, 23, 42, 0.52);
+            backdrop-filter: blur(12px) saturate(130%);
+            -webkit-backdrop-filter: blur(12px) saturate(130%);
+            animation: modalBackdropIn 220ms ease both;
+        }
+        .soft-confirm-sheet {
+            width: 100%;
+            max-width: 390px;
+            border-radius: 2rem;
+            padding: 22px;
+            text-align: center;
+            background: rgba(255,255,255,0.86);
+            border: 1px solid rgba(255,255,255,0.72);
+            box-shadow: 0 30px 90px rgba(15,23,42,0.22), inset 0 1px 0 rgba(255,255,255,0.72);
+            backdrop-filter: blur(26px) saturate(170%);
+            -webkit-backdrop-filter: blur(26px) saturate(170%);
+            animation: confirmSheetIn 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .dark .soft-confirm-sheet {
+            background: rgba(15,23,42,0.84);
+            border-color: rgba(255,255,255,0.10);
+            box-shadow: 0 30px 100px rgba(0,0,0,0.46), inset 0 1px 0 rgba(255,255,255,0.07);
+        }
+        .soft-confirm-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 1.35rem;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgb(var(--theme-rgb-a));
+            background:
+                linear-gradient(135deg, rgba(var(--theme-rgb-a),0.16), rgba(var(--theme-rgb-b),0.10));
+        }
+        .soft-confirm-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .soft-confirm-actions button {
+            min-height: 46px;
+            border-radius: 1rem;
+            font-weight: 900;
+            font-size: 13px;
+            transition: transform 180ms ease, background-color 220ms ease, box-shadow 220ms ease;
+        }
+        @keyframes modalBackdropIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes confirmSheetIn {
+            from { opacity: 0; transform: translate3d(0,18px,0) scale(0.976); }
+            to { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+        }
+        @media (max-width: 640px) {
+            .soft-confirm-sheet { max-width: none; border-radius: 2rem 2rem 1.25rem 1.25rem; }
+            .soft-toast-card { font-size: 12.5px; }
+        }
+        .reduce-motion-mode .pressable-card::after,
+        .reduce-motion-mode .settings-action-tile::after,
+        .reduce-motion-mode .settings-studio-row::after,
+        .reduce-motion-mode .complete-burst,
+        .reduce-motion-mode .task-card.task-completing::before {
+            animation: none !important;
+            transition: none !important;
+        }
+
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -1378,7 +1698,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.8.45-beautiful-liquid-gradient',
+                version: 'v1.9.0-polished-interaction-ui',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -1473,25 +1793,25 @@
     </script>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef, useMemo } = React;
+        const { useState, useEffect, useRef, useMemo, useCallback } = React;
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.8.45-beautiful-liquid-gradient',
-            title: '電子手冊 Pro v1.8.45 已更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.9.0-polished-interaction-ui',
+            title: '電子手冊 Pro v1.9.0 已更新',
             summary: [
-                '主頁背景改成多層 Liquid Mesh 漸變：會跟隨主題色，但唔再係單一純色。',
-                '每個主題色會混入柔和藍、紫、青、暖光等伴色，畫面更自然、更高級。',
-                '靈動島、Header、設定頁光感同步微調，令整體色彩更加融合。'
+                '全站按鈕、設定列、功課卡片加入即時點擊回饋。',
+                '頁面切換、Modal、Toast 改成更柔和嘅 App 式動畫。',
+                '設定頁、主題色選擇同功課完成狀態加入更細緻嘅互動效果。'
             ].join(String.fromCharCode(10)),
             guide: [
-                '部署後請先確認登入頁底部顯示 v1.8.45。',
-                '登入後到設定頁切換主題色，返回主頁應該見到更豐富嘅流動漸變。',
-                '再測試深色模式同靈動島，色調應該比 v1.8.45 更自然、更有層次。'
+                '部署後請先確認登入頁版本顯示 v1.9.0。',
+                '登入後快速切換主頁、時間表、設定，應該即按即有反應。',
+                '完成一項功課，卡片應有縮放、掃光同剔號彈入動畫。'
             ].join(String.fromCharCode(10)),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-05-28T01:42:00+08:00',
+            publishedAt: '2026-05-28T02:18:00+08:00',
             source: 'built-in'
         };
 
@@ -3856,11 +4176,21 @@
             );
         }
 
+
+        function getNavigationKey(viewMode, appMode) {
+            if (viewMode === 'admin') return 'admin';
+            if (viewMode === 'settings') return 'settings';
+            if (viewMode === 'history') return 'history';
+            if (viewMode === 'timetable' || viewMode === 'timetable_edit') return 'timetable';
+            if (viewMode === 'current' && appMode === 'class') return 'class';
+            return 'home';
+        }
+
         function NavItem({ id, icon, label, active, onClick, t }) {
             const lastPressRef = useRef(0);
             const handlePress = (event) => {
                 const now = Date.now();
-                if (now - lastPressRef.current < 180) return;
+                if (now - lastPressRef.current < 160) return;
                 lastPressRef.current = now;
                 try {
                     if (event?.cancelable) event.preventDefault();
@@ -3879,6 +4209,7 @@
                     onKeyDown={handleKeyDown}
                     aria-label={label}
                     aria-current={active ? 'page' : undefined}
+                    draggable={false}
                     className={`liquid-island-item ${active ? 'is-active' : ''}`}
                 >
                     <span className="liquid-island-content">
@@ -3888,6 +4219,8 @@
                 </button>
             );
         }
+
+        const MemoNavItem = React.memo(NavItem);
 
         function UserSettingsPage({
             user,
@@ -3954,7 +4287,7 @@
             );
 
             const SwitchRow = ({ icon, label, desc, enabled, onClick }) => (
-                <button type="button" onClick={onClick} aria-pressed={!!enabled} className="settings-studio-row w-full flex items-center justify-between gap-4 text-left">
+                <button type="button" onClick={onClick} aria-pressed={!!enabled} className="settings-studio-row tap-feedback w-full flex items-center justify-between gap-4 text-left">
                     <div className="flex items-center gap-3 min-w-0">
                         <div className="settings-row-icon w-10 h-10 rounded-2xl flex items-center justify-center shrink-0"><Icon name={icon} className="w-4.5 h-4.5" /></div>
                         <div className="min-w-0">
@@ -3967,7 +4300,7 @@
             );
 
             const QuickAction = ({ icon, label, desc, onClick, badge }) => (
-                <button type="button" onClick={onClick} className="settings-action-tile relative overflow-hidden">
+                <button type="button" onClick={onClick} className="settings-action-tile tap-feedback relative overflow-hidden">
                     <div className="settings-action-icon w-10 h-10 rounded-2xl flex items-center justify-center mb-3"><Icon name={icon} className="w-4.5 h-4.5" /></div>
                     <div className="font-black text-sm text-slate-950 dark:text-white tracking-[-0.01em]">{label}</div>
                     <div className="mt-1 text-[11px] font-bold text-slate-400 dark:text-slate-500 leading-snug">{desc}</div>
@@ -3976,7 +4309,7 @@
             );
 
             const MiniToggle = ({ icon, label, enabled, onClick }) => (
-                <button type="button" onClick={onClick} aria-pressed={!!enabled} className={`settings-mini-toggle flex items-center justify-between gap-3 text-left ${enabled ? 'is-active' : ''}`}>
+                <button type="button" onClick={onClick} aria-pressed={!!enabled} className={`settings-mini-toggle tap-feedback flex items-center justify-between gap-3 text-left ${enabled ? 'is-active' : ''}`}>
                     <div className="flex items-center gap-2.5 min-w-0">
                         <div className="settings-row-icon w-9 h-9 rounded-2xl flex items-center justify-center shrink-0"><Icon name={icon} className="w-4 h-4" /></div>
                         <span className="font-black text-xs sm:text-sm text-slate-800 dark:text-slate-100 truncate">{label}</span>
@@ -3986,8 +4319,8 @@
             );
 
             return (
-                <div className="settings-page-stable settings-remix mx-auto pb-10 space-y-5">
-                    <section className="settings-studio-card p-4 sm:p-5">
+                <div className="settings-page-stable settings-remix mx-auto pb-10 space-y-5 polished-settings-page">
+                    <section className="settings-studio-card settings-profile-card p-4 sm:p-5">
                         <div className="settings-studio-content flex items-center justify-between gap-4">
                             <div className="flex items-center gap-4 min-w-0">
                                 <div className={`w-14 h-14 rounded-[1.35rem] bg-gradient-to-br ${activeTheme.gradient} text-white flex items-center justify-center font-black text-xl shadow-lg shrink-0 transition-all duration-700`}>{initial}</div>
@@ -3997,7 +4330,7 @@
                                     <p className="mt-0.5 text-xs font-bold text-slate-400 dark:text-slate-500 truncate">{email || '電子手冊 Pro'}</p>
                                 </div>
                             </div>
-                            <span className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-white/50 dark:bg-white/8 border border-white/60 dark:border-white/10 text-[11px] font-black text-slate-500 dark:text-slate-400">v1.8.45</span>
+                            <span className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-white/50 dark:bg-white/8 border border-white/60 dark:border-white/10 text-[11px] font-black text-slate-500 dark:text-slate-400">{window.__EHANDBOOK_VERSION__ || 'v1.9.0'}</span>
                         </div>
                     </section>
 
@@ -4020,7 +4353,7 @@
                                 </div>
                                 <div className="grid grid-cols-7 gap-2">
                                     {themeEntries.map(([key, cfg]) => (
-                                        <button key={key} type="button" onClick={() => setThemeColor(key)} aria-pressed={themeColor === key} className={`theme-swatch-button flex items-center justify-center ${themeColor === key ? 'is-selected' : ''}`} title={cfg.name}>
+                                        <button key={key} type="button" onClick={() => setThemeColor(key)} aria-pressed={themeColor === key} className={`theme-swatch-button tap-feedback flex items-center justify-center ${themeColor === key ? 'is-selected' : ''}`} title={cfg.name}>
                                             <span className={`theme-swatch-core bg-gradient-to-br ${cfg.gradient}`}></span>
                                         </button>
                                     ))}
@@ -4057,7 +4390,7 @@
 
                     <StudioCard label="Account" title="帳號與其他" desc="較少用嘅功能集中放底部，版面會乾淨啲。">
                         <div className="space-y-3">
-                            <button type="button" onClick={onOpenAppearance} className="settings-studio-row w-full flex items-center justify-between gap-4 text-left">
+                            <button type="button" onClick={onOpenAppearance} className="settings-studio-row tap-feedback w-full flex items-center justify-between gap-4 text-left">
                                 <div className="flex items-center gap-3 min-w-0">
                                     <div className="settings-row-icon w-10 h-10 rounded-2xl flex items-center justify-center shrink-0"><Icon name="palette" className="w-4.5 h-4.5" /></div>
                                     <div className="min-w-0">
@@ -4067,7 +4400,7 @@
                                 </div>
                                 <Icon name="chevron-right" className="w-4 h-4 text-slate-300 dark:text-slate-600" />
                             </button>
-                            <button type="button" onClick={onLogout} className="settings-studio-row w-full flex items-center justify-between gap-4 text-left hover:bg-red-50/70 dark:hover:bg-red-900/18">
+                            <button type="button" onClick={onLogout} className="settings-studio-row tap-feedback w-full flex items-center justify-between gap-4 text-left hover:bg-red-50/70 dark:hover:bg-red-900/18">
                                 <div className="flex items-center gap-3 min-w-0">
                                     <div className="w-10 h-10 rounded-2xl bg-red-50 dark:bg-red-900/24 text-red-600 dark:text-red-300 flex items-center justify-center shrink-0"><Icon name="log-out" className="w-4.5 h-4.5" /></div>
                                     <div className="min-w-0">
@@ -4182,10 +4515,76 @@
             const [currentTimetableDay, setCurrentTimetableDay] = useState(new Date().getDay() || 1);
             const [quickView, setQuickView] = useState({ isOpen: false, title: '', items: [] });
             const [globalNow, setGlobalNow] = useState(new Date());
+            const [isPageSwitching, setIsPageSwitching] = useState(false);
+            const [activeNavHint, setActiveNavHint] = useState(() => getNavigationKey('current', 'personal'));
+            const navigationTimerRef = useRef(null);
             const itemsRef = useRef([]);
             const publicTasksRef = useRef([]);
             const autoDeleteRan = useRef(false);
             const autoSyncingPublicIdsRef = useRef(new Set());
+
+            const finishPageSwitch = useCallback(() => {
+                if (navigationTimerRef.current) {
+                    clearTimeout(navigationTimerRef.current);
+                    navigationTimerRef.current = null;
+                }
+                setIsPageSwitching(false);
+                try { document.documentElement.classList.remove('page-switching'); } catch (e) {}
+            }, []);
+
+            const navigateTo = useCallback((nextViewMode, nextAppMode = 'personal') => {
+                const normalizedAppMode = nextViewMode === 'admin' ? appMode : nextAppMode;
+                const samePage = viewMode === nextViewMode && (nextViewMode === 'admin' || appMode === normalizedAppMode);
+                const nextKey = getNavigationKey(nextViewMode, normalizedAppMode);
+
+                setActiveNavHint(nextKey);
+                if (samePage) {
+                    setIsListVisible(true);
+                    finishPageSwitch();
+                    return;
+                }
+
+                if (navigationTimerRef.current) clearTimeout(navigationTimerRef.current);
+                setIsPageSwitching(true);
+                try { document.documentElement.classList.add('page-switching'); } catch (e) {}
+
+                navigationTimerRef.current = setTimeout(() => {
+                    const commit = () => {
+                        setViewMode(nextViewMode);
+                        if (nextViewMode !== 'admin') setAppMode(normalizedAppMode);
+                        setIsListVisible(true);
+                    };
+                    if (typeof React.startTransition === 'function') React.startTransition(commit);
+                    else commit();
+
+                    requestAnimationFrame(() => {
+                        navigationTimerRef.current = setTimeout(finishPageSwitch, 130);
+                    });
+                }, 90);
+            }, [appMode, finishPageSwitch, viewMode]);
+
+            const navItems = useMemo(() => {
+                const base = [
+                    { id: 'home', icon: 'book-open', label: '主頁', active: activeNavHint === 'home', action: () => navigateTo('current', 'personal') },
+                    { id: 'class', icon: 'school', label: '班級', active: activeNavHint === 'class', action: () => navigateTo('current', 'class') },
+                    { id: 'timetable', icon: 'calendar-clock', label: '時間表', active: activeNavHint === 'timetable', action: () => navigateTo('timetable', 'personal') },
+                    { id: 'history', icon: 'timer', label: '歷史', active: activeNavHint === 'history', action: () => navigateTo('history', 'personal') },
+                    { id: 'settings', icon: 'sliders-horizontal', label: '設定', active: activeNavHint === 'settings', action: () => navigateTo('settings', 'personal') }
+                ];
+                if (isAdmin) base.push({ id: 'admin', icon: 'shield', label: '後台', active: activeNavHint === 'admin', action: () => navigateTo('admin', appMode) });
+                return base;
+            }, [activeNavHint, appMode, isAdmin, navigateTo]);
+
+            useEffect(() => {
+                setActiveNavHint(getNavigationKey(viewMode, appMode));
+            }, [viewMode, appMode]);
+
+            useEffect(() => {
+                return () => {
+                    if (navigationTimerRef.current) clearTimeout(navigationTimerRef.current);
+                    try { document.documentElement.classList.remove('page-switching'); } catch (e) {}
+                };
+            }, []);
 
             useEffect(() => { 
                 const loadingScreen = document.getElementById('loading-screen');
@@ -4909,7 +5308,7 @@
                     setTimeout(async () => { 
                         try { await updateDoc(doc(db, "users", user.uid, "items", id), { completed: true }); } catch (e) {} 
                         setExitingIds(prev => prev.filter(eid => eid !== id)); 
-                    }, 400); 
+                    }, 520); 
                 } else { 
                     updateDoc(doc(db, "users", user.uid, "items", id), { completed: false }).catch(()=>{}); 
                 } 
@@ -5044,8 +5443,8 @@
                 return (
                     <>
                         <AuthPage triggerAlert={triggerAlert} />
-                        <div className={`fixed top-4 sm:top-8 left-1/2 transform -translate-x-1/2 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${toast.isVisible ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-full opacity-0 scale-95 pointer-events-none'}`}>
-                            <div className={`px-5 py-3 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-xl flex items-center gap-3 font-bold text-sm tracking-wide border ${toast.type === 'error' ? 'bg-red-500/95 text-white border-red-400' : 'bg-slate-900/95 text-white border-slate-800 dark:bg-white/95 dark:text-slate-900 dark:border-white/50'}`}>
+                        <div className={`soft-toast-shell ${toast.isVisible ? 'is-visible' : ''}`}>
+                            <div className={`soft-toast-card ${toast.type === 'error' ? 'is-error' : 'is-success'}`}>
                                 <Icon name={toast.type === 'error' ? 'alert-triangle' : 'check-circle-2'} className={`w-5 h-5 ${toast.type === 'error' ? 'text-white' : 'text-emerald-400'}`} />
                                 {toast.message}
                             </div>
@@ -5062,8 +5461,8 @@
             return (
                 <div data-theme-color={themeColor} className={`app-liquid-canvas min-h-screen transition-colors duration-500 font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
                     
-                    <div className={`fixed top-4 sm:top-8 left-1/2 transform -translate-x-1/2 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${toast.isVisible ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-full opacity-0 scale-95 pointer-events-none'}`}>
-                        <div className={`px-5 py-3 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-xl flex items-center gap-3 font-bold text-sm tracking-wide border ${toast.type === 'error' ? 'bg-red-500/95 text-white border-red-400' : 'bg-slate-900/95 text-white border-slate-800 dark:bg-white/95 dark:text-slate-900 dark:border-white/50'}`}>
+                    <div className={`soft-toast-shell ${toast.isVisible ? 'is-visible' : ''}`}>
+                        <div className={`soft-toast-card ${toast.type === 'error' ? 'is-error' : 'is-success'}`}>
                             <Icon name={toast.type === 'error' ? 'alert-triangle' : 'check-circle-2'} className={`w-5 h-5 ${toast.type === 'error' ? 'text-white' : 'text-emerald-400'}`} />
                             {toast.message}
                         </div>
@@ -5081,7 +5480,7 @@
                         </div>
                     )}
 
-                    <div className="max-w-[1200px] mx-auto relative z-10 transition-all duration-500">
+                    <div className={`max-w-[1200px] mx-auto relative z-10 transition-all duration-500 page-transition-shell ${isPageSwitching ? 'is-switching' : ''}`}>
                         {viewMode !== 'admin' && (
                         <header className="app-page-header mb-6 sm:mb-8 max-w-3xl mx-auto px-1 sm:px-2">
                             <div className="flex items-start justify-between gap-4">
@@ -5098,7 +5497,7 @@
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0">
                                     {viewMode === 'timetable' && (
-                                        <button type="button" onClick={() => setViewMode('timetable_edit')} className="h-11 w-11 sm:w-auto sm:px-3 rounded-2xl font-black text-xs bg-slate-950 dark:bg-white text-white dark:text-slate-950 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"><Icon name="book-open" className="w-4 h-4" /><span className="hidden sm:inline">編輯</span></button>
+                                        <button type="button" onClick={() => navigateTo('timetable_edit', 'personal')} className="h-11 w-11 sm:w-auto sm:px-3 rounded-2xl font-black text-xs bg-slate-950 dark:bg-white text-white dark:text-slate-950 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"><Icon name="book-open" className="w-4 h-4" /><span className="hidden sm:inline">編輯</span></button>
                                     )}
                                     <button
                                         type="button"
@@ -5122,15 +5521,15 @@
                         )}
 
                         {viewMode === 'admin' && (
-                            <div className="animate-item">
-                                <AdminConsole db={db} systemConfig={systemConfig} systemClasses={systemClasses} onBack={() => {setViewMode('current'); setAppMode('personal');}} subjects={subjects} triggerAlert={triggerAlert} triggerConfirm={triggerConfirm} />
+                            <div className="page-content-layer">
+                                <AdminConsole db={db} systemConfig={systemConfig} systemClasses={systemClasses} onBack={() => navigateTo('current', 'personal')} subjects={subjects} triggerAlert={triggerAlert} triggerConfirm={triggerConfirm} />
                             </div>
                         )}
 
                         {viewMode !== 'admin' && (
-                            <div key={`${viewMode}-${appMode}`} className="animate-item">
+                            <div className="page-content-layer">
                                 {viewMode === 'timetable' ? ( <div className="max-w-3xl mx-auto"><Timetable currentDay={currentTimetableDay} config={timetableConfig} onDayChange={setCurrentTimetableDay} subjects={subjects} globalNow={globalNow} /></div> ) : 
-                                 viewMode === 'timetable_edit' ? ( <TimetableEditor initialConfig={timetableConfig} onSave={saveTimetableConfig} onCancel={() => setViewMode('timetable')} subjects={subjects} triggerConfirm={triggerConfirm} /> ) :
+                                 viewMode === 'timetable_edit' ? ( <TimetableEditor initialConfig={timetableConfig} onSave={saveTimetableConfig} onCancel={() => navigateTo('timetable', 'personal')} subjects={subjects} triggerConfirm={triggerConfirm} /> ) :
                                  viewMode === 'settings' ? ( <UserSettingsPage
                                     user={user}
                                     userProfile={userProfile}
@@ -5149,7 +5548,7 @@
                                     onOpenNotifications={() => setIsNotificationCenterOpen(true)}
                                     onOpenAppearance={() => setIsPreferencesOpen(true)}
                                     onOpenSubjects={() => setIsSubjectManagerOpen(true)}
-                                    onGoClass={() => { setViewMode('current'); setAppMode('class'); }}
+                                    onGoClass={() => navigateTo('current', 'class')}
                                     onLogout={handleLogout}
                                  /> ) : (
                                 
@@ -5203,7 +5602,7 @@
                                     )}
 
 
-                                    {viewMode === 'current' && isVisible('timetable') && <CurrentLessonWidget config={timetableConfig} t={t} onClick={() => setViewMode('timetable')} globalNow={globalNow} />}
+                                    {viewMode === 'current' && isVisible('timetable') && <CurrentLessonWidget config={timetableConfig} t={t} onClick={() => navigateTo('timetable', 'personal')} globalNow={globalNow} />}
 
                                     {(viewMode === 'current' || viewMode === 'history') && appMode === 'personal' && (
                                         <>
@@ -5291,10 +5690,11 @@
                                                             const subjectStyle = subjects.find(s => s.name === item.subject)?.color || 'bg-slate-100 text-slate-600 border-slate-200';
                                                             
                                                             return (
-                                                                <div key={item.id} style={{ animationDelay: `${index * 0.05}s` }} className={`animate-item glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl p-5 shadow-sm border border-white/40 transition-all hover:shadow-md hover:-translate-y-0.5 group ${isExiting ? 'scale-95 opacity-0' : ''}`}>
+                                                                <div key={item.id} style={{ animationDelay: `${index * 0.05}s` }} className={`animate-item task-card pressable-card glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl p-5 shadow-sm border border-white/40 transition-all hover:shadow-md hover:-translate-y-0.5 group ${isExiting ? 'task-completing scale-95 opacity-0' : ''}`}>
                                                                     <div className="flex items-start gap-4">
                                                                         {/* Snappy Checkbox Animation */}
-                                                                        <button onClick={() => handleToggle(item.id, item.completed)} className={`mt-0.5 w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-200 ${isCompleted ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50 hover:border-emerald-400 dark:hover:border-emerald-500'}`}>
+                                                                        <button type="button" aria-label={isCompleted ? '已完成' : '標記完成'} onClick={() => handleToggle(item.id, item.completed)} className={`completion-button tap-feedback mt-0.5 w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-200 ${isCompleted ? 'is-completed bg-emerald-500 border-emerald-500 text-white shadow-[0_8px_18px_rgba(16,185,129,0.24)]' : 'border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50 hover:border-emerald-400 dark:hover:border-emerald-500'}`}>
+                                                                            <span className="complete-burst"></span>
                                                                             <Icon name="check" className={`w-4 h-4 transition-transform duration-200 ${isCompleted ? 'scale-100' : 'scale-0'}`} />
                                                                         </button>
                                                                         <div className="flex-1 min-w-0">
@@ -5405,21 +5805,13 @@
                     </div>
 
                     {(() => {
-                        const navItems = [
-                            { id: 'home', icon: 'book-open', label: '主頁', active: viewMode === 'current' && appMode === 'personal', action: () => { setViewMode('current'); setAppMode('personal'); setIsListVisible(true); } },
-                            { id: 'class', icon: 'school', label: '班級', active: viewMode === 'current' && appMode === 'class', action: () => { setViewMode('current'); setAppMode('class'); setIsListVisible(true); } },
-                            { id: 'timetable', icon: 'calendar-clock', label: '時間表', active: viewMode === 'timetable' || viewMode === 'timetable_edit', action: () => { setViewMode('timetable'); setAppMode('personal'); setIsListVisible(true); } },
-                            { id: 'history', icon: 'timer', label: '歷史', active: viewMode === 'history', action: () => { setViewMode('history'); setAppMode('personal'); setIsListVisible(true); } },
-                            { id: 'settings', icon: 'sliders-horizontal', label: '設定', active: viewMode === 'settings', action: () => { setViewMode('settings'); setAppMode('personal'); setIsListVisible(true); } }
-                        ];
-                        if (isAdmin) navItems.push({ id: 'admin', icon: 'shield', label: '後台', active: viewMode === 'admin', action: () => { setViewMode('admin'); setIsListVisible(true); } });
                         const activeIndex = Math.max(0, navItems.findIndex(item => item.active));
                         return (
                             <nav className="liquid-island-shell" aria-label="主要導航">
                                 <div className="liquid-island-track" style={{ '--count': navItems.length, '--active-index': activeIndex }}>
                                     <div className="liquid-island-blob"></div>
                                     {navItems.map(item => (
-                                        <NavItem key={item.id} id={item.id} icon={item.icon} label={item.label} active={item.active} onClick={item.action} t={t} />
+                                        <MemoNavItem key={item.id} id={item.id} icon={item.icon} label={item.label} active={item.active} onClick={item.action} t={t} />
                                     ))}
                                 </div>
                             </nav>
@@ -5538,15 +5930,15 @@
                     )}
 
                     {notification.isOpen && (
-                        <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
-                            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={closeNotification}></div>
-                            <div className="dialog-animate glass-card bg-white/95 dark:bg-slate-800/95 rounded-3xl shadow-2xl w-full max-w-sm p-6 relative z-10 text-center border border-white/50">
-                                <div className="w-16 h-16 bg-amber-100 dark:bg-amber-900/30 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4"><Icon name="alert-circle" className="w-8 h-8" /></div>
-                                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">請確認</h3>
-                                <p className="text-slate-500 dark:text-slate-400 mb-6 text-sm">{notification.message}</p>
-                                <div className="flex gap-3">
-                                    <button onClick={closeNotification} className="flex-1 py-3 rounded-xl font-bold bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors">取消</button>
-                                    <button onClick={handleNotificationConfirm} className="flex-1 py-3 rounded-xl font-bold bg-red-500 hover:bg-red-600 text-white transition-colors shadow-lg active:scale-95">確定</button>
+                        <div className="fixed inset-0 z-[250] flex items-end sm:items-center justify-center p-3 sm:p-4">
+                            <div className="absolute inset-0 soft-modal-backdrop" onClick={closeNotification}></div>
+                            <div className="soft-confirm-sheet relative z-10">
+                                <div className="soft-confirm-icon"><Icon name="alert-circle" className="w-7 h-7" /></div>
+                                <h3 className="text-xl font-black tracking-[-0.03em] text-slate-900 dark:text-white mb-2">請確認</h3>
+                                <p className="text-slate-500 dark:text-slate-400 mb-6 text-sm font-bold leading-relaxed whitespace-pre-line">{notification.message}</p>
+                                <div className="soft-confirm-actions">
+                                    <button type="button" onClick={closeNotification} className="bg-slate-100/90 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/14 text-slate-600 dark:text-slate-300">取消</button>
+                                    <button type="button" onClick={handleNotificationConfirm} className="text-white shadow-lg" style={{ background: 'linear-gradient(135deg, rgb(var(--theme-rgb-a)), rgb(var(--theme-rgb-b)))' }}>確定</button>
                                 </div>
                             </div>
                         </div>
@@ -5566,11 +5958,11 @@
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.8.45-beautiful-liquid-gradient | liquid-island | frameless-header | ios-settings | original-functions-preserved -->
-    <!-- ehandbook-build: v1.8.45-beautiful-liquid-gradient -->
+<!-- VERSION_CHECK: v1.9.0-polished-interaction-ui | liquid-island | frameless-header | ios-settings | original-functions-preserved -->
+    <!-- ehandbook-build: v1.9.0-polished-interaction-ui -->
 </body>
 </html>
 
 <!-- ehandbook_v1.8.45_beautiful_liquid_gradient: Flowing app background, blended Liquid Glass island, refined visual harmony; v1.8 functions preserved. -->
 
-<!-- v1.8.45-beautiful-liquid-gradient: Flowing background, matched Liquid Glass island and cleaner app atmosphere; students auto-claim broadcast assignments on login; no extra class-page controls added. -->
+<!-- v1.9.0-polished-interaction-ui: Polished interaction UI, unified touch feedback, softer modal/toast, completion animation; original functions preserved. -->
