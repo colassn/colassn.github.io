@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.8.42 Liquid Glass Refine + App Header + Settings Polish：修正 Liquid Glass 靈動島視覺、Header 對齊及設定頁字體間距，保留 v1.8 系列完整功能 -->
+    <!-- 電子手冊 Pro v1.8.43 Liquid Glass Refine + App Header + Settings Polish：修正 Liquid Glass 靈動島視覺、Header 對齊及設定頁字體間距，保留 v1.8 系列完整功能 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -24,8 +24,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.8.42-liquid-glass-refine">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.8.42-liquid-glass-refine"; console.log("電子手冊 Pro v1.8.42-liquid-glass-refine loaded");</script>
+    <meta name="ehandbook-version" content="v1.8.43-liquid-atmosphere-refine">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.8.43-liquid-atmosphere-refine"; console.log("電子手冊 Pro v1.8.43-liquid-atmosphere-refine loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -379,7 +379,7 @@
         .modern-input-shell { transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, transform 0.18s ease; }
         .modern-input-shell:focus-within { transform: translateY(-1px); box-shadow: 0 16px 36px rgba(79,70,229,0.12); }
 
-        /* v1.8.42 Liquid Glass refinement + aligned App Header + polished Settings */
+        /* v1.8.43 Liquid Atmosphere refinement + aligned App Header + polished Settings */
         .liquid-island-shell {
             position: fixed;
             left: 50%;
@@ -561,7 +561,7 @@
 
     
 
-        /* v1.8.42 visual refinement: Liquid Glass without heavy black blocks */
+        /* v1.8.43 visual refinement: flowing background + blended Liquid Glass island */
         .liquid-island-shell {
             width: min(88vw, 418px);
             bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
@@ -737,7 +737,155 @@
             .liquid-island-item { height: 48px; }
             .liquid-island-item.is-active .liquid-island-label { max-width: 34px; font-size: 10px; margin-left: 4px; }
         }
-</style>
+
+
+        /* v1.8.43 flowing atmosphere + better blended Liquid Island */
+        @keyframes appAtmosphereFlow {
+            0%, 100% { background-position: 0% 40%, 100% 20%, 50% 50%; }
+            45% { background-position: 70% 30%, 20% 80%, 45% 55%; }
+            70% { background-position: 30% 90%, 70% 25%, 55% 45%; }
+        }
+        @keyframes appAtmosphereDrift {
+            0%, 100% { transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1); opacity: 0.34; }
+            50% { transform: translate3d(3%, 2%, 0) rotate(8deg) scale(1.04); opacity: 0.46; }
+        }
+        @keyframes islandTintFlow {
+            0%, 100% { transform: translateX(-28%) rotate(0deg); opacity: 0.36; }
+            50% { transform: translateX(28%) rotate(5deg); opacity: 0.52; }
+        }
+        .app-liquid-canvas {
+            background:
+                radial-gradient(circle at 16% 10%, rgba(186, 230, 253, 0.52), transparent 31%),
+                radial-gradient(circle at 88% 18%, rgba(221, 214, 254, 0.44), transparent 34%),
+                radial-gradient(circle at 52% 92%, rgba(204, 251, 241, 0.40), transparent 35%),
+                linear-gradient(135deg, #f8fafc 0%, #f1f5f9 42%, #eef6f7 72%, #f8fafc 100%);
+            background-size: 150% 150%, 145% 145%, 160% 160%, 100% 100%;
+            animation: appAtmosphereFlow 18s ease-in-out infinite;
+        }
+        .dark .app-liquid-canvas {
+            background:
+                radial-gradient(circle at 18% 12%, rgba(14, 165, 233, 0.20), transparent 34%),
+                radial-gradient(circle at 86% 16%, rgba(129, 140, 248, 0.20), transparent 34%),
+                radial-gradient(circle at 52% 88%, rgba(20, 184, 166, 0.14), transparent 38%),
+                linear-gradient(135deg, #020617 0%, #0f172a 48%, #111827 100%);
+            background-size: 145% 145%, 140% 140%, 150% 150%, 100% 100%;
+        }
+        .app-liquid-canvas::before {
+            content: '';
+            position: fixed;
+            inset: -22%;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                conic-gradient(from 160deg at 50% 50%, rgba(125,211,252,0.26), rgba(167,139,250,0.18), rgba(94,234,212,0.20), rgba(125,211,252,0.26));
+            filter: blur(92px);
+            opacity: 0.42;
+            mix-blend-mode: multiply;
+            animation: appAtmosphereDrift 22s ease-in-out infinite;
+        }
+        .dark .app-liquid-canvas::before {
+            opacity: 0.22;
+            mix-blend-mode: screen;
+        }
+        .app-liquid-canvas > .fixed.inset-0.z-0.pointer-events-none {
+            opacity: 0.42;
+        }
+        .app-liquid-canvas > .fixed.inset-0.z-0.pointer-events-none .animate-blob {
+            opacity: 0.13 !important;
+            filter: blur(118px) saturate(120%);
+        }
+        .liquid-island-shell {
+            width: min(86vw, 402px);
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+            filter: drop-shadow(0 18px 30px rgba(15, 23, 42, 0.13));
+        }
+        .liquid-island-track {
+            height: 60px;
+            padding: 6px;
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.62), rgba(255,255,255,0.30)),
+                radial-gradient(circle at 20% 12%, rgba(186,230,253,0.34), transparent 36%),
+                radial-gradient(circle at 82% 82%, rgba(204,251,241,0.26), transparent 38%),
+                radial-gradient(circle at 52% 32%, rgba(221,214,254,0.20), transparent 42%);
+            border: 1px solid rgba(255,255,255,0.70);
+            box-shadow:
+                0 18px 42px rgba(15, 23, 42, 0.12),
+                0 4px 14px rgba(15, 23, 42, 0.07),
+                inset 0 1px 0 rgba(255,255,255,0.78),
+                inset 0 -1px 0 rgba(15,23,42,0.04);
+            backdrop-filter: blur(34px) saturate(190%);
+            -webkit-backdrop-filter: blur(34px) saturate(190%);
+        }
+        .dark .liquid-island-track {
+            background:
+                linear-gradient(135deg, rgba(30,41,59,0.46), rgba(15,23,42,0.30)),
+                radial-gradient(circle at 18% 12%, rgba(56,189,248,0.18), transparent 38%),
+                radial-gradient(circle at 82% 82%, rgba(45,212,191,0.13), transparent 40%),
+                radial-gradient(circle at 52% 32%, rgba(129,140,248,0.16), transparent 44%);
+            border-color: rgba(255,255,255,0.14);
+            box-shadow:
+                0 22px 52px rgba(0, 0, 0, 0.30),
+                0 6px 18px rgba(0, 0, 0, 0.18),
+                inset 0 1px 0 rgba(255,255,255,0.11),
+                inset 0 -1px 0 rgba(255,255,255,0.04);
+        }
+        .liquid-island-track::after {
+            content: '';
+            position: absolute;
+            top: -55%;
+            bottom: -55%;
+            left: -40%;
+            width: 62%;
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 999px;
+            background: linear-gradient(100deg, transparent 10%, rgba(255,255,255,0.34), transparent 72%);
+            filter: blur(16px);
+            animation: islandTintFlow 9s ease-in-out infinite;
+        }
+        .liquid-island-blob {
+            top: 6px;
+            bottom: 6px;
+            left: 6px;
+            width: calc((100% - 12px) / var(--count));
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.60), rgba(255,255,255,0.22)),
+                radial-gradient(circle at 24% 20%, rgba(125,211,252,0.26), transparent 46%),
+                radial-gradient(circle at 80% 86%, rgba(94,234,212,0.20), transparent 46%);
+            border: 1px solid rgba(255,255,255,0.54);
+            box-shadow:
+                0 10px 24px rgba(15,23,42,0.09),
+                inset 0 1px 0 rgba(255,255,255,0.72),
+                inset 0 -1px 0 rgba(15,23,42,0.04);
+        }
+        .dark .liquid-island-blob {
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06)),
+                radial-gradient(circle at 24% 20%, rgba(125,211,252,0.24), transparent 46%),
+                radial-gradient(circle at 80% 86%, rgba(45,212,191,0.18), transparent 46%);
+            border-color: rgba(255,255,255,0.16);
+        }
+        .liquid-island-item { height: 48px; color: rgba(51,65,85,0.72); }
+        .dark .liquid-island-item { color: rgba(226,232,240,0.68); }
+        .liquid-island-item.is-active { color: #0f172a; }
+        .dark .liquid-island-item.is-active { color: #f8fafc; }
+        .liquid-island-content svg { filter: drop-shadow(0 1px 0 rgba(255,255,255,0.18)); }
+        .liquid-island-label { font-weight: 800; letter-spacing: -0.02em; }
+        .app-page-header { position: relative; }
+        .app-header-mark {
+            background:
+                linear-gradient(145deg, rgba(255,255,255,0.62), rgba(255,255,255,0.28)),
+                radial-gradient(circle at 32% 20%, rgba(125,211,252,0.24), transparent 46%);
+            color: #0f172a;
+        }
+        .dark .app-header-mark {
+            background:
+                linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04)),
+                radial-gradient(circle at 32% 20%, rgba(56,189,248,0.16), transparent 48%);
+            color: #f8fafc;
+        }
+
+    </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
     
@@ -746,7 +894,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.8.42 Google 登入穩定版啟動保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.8.43 Google 登入穩定版啟動保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -824,7 +972,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.8.42-liquid-glass-refine',
+                version: 'v1.8.43-liquid-atmosphere-refine',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -923,21 +1071,21 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.8.42-liquid-glass-refine',
-            title: '電子手冊 Pro v1.8.42 已更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.8.43-liquid-atmosphere-refine',
+            title: '電子手冊 Pro v1.8.43 已更新',
             summary: [
-                '靈動島由實色工具列修正成半透明 Liquid Glass，保留大觸控區但視覺更輕盈。',
-                '主頁 Header 改善 Logo、標題、日期與操作按鈕對齊，減少錯位感。',
-                '設定頁調整字體層級、行距、間距與分組質感，保留原有實用功能。'
+                '主頁背景改成更柔和嘅流動漸變，減少靜態灰底感。',
+                '靈動島色調改到同背景更融合，保留半透明 Liquid Glass 但減少突兀感。',
+                '只做小範圍視覺融合修正，保留上一版已改善嘅 Header、設定頁同觸控邏輯。'
             ].join(String.fromCharCode(10)),
             guide: [
-                '部署後請先確認登入頁底部顯示 v1.8.42。',
-                '登入後測試底部靈動島：半透明玻璃感、滑動 active 狀態及一按切換是否正常。',
-                '再檢查主頁 Header 對齊、設定頁分組、班級及後台入口是否正常。'
+                '部署後請先確認登入頁底部顯示 v1.8.43。',
+                '登入後檢查主頁背景是否有柔和流動漸變，而唔係死灰底。',
+                '再測試底部靈動島是否更似融入畫面，以及一按切換是否正常。'
             ].join(String.fromCharCode(10)),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-05-28T01:05:00+08:00',
+            publishedAt: '2026-05-28T01:25:00+08:00',
             source: 'built-in'
         };
 
@@ -992,7 +1140,7 @@
             if (code === 'auth/operation-not-supported-in-this-environment' || code === 'auth/web-storage-unsupported') return '這個瀏覽器不支援彈出式登入，請用 Chrome / Safari 開啟，或再按一次讓系統改用跳轉登入。';
             if (code === 'auth/unauthorized-domain') return '此網站網域尚未加入 Firebase 授權網域，請由網站負責人更新 Firebase Authentication 授權網域設定。';
             if (code === 'auth/operation-not-allowed') return 'Firebase 尚未開啟 Google 或 Email 登入方式，請由網站負責人檢查登入設定。';
-            if (code === 'auth/argument-error') return 'Google 登入參數錯誤。已改為 v1.8.42 登入流程；請重新部署此檔案並清除快取。';
+            if (code === 'auth/argument-error') return 'Google 登入參數錯誤。已改為 v1.8.43 登入流程；請重新部署此檔案並清除快取。';
             return (mode === 'reset' ? '重設密碼失敗：' : mode === 'register' ? '註冊失敗：' : '登入失敗：') + (error?.message || code || '請稍後再試');
         };
 
@@ -1448,7 +1596,7 @@
                                 )}
                             </div>
 
-                            <div className="mt-4 text-center text-[10px] font-black text-slate-400/80 dark:text-slate-600 select-none">v1.8.42</div>
+                            <div className="mt-4 text-center text-[10px] font-black text-slate-400/80 dark:text-slate-600 select-none">v1.8.43</div>
                         </section>
                     </main>
                 </div>
@@ -3457,7 +3605,7 @@
                                 <p className="text-xs font-bold text-slate-400 dark:text-slate-500 truncate">{email || '電子手冊 Pro'}</p>
                             </div>
                         </div>
-                        <span className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-black text-slate-500 dark:text-slate-400">v1.8.42</span>
+                        <span className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-black text-slate-500 dark:text-slate-400">v1.8.43</span>
                     </section>
 
                     <SettingsGroup title="常用">
@@ -3634,7 +3782,7 @@
                 const loadingScreen = document.getElementById('loading-screen');
                 window.__EHANDBOOK_RENDERED__ = true;
                 if (loadingScreen) { loadingScreen.classList.add('hidden-loader'); setTimeout(() => loadingScreen.remove(), 500); }
-                // v1.8.42: 已保留登入功能；廣播功課發放後即時派發。
+                // v1.8.43: 已保留登入功能；廣播功課發放後即時派發。
             }, []);
 
             useEffect(() => {
@@ -4483,7 +4631,7 @@
             if (systemConfig?.blacklistEnabled && !isAdmin && systemConfig?.blacklistedEmails?.includes(user.email)) return <BlockScreen type="access_denied" customTitle="帳號停權" customMessage="您的帳號目前無法存取本系統。" user={user} />;
 
             return (
-                <div className={`min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-slate-900 font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
+                <div className={`app-liquid-canvas min-h-screen transition-colors duration-500 font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
                     
                     <div className={`fixed top-4 sm:top-8 left-1/2 transform -translate-x-1/2 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${toast.isVisible ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-full opacity-0 scale-95 pointer-events-none'}`}>
                         <div className={`px-5 py-3 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-xl flex items-center gap-3 font-bold text-sm tracking-wide border ${toast.type === 'error' ? 'bg-red-500/95 text-white border-red-400' : 'bg-slate-900/95 text-white border-slate-800 dark:bg-white/95 dark:text-slate-900 dark:border-white/50'}`}>
@@ -4989,11 +5137,11 @@
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.8.42-liquid-glass-refine | liquid-island | frameless-header | ios-settings | original-functions-preserved -->
-    <!-- ehandbook-build: v1.8.42-liquid-glass-refine -->
+<!-- VERSION_CHECK: v1.8.43-liquid-atmosphere-refine | liquid-island | frameless-header | ios-settings | original-functions-preserved -->
+    <!-- ehandbook-build: v1.8.43-liquid-atmosphere-refine -->
 </body>
 </html>
 
-<!-- ehandbook_v1.8.42_liquid_glass_refine: Liquid Glass translucent island, refined app header alignment, polished Settings typography; v1.8 functions preserved. -->
+<!-- ehandbook_v1.8.43_liquid_atmosphere_refine: Flowing app background, blended Liquid Glass island, refined visual harmony; v1.8 functions preserved. -->
 
-<!-- v1.8.42-liquid-glass-refine: Liquid Island, frameless app header and cleaner iOS-style settings; students auto-claim broadcast assignments on login; no extra class-page controls added. -->
+<!-- v1.8.43-liquid-atmosphere-refine: Flowing background, matched Liquid Glass island and cleaner app atmosphere; students auto-claim broadcast assignments on login; no extra class-page controls added. -->
