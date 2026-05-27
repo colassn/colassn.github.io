@@ -1,42 +1,38 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro UD.html：第二 Firebase / 無 Google 登入 / 匿名身份儲存版本 -->
-    <!-- 版本：UD Firebase Anonymous v1.0 -->
+    <!-- 電子手冊 Pro UD.html 靜態更新紀錄頁 -->
+    <!-- 無 Firebase、無 Google 登入、無資料庫；每次更新直接覆蓋此檔案即可 -->
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>電子手冊 Pro｜私人更新紀錄</title>
-    <meta name="description" content="電子手冊 Pro 私人更新紀錄管理頁。">
+    <title>電子手冊 Pro｜更新紀錄</title>
+    <meta name="description" content="電子手冊 Pro 私人更新紀錄頁。">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#f8fafc">
 
     <style>
         :root {
             --bg: #f8fafc;
-            --surface: rgba(255, 255, 255, 0.78);
-            --surface-strong: rgba(255, 255, 255, 0.94);
-            --surface-soft: rgba(248, 250, 252, 0.82);
+            --card: rgba(255, 255, 255, 0.82);
+            --card-solid: #ffffff;
             --text: #0f172a;
             --text-soft: #334155;
             --muted: #64748b;
-            --muted-2: #94a3b8;
-            --line: rgba(148, 163, 184, 0.24);
-            --line-strong: rgba(148, 163, 184, 0.38);
+            --muted-light: #94a3b8;
+            --line: #e2e8f0;
             --primary: #4f46e5;
             --primary-dark: #3730a3;
-            --primary-soft: #eef2ff;
-            --blue: #2563eb;
-            --sky: #0284c7;
             --green: #059669;
             --green-soft: #d1fae5;
             --amber: #d97706;
             --amber-soft: #fef3c7;
-            --red: #dc2626;
-            --red-soft: #fee2e2;
-            --shadow: 0 24px 80px rgba(15, 23, 42, 0.10);
-            --shadow-small: 0 10px 30px rgba(15, 23, 42, 0.06);
-            --radius: 24px;
+            --blue: #0284c7;
+            --blue-soft: #e0f2fe;
+            --slate-soft: #f1f5f9;
+            --shadow: 0 18px 60px rgba(15, 23, 42, 0.10);
+            --shadow-small: 0 8px 28px rgba(15, 23, 42, 0.06);
+            --radius: 22px;
         }
 
         * {
@@ -53,15 +49,13 @@
             min-height: 100vh;
             color: var(--text);
             background:
-                radial-gradient(circle at 12% 12%, rgba(79, 70, 229, 0.16), transparent 28%),
-                radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.14), transparent 30%),
-                radial-gradient(circle at 72% 92%, rgba(124, 58, 237, 0.10), transparent 32%),
+                radial-gradient(circle at 12% 12%, rgba(79, 70, 229, 0.14), transparent 30%),
+                radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.12), transparent 28%),
                 linear-gradient(135deg, #f8fafc 0%, #eef2ff 46%, #ffffff 100%);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans HK", "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
-            text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
+            text-rendering: optimizeLegibility;
+            line-height: 1.6;
         }
 
         a {
@@ -71,13 +65,8 @@
 
         button,
         input,
-        textarea,
         select {
             font: inherit;
-        }
-
-        button {
-            cursor: pointer;
         }
 
         .page {
@@ -92,62 +81,18 @@
             pointer-events: none;
             opacity: 0.035;
             background-image:
-                linear-gradient(rgba(15, 23, 42, 0.7) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(15, 23, 42, 0.7) 1px, transparent 1px);
+                linear-gradient(rgba(15, 23, 42, 0.72) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, 0.72) 1px, transparent 1px);
             background-size: 46px 46px;
-            mask-image: linear-gradient(to bottom, black, transparent 80%);
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 999px;
-            filter: blur(58px);
-            pointer-events: none;
-            opacity: 0.48;
-            animation: floatOrb 9s ease-in-out infinite;
-        }
-
-        .orb.one {
-            width: 360px;
-            height: 360px;
-            left: -130px;
-            top: 120px;
-            background: #c7d2fe;
-        }
-
-        .orb.two {
-            width: 420px;
-            height: 420px;
-            right: -150px;
-            top: 40px;
-            background: #bae6fd;
-            animation-delay: 1.5s;
-        }
-
-        .orb.three {
-            width: 290px;
-            height: 290px;
-            right: 22%;
-            bottom: -120px;
-            background: #ddd6fe;
-            animation-delay: 3s;
-        }
-
-        @keyframes floatOrb {
-            0%, 100% {
-                transform: translate3d(0, 0, 0) scale(1);
-            }
-            50% {
-                transform: translate3d(0, -18px, 0) scale(1.04);
-            }
+            mask-image: linear-gradient(to bottom, black, transparent 82%);
         }
 
         .wrap {
             position: relative;
-            z-index: 2;
-            width: min(1140px, calc(100% - 28px));
+            z-index: 1;
+            width: min(1040px, calc(100% - 28px));
             margin: 0 auto;
-            padding: 26px 0 52px;
+            padding: 26px 0 48px;
         }
 
         .topbar {
@@ -155,14 +100,13 @@
             align-items: center;
             justify-content: space-between;
             gap: 14px;
-            margin-bottom: 22px;
+            margin-bottom: 18px;
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 13px;
-            min-width: 0;
         }
 
         .brand-mark {
@@ -173,9 +117,9 @@
             place-items: center;
             color: white;
             background:
-                radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.34), transparent 30%),
-                linear-gradient(145deg, #111827 0%, #312e81 48%, #4f46e5 100%);
-            box-shadow: 0 18px 38px rgba(79, 70, 229, 0.25);
+                radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.36), transparent 30%),
+                linear-gradient(145deg, #111827 0%, #312e81 50%, #4f46e5 100%);
+            box-shadow: 0 16px 34px rgba(79, 70, 229, 0.24);
             font-size: 13px;
             font-weight: 950;
             letter-spacing: -0.04em;
@@ -184,51 +128,48 @@
 
         .brand h1 {
             margin: 0;
-            font-size: 21px;
+            font-size: 22px;
             line-height: 1.15;
-            letter-spacing: -0.045em;
             font-weight: 950;
+            letter-spacing: -0.045em;
         }
 
         .brand p {
             margin: 4px 0 0;
             color: var(--muted);
             font-size: 12px;
-            line-height: 1.3;
             font-weight: 750;
         }
 
         .top-actions {
             display: flex;
-            align-items: center;
-            justify-content: flex-end;
             gap: 9px;
             flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .btn {
             min-height: 39px;
+            padding: 0 13px;
             border: 1px solid var(--line);
             border-radius: 13px;
-            padding: 0 13px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 7px;
             color: var(--text);
-            background: rgba(255, 255, 255, 0.76);
+            background: rgba(255, 255, 255, 0.82);
             box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
             font-size: 13px;
             line-height: 1;
             font-weight: 850;
-            transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
-            user-select: none;
+            transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease;
         }
 
         .btn:hover {
             transform: translateY(-1px);
-            background: white;
-            border-color: var(--line-strong);
+            background: #fff;
+            border-color: #cbd5e1;
             box-shadow: 0 9px 24px rgba(15, 23, 42, 0.06);
         }
 
@@ -240,23 +181,11 @@
             color: white;
             background: var(--primary);
             border-color: var(--primary);
-            box-shadow: 0 14px 28px rgba(79, 70, 229, 0.22);
+            box-shadow: 0 14px 28px rgba(79, 70, 229, 0.20);
         }
 
         .btn.primary:hover {
             background: var(--primary-dark);
-        }
-
-        .btn.danger {
-            color: var(--red);
-            background: white;
-            border-color: #fecaca;
-        }
-
-        .btn.green {
-            color: var(--green);
-            background: white;
-            border-color: #a7f3d0;
         }
 
         .btn.small {
@@ -266,271 +195,86 @@
             font-size: 12px;
         }
 
-        .btn:disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .hero-note {
+        .note {
             margin-bottom: 16px;
-            border: 1px solid rgba(199, 210, 254, 0.72);
-            background: rgba(238, 242, 255, 0.72);
-            border-radius: 20px;
-            padding: 14px 16px;
+            padding: 13px 15px;
+            border-radius: 18px;
             color: #3730a3;
+            background: rgba(238, 242, 255, 0.74);
+            border: 1px solid rgba(199, 210, 254, 0.78);
             box-shadow: 0 10px 30px rgba(79, 70, 229, 0.06);
             font-size: 13px;
             line-height: 1.65;
             font-weight: 750;
         }
 
-        .grid {
+        .tools {
             display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 16px;
-            align-items: start;
-        }
-
-        .panel {
-            background: var(--surface);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            overflow: hidden;
-            animation: panelIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-
-        .panel:nth-child(2) {
-            animation-delay: 0.04s;
-        }
-
-        @keyframes panelIn {
-            from {
-                opacity: 0;
-                transform: translateY(12px) scale(0.99);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .panel-head {
-            padding: 17px 17px 14px;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.82);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), transparent);
-        }
-
-        .panel-head h2 {
-            margin: 0;
-            font-size: 16px;
-            line-height: 1.25;
-            font-weight: 950;
-            letter-spacing: -0.035em;
-        }
-
-        .panel-head p {
-            margin: 5px 0 0;
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.45;
-            font-weight: 700;
-        }
-
-        .panel-body {
-            padding: 17px;
-        }
-
-        .setup-box {
-            display: none;
-            background: #fff7ed;
-            border: 1px solid #fed7aa;
-            color: #9a3412;
-            border-radius: 18px;
-            padding: 13px;
-            margin-bottom: 14px;
-            font-size: 12px;
-            line-height: 1.7;
-            font-weight: 700;
-        }
-
-        .setup-box.show {
-            display: block;
-        }
-
-        .setup-box code,
-        .help code {
-            background: rgba(255, 255, 255, 0.78);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            border-radius: 7px;
-            padding: 1px 5px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 11px;
-            word-break: break-all;
-        }
-
-        .status {
-            border-radius: 16px;
-            padding: 12px 13px;
-            color: var(--muted);
-            background: var(--surface-soft);
-            border: 1px solid var(--line);
-            font-size: 13px;
-            line-height: 1.55;
-            font-weight: 760;
-        }
-
-        .status.good {
-            color: #065f46;
-            background: var(--green-soft);
-            border-color: #a7f3d0;
-        }
-
-        .status.warn {
-            color: #92400e;
-            background: var(--amber-soft);
-            border-color: #fde68a;
-        }
-
-        .status.bad {
-            color: #991b1b;
-            background: var(--red-soft);
-            border-color: #fecaca;
-        }
-
-        .uid-box {
-            margin-top: 10px;
-            display: grid;
-            gap: 8px;
-        }
-
-        .uid-value {
-            min-height: 38px;
-            border-radius: 13px;
-            border: 1px solid var(--line);
-            background: white;
-            color: #334155;
-            padding: 9px 10px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 12px;
-            line-height: 1.45;
-            word-break: break-all;
-        }
-
-        label {
-            display: block;
-            margin: 13px 0 6px;
-            color: #475569;
-            font-size: 12px;
-            line-height: 1.2;
-            font-weight: 950;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.92);
-            color: var(--text);
-            outline: none;
-            padding: 11px 12px;
-            font-size: 14px;
-            line-height: 1.35;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-        }
-
-        textarea {
-            min-height: 118px;
-            resize: vertical;
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.10);
-            background: white;
-        }
-
-        .form-actions,
-        .card-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .form-actions {
-            margin-top: 14px;
-        }
-
-        .danger-zone {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid var(--line);
-        }
-
-        .help {
-            margin-top: 14px;
-            border: 1px dashed #cbd5e1;
-            border-radius: 17px;
-            padding: 12px;
-            background: rgba(248, 250, 252, 0.76);
-            color: #475569;
-            font-size: 12px;
-            line-height: 1.7;
-            font-weight: 700;
-        }
-
-        .search-row {
-            display: grid;
-            grid-template-columns: 1fr 136px;
+            grid-template-columns: 1fr 150px;
             gap: 10px;
             margin-bottom: 14px;
         }
 
-        .summary-row {
+        .input,
+        .select {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.86);
+            color: var(--text);
+            padding: 0 13px;
+            outline: none;
+            font-size: 14px;
+            font-weight: 650;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        .input:focus,
+        .select:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.10);
+        }
+
+        .summary {
             display: flex;
-            align-items: center;
             gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 14px;
         }
 
         .chip {
-            border-radius: 999px;
-            border: 1px solid var(--line);
-            background: rgba(255, 255, 255, 0.78);
-            color: #475569;
             padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--line);
+            color: #475569;
             font-size: 12px;
             line-height: 1;
             font-weight: 850;
         }
 
-        .version-list {
+        .list {
             display: grid;
             gap: 12px;
         }
 
-        .version-card {
-            background: var(--surface-strong);
-            border: 1px solid rgba(226, 232, 240, 0.88);
-            border-radius: 19px;
-            padding: 15px;
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(226, 232, 240, 0.92);
+            border-radius: var(--radius);
             box-shadow: var(--shadow-small);
-            animation: cardIn 0.24s ease both;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 16px;
+            animation: cardIn 0.25s ease both;
         }
 
         @keyframes cardIn {
             from {
                 opacity: 0;
-                transform: translateY(7px);
+                transform: translateY(8px);
             }
             to {
                 opacity: 1;
@@ -538,134 +282,121 @@
             }
         }
 
-        .version-top {
+        .card-top {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
+            gap: 12px;
             align-items: flex-start;
             margin-bottom: 9px;
         }
 
-        .version-title {
+        .title {
             min-width: 0;
         }
 
-        .version-title h3 {
+        .title h2 {
             margin: 0;
-            font-size: 17px;
-            line-height: 1.3;
+            font-size: 18px;
+            line-height: 1.32;
             font-weight: 950;
             letter-spacing: -0.035em;
         }
 
-        .version-meta {
+        .meta {
             margin-top: 5px;
             color: var(--muted);
             font-size: 12px;
-            line-height: 1.35;
+            line-height: 1.4;
             font-weight: 760;
         }
 
-        .type-badge {
+        .badge {
             flex: 0 0 auto;
             border-radius: 999px;
-            padding: 5px 9px;
-            color: #3730a3;
-            background: #eef2ff;
-            border: 1px solid #c7d2fe;
+            padding: 6px 10px;
+            color: #334155;
+            background: var(--slate-soft);
+            border: 1px solid #cbd5e1;
             font-size: 11px;
             line-height: 1;
             font-weight: 950;
         }
 
-        .type-badge.fix {
-            background: #fef3c7;
+        .badge.fix {
             color: #92400e;
+            background: var(--amber-soft);
             border-color: #fde68a;
         }
 
-        .type-badge.feature {
-            background: #d1fae5;
+        .badge.feature {
             color: #065f46;
+            background: var(--green-soft);
             border-color: #a7f3d0;
         }
 
-        .type-badge.ads {
-            background: #e0f2fe;
+        .badge.ads {
             color: #075985;
+            background: var(--blue-soft);
             border-color: #bae6fd;
         }
 
-        .type-badge.stable {
-            background: #f1f5f9;
+        .badge.stable {
             color: #334155;
+            background: #f1f5f9;
             border-color: #cbd5e1;
         }
 
-        .version-summary {
+        .summary-text {
             margin: 0 0 10px;
             color: #475569;
-            font-size: 13px;
-            line-height: 1.6;
-            font-weight: 680;
-        }
-
-        .update-list {
-            margin: 0;
-            padding-left: 20px;
-            color: #334155;
             font-size: 13px;
             line-height: 1.65;
             font-weight: 680;
         }
 
-        .update-list li {
+        .updates {
+            margin: 0;
+            padding-left: 20px;
+            color: #334155;
+            font-size: 13px;
+            line-height: 1.7;
+            font-weight: 680;
+        }
+
+        .updates li {
             margin: 2px 0;
         }
 
-        .card-actions {
+        .actions {
             margin-top: 13px;
             padding-top: 12px;
             border-top: 1px solid #f1f5f9;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .empty {
             text-align: center;
-            padding: 38px 18px;
+            padding: 40px 18px;
+            border: 1px dashed #cbd5e1;
+            border-radius: var(--radius);
             color: var(--muted);
+            background: rgba(255, 255, 255, 0.62);
             font-size: 13px;
             line-height: 1.7;
             font-weight: 760;
         }
 
-        .hidden {
-            display: none !important;
-        }
-
-        .toast {
-            position: fixed;
-            z-index: 50;
-            left: 50%;
-            bottom: 22px;
-            transform: translateX(-50%) translateY(8px);
-            width: max-content;
-            max-width: min(560px, calc(100% - 28px));
-            border-radius: 16px;
-            padding: 12px 14px;
-            color: white;
-            background: #0f172a;
-            box-shadow: 0 18px 50px rgba(15, 23, 42, 0.26);
-            opacity: 0;
-            pointer-events: none;
-            font-size: 13px;
-            line-height: 1.45;
-            font-weight: 850;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
+        .footer {
+            margin-top: 22px;
+            color: var(--muted-light);
+            font-size: 12px;
+            font-weight: 650;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -679,11 +410,7 @@
             }
         }
 
-        @media (max-width: 900px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
+        @media (max-width: 720px) {
             .topbar {
                 align-items: flex-start;
                 flex-direction: column;
@@ -692,11 +419,15 @@
             .top-actions {
                 justify-content: flex-start;
             }
+
+            .tools {
+                grid-template-columns: 1fr;
+            }
         }
 
-        @media (max-width: 580px) {
+        @media (max-width: 560px) {
             .wrap {
-                width: min(100% - 20px, 1140px);
+                width: min(100% - 20px, 1040px);
                 padding-top: 18px;
             }
 
@@ -704,23 +435,17 @@
                 font-size: 19px;
             }
 
-            .search-row {
-                grid-template-columns: 1fr;
+            .card-top {
+                display: grid;
             }
 
-            .version-top {
-                display: grid;
+            .top-actions .btn,
+            .actions .btn {
+                width: auto;
             }
 
             .btn {
                 width: 100%;
-            }
-
-            .top-actions .btn,
-            .form-actions .btn,
-            .card-actions .btn,
-            .uid-box .btn {
-                width: auto;
             }
         }
     </style>
@@ -729,9 +454,6 @@
 <body>
     <main class="page">
         <div class="mesh"></div>
-        <div class="orb one"></div>
-        <div class="orb two"></div>
-        <div class="orb three"></div>
 
         <div class="wrap">
             <header class="topbar">
@@ -739,176 +461,48 @@
                     <div class="brand-mark">UD</div>
                     <div>
                         <h1>電子手冊 Pro 更新紀錄</h1>
-                        <p>第二 Firebase · 無 Google 登入 · 私人管理</p>
+                        <p>靜態版 · 無 Firebase · 無登入 · 直接覆蓋檔案</p>
                     </div>
                 </a>
 
                 <div class="top-actions">
-                    <a class="btn" href="rchw/index.html">打開主程式</a>
+                    <a class="btn primary" href="rchw/index.html">打開主程式</a>
                     <a class="btn" href="index.html">打開首頁</a>
-                    <button class="btn" id="exportBtn" type="button">匯出 JSON</button>
                 </div>
             </header>
 
-            <div class="hero-note">
-                呢個版本唔會彈 Google 登入。頁面會自動建立一個匿名身份，然後用第二個 Firebase / 第二個 Firestore 資料庫儲存更新紀錄。
+            <div class="note">
+                呢頁係私人用靜態更新紀錄。之後每次更新主程式，我會一併俾你新版 <strong>UD.html</strong>，你直接覆蓋 repo 根目錄就得，唔需要 Firebase、唔需要登入、唔需要後台設定。
             </div>
 
-            <div class="grid">
-                <aside class="panel">
-                    <div class="panel-head">
-                        <h2>新增 / 修改版本</h2>
-                        <p>直接喺網站入面記錄版本，不需要去 GitHub 後台改 UD.html。</p>
-                    </div>
+            <section class="tools">
+                <input class="input" id="searchInput" placeholder="搜尋版本、功能、問題，例如：v1.8.26 / Google / 加入班級 / AdSense">
+                <select class="select" id="filterInput">
+                    <option value="all">全部類型</option>
+                    <option value="fix">修復</option>
+                    <option value="feature">功能</option>
+                    <option value="ads">AdSense</option>
+                    <option value="stable">穩定版</option>
+                </select>
+            </section>
 
-                    <div class="panel-body">
-                        <div id="setupBox" class="setup-box">
-                            <strong>未設定第二 Firebase。</strong><br>
-                            請打開此檔案，搵 <code>SECOND_FIREBASE_CONFIG</code>，填入你第二個 Firebase Web App config。
-                        </div>
+            <section class="summary">
+                <span class="chip" id="totalChip">共 0 個版本</span>
+                <span class="chip" id="latestChip">最新：--</span>
+                <span class="chip">資料來源：UD.html 內置</span>
+            </section>
 
-                        <div id="statusBox" class="status warn">
-                            正在連接第二 Firebase...
-                        </div>
+            <section class="list" id="listBox"></section>
 
-                        <div class="uid-box">
-                            <div class="uid-value" id="uidValue">UID 載入中...</div>
-                            <button class="btn small" id="copyUidBtn" type="button">複製匿名 UID</button>
-                        </div>
-
-                        <div id="editorBox">
-                            <label for="versionInput">版本號</label>
-                            <input id="versionInput" placeholder="例如：v1.8.27">
-
-                            <label for="codeInput">短代碼</label>
-                            <input id="codeInput" placeholder="例如：v1827">
-
-                            <label for="dateInput">日期</label>
-                            <input id="dateInput" type="date">
-
-                            <label for="typeInput">類型</label>
-                            <select id="typeInput">
-                                <option value="fix">修復</option>
-                                <option value="feature">功能</option>
-                                <option value="ads">AdSense</option>
-                                <option value="stable">穩定版</option>
-                            </select>
-
-                            <label for="titleInput">標題</label>
-                            <input id="titleInput" placeholder="例如：修復 Google 登入跳轉問題">
-
-                            <label for="backupInput">備份連結</label>
-                            <input id="backupInput" placeholder="例如：backup/v1827.html">
-
-                            <label for="summaryInput">簡短說明</label>
-                            <textarea id="summaryInput" placeholder="簡短講今次版本主要做咗咩。"></textarea>
-
-                            <label for="updatesInput">更新內容</label>
-                            <textarea id="updatesInput" placeholder="每行一項，例如：&#10;修復加入班級按鈕。&#10;修復科目管理頁。&#10;加強 Google 登入後跳轉。"></textarea>
-
-                            <div class="form-actions">
-                                <button class="btn primary" id="saveBtn" type="button">儲存版本</button>
-                                <button class="btn" id="newBtn" type="button">清空新增</button>
-                            </div>
-
-                            <div class="danger-zone">
-                                <button class="btn danger" id="deleteBtn" type="button">刪除目前編輯版本</button>
-                            </div>
-                        </div>
-
-                        <div class="help">
-                            <strong>安全做法：</strong><br>
-                            第一次打開頁面後，複製上面匿名 UID，放入第二 Firebase 的 Firestore Rules。咁就唔使 Google 登入，但又唔會變成所有人都可以亂改。<br><br>
-                            <strong>備份檔提示：</strong><br>
-                            Firebase 只儲存版本紀錄。真正備份 HTML 仍然要你放入 <code>/backup/v1827.html</code>。
-                        </div>
-                    </div>
-                </aside>
-
-                <section class="panel">
-                    <div class="panel-head">
-                        <h2>版本列表</h2>
-                        <p>搜尋、查看更新內容，或者打開指定版本備份頁。</p>
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="search-row">
-                            <input id="searchInput" placeholder="搜尋版本、標題、內容，例如：v1.8.26 / Google / AdSense">
-                            <select id="filterInput">
-                                <option value="all">全部類型</option>
-                                <option value="fix">修復</option>
-                                <option value="feature">功能</option>
-                                <option value="ads">AdSense</option>
-                                <option value="stable">穩定版</option>
-                            </select>
-                        </div>
-
-                        <div class="summary-row">
-                            <span class="chip" id="totalChip">共 0 個版本</span>
-                            <span class="chip" id="latestChip">最新：--</span>
-                            <span class="chip" id="dbChip">第二 Firebase</span>
-                        </div>
-
-                        <div id="listBox" class="version-list">
-                            <div class="empty">載入中...</div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+            <footer class="footer">
+                <div>© 2026 電子手冊 Pro</div>
+                <div>最後更新：2026-05-27</div>
+            </footer>
         </div>
-
-        <div id="toast" class="toast"></div>
     </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-        import {
-            getAuth,
-            signInAnonymously,
-            onAuthStateChanged,
-            setPersistence,
-            browserLocalPersistence
-        } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import {
-            getFirestore,
-            collection,
-            doc,
-            setDoc,
-            deleteDoc,
-            onSnapshot,
-            serverTimestamp,
-            query,
-            orderBy
-        } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-        /*
-            ============================================================
-            第二 Firebase 設定區
-            ============================================================
-
-            你要建立第二個 Firebase project，然後在 Project settings > Web app
-            複製 firebaseConfig，貼到下面。
-
-            不要用你主程式 recordhwv2 的 config，否則就仍然會連到舊資料庫。
-
-            如果你在同一 Firebase project 入面建立「named database」，
-            可以將 FIRESTORE_DATABASE_ID 改成該 database ID。
-            如果你用第二 Firebase project 的預設 Firestore，保持 "(default)" 就可以。
-        */
-
-        const SECOND_FIREBASE_CONFIG = {
-            apiKey: "AIzaSyAk2ESJPvsa0sut-N1VS2nVYkXiQp0aNgc",
-            authDomain: "homeworkversion.firebaseapp.com",
-            projectId: "homeworkversion",
-            storageBucket: "homeworkversion.firebasestorage.app",
-            messagingSenderId: "50891688486",
-            appId: "1:50891688486:web:acd259b7b81127f4b3b4e7"
-        };
-
-        const FIRESTORE_DATABASE_ID = "(default)";
-        const COLLECTION_NAME = "udVersionHistory";
-
-        const SEED_DATA = [
+    <script>
+        const VERSION_HISTORY = [
             {
                 version: "v1.8.26",
                 code: "v1826",
@@ -921,7 +515,9 @@
                     "修復「加入班級」按鈕點擊後沒有彈窗。",
                     "修復「設定 > 科目管理」點擊後沒有打開頁面。",
                     "加強 Google 登入成功後的畫面切換保護，避免停留在登入頁。",
-                    "保留原有功課、班級廣播、管理員、Firebase、AdSense 功能。"
+                    "保留原有 Google 登入、Email 登入、Firebase、功課列表、班級廣播、管理員功能。",
+                    "保留 AdSense Auto Ads script。",
+                    "沒有加入「同步」字眼或同步按鈕。"
                 ]
             },
             {
@@ -931,11 +527,12 @@
                 type: "ads",
                 title: "主程式加入 AdSense Auto Ads",
                 backupUrl: "backup/v1825.html",
-                summary: "主程式加入 Google AdSense Auto Ads，等待 Google 審核後顯示。",
+                summary: "主程式加入 Google AdSense Auto Ads，等待 Google 審核完成後顯示。",
                 updates: [
                     "在 /rchw/index.html 加入 AdSense Auto Ads script。",
                     "保留 Google 登入、Email 登入、Firebase 與功課功能。",
-                    "不改動班級廣播與管理員功能。"
+                    "保留班級廣播、管理員功能與學生登入後自動補領廣播功課。",
+                    "不改動 public 頁面與 rchw 路徑。"
                 ]
             },
             {
@@ -949,7 +546,38 @@
                 updates: [
                     "移除班級頁面手動加入提示。",
                     "學生登入後自動補領應收廣播功課。",
-                    "加入版本更新彈窗。"
+                    "加入版本更新彈窗。",
+                    "管理員發放廣播功課後，目標學生自動收到。"
+                ]
+            },
+            {
+                version: "v1.8.23",
+                code: "v1823",
+                date: "2026-05-26",
+                type: "feature",
+                title: "廣播功課自動派發流程",
+                backupUrl: "backup/v1823.html",
+                summary: "班級廣播功課改為管理員發放後自動派發，學生不需要手動加入。",
+                updates: [
+                    "管理員發放廣播功課後，自動寫入目標學生個人功課。",
+                    "使用固定路徑 users/{學生UID}/items/public_{廣播功課ID}，避免重複功課。",
+                    "學生登入後會自動補領應收但漏派的廣播功課。",
+                    "移除手動同步或手動加入方向。"
+                ]
+            },
+            {
+                version: "v1.8.21",
+                code: "v1821",
+                date: "2026-05-26",
+                type: "fix",
+                title: "Google 登入穩定版流程",
+                backupUrl: "backup/v1821.html",
+                summary: "加強 Google 登入流程，改善 popup / redirect 狀態處理。",
+                updates: [
+                    "加入 Google 登入穩定版啟動保護。",
+                    "改善不同瀏覽器的 popup 與 redirect fallback。",
+                    "加入登入錯誤友善提示。",
+                    "保留 Email 登入和忘記密碼功能。"
                 ]
             },
             {
@@ -959,69 +587,27 @@
                 type: "stable",
                 title: "早期穩定備份版本",
                 backupUrl: "backup/v1816.html",
-                summary: "作為舊版本備份參考。",
+                summary: "作為舊版本備份與回滾參考。",
                 updates: [
                     "保留早期主程式狀態。",
-                    "可用作版本回滾參考。"
+                    "可用作版本回滾參考。",
+                    "建議只在新版出現嚴重問題時使用。"
                 ]
             }
         ];
 
-        const $ = (id) => document.getElementById(id);
-
-        const elements = {
-            setupBox: $("setupBox"),
-            statusBox: $("statusBox"),
-            uidValue: $("uidValue"),
-            copyUidBtn: $("copyUidBtn"),
-            editorBox: $("editorBox"),
-            versionInput: $("versionInput"),
-            codeInput: $("codeInput"),
-            dateInput: $("dateInput"),
-            typeInput: $("typeInput"),
-            titleInput: $("titleInput"),
-            backupInput: $("backupInput"),
-            summaryInput: $("summaryInput"),
-            updatesInput: $("updatesInput"),
-            saveBtn: $("saveBtn"),
-            newBtn: $("newBtn"),
-            deleteBtn: $("deleteBtn"),
-            searchInput: $("searchInput"),
-            filterInput: $("filterInput"),
-            listBox: $("listBox"),
-            totalChip: $("totalChip"),
-            latestChip: $("latestChip"),
-            dbChip: $("dbChip"),
-            exportBtn: $("exportBtn"),
-            toast: $("toast")
+        const TYPE_LABEL = {
+            fix: "修復",
+            feature: "功能",
+            ads: "AdSense",
+            stable: "穩定版"
         };
 
-        let app = null;
-        let auth = null;
-        let db = null;
-        let currentUser = null;
-        let allVersions = [];
-        let editingId = "";
-        let unsubscribe = null;
-        let hasPromptedSeed = false;
-
-        function hasFirebaseConfig() {
-            return SECOND_FIREBASE_CONFIG.apiKey &&
-                !SECOND_FIREBASE_CONFIG.apiKey.includes("PASTE_") &&
-                SECOND_FIREBASE_CONFIG.projectId &&
-                !SECOND_FIREBASE_CONFIG.projectId.includes("PASTE_");
-        }
-
-        function showToast(message) {
-            elements.toast.textContent = message;
-            elements.toast.classList.add("show");
-            window.setTimeout(() => elements.toast.classList.remove("show"), 2300);
-        }
-
-        function setStatus(type, message) {
-            elements.statusBox.className = `status ${type}`;
-            elements.statusBox.textContent = message;
-        }
+        const searchInput = document.getElementById("searchInput");
+        const filterInput = document.getElementById("filterInput");
+        const listBox = document.getElementById("listBox");
+        const totalChip = document.getElementById("totalChip");
+        const latestChip = document.getElementById("latestChip");
 
         function escapeHtml(value) {
             return String(value ?? "")
@@ -1032,388 +618,75 @@
                 .replaceAll("'", "&#039;");
         }
 
-        function getTypeLabel(type) {
-            if (type === "fix") return "修復";
-            if (type === "feature") return "功能";
-            if (type === "ads") return "AdSense";
-            if (type === "stable") return "穩定版";
-            return "版本";
-        }
+        function render() {
+            const keyword = searchInput.value.trim().toLowerCase();
+            const filter = filterInput.value;
 
-        function normalizeCode(version, code) {
-            const cleanCode = String(code || "").trim();
-            if (cleanCode) return cleanCode.replace(/[^a-zA-Z0-9_-]/g, "").toLowerCase();
+            let list = [...VERSION_HISTORY];
 
-            const cleanVersion = String(version || "")
-                .toLowerCase()
-                .replace(/^v/, "")
-                .replaceAll(".", "")
-                .replace(/[^a-zA-Z0-9_-]/g, "");
-
-            return cleanVersion ? `v${cleanVersion}` : `v${Date.now()}`;
-        }
-
-        function formatDateForInput(date) {
-            if (date) return date;
-            const now = new Date();
-            const y = now.getFullYear();
-            const m = String(now.getMonth() + 1).padStart(2, "0");
-            const d = String(now.getDate()).padStart(2, "0");
-            return `${y}-${m}-${d}`;
-        }
-
-        function clearForm() {
-            editingId = "";
-            elements.versionInput.value = "";
-            elements.codeInput.value = "";
-            elements.dateInput.value = formatDateForInput("");
-            elements.typeInput.value = "fix";
-            elements.titleInput.value = "";
-            elements.backupInput.value = "";
-            elements.summaryInput.value = "";
-            elements.updatesInput.value = "";
-            elements.deleteBtn.disabled = true;
-            elements.deleteBtn.textContent = "刪除目前編輯版本";
-        }
-
-        function fillForm(item) {
-            editingId = item.id || item.code || "";
-            elements.versionInput.value = item.version || "";
-            elements.codeInput.value = item.code || "";
-            elements.dateInput.value = item.date || formatDateForInput("");
-            elements.typeInput.value = item.type || "fix";
-            elements.titleInput.value = item.title || "";
-            elements.backupInput.value = item.backupUrl || "";
-            elements.summaryInput.value = item.summary || "";
-            elements.updatesInput.value = Array.isArray(item.updates) ? item.updates.join("\n") : "";
-            elements.deleteBtn.disabled = false;
-            elements.deleteBtn.textContent = `刪除 ${item.version || item.code || "目前版本"}`;
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-
-        function getFormData() {
-            const version = elements.versionInput.value.trim();
-            const code = normalizeCode(version, elements.codeInput.value);
-            const date = elements.dateInput.value || formatDateForInput("");
-            const type = elements.typeInput.value;
-            const title = elements.titleInput.value.trim();
-            const backupUrl = elements.backupInput.value.trim();
-            const summary = elements.summaryInput.value.trim();
-            const updates = elements.updatesInput.value
-                .split("\n")
-                .map(line => line.trim())
-                .filter(Boolean);
-
-            if (!version) throw new Error("請輸入版本號。");
-            if (!title) throw new Error("請輸入標題。");
-            if (!summary) throw new Error("請輸入簡短說明。");
-            if (!updates.length) throw new Error("請至少輸入一項更新內容。");
-
-            return {
-                version,
-                code,
-                date,
-                type,
-                title,
-                backupUrl,
-                summary,
-                updates
-            };
-        }
-
-        function collectionRef() {
-            return collection(db, COLLECTION_NAME);
-        }
-
-        async function saveVersion() {
-            if (!db || !currentUser) {
-                showToast("第二 Firebase 尚未準備好。");
-                return;
-            }
-
-            try {
-                const data = getFormData();
-                const id = editingId || data.code;
-
-                await setDoc(doc(db, COLLECTION_NAME, id), {
-                    ...data,
-                    id,
-                    anonymousUid: currentUser.uid,
-                    updatedAt: serverTimestamp()
-                }, { merge: true });
-
-                editingId = id;
-                elements.codeInput.value = data.code;
-                elements.deleteBtn.disabled = false;
-                showToast("版本紀錄已儲存。");
-            } catch (error) {
-                console.error(error);
-                if (String(error?.code || "").includes("permission-denied")) {
-                    showToast("儲存失敗：Firestore Rules 未允許此匿名 UID 寫入。");
-                    setStatus("bad", "Firestore 拒絕寫入。請將上方匿名 UID 加入第二 Firebase 的 Firestore Rules。");
-                } else {
-                    showToast(error.message || "儲存失敗。");
-                }
-            }
-        }
-
-        async function deleteVersion() {
-            if (!db || !currentUser) {
-                showToast("第二 Firebase 尚未準備好。");
-                return;
-            }
-
-            if (!editingId) {
-                showToast("請先選擇要刪除的版本。");
-                return;
-            }
-
-            const item = allVersions.find(v => v.id === editingId);
-            const label = item?.version || editingId;
-            const ok = window.confirm(`確定要刪除 ${label}？`);
-            if (!ok) return;
-
-            try {
-                await deleteDoc(doc(db, COLLECTION_NAME, editingId));
-                clearForm();
-                showToast("已刪除版本紀錄。");
-            } catch (error) {
-                console.error(error);
-                if (String(error?.code || "").includes("permission-denied")) {
-                    showToast("刪除失敗：Firestore Rules 未允許此匿名 UID。");
-                } else {
-                    showToast("刪除失敗。");
-                }
-            }
-        }
-
-        async function seedInitialDataIfEmpty() {
-            if (!db || !currentUser || hasPromptedSeed || allVersions.length > 0) return;
-            hasPromptedSeed = true;
-
-            const ok = window.confirm("第二 Firebase 暫時未有版本紀錄，要建立預設 v1.8.16 / v1.8.24 / v1.8.25 / v1.8.26 嗎？");
-            if (!ok) return;
-
-            try {
-                for (const item of SEED_DATA) {
-                    const id = item.code;
-                    await setDoc(doc(db, COLLECTION_NAME, id), {
-                        ...item,
-                        id,
-                        anonymousUid: currentUser.uid,
-                        updatedAt: serverTimestamp()
-                    }, { merge: true });
-                }
-                showToast("已建立預設版本紀錄。");
-            } catch (error) {
-                console.error(error);
-                if (String(error?.code || "").includes("permission-denied")) {
-                    showToast("建立失敗：請先設定 Firestore Rules。");
-                } else {
-                    showToast("建立預設資料失敗。");
-                }
-            }
-        }
-
-        function renderList() {
-            const keyword = elements.searchInput.value.trim().toLowerCase();
-            const type = elements.filterInput.value;
-
-            let list = [...allVersions];
-
-            if (type !== "all") {
-                list = list.filter(item => item.type === type);
+            if (filter !== "all") {
+                list = list.filter(item => item.type === filter);
             }
 
             if (keyword) {
                 list = list.filter(item => {
-                    const blob = [
+                    const text = [
                         item.version,
                         item.code,
                         item.date,
                         item.type,
                         item.title,
-                        item.backupUrl,
                         item.summary,
-                        ...(Array.isArray(item.updates) ? item.updates : [])
+                        item.backupUrl,
+                        ...(item.updates || [])
                     ].join(" ").toLowerCase();
 
-                    return blob.includes(keyword);
+                    return text.includes(keyword);
                 });
             }
 
-            elements.totalChip.textContent = `共 ${allVersions.length} 個版本`;
-            elements.latestChip.textContent = allVersions[0]?.version ? `最新：${allVersions[0].version}` : "最新：--";
-            elements.dbChip.textContent = FIRESTORE_DATABASE_ID === "(default)"
-                ? `資料庫：${SECOND_FIREBASE_CONFIG.projectId || "未設定"}`
-                : `資料庫：${FIRESTORE_DATABASE_ID}`;
+            totalChip.textContent = `共 ${VERSION_HISTORY.length} 個版本`;
+            latestChip.textContent = VERSION_HISTORY[0] ? `最新：${VERSION_HISTORY[0].version}` : "最新：--";
 
             if (!list.length) {
-                elements.listBox.innerHTML = `<div class="empty">暫時沒有符合條件的版本。</div>`;
+                listBox.innerHTML = `<div class="empty">暫時沒有符合搜尋條件的版本。</div>`;
                 return;
             }
 
-            elements.listBox.innerHTML = list.map(item => {
-                const updateItems = Array.isArray(item.updates) ? item.updates : [];
-                const backupHtml = item.backupUrl
-                    ? `<a class="btn small green" href="${escapeHtml(item.backupUrl)}" target="_blank" rel="noopener">打開備份</a>`
-                    : `<button class="btn small" type="button" disabled>未填備份</button>`;
+            listBox.innerHTML = list.map(item => {
+                const updates = Array.isArray(item.updates) ? item.updates : [];
+                const backupButton = item.backupUrl
+                    ? `<a class="btn small" href="${escapeHtml(item.backupUrl)}" target="_blank" rel="noopener">打開備份</a>`
+                    : `<span class="btn small">未有備份</span>`;
 
                 return `
-                    <article class="version-card">
-                        <div class="version-top">
-                            <div class="version-title">
-                                <h3>${escapeHtml(item.version)}｜${escapeHtml(item.title)}</h3>
-                                <div class="version-meta">${escapeHtml(item.date || "未填日期")} · ${escapeHtml(item.code || "")}</div>
+                    <article class="card">
+                        <div class="card-top">
+                            <div class="title">
+                                <h2>${escapeHtml(item.version)}｜${escapeHtml(item.title)}</h2>
+                                <div class="meta">${escapeHtml(item.date)} · ${escapeHtml(item.code)}</div>
                             </div>
-                            <span class="type-badge ${escapeHtml(item.type || "")}">${escapeHtml(getTypeLabel(item.type))}</span>
+                            <span class="badge ${escapeHtml(item.type)}">${escapeHtml(TYPE_LABEL[item.type] || "版本")}</span>
                         </div>
 
-                        <p class="version-summary">${escapeHtml(item.summary || "")}</p>
+                        <p class="summary-text">${escapeHtml(item.summary)}</p>
 
-                        <ul class="update-list">
-                            ${updateItems.map(line => `<li>${escapeHtml(line)}</li>`).join("")}
+                        <ul class="updates">
+                            ${updates.map(line => `<li>${escapeHtml(line)}</li>`).join("")}
                         </ul>
 
-                        <div class="card-actions">
-                            ${backupHtml}
-                            <button class="btn small primary" type="button" data-edit="${escapeHtml(item.id)}">編輯</button>
+                        <div class="actions">
+                            ${backupButton}
                         </div>
                     </article>
                 `;
             }).join("");
-
-            elements.listBox.querySelectorAll("[data-edit]").forEach(button => {
-                button.addEventListener("click", () => {
-                    const id = button.getAttribute("data-edit");
-                    const item = allVersions.find(v => v.id === id);
-                    if (item) fillForm(item);
-                });
-            });
         }
 
-        function exportJson() {
-            const blob = new Blob([JSON.stringify(allVersions, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `ehandbook-version-history-${new Date().toISOString().slice(0, 10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-            showToast("已匯出 JSON。");
-        }
+        searchInput.addEventListener("input", render);
+        filterInput.addEventListener("change", render);
 
-        function startSnapshot() {
-            if (unsubscribe) unsubscribe();
-
-            const q = query(collectionRef(), orderBy("date", "desc"));
-            unsubscribe = onSnapshot(q, (snapshot) => {
-                allVersions = snapshot.docs.map(docSnap => ({
-                    id: docSnap.id,
-                    ...docSnap.data()
-                })).sort((a, b) => {
-                    const ad = String(a.date || "");
-                    const bd = String(b.date || "");
-                    if (bd !== ad) return bd.localeCompare(ad);
-                    return String(b.code || "").localeCompare(String(a.code || ""));
-                });
-
-                renderList();
-
-                if (allVersions.length === 0) {
-                    window.setTimeout(seedInitialDataIfEmpty, 300);
-                }
-            }, (error) => {
-                console.error(error);
-                elements.listBox.innerHTML = `<div class="empty">讀取第二 Firebase 失敗。請檢查 Firestore Rules、資料庫 ID 或網絡。</div>`;
-
-                if (String(error?.code || "").includes("permission-denied")) {
-                    setStatus("bad", "讀取被拒。請檢查 Firestore Rules 是否允許此匿名 UID 讀取。");
-                } else {
-                    setStatus("bad", "讀取第二 Firebase 失敗。請檢查設定。");
-                }
-            });
-        }
-
-        async function copyUid() {
-            const uid = currentUser?.uid || "";
-            if (!uid) {
-                showToast("UID 尚未準備好。");
-                return;
-            }
-
-            try {
-                await navigator.clipboard.writeText(uid);
-                showToast("已複製匿名 UID。");
-            } catch (error) {
-                showToast("無法自動複製，請手動複製。");
-            }
-        }
-
-        async function boot() {
-            clearForm();
-
-            if (!hasFirebaseConfig()) {
-                elements.setupBox.classList.add("show");
-                elements.uidValue.textContent = "未設定第二 Firebase config";
-                setStatus("warn", "未設定第二 Firebase。請先填入 SECOND_FIREBASE_CONFIG。");
-                elements.listBox.innerHTML = `<div class="empty">未設定第二 Firebase，所以暫時不能讀取版本紀錄。</div>`;
-                elements.saveBtn.disabled = true;
-                elements.deleteBtn.disabled = true;
-                return;
-            }
-
-            try {
-                app = initializeApp(SECOND_FIREBASE_CONFIG, "ud-history-app");
-                auth = getAuth(app);
-                db = FIRESTORE_DATABASE_ID && FIRESTORE_DATABASE_ID !== "(default)"
-                    ? getFirestore(app, FIRESTORE_DATABASE_ID)
-                    : getFirestore(app);
-
-                await setPersistence(auth, browserLocalPersistence);
-
-                onAuthStateChanged(auth, async (user) => {
-                    if (!user) {
-                        setStatus("warn", "正在建立匿名身份...");
-                        try {
-                            await signInAnonymously(auth);
-                        } catch (error) {
-                            console.error(error);
-                            elements.uidValue.textContent = "匿名登入失敗";
-                            setStatus("bad", "匿名登入失敗。請確認第二 Firebase 已啟用 Anonymous Auth。");
-                        }
-                        return;
-                    }
-
-                    currentUser = user;
-                    elements.uidValue.textContent = user.uid;
-                    elements.saveBtn.disabled = false;
-                    setStatus("good", "已連接第二 Firebase。此頁沒有 Google 登入，使用匿名身份儲存。");
-                    startSnapshot();
-                });
-
-                if (!auth.currentUser) {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error(error);
-                elements.uidValue.textContent = "連接失敗";
-                setStatus("bad", "連接第二 Firebase 失敗。請檢查 SECOND_FIREBASE_CONFIG。");
-                elements.listBox.innerHTML = `<div class="empty">第二 Firebase 連接失敗。</div>`;
-            }
-        }
-
-        elements.copyUidBtn.addEventListener("click", copyUid);
-        elements.saveBtn.addEventListener("click", saveVersion);
-        elements.newBtn.addEventListener("click", clearForm);
-        elements.deleteBtn.addEventListener("click", deleteVersion);
-        elements.searchInput.addEventListener("input", renderList);
-        elements.filterInput.addEventListener("change", renderList);
-        elements.exportBtn.addEventListener("click", exportJson);
-
-        boot();
+        render();
     </script>
 </body>
 </html>
