@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro 舊網址引導頁：引導用戶前往新網址 /rchw/index.html -->
+    <!-- 電子手冊 Pro 舊網址引導頁：精修字體及 Apple-style 產品頁設計 -->
 
     <!-- Google AdSense：保持原有 publisher ID，不移除審核用程式碼 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4156749891284054"
@@ -9,34 +9,43 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>電子手冊 Pro｜網址已更新</title>
+    <title>電子手冊 Pro｜新版入口</title>
 
     <meta name="description" content="電子手冊 Pro 網址已更新，請前往新的正式入口繼續使用。">
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#f8fafc">
     <meta name="apple-mobile-web-app-title" content="電子手冊 Pro">
     <meta name="canonical" content="https://colassn.github.io/rchw/index.html">
 
     <!-- 如 JavaScript 無法運作，仍會自動前往新網址 -->
     <meta http-equiv="refresh" content="8;url=https://colassn.github.io/rchw/index.html">
 
+    <!-- 精修字體：中文使用 Noto Sans HK，英文數字使用 Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans+HK:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg: #f8fafc;
-            --text: #0f172a;
+            --page-bg: #f8fafc;
+            --ink: #0f172a;
+            --ink-soft: #334155;
             --muted: #64748b;
-            --soft: #e2e8f0;
-            --card: rgba(255, 255, 255, 0.72);
-            --card-strong: rgba(255, 255, 255, 0.9);
-            --primary: #4f46e5;
-            --primary-dark: #3730a3;
-            --primary-soft: #eef2ff;
+            --muted-light: #94a3b8;
+            --line: rgba(148, 163, 184, 0.24);
+            --glass: rgba(255, 255, 255, 0.72);
+            --glass-strong: rgba(255, 255, 255, 0.88);
+            --indigo: #4f46e5;
             --blue: #2563eb;
+            --sky: #0284c7;
             --cyan: #06b6d4;
             --green: #10b981;
-            --shadow: 0 30px 90px rgba(15, 23, 42, 0.12);
-            --radius-xl: 28px;
-            --radius-2xl: 40px;
-            --max: 1180px;
+            --violet-soft: #eef2ff;
+            --shadow-soft: 0 24px 80px rgba(15, 23, 42, 0.10);
+            --shadow-strong: 0 36px 110px rgba(15, 23, 42, 0.18);
+            --radius-lg: 22px;
+            --radius-xl: 30px;
+            --radius-xxl: 44px;
+            --max-width: 1180px;
         }
 
         * {
@@ -45,23 +54,43 @@
 
         html {
             scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
-            color: var(--text);
+            font-family:
+                "Noto Sans HK",
+                "PingFang HK",
+                "PingFang TC",
+                "Microsoft JhengHei",
+                "Heiti TC",
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            color: var(--ink);
             background:
-                radial-gradient(circle at 12% 12%, rgba(99, 102, 241, 0.18), transparent 28%),
-                radial-gradient(circle at 88% 18%, rgba(14, 165, 233, 0.16), transparent 30%),
-                linear-gradient(135deg, #f8fafc 0%, #eef2ff 42%, #ffffff 100%);
+                radial-gradient(circle at 14% 10%, rgba(99, 102, 241, 0.18), transparent 30%),
+                radial-gradient(circle at 88% 14%, rgba(14, 165, 233, 0.14), transparent 31%),
+                radial-gradient(circle at 72% 88%, rgba(167, 139, 250, 0.13), transparent 34%),
+                linear-gradient(135deg, #f8fafc 0%, #f1f5ff 42%, #ffffff 100%);
             overflow-x: hidden;
+            letter-spacing: -0.015em;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         a {
             color: inherit;
             text-decoration: none;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
         }
 
         .page {
@@ -70,64 +99,66 @@
             overflow: hidden;
         }
 
-        .noise {
+        .grain {
             position: fixed;
             inset: 0;
             pointer-events: none;
             opacity: 0.035;
             background-image:
-                linear-gradient(rgba(15, 23, 42, 0.8) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(15, 23, 42, 0.8) 1px, transparent 1px);
-            background-size: 42px 42px;
-            mask-image: linear-gradient(to bottom, black, transparent 85%);
+                linear-gradient(rgba(15, 23, 42, 0.75) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, 0.75) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: linear-gradient(to bottom, black, transparent 82%);
+            z-index: 0;
         }
 
-        .blob {
+        .aurora {
             position: absolute;
             border-radius: 999px;
-            filter: blur(46px);
-            opacity: 0.46;
+            filter: blur(54px);
+            opacity: 0.5;
             pointer-events: none;
-            animation: float 8s ease-in-out infinite;
+            z-index: 0;
+            animation: auroraFloat 9s ease-in-out infinite;
         }
 
-        .blob.one {
-            width: 360px;
-            height: 360px;
-            left: -120px;
-            top: 90px;
+        .aurora.one {
+            width: 390px;
+            height: 390px;
+            left: -130px;
+            top: 120px;
             background: #c7d2fe;
         }
 
-        .blob.two {
-            width: 420px;
-            height: 420px;
-            right: -160px;
+        .aurora.two {
+            width: 440px;
+            height: 440px;
+            right: -170px;
             top: 40px;
             background: #bae6fd;
-            animation-delay: 1.5s;
+            animation-delay: 1.4s;
         }
 
-        .blob.three {
-            width: 280px;
-            height: 280px;
-            right: 18%;
+        .aurora.three {
+            width: 300px;
+            height: 300px;
+            right: 24%;
             bottom: -120px;
             background: #ddd6fe;
             animation-delay: 3s;
         }
 
-        @keyframes float {
+        @keyframes auroraFloat {
             0%, 100% {
                 transform: translate3d(0, 0, 0) scale(1);
             }
             50% {
-                transform: translate3d(0, -18px, 0) scale(1.04);
+                transform: translate3d(0, -20px, 0) scale(1.04);
             }
         }
 
         .nav {
-            width: min(var(--max), calc(100% - 40px));
+            width: min(var(--max-width), calc(100% - 44px));
             margin: 0 auto;
             padding: 24px 0 0;
             display: flex;
@@ -143,46 +174,51 @@
             gap: 12px;
         }
 
-        .brand-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #111827, #4f46e5);
+        .brand-mark {
+            width: 46px;
+            height: 46px;
+            border-radius: 17px;
+            background:
+                radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.38), transparent 30%),
+                linear-gradient(145deg, #111827 0%, #312e81 48%, #4f46e5 100%);
             color: white;
             display: grid;
             place-items: center;
-            box-shadow: 0 14px 30px rgba(79, 70, 229, 0.28);
-            font-size: 22px;
+            font-size: 21px;
             font-weight: 900;
+            box-shadow: 0 18px 36px rgba(79, 70, 229, 0.26);
         }
 
-        .brand-title {
+        .brand-name {
             font-size: 15px;
+            line-height: 1.1;
             font-weight: 900;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.035em;
         }
 
-        .brand-subtitle {
-            font-size: 11px;
-            color: var(--muted);
-            font-weight: 700;
-            margin-top: 2px;
+        .brand-en {
+            margin-top: 4px;
+            font-family: "Manrope", sans-serif;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            color: var(--muted-light);
         }
 
-        .nav-pill {
+        .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            border: 1px solid rgba(148, 163, 184, 0.28);
-            background: rgba(255, 255, 255, 0.68);
+            gap: 9px;
+            padding: 10px 15px;
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            background: rgba(255, 255, 255, 0.66);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             border-radius: 999px;
-            padding: 10px 14px;
+            color: #475569;
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
             font-size: 12px;
             font-weight: 800;
-            color: #475569;
-            box-shadow: 0 12px 34px rgba(15, 23, 42, 0.06);
         }
 
         .status-dot {
@@ -194,20 +230,20 @@
         }
 
         .hero {
-            width: min(var(--max), calc(100% - 40px));
+            width: min(var(--max-width), calc(100% - 44px));
             margin: 0 auto;
-            min-height: calc(100vh - 70px);
+            min-height: calc(100vh - 72px);
             display: grid;
             grid-template-columns: 61.8fr 38.2fr;
-            gap: 44px;
+            gap: 46px;
             align-items: center;
             position: relative;
             z-index: 2;
-            padding: 54px 0 72px;
+            padding: 56px 0 72px;
         }
 
         .copy {
-            max-width: 700px;
+            max-width: 730px;
         }
 
         .eyebrow {
@@ -215,126 +251,162 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            margin-bottom: 26px;
+            padding: 9px 15px 9px 10px;
             border-radius: 999px;
-            background: rgba(238, 242, 255, 0.9);
+            background: rgba(238, 242, 255, 0.86);
             border: 1px solid rgba(99, 102, 241, 0.18);
             color: #4338ca;
-            padding: 9px 14px;
+            box-shadow: 0 12px 34px rgba(79, 70, 229, 0.07);
             font-size: 12px;
             font-weight: 900;
-            letter-spacing: 0.02em;
-            margin-bottom: 24px;
+            letter-spacing: 0.03em;
         }
 
-        .spark {
-            width: 22px;
-            height: 22px;
+        .eyebrow-icon {
+            width: 24px;
+            height: 24px;
             border-radius: 999px;
             display: grid;
             place-items: center;
             background: white;
             box-shadow: 0 8px 20px rgba(79, 70, 229, 0.12);
+            font-size: 13px;
         }
 
-        h1 {
+        .headline {
             margin: 0;
-            font-size: clamp(42px, 7vw, 86px);
-            line-height: 0.96;
-            letter-spacing: -0.07em;
-            font-weight: 950;
+            color: var(--ink);
+            font-size: clamp(48px, 7.4vw, 92px);
+            line-height: 0.94;
+            letter-spacing: -0.085em;
+            font-weight: 900;
         }
 
-        .gradient-text {
-            background: linear-gradient(120deg, #111827 0%, #4f46e5 48%, #0284c7 100%);
+        .headline .line {
+            display: block;
+        }
+
+        .headline .accent {
+            display: inline-block;
+            padding-right: 0.04em;
+            background: linear-gradient(118deg, #111827 0%, #4f46e5 45%, #0284c7 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
         .lead {
-            margin: 28px 0 0;
-            max-width: 600px;
-            font-size: clamp(17px, 2vw, 22px);
-            line-height: 1.75;
+            margin: 30px 0 0;
+            max-width: 640px;
             color: var(--muted);
-            font-weight: 650;
-            letter-spacing: -0.02em;
+            font-size: clamp(17px, 1.65vw, 21px);
+            line-height: 1.82;
+            font-weight: 600;
+            letter-spacing: -0.018em;
+        }
+
+        .lead strong {
+            color: var(--ink-soft);
+            font-weight: 850;
         }
 
         .redirect-card {
-            margin-top: 34px;
+            margin-top: 36px;
+            max-width: 650px;
             border-radius: var(--radius-xl);
-            background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            box-shadow: var(--shadow);
-            padding: 22px;
-            max-width: 630px;
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.76);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(26px);
+            -webkit-backdrop-filter: blur(26px);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .redirect-top {
+        .redirect-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 44%);
+            pointer-events: none;
+        }
+
+        .redirect-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .redirect-header {
             display: flex;
-            gap: 16px;
             align-items: flex-start;
+            gap: 16px;
         }
 
-        .redirect-icon {
-            width: 48px;
-            height: 48px;
+        .redirect-symbol {
+            width: 50px;
+            height: 50px;
             flex: 0 0 auto;
             border-radius: 18px;
             display: grid;
             place-items: center;
             color: white;
-            background: linear-gradient(135deg, var(--primary), var(--blue));
-            box-shadow: 0 16px 28px rgba(79, 70, 229, 0.24);
-            font-size: 22px;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.38), transparent 34%),
+                linear-gradient(135deg, var(--indigo), var(--blue));
+            box-shadow: 0 18px 32px rgba(79, 70, 229, 0.24);
+            font-family: "Manrope", sans-serif;
+            font-size: 23px;
+            font-weight: 800;
         }
 
         .redirect-title {
-            font-size: 18px;
-            font-weight: 950;
-            letter-spacing: -0.03em;
-            margin-bottom: 6px;
+            margin: 0 0 7px;
+            font-size: 20px;
+            line-height: 1.25;
+            font-weight: 900;
+            letter-spacing: -0.045em;
         }
 
         .redirect-desc {
-            font-size: 14px;
+            margin: 0;
             color: var(--muted);
-            line-height: 1.65;
-            font-weight: 650;
+            font-size: 14px;
+            line-height: 1.7;
+            font-weight: 600;
+            letter-spacing: -0.01em;
         }
 
-        .url-box {
-            margin-top: 18px;
-            border-radius: 20px;
-            background: rgba(248, 250, 252, 0.9);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            padding: 14px 16px;
+        .url-panel {
+            margin-top: 20px;
+            border-radius: 23px;
+            background: rgba(248, 250, 252, 0.88);
+            border: 1px solid rgba(226, 232, 240, 0.84);
+            padding: 15px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 14px;
-        }
-
-        .url-text {
-            min-width: 0;
+            gap: 16px;
         }
 
         .url-label {
+            margin-bottom: 6px;
+            color: var(--muted-light);
+            font-family: "Manrope", sans-serif;
             font-size: 10px;
-            font-weight: 950;
-            color: #94a3b8;
-            letter-spacing: 0.16em;
+            font-weight: 800;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
 
         .url-value {
-            font-size: 13px;
+            max-width: 430px;
             color: #334155;
+            font-family: "Manrope", "Noto Sans HK", sans-serif;
+            font-size: 13px;
             font-weight: 800;
+            letter-spacing: -0.01em;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -342,16 +414,17 @@
 
         .countdown {
             flex: 0 0 auto;
-            min-width: 52px;
-            height: 52px;
-            border-radius: 18px;
+            width: 54px;
+            height: 54px;
+            border-radius: 19px;
             display: grid;
             place-items: center;
-            background: #111827;
+            background: #0f172a;
             color: white;
-            font-size: 20px;
-            font-weight: 950;
-            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.2);
+            font-family: "Manrope", sans-serif;
+            font-size: 21px;
+            font-weight: 800;
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.22);
         }
 
         .progress {
@@ -359,19 +432,19 @@
             height: 8px;
             border-radius: 999px;
             overflow: hidden;
-            background: rgba(226, 232, 240, 0.9);
+            background: rgba(226, 232, 240, 0.92);
         }
 
         .progress-bar {
             height: 100%;
             width: 100%;
             border-radius: inherit;
-            background: linear-gradient(90deg, var(--primary), var(--cyan));
+            background: linear-gradient(90deg, var(--indigo), var(--cyan));
             transform-origin: left center;
-            animation: shrink 8s linear forwards;
+            animation: progressShrink 8s linear forwards;
         }
 
-        @keyframes shrink {
+        @keyframes progressShrink {
             from {
                 transform: scaleX(1);
             }
@@ -383,13 +456,13 @@
         .actions {
             margin-top: 26px;
             display: flex;
-            gap: 14px;
+            gap: 13px;
             flex-wrap: wrap;
             align-items: center;
         }
 
-        .btn {
-            min-height: 54px;
+        .button {
+            min-height: 55px;
             border-radius: 999px;
             padding: 0 22px;
             display: inline-flex;
@@ -397,89 +470,99 @@
             justify-content: center;
             gap: 10px;
             font-size: 15px;
-            font-weight: 950;
-            letter-spacing: -0.02em;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            line-height: 1;
+            font-weight: 850;
+            letter-spacing: -0.025em;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease,
+                border-color 0.2s ease;
         }
 
-        .btn:active {
-            transform: scale(0.98);
+        .button:active {
+            transform: scale(0.985);
         }
 
-        .btn-primary {
-            background: #111827;
+        .button-primary {
             color: white;
-            box-shadow: 0 20px 42px rgba(15, 23, 42, 0.22);
+            background:
+                radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.2), transparent 34%),
+                #0f172a;
+            box-shadow: 0 22px 44px rgba(15, 23, 42, 0.24);
         }
 
-        .btn-primary:hover {
+        .button-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 24px 52px rgba(15, 23, 42, 0.26);
+            box-shadow: 0 26px 54px rgba(15, 23, 42, 0.28);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.74);
-            color: #334155;
+        .button-secondary {
+            color: #475569;
+            background: rgba(255, 255, 255, 0.68);
             border: 1px solid rgba(203, 213, 225, 0.72);
         }
 
-        .btn-secondary:hover {
-            background: white;
+        .button-secondary:hover {
             transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(148, 163, 184, 0.42);
         }
 
-        .note {
-            margin-top: 16px;
-            color: #94a3b8;
+        .fine-note {
+            margin-top: 17px;
+            color: var(--muted-light);
             font-size: 12px;
-            font-weight: 700;
-            line-height: 1.6;
+            line-height: 1.65;
+            font-weight: 600;
         }
 
         .visual {
-            position: relative;
-            min-height: 560px;
+            min-height: 570px;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
         .phone-wrap {
             position: relative;
-            width: min(100%, 340px);
-            transform: rotate(2deg);
+            width: min(100%, 342px);
+            transform: rotate(2.2deg);
         }
 
         .phone-shadow {
             position: absolute;
-            inset: auto 18px -32px 18px;
-            height: 60px;
+            inset: auto 22px -34px 22px;
+            height: 64px;
             border-radius: 999px;
             background: rgba(15, 23, 42, 0.22);
-            filter: blur(28px);
+            filter: blur(30px);
             z-index: 0;
         }
 
         .phone {
             position: relative;
             z-index: 1;
-            border-radius: 44px;
             padding: 12px;
-            background: linear-gradient(135deg, #0f172a, #334155);
+            border-radius: 46px;
+            background:
+                radial-gradient(circle at 30% 16%, rgba(255, 255, 255, 0.18), transparent 24%),
+                linear-gradient(145deg, #0f172a, #334155);
             box-shadow:
-                0 36px 100px rgba(15, 23, 42, 0.34),
+                0 38px 110px rgba(15, 23, 42, 0.34),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.12);
         }
 
         .phone-screen {
-            min-height: 640px;
-            border-radius: 34px;
+            min-height: 646px;
+            border-radius: 35px;
             overflow: hidden;
-            background:
-                radial-gradient(circle at top left, rgba(99, 102, 241, 0.2), transparent 34%),
-                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid rgba(255, 255, 255, 0.7);
             position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            background:
+                radial-gradient(circle at top left, rgba(99, 102, 241, 0.2), transparent 36%),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
         }
 
         .notch {
@@ -487,15 +570,15 @@
             top: 12px;
             left: 50%;
             transform: translateX(-50%);
-            width: 92px;
-            height: 26px;
+            width: 94px;
+            height: 27px;
             border-radius: 999px;
             background: #0f172a;
             z-index: 3;
         }
 
         .screen-content {
-            padding: 54px 22px 24px;
+            padding: 55px 22px 24px;
         }
 
         .mini-header {
@@ -505,23 +588,36 @@
             margin-bottom: 24px;
         }
 
+        .mini-kicker {
+            font-family: "Manrope", sans-serif;
+            color: var(--muted-light);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
         .mini-title {
-            font-size: 21px;
-            font-weight: 950;
-            letter-spacing: -0.04em;
+            font-size: 22px;
+            line-height: 1.05;
+            font-weight: 900;
+            letter-spacing: -0.055em;
         }
 
         .mini-avatar {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 15px;
-            background: linear-gradient(135deg, #4f46e5, #06b6d4);
-            box-shadow: 0 10px 22px rgba(79, 70, 229, 0.22);
+            background:
+                radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.45), transparent 30%),
+                linear-gradient(135deg, #4f46e5, #06b6d4);
+            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.23);
         }
 
         .mini-card {
-            border-radius: 26px;
-            background: white;
+            border-radius: 27px;
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid #eef2f7;
             box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
             padding: 18px;
@@ -529,20 +625,23 @@
         }
 
         .mini-card.dark {
-            background: #111827;
             color: white;
+            background:
+                radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.18), transparent 28%),
+                linear-gradient(145deg, #0f172a, #1e293b);
             border: none;
         }
 
         .mini-chip {
             width: fit-content;
             border-radius: 999px;
-            padding: 7px 10px;
+            padding: 7px 11px;
             background: #eef2ff;
             color: #4338ca;
             font-size: 11px;
-            font-weight: 950;
-            margin-bottom: 12px;
+            line-height: 1;
+            font-weight: 850;
+            margin-bottom: 13px;
         }
 
         .mini-line {
@@ -553,7 +652,7 @@
         }
 
         .mini-line.short {
-            width: 58%;
+            width: 56%;
         }
 
         .mini-line.medium {
@@ -568,7 +667,7 @@
         }
 
         .mini-tile {
-            min-height: 94px;
+            min-height: 96px;
             border-radius: 24px;
             background: rgba(79, 70, 229, 0.08);
             padding: 14px;
@@ -579,98 +678,106 @@
         }
 
         .mini-number {
-            font-size: 28px;
-            font-weight: 950;
+            font-family: "Manrope", sans-serif;
+            font-size: 30px;
+            line-height: 1;
+            font-weight: 800;
             letter-spacing: -0.06em;
             color: #111827;
         }
 
         .mini-label {
-            margin-top: 4px;
+            margin-top: 7px;
             color: #64748b;
             font-size: 11px;
-            font-weight: 850;
+            line-height: 1.2;
+            font-weight: 800;
         }
 
         .floating-card {
             position: absolute;
             z-index: 4;
-            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             padding: 15px 16px;
+            border-radius: 23px;
             background: rgba(255, 255, 255, 0.76);
             border: 1px solid rgba(255, 255, 255, 0.86);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 12px;
-            font-weight: 950;
             color: #334155;
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: -0.01em;
         }
 
         .floating-card.top {
-            top: 90px;
+            top: 92px;
             left: -34px;
         }
 
         .floating-card.bottom {
             bottom: 110px;
-            right: -48px;
+            right: -50px;
         }
 
         .floating-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 13px;
+            width: 35px;
+            height: 35px;
+            flex: 0 0 auto;
+            border-radius: 14px;
             display: grid;
             place-items: center;
-            background: #eef2ff;
             color: #4f46e5;
-            flex: 0 0 auto;
+            background: #eef2ff;
+            font-family: "Manrope", sans-serif;
+            font-weight: 800;
         }
 
         footer {
             position: relative;
             z-index: 3;
-            width: min(var(--max), calc(100% - 40px));
+            width: min(var(--max-width), calc(100% - 44px));
             margin: 0 auto;
             padding: 0 0 30px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             gap: 16px;
             flex-wrap: wrap;
-            color: #94a3b8;
+            color: var(--muted-light);
             font-size: 12px;
-            font-weight: 750;
-        }
-
-        footer a {
-            color: #64748b;
-            font-weight: 900;
+            font-weight: 650;
         }
 
         .footer-links {
             display: flex;
+            align-items: center;
             gap: 16px;
             flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #64748b;
+            font-weight: 800;
         }
 
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.001ms !important;
                 animation-iteration-count: 1 !important;
-                scroll-behavior: auto !important;
                 transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
             }
         }
 
-        @media (max-width: 920px) {
+        @media (max-width: 960px) {
             .hero {
                 grid-template-columns: 1fr;
-                gap: 36px;
-                padding-top: 46px;
+                gap: 38px;
+                padding-top: 48px;
             }
 
             .copy {
@@ -679,11 +786,11 @@
 
             .visual {
                 min-height: auto;
-                padding: 10px 0 36px;
+                padding: 8px 0 38px;
             }
 
             .phone-wrap {
-                width: min(88vw, 330px);
+                width: min(88vw, 334px);
             }
 
             .floating-card.top {
@@ -695,65 +802,100 @@
             }
         }
 
-        @media (max-width: 620px) {
+        @media (max-width: 640px) {
             .nav {
-                width: min(100% - 28px, var(--max));
+                width: min(100% - 28px, var(--max-width));
                 padding-top: 18px;
             }
 
-            .nav-pill {
+            .brand-mark {
+                width: 43px;
+                height: 43px;
+                border-radius: 16px;
+                font-size: 19px;
+            }
+
+            .status-pill {
                 display: none;
             }
 
             .hero {
-                width: min(100% - 28px, var(--max));
-                padding: 42px 0 46px;
+                width: min(100% - 28px, var(--max-width));
+                padding: 44px 0 48px;
             }
 
-            h1 {
-                font-size: clamp(42px, 15vw, 62px);
+            .eyebrow {
+                margin-bottom: 22px;
+            }
+
+            .headline {
+                font-size: clamp(45px, 15vw, 64px);
+                line-height: 0.98;
+                letter-spacing: -0.075em;
             }
 
             .lead {
-                margin-top: 22px;
+                margin-top: 23px;
                 font-size: 16px;
+                line-height: 1.78;
             }
 
             .redirect-card {
-                padding: 18px;
-                border-radius: 24px;
+                margin-top: 30px;
+                padding: 19px;
+                border-radius: 25px;
             }
 
-            .redirect-top {
-                gap: 12px;
+            .redirect-header {
+                gap: 13px;
             }
 
-            .redirect-icon {
-                width: 44px;
-                height: 44px;
+            .redirect-symbol {
+                width: 45px;
+                height: 45px;
                 border-radius: 16px;
+                font-size: 21px;
             }
 
-            .url-box {
+            .redirect-title {
+                font-size: 18px;
+            }
+
+            .redirect-desc {
+                font-size: 13px;
+            }
+
+            .url-panel {
                 align-items: stretch;
+                gap: 13px;
+                border-radius: 21px;
+            }
+
+            .url-value {
+                max-width: 100%;
+                font-size: 12px;
             }
 
             .countdown {
-                min-width: 48px;
-                height: 48px;
+                width: 49px;
+                height: 49px;
+                border-radius: 17px;
+                font-size: 20px;
             }
 
             .actions {
                 display: grid;
                 grid-template-columns: 1fr;
+                gap: 11px;
             }
 
-            .btn {
+            .button {
                 width: 100%;
+                min-height: 54px;
             }
 
             .phone-screen {
-                min-height: 570px;
+                min-height: 574px;
             }
 
             .floating-card {
@@ -761,8 +903,9 @@
             }
 
             footer {
-                width: min(100% - 28px, var(--max));
+                width: min(100% - 28px, var(--max-width));
                 padding-bottom: 24px;
+                align-items: flex-start;
             }
         }
     </style>
@@ -770,83 +913,86 @@
 
 <body>
     <main class="page">
-        <div class="noise"></div>
-        <div class="blob one"></div>
-        <div class="blob two"></div>
-        <div class="blob three"></div>
+        <div class="grain"></div>
+        <div class="aurora one"></div>
+        <div class="aurora two"></div>
+        <div class="aurora three"></div>
 
         <nav class="nav" aria-label="網站導覽">
-            <a class="brand" href="https://colassn.github.io/rchw/index.html" aria-label="前往電子手冊 Pro 新網址">
-                <div class="brand-icon">冊</div>
+            <a class="brand" href="https://colassn.github.io/rchw/index.html" aria-label="前往電子手冊 Pro 新版入口">
+                <div class="brand-mark">冊</div>
                 <div>
-                    <div class="brand-title">電子手冊 Pro</div>
-                    <div class="brand-subtitle">E-HANDBOOK PRO</div>
+                    <div class="brand-name">電子手冊 Pro</div>
+                    <div class="brand-en">E-HANDBOOK PRO</div>
                 </div>
             </a>
 
-            <div class="nav-pill">
+            <div class="status-pill">
                 <span class="status-dot"></span>
-                新網址已啟用
+                新版入口已啟用
             </div>
         </nav>
 
         <section class="hero">
             <div class="copy">
                 <div class="eyebrow">
-                    <span class="spark">✨</span>
+                    <span class="eyebrow-icon">↗</span>
                     網址已更新
                 </div>
 
-                <h1>
-                    請前往<br>
-                    <span class="gradient-text">新版入口</span>
+                <h1 class="headline">
+                    <span class="line">請前往</span>
+                    <span class="line accent">新版入口</span>
                 </h1>
 
                 <p class="lead">
-                    電子手冊 Pro 已搬到新的正式入口。你可以按下面按鈕立即前往，
-                    系統亦會在倒數完結後自動為你跳轉。
+                    電子手冊 Pro 已搬到新的正式入口。
+                    你可以立即前往，系統亦會在倒數後自動跳轉到
+                    <strong>新版電子手冊 Pro</strong>。
                 </p>
 
                 <div class="redirect-card">
-                    <div class="redirect-top">
-                        <div class="redirect-icon">↗</div>
-                        <div>
-                            <div class="redirect-title">正在引導你前往新網址</div>
-                            <div class="redirect-desc">
-                                建議將新網址加入書籤或加到主畫面，之後就可以直接進入電子手冊 Pro。
+                    <div class="redirect-inner">
+                        <div class="redirect-header">
+                            <div class="redirect-symbol">→</div>
+                            <div>
+                                <h2 class="redirect-title">正在為你打開新的正式入口</h2>
+                                <p class="redirect-desc">
+                                    建議將新網址加入書籤，或在手機加到主畫面。之後就可以更快進入你的功課、班級通知同學習記錄。
+                                </p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="url-box">
-                        <div class="url-text">
-                            <div class="url-label">New URL</div>
-                            <div class="url-value">https://colassn.github.io/rchw/index.html</div>
+                        <div class="url-panel">
+                            <div>
+                                <div class="url-label">New entrance</div>
+                                <div class="url-value">https://colassn.github.io/rchw/index.html</div>
+                            </div>
+                            <div class="countdown" id="countdown">8</div>
                         </div>
-                        <div class="countdown" id="countdown">8</div>
-                    </div>
 
-                    <div class="progress" aria-hidden="true">
-                        <div class="progress-bar"></div>
-                    </div>
+                        <div class="progress" aria-hidden="true">
+                            <div class="progress-bar"></div>
+                        </div>
 
-                    <div class="actions">
-                        <a class="btn btn-primary" id="goNow" href="https://colassn.github.io/rchw/index.html">
-                            立即前往新版入口
-                            <span>→</span>
-                        </a>
+                        <div class="actions">
+                            <a class="button button-primary" href="https://colassn.github.io/rchw/index.html">
+                                立即前往新版入口
+                                <span>→</span>
+                            </a>
 
-                        <a class="btn btn-secondary" href="privacy.html">
-                            私隱政策
-                        </a>
+                            <a class="button button-secondary" href="privacy.html">
+                                私隱政策
+                            </a>
 
-                        <a class="btn btn-secondary" href="terms.html">
-                            使用條款
-                        </a>
-                    </div>
+                            <a class="button button-secondary" href="terms.html">
+                                使用條款
+                            </a>
+                        </div>
 
-                    <div class="note">
-                        如果頁面沒有自動跳轉，請按「立即前往新版入口」。
+                        <div class="fine-note">
+                            如果頁面沒有自動跳轉，請按「立即前往新版入口」。
+                        </div>
                     </div>
                 </div>
             </div>
@@ -860,7 +1006,7 @@
 
                     <div class="floating-card bottom">
                         <div class="floating-icon">↗</div>
-                        <div>前往新版入口</div>
+                        <div>正在前往新版入口</div>
                     </div>
 
                     <div class="phone-shadow"></div>
@@ -872,16 +1018,21 @@
                             <div class="screen-content">
                                 <div class="mini-header">
                                     <div>
+                                        <div class="mini-kicker">Today</div>
                                         <div class="mini-title">電子手冊</div>
-                                        <div style="font-size: 12px; color: #64748b; font-weight: 800; margin-top: 4px;">今日學習狀態</div>
                                     </div>
                                     <div class="mini-avatar"></div>
                                 </div>
 
                                 <div class="mini-card dark">
-                                    <div style="font-size: 12px; color: #cbd5e1; font-weight: 900; margin-bottom: 10px;">新版入口</div>
-                                    <div style="font-size: 28px; font-weight: 950; letter-spacing: -0.06em; line-height: 1.05;">更快進入<br>你的學習空間</div>
-                                    <div style="height: 10px; width: 72%; border-radius: 999px; background: rgba(255,255,255,0.18); margin-top: 18px;"></div>
+                                    <div style="font-size: 12px; color: #cbd5e1; font-weight: 800; margin-bottom: 12px;">
+                                        新版入口
+                                    </div>
+                                    <div style="font-size: 29px; font-weight: 900; letter-spacing: -0.065em; line-height: 1.08;">
+                                        更快進入<br>
+                                        你的學習空間
+                                    </div>
+                                    <div style="height: 10px; width: 72%; border-radius: 999px; background: rgba(255,255,255,0.18); margin-top: 20px;"></div>
                                     <div style="height: 10px; width: 44%; border-radius: 999px; background: rgba(255,255,255,0.12); margin-top: 10px;"></div>
                                 </div>
 
@@ -905,15 +1056,22 @@
                                 <div class="mini-card">
                                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
                                         <div>
-                                            <div style="font-size: 13px; font-weight: 950; color: #0f172a;">自動跳轉中</div>
-                                            <div style="font-size: 11px; font-weight: 800; color: #94a3b8; margin-top: 5px;">前往 rchw/index.html</div>
+                                            <div style="font-size: 14px; font-weight: 900; letter-spacing: -0.035em; color: #0f172a;">
+                                                自動跳轉中
+                                            </div>
+                                            <div style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #94a3b8; margin-top: 6px;">
+                                                rchw / index.html
+                                            </div>
                                         </div>
-                                        <div style="width: 46px; height: 46px; border-radius: 17px; background: #eef2ff; color: #4f46e5; display: grid; place-items: center; font-weight: 950;">→</div>
+                                        <div style="width: 46px; height: 46px; border-radius: 17px; background: #eef2ff; color: #4f46e5; display: grid; place-items: center; font-family: Manrope, sans-serif; font-weight: 800;">
+                                            →
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>
