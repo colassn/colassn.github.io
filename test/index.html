@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.8.35 Premium Login：精品級公開登入頁、現代靈動島、頂部資訊框、三張狀態卡片，保留 v1.8 系列完整功能 -->
+    <!-- 電子手冊 Pro v1.8.39-hotfix1 Login Only：登入頁移除多餘文案，只保留品牌與登入入口，保留 v1.8 系列完整功能 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -24,8 +24,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.8.35-premium-login-ui">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.8.35-premium-login-ui"; console.log("電子手冊 Pro v1.8.35-premium-login-ui loaded");</script>
+    <meta name="ehandbook-version" content="v1.8.39-hotfix1-login-only-ui">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.8.39-hotfix1-login-only-ui"; console.log("電子手冊 Pro v1.8.39-hotfix1-login-only-ui loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -179,114 +179,152 @@
         }
         .dynamic-island-scroll::-webkit-scrollbar { display: none; }
 
-
-
-        .human-login-surface {
+        .folio-login-surface {
             background:
-                linear-gradient(135deg, rgba(246,244,239,0.98) 0%, rgba(250,250,248,0.98) 42%, rgba(240,243,247,0.98) 100%);
+                radial-gradient(circle at 12% 18%, rgba(20,184,166,0.10), transparent 28%),
+                radial-gradient(circle at 88% 12%, rgba(15,23,42,0.055), transparent 26%),
+                linear-gradient(135deg, #fbfaf6 0%, #f3efe6 47%, #f8f7f2 100%);
             isolation: isolate;
         }
-        .dark .human-login-surface {
+        .dark .folio-login-surface {
             background:
-                linear-gradient(135deg, rgba(2,6,23,1) 0%, rgba(15,23,42,0.98) 52%, rgba(9,13,24,1) 100%);
+                radial-gradient(circle at 18% 20%, rgba(20,184,166,0.13), transparent 30%),
+                linear-gradient(135deg, #030712 0%, #0f172a 48%, #111827 100%);
         }
-        .human-login-surface::before {
+        .folio-login-surface::before {
             content: '';
             position: absolute;
             inset: 0;
             pointer-events: none;
             z-index: 0;
-            background:
-                linear-gradient(90deg, rgba(15,23,42,0.035) 1px, transparent 1px),
-                linear-gradient(180deg, rgba(15,23,42,0.026) 1px, transparent 1px);
-            background-size: 44px 44px;
-            mask-image: linear-gradient(180deg, rgba(0,0,0,0.82), transparent 78%);
-            -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.82), transparent 78%);
-            opacity: 0.52;
-        }
-        .dark .human-login-surface::before { opacity: 0.18; }
-        .human-login-surface::after {
-            content: '';
-            position: absolute;
-            inset: auto 8% 4% 8%;
-            height: 38%;
-            pointer-events: none;
-            z-index: 0;
-            background: radial-gradient(ellipse at center, rgba(15,23,42,0.075), transparent 62%);
-            filter: blur(24px);
+            background-image:
+                linear-gradient(rgba(15,23,42,0.028) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15,23,42,0.024) 1px, transparent 1px);
+            background-size: 34px 34px;
             opacity: 0.55;
+            mask-image: linear-gradient(180deg, rgba(0,0,0,0.88), transparent 88%);
+            -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.88), transparent 88%);
         }
-        .dark .human-login-surface::after { background: radial-gradient(ellipse at center, rgba(148,163,184,0.10), transparent 64%); opacity: 0.38; }
-        .human-auth-shell {
-            box-shadow: 0 34px 90px rgba(15,23,42,0.16), 0 10px 34px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.76);
+        .dark .folio-login-surface::before { opacity: 0.18; }
+        .folio-topbar {
+            background: rgba(255,255,255,0.52);
+            backdrop-filter: blur(18px) saturate(150%);
+            -webkit-backdrop-filter: blur(18px) saturate(150%);
+            border: 1px solid rgba(15,23,42,0.06);
+            box-shadow: 0 16px 50px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.70);
         }
-        .dark .human-auth-shell {
-            box-shadow: 0 34px 100px rgba(0,0,0,0.55), 0 10px 34px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
+        .dark .folio-topbar {
+            background: rgba(15,23,42,0.52);
+            border-color: rgba(255,255,255,0.08);
+            box-shadow: 0 18px 56px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.06);
         }
-        .human-brand-panel {
+        .folio-brand-mark {
+            background: #101828;
+            color: #ffffff;
+            box-shadow: 0 16px 36px rgba(16,24,40,0.18), inset 0 1px 0 rgba(255,255,255,0.16);
+        }
+        .dark .folio-brand-mark {
+            background: #f8fafc;
+            color: #0f172a;
+            box-shadow: 0 16px 38px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.42);
+        }
+        .folio-hero-word {
+            letter-spacing: -0.068em;
+            text-wrap: balance;
+            font-feature-settings: "palt" 1;
+        }
+        .folio-ink-line {
+            background: linear-gradient(90deg, rgba(15,23,42,0.92), rgba(15,23,42,0.20), transparent);
+        }
+        .dark .folio-ink-line {
+            background: linear-gradient(90deg, rgba(248,250,252,0.90), rgba(248,250,252,0.20), transparent);
+        }
+        .folio-form-card {
+            background: rgba(255,255,255,0.76);
+            backdrop-filter: blur(26px) saturate(155%);
+            -webkit-backdrop-filter: blur(26px) saturate(155%);
+            border: 1px solid rgba(15,23,42,0.08);
+            box-shadow: 0 30px 90px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.82) inset;
+        }
+        .dark .folio-form-card {
+            background: rgba(15,23,42,0.72);
+            border-color: rgba(255,255,255,0.10);
+            box-shadow: 0 30px 100px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.07) inset;
+        }
+        .folio-mode-track {
+            background: rgba(16,24,40,0.055);
+            border: 1px solid rgba(16,24,40,0.055);
+        }
+        .dark .folio-mode-track {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.06);
+        }
+        .folio-field {
+            transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+        }
+        .folio-field:focus-within {
+            transform: translateY(-1px);
+            border-color: rgba(13,148,136,0.55);
+            box-shadow: 0 0 0 4px rgba(13,148,136,0.11), 0 16px 38px rgba(15,23,42,0.07);
+        }
+        .dark .folio-field:focus-within {
+            border-color: rgba(45,212,191,0.42);
+            box-shadow: 0 0 0 4px rgba(45,212,191,0.10), 0 16px 38px rgba(0,0,0,0.20);
+        }
+        .folio-primary-btn {
+            background: linear-gradient(135deg, #0f172a, #111827 55%, #0f766e);
+            box-shadow: 0 18px 42px rgba(15,23,42,0.22);
+        }
+        .folio-primary-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 24px 54px rgba(15,23,42,0.26);
+        }
+        .dark .folio-primary-btn {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0 58%, #99f6e4);
+            box-shadow: 0 18px 42px rgba(0,0,0,0.30);
+        }
+        .folio-google-btn:hover { transform: translateY(-1px); }
+        .folio-signet {
+            background: linear-gradient(180deg, rgba(13,148,136,0.16), rgba(13,148,136,0.04));
+            border: 1px solid rgba(13,148,136,0.16);
+        }
+        .dark .folio-signet {
+            background: linear-gradient(180deg, rgba(45,212,191,0.12), rgba(45,212,191,0.035));
+            border-color: rgba(45,212,191,0.14);
+        }
+        @keyframes folioRise {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .folio-enter { animation: folioRise 520ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .folio-enter-delay { animation: folioRise 620ms cubic-bezier(0.16, 1, 0.3, 1) 70ms both; }
+        .folio-divider { background: linear-gradient(90deg, transparent, rgba(15,23,42,0.16), transparent); }
+        .dark .folio-divider { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent); }
+
+        .login-only-surface {
             background:
-                linear-gradient(160deg, rgba(12,18,32,0.98) 0%, rgba(24,33,52,0.98) 46%, rgba(8,13,24,0.99) 100%);
-            color: white;
+                radial-gradient(circle at 50% 0%, rgba(15,23,42,0.055), transparent 30%),
+                linear-gradient(180deg, #fbfaf7 0%, #f4f0e8 100%);
         }
-        .human-brand-panel::before {
-            content: '';
-            position: absolute;
-            inset: 22px;
-            border: 1px solid rgba(255,255,255,0.09);
-            border-radius: 1.65rem;
-            pointer-events: none;
+        .dark .login-only-surface {
+            background:
+                radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08), transparent 32%),
+                linear-gradient(180deg, #020617 0%, #0f172a 100%);
         }
-        .human-brand-panel::after {
-            content: '';
-            position: absolute;
-            left: 3rem;
-            right: 3rem;
-            bottom: 8.2rem;
-            height: 1px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.42), rgba(255,255,255,0.04));
-            pointer-events: none;
+        .login-only-card {
+            background: rgba(255,255,255,0.82);
+            border: 1px solid rgba(15,23,42,0.08);
+            box-shadow: 0 28px 90px rgba(15,23,42,0.12), inset 0 1px 0 rgba(255,255,255,0.72);
+            backdrop-filter: blur(24px) saturate(140%);
+            -webkit-backdrop-filter: blur(24px) saturate(140%);
         }
-        .human-brand-mark {
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.46), 0 18px 38px rgba(15,23,42,0.16);
+        .dark .login-only-card {
+            background: rgba(15,23,42,0.74);
+            border-color: rgba(255,255,255,0.10);
+            box-shadow: 0 28px 90px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.06);
         }
-        .dark .human-brand-mark {
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 18px 42px rgba(0,0,0,0.36);
-        }
-        .human-premium-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.72));
-            box-shadow: 0 22px 70px rgba(15,23,42,0.10), 0 2px 0 rgba(255,255,255,0.70) inset;
-        }
-        .dark .human-premium-card {
-            background: linear-gradient(180deg, rgba(15,23,42,0.84), rgba(2,6,23,0.72));
-            box-shadow: 0 22px 70px rgba(0,0,0,0.36), 0 1px 0 rgba(255,255,255,0.06) inset;
-        }
-        .human-input-shell {
-            transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, transform 180ms ease;
-        }
-        .human-input-shell:focus-within {
-            transform: translateY(-1px);
-            border-color: rgba(15,23,42,0.34);
-            box-shadow: 0 0 0 5px rgba(15,23,42,0.055), 0 14px 30px rgba(15,23,42,0.06);
-        }
-        .dark .human-input-shell:focus-within {
-            border-color: rgba(226,232,240,0.34);
-            box-shadow: 0 0 0 5px rgba(226,232,240,0.07), 0 14px 30px rgba(0,0,0,0.16);
-        }
-        .human-primary-btn {
-            box-shadow: 0 18px 38px rgba(15,23,42,0.20);
-        }
-        .human-primary-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 22px 46px rgba(15,23,42,0.24);
-        }
-        .human-secondary-btn:hover { transform: translateY(-1px); }
-        @keyframes humanFadeUp {
-            from { opacity: 0; transform: translateY(12px) scale(0.992); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .human-fade-up { animation: humanFadeUp 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-        .human-fine-line { background: linear-gradient(90deg, transparent, rgba(15,23,42,0.16), transparent); }
-        .dark .human-fine-line { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent); }
+        .login-only-wordmark { letter-spacing: -0.035em; }
+        .login-only-fade { animation: folioRise 460ms cubic-bezier(0.16, 1, 0.3, 1) both; }
         .modern-custom-switch { transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease; }
         .modern-custom-switch:active { transform: scale(0.96); }
         .modern-input-shell { transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, transform 0.18s ease; }
@@ -300,7 +338,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.8.35 Google 登入穩定版啟動保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.8.39-hotfix1 Google 登入穩定版啟動保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -378,7 +416,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.8.35-premium-login-ui',
+                version: 'v1.8.39-hotfix1-login-only-ui',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -477,23 +515,21 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.8.35-premium-login-ui',
-            title: '電子手冊 Pro v1.8.35 已更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.8.39-hotfix1-login-only-ui',
+            title: '電子手冊 Pro v1.8.39-hotfix1 已更新',
             summary: [
-                '登入頁已重做成更克制、更自然的公開產品入口，去除過度 AI 感光效和裝飾。',
-                '保留登入、註冊、重設密碼和必要提示，畫面更簡潔、專業、集中。',
-                '保留 Google 登入、Email 登入、Firebase、主頁、班級、管理員、更新彈窗和 AdSense。',
-                '延續自建 UI 控制、現代靈動島、主頁資訊框和三張狀態卡片。'
+                '登入頁已移除多餘品牌文案，只保留必要登入入口。',
+                '畫面改為更簡潔集中，減少左側大字與介紹內容。',
+                '保留原有 Google 登入、Email 登入、註冊、忘記密碼與所有主程式功能。'
             ].join('\n'),
             guide: [
-                '部署後重新整理網站，確認登入頁底部顯示 v1.8.35。',
-                '登入頁應更接近真實公開產品入口，不應再有浮誇 AI 生成感。',
-                '測試 Google 登入、Email 登入、註冊和忘記密碼，流程應與之前一樣正常。',
-                '登入後測試靈動島、主頁資訊框、三張狀態卡片和管理員後台入口。'
+                '部署後請先確認登入頁底部顯示 v1.8.39-hotfix1。',
+                '再測試 Google 登入、Email 登入、註冊及忘記密碼。',
+                '登入後檢查主頁、班級、時間表及後台入口正常。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-05-27T16:30:00+08:00',
+            publishedAt: '2026-05-27T23:39:00+08:00',
             source: 'built-in'
         };
 
@@ -546,9 +582,9 @@
             if (code === 'auth/popup-blocked') return '瀏覽器阻擋了登入視窗，請再按一次 Google 登入，系統會自動改用跳轉登入。';
             if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return '你已取消 Google 登入，請再按一次「使用 Google 繼續」。';
             if (code === 'auth/operation-not-supported-in-this-environment' || code === 'auth/web-storage-unsupported') return '這個瀏覽器不支援彈出式登入，請用 Chrome / Safari 開啟，或再按一次讓系統改用跳轉登入。';
-            if (code === 'auth/unauthorized-domain') return '此網站網域未加入 Firebase 授權網域，請管理員到 Firebase Authentication > Settings > Authorized domains 加入目前網址。';
-            if (code === 'auth/operation-not-allowed') return 'Firebase 尚未開啟 Google 或 Email 登入方式，請管理員到 Firebase Authentication 啟用。';
-            if (code === 'auth/argument-error') return 'Google 登入參數錯誤。已改為 v1.8.35 登入流程；請重新部署此檔案並清除快取。';
+            if (code === 'auth/unauthorized-domain') return '此網站網域尚未加入 Firebase 授權網域，請由網站負責人更新 Firebase Authentication 授權網域設定。';
+            if (code === 'auth/operation-not-allowed') return 'Firebase 尚未開啟 Google 或 Email 登入方式，請由網站負責人檢查登入設定。';
+            if (code === 'auth/argument-error') return 'Google 登入參數錯誤。已改為 v1.8.39-hotfix1 登入流程；請重新部署此檔案並清除快取。';
             return (mode === 'reset' ? '重設密碼失敗：' : mode === 'register' ? '註冊失敗：' : '登入失敗：') + (error?.message || code || '請稍後再試');
         };
 
@@ -911,146 +947,100 @@
                 } 
             };
 
-            const titleText = isResetMode ? '重設密碼' : (isLogin ? '登入' : '建立帳戶');
-            const subtitleText = isResetMode ? '輸入 Email，系統會寄出重設連結。' : (isLogin ? '歡迎回到電子手冊 Pro。' : '建立你的電子手冊 Pro 帳戶。');
-            const submitText = isResetMode ? '發送重設連結' : (isLogin ? '繼續' : '建立帳戶');
+            const titleText = isResetMode ? '重設密碼' : (isLogin ? '登入' : '註冊');
+            const subtitleText = isResetMode ? '輸入 Email 收取連結' : '';
+            const submitText = isResetMode ? '發送連結' : (isLogin ? '登入' : '註冊');
 
             return (
-                <div className="human-login-surface min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-6 text-slate-950 dark:text-white">
-                    <main className="human-auth-shell human-fade-up relative z-10 w-full max-w-6xl min-h-[690px] rounded-[2.25rem] overflow-hidden border border-white/80 dark:border-white/10 bg-white/68 dark:bg-slate-950/70 backdrop-blur-2xl grid lg:grid-cols-[1.03fr_0.97fr]">
-                        <aside className="hidden lg:flex human-brand-panel relative p-12 xl:p-14 flex-col justify-between overflow-hidden">
-                            <div className="relative z-10">
-                                <div className="flex items-center gap-3 mb-24">
-                                    <div className="human-brand-mark w-11 h-11 rounded-[1.05rem] bg-white text-slate-950 flex items-center justify-center">
-                                        <Icon name="book-open" className="w-5 h-5" />
+                <div className="login-only-surface min-h-screen relative overflow-hidden text-slate-950 dark:text-white selection:bg-teal-200/60 dark:selection:bg-teal-500/25">
+                    <main className="min-h-screen flex items-center justify-center px-4 py-8">
+                        <section className="login-only-fade w-full max-w-[410px]">
+                            <div className="login-only-card rounded-[2rem] p-5 sm:p-7">
+                                <div className="flex flex-col items-center text-center mb-7">
+                                    <div className="folio-brand-mark w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                                        <Icon name="book-open" className="w-6 h-6" />
                                     </div>
+                                    <h1 className="login-only-wordmark text-2xl font-black text-slate-950 dark:text-white">電子手冊 Pro</h1>
+                                </div>
+
+                                {!isResetMode && (
+                                    <div className="folio-mode-track grid grid-cols-2 gap-1 rounded-2xl p-1 mb-5">
+                                        <button type="button" onClick={() => { setIsLogin(true); setIsResetMode(false); }} className={`py-2.5 rounded-[0.95rem] text-sm font-black transition-all duration-200 active:scale-[0.985] ${isLogin ? 'bg-white dark:bg-slate-950 text-slate-950 dark:text-white shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'}`}>
+                                            登入
+                                        </button>
+                                        <button type="button" onClick={() => { setIsLogin(false); setIsResetMode(false); }} className={`py-2.5 rounded-[0.95rem] text-sm font-black transition-all duration-200 active:scale-[0.985] ${!isLogin ? 'bg-white dark:bg-slate-950 text-slate-950 dark:text-white shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'}`}>
+                                            註冊
+                                        </button>
+                                    </div>
+                                )}
+
+                                <div className="mb-5">
+                                    <h2 className="text-xl font-black tracking-[-0.03em] text-slate-950 dark:text-white">{titleText}</h2>
+                                    {isResetMode && <p className="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-400">{subtitleText}</p>}
+                                </div>
+
+                                {!isResetMode && (
+                                    <button type="button" onClick={handleGoogleLogin} disabled={loading} className="folio-google-btn w-full py-3.5 rounded-2xl bg-white/88 dark:bg-slate-950/65 border border-slate-900/10 dark:border-white/10 hover:border-teal-700/24 dark:hover:border-teal-300/22 text-slate-950 dark:text-white font-black transition-all duration-200 active:scale-[0.99] flex items-center justify-center gap-3 shadow-sm disabled:opacity-70">
+                                        {loading ? <Icon name="loader" className="w-5 h-5 animate-spin" /> : <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />}
+                                        <span>Google 登入</span>
+                                    </button>
+                                )}
+
+                                {inAppBrowser && !isResetMode && (
+                                    <div className="mt-3 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 px-4 py-3 text-xs font-bold text-amber-700 dark:text-amber-300 flex gap-2.5 items-center">
+                                        <Icon name="alert-triangle" className="w-4 h-4 shrink-0" />
+                                        請用 Safari / Chrome 開啟。
+                                    </div>
+                                )}
+
+                                {!isResetMode && (
+                                    <div className="relative my-5">
+                                        <div className="absolute inset-0 flex items-center"><div className="folio-divider w-full h-px"></div></div>
+                                        <div className="relative flex justify-center text-[11px] font-black text-slate-400"><span className="px-3 bg-white/78 dark:bg-slate-950/78 rounded-full">或</span></div>
+                                    </div>
+                                )}
+
+                                <form onSubmit={handleEmailAuth} className="space-y-4">
                                     <div>
-                                        <div className="text-[13px] font-black tracking-[-0.02em] text-white">電子手冊 Pro</div>
-                                        <div className="text-[10px] font-black tracking-[0.24em] text-slate-400 uppercase">E-HANDBOOK PRO</div>
-                                    </div>
-                                </div>
-
-                                <div className="max-w-[25rem]">
-                                    <div className="mb-7 flex items-center gap-3 text-[10px] font-black tracking-[0.24em] text-slate-400 uppercase">
-                                        <span className="h-px w-10 bg-white/28"></span>
-                                        Private Access
-                                    </div>
-                                    <h1 className="text-[4.35rem] xl:text-[4.85rem] leading-[0.88] tracking-[-0.085em] font-black text-white">
-                                        Calm<br/>Entry.
-                                    </h1>
-                                    <p className="mt-8 text-[15px] leading-7 font-semibold text-slate-300 max-w-[20rem]">
-                                        一個安靜、清晰、專注嘅開始。
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="relative z-10 grid grid-cols-[1fr_auto] items-end gap-6 text-[11px] font-black text-slate-400">
-                                <div>
-                                    <div className="mb-3 h-px w-20 bg-white/20"></div>
-                                    <div>colassn.github.io</div>
-                                </div>
-                                <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">v1.8.35</div>
-                            </div>
-                        </aside>
-
-                        <section className="relative flex items-center justify-center px-5 py-8 sm:px-10 lg:px-14">
-                            <div className="w-full max-w-[26.5rem]">
-                                <div className="lg:hidden flex items-center justify-between mb-9">
-                                    <div className="flex items-center gap-3">
-                                        <div className="human-brand-mark w-11 h-11 rounded-[1.05rem] bg-slate-950 dark:bg-white flex items-center justify-center">
-                                            <Icon name="book-open" className="w-5 h-5 text-white dark:text-slate-950" />
+                                        <label className="text-xs font-black text-slate-500 dark:text-slate-400 ml-1">Email</label>
+                                        <div className="folio-field relative mt-1.5 rounded-2xl bg-white/78 dark:bg-slate-950/52 border border-slate-900/10 dark:border-white/10">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-teal-700/60 dark:text-teal-300/70"><Icon name="mail" className="w-5 h-5" /></div>
+                                            <input type="email" className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-transparent focus:outline-none font-bold dark:text-white placeholder:text-slate-300" placeholder="name@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
                                         </div>
+                                    </div>
+
+                                    {!isResetMode && (
                                         <div>
-                                            <div className="text-[13px] font-black text-slate-950 dark:text-white">電子手冊 Pro</div>
-                                            <div className="text-[10px] font-black tracking-[0.24em] text-slate-400 uppercase">E-HANDBOOK PRO</div>
-                                        </div>
-                                    </div>
-                                    <div className="rounded-full border border-slate-200 dark:border-white/10 px-2.5 py-1 text-[10px] font-black text-slate-400 dark:text-slate-600">v1.8.35</div>
-                                </div>
-
-                                <div className="human-premium-card rounded-[2rem] border border-white/85 dark:border-white/10 p-5 sm:p-7">
-                                    <div className="mb-7">
-                                        <div className="text-[10px] font-black tracking-[0.24em] text-slate-400 uppercase mb-3">Secure Access</div>
-                                        <h2 className="text-4xl sm:text-[2.85rem] font-black tracking-[-0.065em] leading-none text-slate-950 dark:text-white">{titleText}</h2>
-                                        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-3">{subtitleText}</p>
-                                    </div>
-
-                                    {!isResetMode && (
-                                        <div className="grid grid-cols-2 gap-1 p-1 rounded-2xl bg-slate-950/[0.035] dark:bg-white/[0.055] border border-slate-200/80 dark:border-white/10 mb-5">
-                                            <button type="button" onClick={() => { setIsLogin(true); setIsResetMode(false); }} className={`py-2.5 rounded-xl text-sm font-black transition-all duration-200 active:scale-[0.99] ${isLogin ? 'bg-white dark:bg-slate-950 text-slate-950 dark:text-white shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>
-                                                登入
-                                            </button>
-                                            <button type="button" onClick={() => { setIsLogin(false); setIsResetMode(false); }} className={`py-2.5 rounded-xl text-sm font-black transition-all duration-200 active:scale-[0.99] ${!isLogin ? 'bg-white dark:bg-slate-950 text-slate-950 dark:text-white shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>
-                                                註冊
-                                            </button>
-                                        </div>
-                                    )}
-
-                                    {!isResetMode && (
-                                        <button type="button" onClick={handleGoogleLogin} disabled={loading} className="human-secondary-btn w-full py-3.5 rounded-2xl bg-white/92 dark:bg-slate-950/72 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/18 text-slate-900 dark:text-white font-black transition-all duration-200 active:scale-[0.99] flex items-center justify-center gap-3 shadow-sm disabled:opacity-70">
-                                            {loading ? <Icon name="loader" className="w-5 h-5 animate-spin" /> : <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />}
-                                            <span>使用 Google 繼續</span>
-                                        </button>
-                                    )}
-
-                                    {inAppBrowser && !isResetMode && (
-                                        <div className="mt-3 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 px-4 py-3 text-xs font-bold text-amber-700 dark:text-amber-300 flex gap-2.5 items-center">
-                                            <Icon name="alert-triangle" className="w-4 h-4 shrink-0" />
-                                            如登入不順，請用 Safari / Chrome 開啟。
-                                        </div>
-                                    )}
-
-                                    {!isResetMode && (
-                                        <div className="relative my-6">
-                                            <div className="absolute inset-0 flex items-center"><div className="human-fine-line w-full h-px"></div></div>
-                                            <div className="relative flex justify-center text-[11px] font-black text-slate-400"><span className="px-4 bg-white/80 dark:bg-slate-950/80 rounded-full">或使用 Email</span></div>
-                                        </div>
-                                    )}
-
-                                    <form onSubmit={handleEmailAuth} className="space-y-4">
-                                        <div>
-                                            <label className="text-xs font-black text-slate-500 dark:text-slate-400 ml-1">Email</label>
-                                            <div className="human-input-shell relative mt-1.5 rounded-2xl bg-white/84 dark:bg-slate-950/58 border border-slate-200 dark:border-white/10">
-                                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400"><Icon name="mail" className="w-5 h-5" /></div>
-                                                <input type="email" className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-transparent focus:outline-none font-bold dark:text-white placeholder:text-slate-300" placeholder="name@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
+                                            <div className="flex items-center justify-between ml-1 mb-1.5">
+                                                <label className="text-xs font-black text-slate-500 dark:text-slate-400">密碼</label>
+                                                <button type="button" onClick={() => setIsResetMode(true)} className="text-xs font-black text-teal-700 dark:text-teal-300 hover:text-slate-950 dark:hover:text-white transition-colors">忘記密碼？</button>
+                                            </div>
+                                            <div className="folio-field relative rounded-2xl bg-white/78 dark:bg-slate-950/52 border border-slate-900/10 dark:border-white/10">
+                                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-teal-700/60 dark:text-teal-300/70"><Icon name="lock" className="w-5 h-5" /></div>
+                                                <input type={showPassword ? 'text' : 'password'} className="w-full pl-12 pr-12 py-3.5 rounded-2xl bg-transparent focus:outline-none font-bold dark:text-white placeholder:text-slate-300" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
+                                                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors" aria-label={showPassword ? '隱藏密碼' : '顯示密碼'}>
+                                                    <Icon name={showPassword ? 'eye-off' : 'eye'} className="w-5 h-5" />
+                                                </button>
                                             </div>
                                         </div>
-
-                                        {!isResetMode && (
-                                            <div>
-                                                <div className="flex items-center justify-between ml-1 mb-1.5">
-                                                    <label className="text-xs font-black text-slate-500 dark:text-slate-400">密碼</label>
-                                                    <button type="button" onClick={() => setIsResetMode(true)} className="text-xs font-black text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors">忘記密碼？</button>
-                                                </div>
-                                                <div className="human-input-shell relative rounded-2xl bg-white/84 dark:bg-slate-950/58 border border-slate-200 dark:border-white/10">
-                                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400"><Icon name="lock" className="w-5 h-5" /></div>
-                                                    <input type={showPassword ? 'text' : 'password'} className="w-full pl-12 pr-12 py-3.5 rounded-2xl bg-transparent focus:outline-none font-bold dark:text-white placeholder:text-slate-300" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
-                                                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors" aria-label={showPassword ? '隱藏密碼' : '顯示密碼'}>
-                                                        <Icon name={showPassword ? 'eye-off' : 'eye'} className="w-5 h-5" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        <button type="submit" disabled={loading} className="human-primary-btn w-full py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-black transition-all duration-200 active:scale-[0.99] flex items-center justify-center gap-2 mt-5 disabled:opacity-70">
-                                            {loading ? <Icon name="loader" className="w-5 h-5 animate-spin" /> : <span>{submitText}</span>}
-                                        </button>
-                                    </form>
-
-                                    {isResetMode && (
-                                        <div className="mt-6 text-center">
-                                            <button type="button" onClick={() => { setIsResetMode(false); setIsLogin(true); }} className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-black text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/8 transition-all">
-                                                <Icon name="arrow-left" className="w-4 h-4" />
-                                                返回登入
-                                            </button>
-                                        </div>
                                     )}
-                                </div>
 
-                                <div className="mt-5 text-center text-[10px] font-black text-slate-300 dark:text-slate-700 select-none">
-                                    v1.8.35
-                                </div>
+                                    <button type="submit" disabled={loading} className="folio-primary-btn w-full py-3.5 rounded-2xl text-white dark:text-slate-950 font-black transition-all duration-200 active:scale-[0.99] flex items-center justify-center gap-2 mt-5 disabled:opacity-70">
+                                        {loading ? <Icon name="loader" className="w-5 h-5 animate-spin" /> : <span>{submitText}</span>}
+                                    </button>
+                                </form>
+
+                                {isResetMode && (
+                                    <div className="mt-5 text-center">
+                                        <button type="button" onClick={() => { setIsResetMode(false); setIsLogin(true); }} className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-black text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/8 transition-all">
+                                            <Icon name="arrow-left" className="w-4 h-4" />
+                                            返回
+                                        </button>
+                                    </div>
+                                )}
                             </div>
+
+                            <div className="mt-4 text-center text-[10px] font-black text-slate-400/80 dark:text-slate-600 select-none">v1.8.39-hotfix1</div>
                         </section>
                     </main>
                 </div>
@@ -1106,7 +1096,7 @@
         }
 
         function BlockScreen({ type, estimatedTime, customMessage, customTitle, user }) {
-            const defaultMessage = (type === 'access_denied' || type === 'whitelist_blocked') ? '抱歉，此系統目前已限制您的存取權限。\n請聯絡管理員了解詳情。' : '管理員正在進行系統維護，請稍後再回來。';
+            const defaultMessage = (type === 'access_denied' || type === 'whitelist_blocked') ? '抱歉，此系統目前已限制您的存取權限。\n請稍後再試或聯絡負責人。' : '系統正在進行維護，請稍後再回來。';
             const iconName = (type === 'access_denied' || type === 'whitelist_blocked') ? 'shield-ban' : (type === 'updating' ? 'hammer' : (type === 'restructuring' ? 'database' : 'lock'));
             const defaultTitle = type === 'access_denied' || type === 'whitelist_blocked' ? '存取被拒' : type === 'updating' ? '網站更新中' : type === 'restructuring' ? '資料重整中' : '系統維護中';
             
@@ -1737,7 +1727,7 @@
             const [updatePopupEnabledInput, setUpdatePopupEnabledInput] = useState(systemConfig?.updatePopupEnabled !== false);
             const [maintenanceModeInput, setMaintenanceModeInput] = useState(systemConfig?.maintenanceMode || 'normal');
             const [maintenanceTitleInput, setMaintenanceTitleInput] = useState(systemConfig?.maintenanceTitle || '網站更新中');
-            const [maintenanceMessageInput, setMaintenanceMessageInput] = useState(systemConfig?.message || '管理員正在更新系統，請稍後再回來。');
+            const [maintenanceMessageInput, setMaintenanceMessageInput] = useState(systemConfig?.message || '系統正在更新，請稍後再回來。');
             const [estimatedTimeInput, setEstimatedTimeInput] = useState(systemConfig?.estimatedTime || '約 10 分鐘');
             const [viewingClass, setViewingClass] = useState(null); 
             const [taskStats, setTaskStats] = useState({});
@@ -1811,7 +1801,7 @@
                 setUpdatePopupEnabledInput(systemConfig?.updatePopupEnabled !== false);
                 setMaintenanceModeInput(systemConfig?.maintenanceMode || 'normal');
                 setMaintenanceTitleInput(systemConfig?.maintenanceTitle || '網站更新中');
-                setMaintenanceMessageInput(systemConfig?.message || '管理員正在更新系統，請稍後再回來。');
+                setMaintenanceMessageInput(systemConfig?.message || '系統正在更新，請稍後再回來。');
                 setEstimatedTimeInput(systemConfig?.estimatedTime || '約 10 分鐘');
             }, [systemConfig?.updateVersion, systemConfig?.updateTitle, systemConfig?.updateSummary, systemConfig?.updateGuide, systemConfig?.updateAudience, systemConfig?.updatePopupEnabled, systemConfig?.maintenanceMode, systemConfig?.maintenanceTitle, systemConfig?.message, systemConfig?.estimatedTime]);
 
@@ -1868,7 +1858,7 @@
                         await setDoc(doc(db, 'system_settings', 'config'), {
                             maintenanceMode: maintenanceModeInput,
                             maintenanceTitle: maintenanceTitleInput.trim() || '網站更新中',
-                            message: maintenanceMessageInput.trim() || '管理員正在更新系統，請稍後再回來。',
+                            message: maintenanceMessageInput.trim() || '系統正在更新，請稍後再回來。',
                             estimatedTime: estimatedTimeInput.trim() || ''
                         }, { merge: true });
                         triggerAlert(maintenanceModeInput === 'normal' ? '已關閉阻攔畫面' : '已啟用阻攔畫面');
@@ -2009,7 +1999,7 @@
                 completed: false,
                 createdAt: new Date().toISOString(),
                 publicRefId: task.id,
-                senderName: task.senderName || '管理員',
+                senderName: task.senderName || '系統',
                 targetClass: task.targetClass || '全校',
                 autoSynced: true,
                 syncedByAdmin: true,
@@ -2024,7 +2014,7 @@
                 description: task.description || '',
                 dueDate: task.dueDate || '',
                 publicRefId: task.id,
-                senderName: task.senderName || '管理員',
+                senderName: task.senderName || '系統',
                 targetClass: task.targetClass || '全校',
                 syncedByAdmin: true,
                 syncedAt: new Date().toISOString(),
@@ -2717,7 +2707,7 @@
                                                         <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
                                                             <button type="button" onClick={() => handlePushPublicTaskNow(task)} disabled={isPushingPublic || !stats.pendingList?.length} className="px-4 py-3 rounded-2xl bg-indigo-600 text-white text-xs font-black hover:bg-indigo-700 disabled:opacity-40 flex items-center justify-center gap-2"><Icon name={isPushingPublic ? "loader" : "send"} className={`w-4 h-4 ${isPushingPublic ? 'animate-spin' : ''}`} /> 重新派發未到位</button>
                                                             <button type="button" onClick={() => handleSendSyncReminder(task, stats)} disabled={!stats.pendingList?.length} className="px-4 py-3 rounded-2xl bg-orange-500 text-white text-xs font-black hover:bg-orange-600 disabled:opacity-40 flex items-center justify-center gap-2"><Icon name="bell-ring" className="w-4 h-4" /> 提醒未到位</button>
-                                                            <button type="button" onClick={() => { setActiveTab('settings'); setMaintenanceModeInput('updating'); setMaintenanceTitleInput('系統更新中'); setMaintenanceMessageInput('管理員正在更新電子手冊功能，請稍後再回來。'); }} className="px-4 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-black hover:opacity-90 flex items-center justify-center gap-2"><Icon name="shield-alert" className="w-4 h-4" /> 開啟阻攔設定</button>
+                                                            <button type="button" onClick={() => { setActiveTab('settings'); setMaintenanceModeInput('updating'); setMaintenanceTitleInput('系統更新中'); setMaintenanceMessageInput('系統正在更新電子手冊功能，請稍後再回來。'); }} className="px-4 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-black hover:opacity-90 flex items-center justify-center gap-2"><Icon name="shield-alert" className="w-4 h-4" /> 開啟阻攔設定</button>
                                                             <button type="button" onClick={() => setActiveTab('tasks')} className="px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center gap-2"><Icon name="list-checks" className="w-4 h-4" /> 返回任務中心</button>
                                                         </div>
                                                         {stats.pendingList.length > 0 ? (
@@ -3013,7 +3003,7 @@
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.8.35
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.8.39-hotfix1
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
@@ -3251,7 +3241,7 @@ function App() {
                 const loadingScreen = document.getElementById('loading-screen');
                 window.__EHANDBOOK_RENDERED__ = true;
                 if (loadingScreen) { loadingScreen.classList.add('hidden-loader'); setTimeout(() => loadingScreen.remove(), 500); }
-                // v1.8.35: 已保留登入功能；廣播功課改為管理員發放後即時廣播派發。
+                // v1.8.39-hotfix1: 已保留登入功能；廣播功課發放後即時派發。
             }, []);
 
             useEffect(() => {
@@ -3699,7 +3689,7 @@ function App() {
                         id: reminder.id || `reminder-${reminder.taskId || makeHash(reminder.message || '')}`,
                         type: 'admin-reminder',
                         icon: 'bell-ring',
-                        title: reminder.title || '管理員提醒',
+                        title: reminder.title || '系統提醒',
                         message: reminder.message || '請查看最新系統提醒。',
                         meta: target === '全校' ? '全校提醒' : `班級 ${target}`,
                         time: formatFirebaseDateTime(reminder.createdAt) || '剛剛',
@@ -3773,7 +3763,7 @@ function App() {
                     const targetCode = task.targetClass || '全校';
                     const cls = systemClasses.find(c => c.code === targetCode);
                     const targetName = targetCode === '全校' ? '全校' : (cls?.name || targetCode);
-                    const sender = task.senderName || '管理員';
+                    const sender = task.senderName || '系統';
                     const subjectName = task.subject || '其他';
                     const taskText = task.description || '未填寫內容';
                     const synced = syncedPublicIds.has(task.id);
@@ -4097,7 +4087,7 @@ function App() {
             const maintenanceMode = systemConfig?.maintenanceMode || 'normal';
             if (maintenanceMode !== 'normal' && !isAdmin) return <BlockScreen type={maintenanceMode} estimatedTime={systemConfig?.estimatedTime} customMessage={systemConfig?.message} customTitle={systemConfig?.maintenanceTitle} user={user} />;
             if (systemConfig?.whitelistEnabled && !isAdmin && (!systemConfig?.allowedEmails?.includes(user.email))) return <BlockScreen type="whitelist_blocked" user={user} />;
-            if (systemConfig?.blacklistEnabled && !isAdmin && systemConfig?.blacklistedEmails?.includes(user.email)) return <BlockScreen type="access_denied" customTitle="帳號停權" customMessage="您的帳號已被管理員列入黑名單，無法存取本系統。" user={user} />;
+            if (systemConfig?.blacklistEnabled && !isAdmin && systemConfig?.blacklistedEmails?.includes(user.email)) return <BlockScreen type="access_denied" customTitle="帳號停權" customMessage="您的帳號目前無法存取本系統。" user={user} />;
 
             return (
                 <div className={`min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-slate-900 font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
@@ -4136,7 +4126,7 @@ function App() {
                                             <h1 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white leading-tight tracking-tight truncate">
                                                 {viewMode === 'settings' ? '應用程式設定' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '歷史紀錄' : appMode === 'class' ? '班級廣播' : '學生小幫手'}
                                             </h1>
-                                            <span className="hidden sm:inline-flex px-2 py-1 rounded-full bg-slate-900/5 dark:bg-white/10 text-[10px] font-black text-slate-400 dark:text-slate-500 border border-white/50 dark:border-white/10">v1.8.35</span>
+                                            <span className="hidden sm:inline-flex px-2 py-1 rounded-full bg-slate-900/5 dark:bg-white/10 text-[10px] font-black text-slate-400 dark:text-slate-500 border border-white/50 dark:border-white/10">v1.8.39-hotfix1</span>
                                         </div>
                                         <div className="mt-1.5 flex items-center gap-2 overflow-x-auto scrollbar-hide text-[11px] font-black text-slate-500 dark:text-slate-400">
                                             <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/70 dark:bg-slate-800/70 border border-white/60 dark:border-slate-700/70"><Icon name="calendar-days" className="w-3.5 h-3.5" />{globalNow.toLocaleDateString('zh-HK', { month: 'numeric', day: 'numeric', weekday: 'short' })}</span>
@@ -4598,11 +4588,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.8.35-premium-login-ui | premium-human-login | custom-switches | modern-island | original-functions-preserved -->
-    <!-- ehandbook-build: v1.8.35-premium-login-ui -->
+<!-- VERSION_CHECK: v1.8.39-hotfix1-login-only-ui | login-only | custom-switches | modern-island | original-functions-preserved -->
+    <!-- ehandbook-build: v1.8.39-hotfix1-login-only-ui -->
 </body>
 </html>
 
-<!-- ehandbook_v1.8.35_premium_login_ui: premium restrained public login page; custom switches and modern Dynamic Island; v1.8 functions preserved. -->
+<!-- ehandbook_v1.8.39_hotfix1_login_only: login page reduced to brand and sign-in only; custom switches and modern Dynamic Island; v1.8 functions preserved. -->
 
-<!-- v1.8.35-premium-login-ui: premium public login page; students auto-claim broadcast assignments on login; no extra class-page controls added. -->
+<!-- v1.8.39-hotfix1-login-only-ui: minimal login-only page; students auto-claim broadcast assignments on login; no extra class-page controls added. -->
