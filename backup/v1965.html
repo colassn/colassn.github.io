@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.9.6.5 Premium Dock UI Fix：高級登入頁面、移除登入頁硬卡片、保留公開版功能 -->
+    <!-- 電子手冊 Pro v1.95.1 Script Boot Fix：高級登入頁面、移除登入頁硬卡片、保留公開版功能 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -24,8 +24,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.9.6.5-premium-dock-ui-fix">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.9.6.5-premium-dock-ui-fix"; console.log("電子手冊 Pro v1.9.6.5-premium-dock-ui-fix loaded");</script>
+    <meta name="ehandbook-version" content="v1.95.1-script-boot-fix">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.95.1-script-boot-fix"; console.log("電子手冊 Pro v1.95.1-script-boot-fix loaded");</script>
 
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
@@ -356,7 +356,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.6.5-premium-dock-ui-fix',
+                version: 'v1.95.1-script-boot-fix',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -456,8 +456,8 @@
         const PERSONAL_CLEAN_MODE = true; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.9.6.5-premium-dock-ui-fix',
-            title: '電子手冊已更新至 v1.9.6.5',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.95.1-script-boot-fix',
+            title: '電子手冊已更新至 v1.95.1',
             summary: [
                 '修正大更新版本穩定性，確保主程式不是簡化版。',
                 '改善 Email 認證、身份選擇、老師申請與派發中心的使用提示。',
@@ -621,32 +621,45 @@
         };
 
         const NavItem = ({ icon, label, active, onClick, t }) => {
+            const tapLockRef = useRef(0);
+            const activate = (event) => {
+                try {
+                    event?.preventDefault?.();
+                    event?.stopPropagation?.();
+                } catch (e) {}
+                const now = Date.now();
+                if (now - tapLockRef.current < 120) return;
+                tapLockRef.current = now;
+                if (typeof onClick === 'function') onClick();
+            };
             return (
                 <button
                     type="button"
-                    onClick={onClick}
+                    onClick={activate}
+                    onTouchEnd={activate}
                     aria-label={label}
                     aria-current={active ? 'page' : undefined}
-                    className="relative group h-14 rounded-[22px] flex items-center justify-center overflow-hidden transition-all duration-300 ease-out active:scale-[0.96] focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/20"
+                    style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+                    className={`relative group h-[62px] rounded-[24px] flex items-center justify-center overflow-hidden transition-all duration-200 ease-out active:scale-[0.94] focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/20 select-none ${active ? 'basis-[34%]' : 'basis-[22%]'}`}
                 >
-                    <span className={`absolute inset-0 rounded-[22px] transition-all duration-300 ${
+                    <span className={`pointer-events-none absolute inset-0 rounded-[24px] transition-all duration-200 ${
                         active
-                            ? 'bg-gradient-to-br from-slate-950 via-indigo-950 to-indigo-700 shadow-[0_12px_30px_rgba(79,70,229,0.28)] dark:from-white dark:via-indigo-100 dark:to-cyan-100'
-                            : 'bg-transparent group-hover:bg-white/70 dark:group-hover:bg-slate-700/60'
+                            ? 'bg-gradient-to-br from-slate-950 via-indigo-950 to-indigo-700 shadow-[0_16px_34px_rgba(79,70,229,0.30)] dark:from-white dark:via-indigo-100 dark:to-cyan-100'
+                            : 'bg-white/0 group-hover:bg-white/80 dark:group-hover:bg-slate-800/70'
                     }`}></span>
-                    <span className={`absolute -top-7 left-1/2 h-12 w-12 -translate-x-1/2 rounded-full blur-2xl transition-opacity duration-300 ${
-                        active ? 'opacity-70 bg-indigo-400' : 'opacity-0'
+                    <span className={`pointer-events-none absolute -top-8 left-1/2 h-16 w-16 -translate-x-1/2 rounded-full blur-2xl transition-opacity duration-200 ${
+                        active ? 'opacity-75 bg-indigo-400' : 'opacity-0'
                     }`}></span>
-                    <span className="relative z-10 flex flex-col items-center justify-center gap-1 min-w-0">
-                        <Icon name={icon} className={`w-[20px] h-[20px] transition-all duration-300 ${
+                    <span className="pointer-events-none relative z-10 flex flex-col items-center justify-center gap-1 min-w-0 px-1">
+                        <Icon name={icon} className={`w-[21px] h-[21px] transition-all duration-200 ${
                             active
                                 ? 'text-white dark:text-slate-950 scale-110'
-                                : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:-translate-y-0.5'
+                                : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-950 dark:group-hover:text-white group-hover:-translate-y-0.5'
                         }`} />
-                        <span className={`text-[11px] leading-none font-black tracking-[-0.02em] transition-colors duration-300 ${
+                        <span className={`text-[11px] leading-none font-black tracking-[-0.02em] transition-all duration-200 whitespace-nowrap ${
                             active
-                                ? 'text-white dark:text-slate-950'
-                                : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white'
+                                ? 'text-white dark:text-slate-950 opacity-100 translate-y-0'
+                                : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-950 dark:group-hover:text-white opacity-90'
                         }`}>{label}</span>
                     </span>
                 </button>
@@ -1102,7 +1115,7 @@
                                     <Icon name="lock-keyhole" className="w-4 h-4 text-emerald-300" />
                                     Google / Email 安全登入
                                 </div>
-                                <div className="text-slate-500">v1.9.6.5</div>
+                                <div className="text-slate-500">v1.95.1</div>
                             </div>
                         </div>
 
@@ -1206,7 +1219,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.9.6.5 · nav fix</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.95.1 · nav fix</div>
                             </div>
                         </div>
                     </div>
@@ -2155,7 +2168,7 @@
                             <div className="absolute -top-16 -right-12 w-44 h-44 rounded-full bg-cyan-300/20 blur-3xl"></div>
                             <div className="relative z-10 flex items-start justify-between gap-4">
                                 <div>
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3"><Icon name="send" className="w-3.5 h-3.5" /> v1.9.6.5 派發中心</div>
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3"><Icon name="send" className="w-3.5 h-3.5" /> v1.95.1 派發中心</div>
                                     <h3 className="text-2xl sm:text-3xl font-black tracking-tight">派發與老師管理</h3>
                                     <p className="text-sm text-indigo-100 font-bold mt-2">{isAdmin ? '管理員可以批准老師申請，亦可以勾選學生直接派發功課。' : isTeacher ? '老師可以輸入學生 Email 派發功課。' : '老師申請等待管理員批准後，才可派發功課。'}</p>
                                 </div>
@@ -2324,7 +2337,7 @@
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.9.6.5
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.95.1
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
@@ -2591,7 +2604,7 @@ function App() {
             const [quickView, setQuickView] = useState({ isOpen: false, title: '', items: [] });
             const [globalNow, setGlobalNow] = useState(new Date());
 
-            // v1.9.6.5：修復通知中心與底部導航元件殘留。
+            // v1.95.1：修復通知中心與底部導航元件殘留。
             // 之前清理舊提醒/舊群組功能後，UI 仍引用 unreadNotificationCount / userNotifications，
             // 會令部分瀏覽器直接白畫面。這裡重新用個人功課與更新資訊生成安全通知資料。
             const userNotifications = useMemo(() => {
@@ -3427,6 +3440,17 @@ const handleClearExpired = () => {
                 };
             };
             const counts = getCounts();
+            const dashboardRoleValue = userProfile?.role || (isAdmin ? 'admin' : 'student');
+            const roleLabel = dashboardRoleValue === 'admin' ? '管理員' : dashboardRoleValue === 'teacher' ? '老師' : dashboardRoleValue === 'teacher_pending' ? '老師申請中' : '學生';
+            const displayNameForHome = userProfile?.displayName || user?.displayName || user?.email?.split('@')?.[0] || '同學';
+            const totalVisibleItems = items.filter(i => !i.isHidden).length;
+            const incompleteCount = items.filter(i => !i.isHidden && !i.completed && !i.forceExpired).length;
+            const completedCount = items.filter(i => !i.isHidden && i.completed).length;
+            const urgentCount = activeItems.filter(i => i.type === 'homework' && getDaysRemaining(i.dueDate) <= 0).length;
+            const upcomingItems = [...activeItems]
+                .filter(i => i.type === 'homework')
+                .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+                .slice(0, 3);
 
             const isVisible = (componentName) => {
                 if (viewMode === 'history') return componentName === 'list';
@@ -3582,7 +3606,67 @@ const handleClearExpired = () => {
                                     onLogout={handleLogout}
                                  /> ) : (
                                 
-                                <div className="max-w-3xl mx-auto pt-2">
+                                <div className="max-w-5xl mx-auto pt-2">
+                                    {viewMode === 'current' && (
+                                        <section className="relative overflow-hidden rounded-[2.35rem] mb-6 sm:mb-7 border border-white/70 dark:border-white/10 bg-slate-950 text-white shadow-[0_32px_90px_rgba(15,23,42,0.24)] dark:shadow-black/50 animate-fadeIn">
+                                            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_15%_10%,rgba(99,102,241,0.55),transparent_32%),radial-gradient(circle_at_82%_18%,rgba(14,165,233,0.42),transparent_30%),linear-gradient(135deg,#020617_0%,#111827_58%,#312e81_100%)]"></div>
+                                            <div className="absolute inset-0 pointer-events-none opacity-[0.08] bg-[linear-gradient(rgba(255,255,255,0.72)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.72)_1px,transparent_1px)] bg-[size:42px_42px]"></div>
+                                            <div className="relative z-10 p-5 sm:p-7 lg:p-8 grid lg:grid-cols-[1.1fr_0.9fr] gap-5 lg:gap-7 items-stretch">
+                                                <div className="flex flex-col justify-between gap-6">
+                                                    <div>
+                                                        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1.5 text-[11px] font-black tracking-[0.16em] text-indigo-100 uppercase mb-5">
+                                                            <span className="w-2 h-2 rounded-full bg-emerald-300 shadow-[0_0_0_6px_rgba(16,185,129,0.16)]"></span>
+                                                            Mobile App Mode · {roleLabel}
+                                                        </div>
+                                                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-[-0.07em] leading-[0.98] mb-4">{displayNameForHome}，<br className="hidden sm:block" />今日安排已準備好。</h1>
+                                                        <p className="text-sm sm:text-base text-slate-300 font-bold leading-7 max-w-xl">集中處理今日功課、時間表同派發工具。所有資料仍然保持在個人 App 版面入面，操作更似真正手機 App。</p>
+                                                    </div>
+                                                    <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+                                                        <button type="button" onClick={() => openQuickView('today')} className="rounded-2xl bg-white/[0.09] border border-white/10 p-3 sm:p-4 text-left active:scale-[0.98] transition-all hover:bg-white/[0.13]">
+                                                            <div className="text-[10px] font-black text-slate-400 uppercase">今日截止</div>
+                                                            <div className="text-2xl sm:text-3xl font-black mt-1 text-orange-300">{counts.today}</div>
+                                                        </button>
+                                                        <button type="button" onClick={() => { setViewMode('history'); setAppMode('personal'); setIsListVisible(true); }} className="rounded-2xl bg-white/[0.09] border border-white/10 p-3 sm:p-4 text-left active:scale-[0.98] transition-all hover:bg-white/[0.13]">
+                                                            <div className="text-[10px] font-black text-slate-400 uppercase">未完成</div>
+                                                            <div className="text-2xl sm:text-3xl font-black mt-1 text-indigo-200">{incompleteCount}</div>
+                                                        </button>
+                                                        <button type="button" onClick={() => setViewMode('timetable')} className="rounded-2xl bg-white/[0.09] border border-white/10 p-3 sm:p-4 text-left active:scale-[0.98] transition-all hover:bg-white/[0.13]">
+                                                            <div className="text-[10px] font-black text-slate-400 uppercase">時間表</div>
+                                                            <div className="text-2xl sm:text-3xl font-black mt-1 text-sky-200">查看</div>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid gap-3">
+                                                    <div className="rounded-[1.75rem] bg-white/10 border border-white/10 p-4 sm:p-5 backdrop-blur-xl">
+                                                        <div className="flex items-center justify-between gap-3 mb-4">
+                                                            <div>
+                                                                <div className="text-sm font-black">快速操作</div>
+                                                                <div className="text-xs text-slate-400 font-bold mt-1">一撳即到常用功能</div>
+                                                            </div>
+                                                            <Icon name="sparkles" className="w-5 h-5 text-indigo-200" />
+                                                        </div>
+                                                        <div className="grid grid-cols-2 gap-2.5">
+                                                            <button type="button" onClick={() => { setViewMode('current'); setAppMode('personal'); setIsListVisible(true); window.setTimeout(() => { try { document.querySelector('input[placeholder*="輸入"]')?.focus(); } catch(e) {} }, 80); }} className="rounded-2xl bg-white text-slate-950 p-3 text-left font-black text-sm active:scale-[0.98] transition-all shadow-lg"><Icon name="plus" className="w-4 h-4 mb-2 text-indigo-600" />新增功課</button>
+                                                            <button type="button" onClick={() => setIsSubjectManagerOpen(true)} className="rounded-2xl bg-white/[0.10] border border-white/10 p-3 text-left font-black text-sm active:scale-[0.98] transition-all"><Icon name="book-marked" className="w-4 h-4 mb-2 text-sky-200" />科目管理</button>
+                                                            {(isAdmin || roleValue === 'teacher' || roleValue === 'teacher_pending') && <button type="button" onClick={() => setIsAssignmentCenterOpen(true)} className="col-span-2 rounded-2xl bg-gradient-to-r from-indigo-500 to-sky-500 p-3 text-left font-black text-sm active:scale-[0.98] transition-all shadow-lg"><Icon name={isAdmin ? 'shield-check' : roleValue === 'teacher' ? 'send' : 'hourglass'} className="w-4 h-4 mb-2 text-white" />{isAdmin ? '管理員中心：老師申請、學生派發、紀錄' : roleValue === 'teacher' ? '老師工具：用 Email 派發功課' : '老師申請狀態：等待管理員批准'}</button>}
+                                                        </div>
+                                                    </div>
+                                                    <div className="rounded-[1.75rem] bg-white/10 border border-white/10 p-4 sm:p-5 backdrop-blur-xl">
+                                                        <div className="flex items-center justify-between mb-3"><div className="text-sm font-black">即將截止</div><div className="text-[11px] font-black text-slate-400">{upcomingItems.length || 0} 項</div></div>
+                                                        <div className="space-y-2">
+                                                            {upcomingItems.length ? upcomingItems.map(item => (
+                                                                <div key={item.id} className="flex items-center justify-between gap-3 rounded-2xl bg-white/[0.08] border border-white/10 px-3 py-2.5">
+                                                                    <div className="min-w-0"><div className="text-xs font-black truncate">{item.description}</div><div className="text-[10px] font-bold text-slate-400 mt-0.5">{item.subject || '其他'} · {formatDueDate(item.dueDate)}</div></div>
+                                                                    <span className="shrink-0 text-[10px] font-black rounded-full px-2 py-1 bg-white/10 text-slate-200">{getDaysRemaining(item.dueDate)}天</span>
+                                                                </div>
+                                                            )) : <div className="rounded-2xl bg-white/[0.08] border border-white/10 px-3 py-4 text-center text-xs font-bold text-slate-400">暫時未有即將截止功課</div>}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    )}
                                     {/* Cards */}
                                     {viewMode === 'current' && isVisible('cards') && (
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6 animate-fadeIn">
@@ -3727,13 +3811,13 @@ const handleClearExpired = () => {
 
                                         <nav
                         aria-label="主功能導覽"
-                        className="fixed left-1/2 -translate-x-1/2 z-[100] w-[min(94vw,430px)]"
+                        className="fixed left-1/2 -translate-x-1/2 z-[100] w-[min(94vw,440px)] pointer-events-none"
                         style={{ bottom: 'max(16px, env(safe-area-inset-bottom))' }}
                     >
-                        <div className="relative rounded-[32px] border border-white/70 dark:border-white/10 bg-white/78 dark:bg-slate-950/72 p-2 shadow-[0_24px_70px_rgba(15,23,42,0.22)] dark:shadow-[0_24px_70px_rgba(0,0,0,0.55)] backdrop-blur-2xl overflow-hidden">
+                        <div className="relative pointer-events-auto rounded-[34px] border border-white/75 dark:border-white/10 bg-white/82 dark:bg-slate-950/78 p-2 shadow-[0_24px_70px_rgba(15,23,42,0.22)] dark:shadow-[0_24px_70px_rgba(0,0,0,0.55)] backdrop-blur-2xl overflow-hidden">
                             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/80 via-white/30 to-indigo-100/45 dark:from-white/10 dark:via-slate-900/10 dark:to-indigo-500/10"></div>
                             <div className="pointer-events-none absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-white/90 to-transparent dark:via-white/25"></div>
-                            <div className="relative grid grid-cols-4 gap-1.5">
+                            <div className="relative flex items-center justify-between gap-1.5">
                                 <NavItem icon="house" label="主頁" active={viewMode === 'current' && appMode === 'personal'} onClick={() => { setViewMode('current'); setAppMode('personal'); setIsListVisible(true); }} t={t} />
                                 <NavItem icon="list-checks" label="功課" active={viewMode === 'history'} onClick={() => { setViewMode('history'); setAppMode('personal'); setIsListVisible(true); }} t={t} />
                                 <NavItem icon="calendar-clock" label="時間表" active={viewMode === 'timetable' || viewMode === 'timetable_edit'} onClick={() => { setViewMode('timetable'); setIsListVisible(true); }} t={t} />
@@ -3898,11 +3982,13 @@ const handleClearExpired = () => {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.9.6.5-premium-dock-ui-fix | premium-login | notification-fix | navitem-fix | boot-fallback | error-boundary | public-ready -->
-    <!-- ehandbook-build: v1.9.6.5-premium-dock-ui-fix -->
+<!-- VERSION_CHECK: v1.95.1-script-boot-fix | mobile-dashboard | premium-dock-tap-fix | admin-entry | public-ready -->
+    <!-- ehandbook-build: v1.95.1-script-boot-fix -->
 </body>
 </html>
 
 <!-- ehandbook_v1.9.6_public_security_and_ux_fullbase: email cooldown, teacher profile, source labels and UX polish added. -->
 
-<!-- v1.9.6.5-premium-dock-ui-fix: public personal app with teacher application and assignment center. -->
+<!-- v1.95.1-script-boot-fix: public personal app with teacher application and assignment center. -->
+
+<!-- v1.95.1-script-boot-fix: script boot fix for duplicate roleValue declaration, mobile dashboard preserved. -->
