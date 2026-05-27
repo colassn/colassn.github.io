@@ -496,13 +496,29 @@
 
             <footer class="footer">
                 <div>© 2026 電子手冊 Pro</div>
-                <div>最後更新：2026-05-27</div>
+                <div>最後更新：2026-05-27｜最新版本 v1.8.27</div>
             </footer>
         </div>
     </main>
 
     <script>
         const VERSION_HISTORY = [
+            {
+                version: "v1.8.27",
+                code: "v1827",
+                date: "2026-05-27",
+                type: "fix",
+                title: "加強跨瀏覽器 Google 登入穩定性",
+                backupUrl: "backup/v1827.html",
+                summary: "針對部分瀏覽器選完 Google 帳戶後仍停留登入頁的情況，加強登入後狀態切換與 redirect fallback。",
+                updates: [
+                    "Safari、Firefox、iPad、PWA、內置瀏覽器會優先使用 redirect 登入，減少 popup 狀態丟失問題。",
+                    "Chrome 等瀏覽器仍可使用 popup 登入，但成功後會等待登入狀態並多次通知主程式切入主頁。",
+                    "加入登入後自動恢復檢查，當瀏覽器稍後才取得 auth.currentUser 時仍會進入主程式。",
+                    "保留 v1.8.26 的加入班級和科目管理修復。",
+                    "保留原有 Google 登入、Email 登入、Firebase、功課、班級廣播、管理員功能與 AdSense。"
+                ]
+            },
             {
                 version: "v1.8.26",
                 code: "v1826",
