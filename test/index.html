@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.8.25 Modern App Layout：保留功能，只更新現代 App 排版 -->
+    <!-- 電子手冊 Pro v1.8.24 Class Page Clean + Auto Update Notice：移除班級頁手動加入提示，內建版本更新彈窗 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -20,8 +20,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.8.25-modern-app-layout">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.8.25-modern-app-layout"; console.log("電子手冊 Pro v1.8.25-modern-app-layout loaded");</script>
+    <meta name="ehandbook-version" content="v1.8.24-class-page-clean-update-notice">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.8.24-class-page-clean-update-notice"; console.log("電子手冊 Pro v1.8.24-class-page-clean-update-notice loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -121,212 +121,6 @@
         .settings-page-stable * { backface-visibility: hidden; }
         .settings-page-stable .settings-live-indicator { transition: none !important; }
         .dynamic-island-scroll::-webkit-scrollbar { display: none; }
-
-
-        /* v1.8.25 Modern App Layout：只改排版與觸感，不改功能邏輯 */
-        :root {
-            --eh-accent-rgb: 79 70 229;
-            --eh-accent-soft-rgb: 224 231 255;
-            --eh-surface: rgba(255, 255, 255, 0.78);
-            --eh-surface-strong: rgba(255, 255, 255, 0.92);
-            --eh-border: rgba(255, 255, 255, 0.62);
-            --eh-shadow: 0 18px 55px rgba(15, 23, 42, 0.08), 0 1px 0 rgba(255,255,255,0.75) inset;
-            --eh-shadow-hover: 0 24px 70px rgba(15, 23, 42, 0.12), 0 1px 0 rgba(255,255,255,0.82) inset;
-            --eh-radius-xl: 28px;
-            --eh-radius-2xl: 34px;
-            --eh-ease: cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        html[data-theme-color="rose"] { --eh-accent-rgb: 225 29 72; --eh-accent-soft-rgb: 255 228 230; }
-        html[data-theme-color="emerald"] { --eh-accent-rgb: 5 150 105; --eh-accent-soft-rgb: 209 250 229; }
-        html[data-theme-color="amber"] { --eh-accent-rgb: 245 158 11; --eh-accent-soft-rgb: 254 243 199; }
-        html[data-theme-color="violet"] { --eh-accent-rgb: 124 58 237; --eh-accent-soft-rgb: 237 233 254; }
-        html[data-theme-color="sky"] { --eh-accent-rgb: 14 165 233; --eh-accent-soft-rgb: 224 242 254; }
-        html[data-theme-color="zinc"] { --eh-accent-rgb: 63 63 70; --eh-accent-soft-rgb: 244 244 245; }
-
-        html { min-height: 100%; background: #f8fafc; scroll-behavior: smooth; }
-        html.dark { background: #020617; }
-        body {
-            min-height: 100dvh;
-            margin: 0;
-            background:
-                radial-gradient(circle at 14% -8%, rgba(var(--eh-accent-rgb), 0.16), transparent 34%),
-                radial-gradient(circle at 88% 0%, rgba(56, 189, 248, 0.12), transparent 30%),
-                linear-gradient(180deg, #fbfdff 0%, #f4f7fb 45%, #eef2f7 100%);
-            -webkit-font-smoothing: antialiased;
-            text-rendering: geometricPrecision;
-            overscroll-behavior-y: none;
-        }
-        .dark body {
-            --eh-surface: rgba(15, 23, 42, 0.72);
-            --eh-surface-strong: rgba(15, 23, 42, 0.88);
-            --eh-border: rgba(148, 163, 184, 0.16);
-            --eh-shadow: 0 22px 70px rgba(0, 0, 0, 0.34), 0 1px 0 rgba(255,255,255,0.05) inset;
-            --eh-shadow-hover: 0 28px 84px rgba(0, 0, 0, 0.42), 0 1px 0 rgba(255,255,255,0.08) inset;
-            background:
-                radial-gradient(circle at 12% -10%, rgba(var(--eh-accent-rgb), 0.28), transparent 34%),
-                radial-gradient(circle at 88% 0%, rgba(14, 165, 233, 0.12), transparent 31%),
-                linear-gradient(180deg, #020617 0%, #0f172a 52%, #111827 100%);
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            background-image:
-                linear-gradient(rgba(15,23,42,0.028) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(15,23,42,0.022) 1px, transparent 1px);
-            background-size: 42px 42px;
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.38), transparent 72%);
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.38), transparent 72%);
-        }
-        .dark body::before { background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); }
-        #root { position: relative; z-index: 1; min-height: 100dvh; }
-        button, input, textarea { font-family: inherit; }
-        button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-        input, textarea { min-height: 44px; }
-        input:focus, textarea:focus, button:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(var(--eh-accent-rgb), 0.14); }
-
-        .glass-card {
-            background: var(--eh-surface);
-            backdrop-filter: blur(24px) saturate(1.35);
-            -webkit-backdrop-filter: blur(24px) saturate(1.35);
-            border-color: var(--eh-border);
-            box-shadow: var(--eh-shadow);
-        }
-        .glass-card:hover { box-shadow: var(--eh-shadow-hover); }
-        .clean-glass-mode .glass-card { background: rgba(255,255,255,0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .dark .clean-glass-mode .glass-card { background: rgba(15,23,42,0.94); }
-
-        .modern-app-shell {
-            background: transparent !important;
-            isolation: isolate;
-            padding-left: max(1rem, env(safe-area-inset-left));
-            padding-right: max(1rem, env(safe-area-inset-right));
-        }
-        .modern-app-shell::after {
-            content: "";
-            position: fixed;
-            left: 50%;
-            top: 7rem;
-            width: min(920px, 86vw);
-            height: min(920px, 86vw);
-            transform: translateX(-50%);
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(var(--eh-accent-rgb), 0.08), transparent 64%);
-            filter: blur(10px);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .modern-app-container {
-            width: min(1120px, 100%);
-            margin-inline: auto;
-        }
-        .modern-page-narrow {
-            width: min(820px, 100%);
-            margin-inline: auto;
-        }
-        .modern-content-stack { position: relative; }
-        .modern-topbar {
-            position: sticky;
-            top: max(0.85rem, env(safe-area-inset-top));
-            z-index: 90;
-            max-width: 820px !important;
-            border-radius: 30px !important;
-            padding: 0.85rem 1rem !important;
-            background: rgba(255,255,255,0.74) !important;
-            border: 1px solid rgba(255,255,255,0.64) !important;
-            box-shadow: 0 18px 55px rgba(15,23,42,0.10), 0 1px 0 rgba(255,255,255,0.85) inset !important;
-        }
-        .dark .modern-topbar {
-            background: rgba(15,23,42,0.74) !important;
-            border-color: rgba(148,163,184,0.14) !important;
-            box-shadow: 0 20px 62px rgba(0,0,0,0.36), 0 1px 0 rgba(255,255,255,0.06) inset !important;
-        }
-        .modern-summary-grid { gap: 0.9rem !important; }
-        .modern-summary-grid > button {
-            min-height: 128px;
-            border-radius: 30px !important;
-            transform: translateZ(0);
-        }
-        .modern-summary-grid > button::after {
-            content: "";
-            position: absolute;
-            inset: 1px;
-            border-radius: inherit;
-            background: linear-gradient(135deg, rgba(255,255,255,0.34), transparent 52%);
-            pointer-events: none;
-        }
-        .modern-input-card {
-            border-radius: 34px !important;
-            background: rgba(255,255,255,0.82) !important;
-            border: 1px solid rgba(255,255,255,0.72) !important;
-        }
-        .dark .modern-input-card { background: rgba(15,23,42,0.82) !important; border-color: rgba(148,163,184,0.16) !important; }
-        .modern-list-toolbar {
-            padding: 0.7rem;
-            border-radius: 24px;
-            background: rgba(255,255,255,0.56);
-            border: 1px solid rgba(255,255,255,0.52);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            box-shadow: 0 12px 36px rgba(15,23,42,0.06);
-        }
-        .dark .modern-list-toolbar { background: rgba(15,23,42,0.48); border-color: rgba(148,163,184,0.14); }
-        .modern-task-card {
-            border-radius: 30px !important;
-            background: rgba(255,255,255,0.84) !important;
-            border: 1px solid rgba(255,255,255,0.68) !important;
-        }
-        .dark .modern-task-card { background: rgba(15,23,42,0.78) !important; border-color: rgba(148,163,184,0.14) !important; }
-        .modern-task-card:hover { transform: translateY(-2px); }
-
-        .modern-dynamic-island {
-            width: min(640px, calc(100vw - 24px));
-            bottom: max(0.95rem, calc(env(safe-area-inset-bottom) + 0.75rem)) !important;
-            border-radius: 999px !important;
-            padding: 0.45rem !important;
-            background: rgba(255,255,255,0.82) !important;
-            border: 1px solid rgba(255,255,255,0.66) !important;
-            box-shadow: 0 20px 62px rgba(15,23,42,0.18), 0 1px 0 rgba(255,255,255,0.78) inset !important;
-        }
-        .dark .modern-dynamic-island {
-            background: rgba(15,23,42,0.82) !important;
-            border-color: rgba(148,163,184,0.16) !important;
-            box-shadow: 0 20px 70px rgba(0,0,0,0.46), 0 1px 0 rgba(255,255,255,0.06) inset !important;
-        }
-        .modern-dynamic-island button { min-width: 62px; border-radius: 999px !important; }
-        .dynamic-island-scroll { scrollbar-width: none; }
-
-        .settings-page-stable .glass-card, .settings-page-stable section, .settings-page-stable button,
-        .modern-app-shell form, .modern-app-shell textarea, .modern-app-shell input {
-            transition-timing-function: var(--eh-ease) !important;
-        }
-        .modern-app-shell .animate-item { animation-duration: 0.28s; animation-timing-function: var(--eh-ease); }
-        .modern-app-shell .rounded-2xl { border-radius: 1.35rem; }
-        .modern-app-shell .rounded-3xl { border-radius: 1.75rem; }
-        .modern-app-shell .shadow-sm { box-shadow: 0 10px 28px rgba(15,23,42,0.055); }
-        .dark .modern-app-shell .shadow-sm { box-shadow: 0 14px 34px rgba(0,0,0,0.22); }
-
-        @media (hover: hover) and (pointer: fine) {
-            .modern-app-shell button:hover { transform: translateY(-1px); }
-            .modern-app-shell button:active { transform: translateY(0) scale(0.985); }
-            .modern-dynamic-island button:hover { transform: translateY(-1px) scale(1.015); }
-        }
-        @media (max-width: 640px) {
-            .modern-app-shell { padding-top: 0.75rem !important; padding-bottom: calc(7rem + env(safe-area-inset-bottom)) !important; }
-            .modern-topbar { top: max(0.6rem, env(safe-area-inset-top)); margin-bottom: 1.1rem !important; padding: 0.75rem !important; border-radius: 26px !important; }
-            .modern-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem !important; }
-            .modern-summary-grid > button { min-height: 112px; padding: 1rem !important; }
-            .modern-input-card { border-radius: 28px !important; padding: 1rem !important; }
-            .modern-list-toolbar { align-items: stretch !important; gap: 0.75rem !important; }
-            .modern-list-toolbar > div { width: 100%; }
-            .modern-task-card { border-radius: 26px !important; padding: 1rem !important; }
-            .modern-dynamic-island { width: min(100% - 18px, 560px); overflow-x: auto; justify-content: flex-start !important; }
-            .modern-dynamic-island button { min-width: 58px; }
-        }
-        .reduce-motion-mode .modern-app-shell *, .reduce-motion-mode .modern-dynamic-island * { transform: none !important; }
-
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -414,7 +208,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.8.25-modern-app-layout',
+                version: 'v1.8.24-class-page-clean-update-notice',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -513,21 +307,21 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.8.25-modern-app-layout',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.8.24-class-page-clean-update-notice',
             title: '電子手冊已更新',
             summary: [
-                '整體介面改成更接近現代 App 的玻璃卡片、頂部工具列同底部浮動導覽。',
-                '保留原有 Google 登入、Email 登入、Firebase、功課、時間表、班級、管理員同更新彈窗功能。',
-                '動畫改為更輕、更順，減少大型位移，保持點擊回饋但避免過度效果。'
+                '班級廣播頁面已清走手動加入提示，只保留功課內容和狀態。',
+                '學生登入後會自動補領應收廣播功課，不需要再按任何加入或補領按鈕。',
+                '新版會內建更新彈窗，之後部署新版時可自動向用戶顯示更新內容。'
             ].join('\n'),
             guide: [
-                '直接照常使用原本功能。',
-                '手機底部導覽、頂部工具列同主頁卡片會以新版 App 排版顯示。',
-                '如想進一步精簡動畫，可到設定頁開啟減少動畫模式。'
+                '管理員照常發放廣播功課。',
+                '學生打開主頁或班級廣播頁即可查看功課。',
+                '下次更新只需要更新程式內的版本資訊，用戶開頁會自動看到更新說明。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-05-28T00:00:00+08:00',
+            publishedAt: '2026-05-26T22:45:00+08:00',
             source: 'built-in'
         };
 
@@ -2793,12 +2587,10 @@
                                             <textarea rows="4" placeholder={"例如：\n1. 按右上角小鈴鐺查看通知\n2. 有新廣播功課時，打開通知中心查看\n3. 廣播功課會出現在個人手冊"} value={updateGuideInput} onChange={e => setUpdateGuideInput(e.target.value)} className="mt-1 w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-all resize-none"></textarea>
                                         </div>
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 p-4">
-                                            <button type="button" role="switch" aria-checked={updatePopupEnabledInput} onClick={() => setUpdatePopupEnabledInput(v => !v)} className="flex items-center gap-3 cursor-pointer text-left select-none active:scale-[0.98] transition-all">
-                                                <span className={`relative w-12 h-7 rounded-full shrink-0 transition-all ${updatePopupEnabledInput ? 'bg-indigo-600 shadow-indigo-200/60' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                                                    <span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow transition-all ${updatePopupEnabledInput ? 'left-[24px]' : 'left-[4px]'}`}></span>
-                                                </span>
+                                            <label className="flex items-center gap-3 cursor-pointer">
+                                                <input type="checkbox" checked={updatePopupEnabledInput} onChange={e => setUpdatePopupEnabledInput(e.target.checked)} className="w-4 h-4 accent-indigo-600" />
                                                 <span className="text-sm font-black text-indigo-700 dark:text-indigo-300">啟用自動彈窗</span>
-                                            </button>
+                                            </label>
                                             <button onClick={handlePublishUpdateNotice} className="bg-indigo-600 text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 active:scale-95 shadow-sm"><Icon name="send" className="w-4 h-4"/> 發佈更新彈窗</button>
                                         </div>
                                         <div className="rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-900/40 p-4">
@@ -2920,186 +2712,267 @@
             const displayName = userProfile?.displayName || user?.displayName || '學生';
             const email = user?.email || userProfile?.email || '';
             const initial = String(displayName || email || 'E').trim().charAt(0).toUpperCase();
-            const layoutOptions = [
-                { value: 'normal', label: '完整模式', desc: '顯示主頁卡片、時間表、輸入欄同任務列表', icon: 'layout-dashboard' },
-                { value: 'minimal', label: '極簡模式', desc: '只保留重要卡片同任務列表，主頁更乾淨', icon: 'minimize-2' },
-                { value: 'custom', label: '自定義', desc: '自己決定主頁每個區塊是否顯示', icon: 'sliders-horizontal' }
-            ];
-            const customBlocks = [
-                { key: 'cards', label: '狀態卡片', desc: '今日急件、明日預告、測驗考試統計', icon: 'columns-3' },
-                { key: 'timetable', label: '即時課堂', desc: '顯示目前課節、倒數及下一節', icon: 'calendar-clock' },
-                { key: 'input', label: '新增功課欄', desc: '主頁直接新增功課或測驗', icon: 'square-pen' },
-                { key: 'list', label: '任務列表', desc: '顯示個人手冊功課列表', icon: 'list-checks' }
-            ];
-            const advancedOptions = [
-                { key: 'largeText', label: '大字體模式', desc: 'iPad 同手機閱讀更舒服，適合長時間使用', icon: 'text' },
-                { key: 'reduceMotion', label: '減少動畫', desc: '降低過場動畫，頁面操作更穩定', icon: 'wind' },
-                { key: 'cleanGlass', label: '清晰玻璃模式', desc: '降低磨砂透明度，文字更清楚', icon: 'glass-water' },
-                { key: 'comfortSpacing', label: '舒適間距', desc: '設定卡片與文字呼吸感更強', icon: 'move-horizontal' },
-                { key: 'smartHints', label: '智能提示', desc: '保留過期、時間表等使用提示', icon: 'sparkles' },
-                { key: 'focusFirst', label: '專注優先', desc: '主頁更重視今日任務與待辦事項', icon: 'target' }
-            ];
-            const quickActionOptions = [
-                { key: 'showClassShortcut', label: '班級廣播快捷', desc: '在設定頁快速查看班級廣播', icon: 'school-2' },
-                { key: 'showNotificationShortcut', label: '通知快捷', desc: '在設定頁快速打開通知中心', icon: 'bell' },
-                { key: 'showSubjectShortcut', label: '科目快捷', desc: '方便快速進入科目管理', icon: 'book-marked' },
-                { key: 'showAccountShortcut', label: '帳號操作', desc: '顯示登出與帳號相關操作', icon: 'user-cog' }
-            ];
-            const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout[key] });
-            const handleAdvancedToggle = (key) => setAdvancedPrefs({ ...advancedPrefs, [key]: !advancedPrefs?.[key] });
             const themeEntries = Object.entries(THEME_CONFIG);
 
-            const SettingSection = ({ title, desc, icon, children, right }) => (
-                <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
-                    <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
-                        <div className="flex items-start gap-3 min-w-0">
+            const layoutOptions = [
+                { value: 'normal', label: '完整模式', desc: '保留所有主頁區塊，適合日常完整管理。', icon: 'layout-dashboard' },
+                { value: 'minimal', label: '極簡模式', desc: '主頁更乾淨，只突出重要任務。', icon: 'minimize-2' },
+                { value: 'custom', label: '自定義', desc: '自行決定主頁每個區塊顯示與否。', icon: 'sliders-horizontal' }
+            ];
+
+            const customBlocks = [
+                { key: 'cards', label: '狀態卡片', desc: '今日急件、明日預告、測驗統計', icon: 'columns-3' },
+                { key: 'timetable', label: '即時課堂', desc: '目前課節、倒數、下一節', icon: 'calendar-clock' },
+                { key: 'input', label: '新增功課欄', desc: '主頁直接新增功課或測驗', icon: 'square-pen' },
+                { key: 'list', label: '任務列表', desc: '個人手冊功課列表', icon: 'list-checks' }
+            ];
+
+            const advancedOptions = [
+                { key: 'largeText', label: '大字體模式', desc: 'iPad 同手機閱讀更舒服。', icon: 'text', defaultOn: false },
+                { key: 'reduceMotion', label: '減少動畫', desc: '降低過場動畫，操作更穩定。', icon: 'wind', defaultOn: false },
+                { key: 'cleanGlass', label: '清晰玻璃模式', desc: '降低透明度，文字更清楚。', icon: 'glass-water', defaultOn: false },
+                { key: 'comfortSpacing', label: '舒適間距', desc: '卡片同文字留白更舒服。', icon: 'move-horizontal', defaultOn: true },
+                { key: 'smartHints', label: '智能提示', desc: '保留過期、時間表等提示。', icon: 'sparkles', defaultOn: true },
+                { key: 'focusFirst', label: '專注優先', desc: '主頁更重視今日任務。', icon: 'target', defaultOn: false }
+            ];
+
+            const shortcutOptions = [
+                { key: 'showNotificationShortcut', label: '通知快捷', desc: '顯示通知中心入口。', icon: 'bell', action: onOpenNotifications },
+                { key: 'showClassShortcut', label: '班級廣播快捷', desc: '顯示班級廣播入口。', icon: 'school-2', action: onGoClass },
+                { key: 'showSubjectShortcut', label: '科目快捷', desc: '顯示科目管理入口。', icon: 'book-marked', action: onOpenSubjects },
+                { key: 'showAccountShortcut', label: '帳號操作', desc: '顯示登出帳號入口。', icon: 'user-cog', action: onLogout }
+            ];
+
+            const themeSwatches = {
+                indigo: 'from-indigo-500 to-blue-500',
+                rose: 'from-rose-500 to-pink-500',
+                emerald: 'from-emerald-500 to-teal-500',
+                amber: 'from-amber-400 to-orange-500',
+                violet: 'from-violet-500 to-purple-500',
+                sky: 'from-sky-400 to-blue-500',
+                zinc: 'from-zinc-600 to-slate-800'
+            };
+
+            const activeLayout = layoutOptions.find(option => option.value === layoutMode) || layoutOptions[0];
+            const quickActions = [
+                advancedPrefs?.showNotificationShortcut !== false ? { label: '通知中心', value: unreadNotificationCount > 0 ? `${unreadNotificationCount} 未讀` : '已清空', icon: 'bell', onClick: onOpenNotifications, tone: 'orange' } : null,
+                advancedPrefs?.showClassShortcut !== false ? { label: '班級廣播', value: '查看功課', icon: 'school-2', onClick: onGoClass, tone: 'emerald' } : null,
+                advancedPrefs?.showSubjectShortcut !== false ? { label: '科目管理', value: '自訂科目', icon: 'book-marked', onClick: onOpenSubjects, tone: 'indigo' } : null,
+                advancedPrefs?.showAccountShortcut !== false ? { label: '登出帳號', value: '切換登入', icon: 'log-out', onClick: onLogout, tone: 'red' } : null
+            ].filter(Boolean);
+
+            const handleCustomToggle = (key) => {
+                setLayoutMode('custom');
+                setCustomLayout({ ...customLayout, [key]: !customLayout?.[key] });
+            };
+            const handleAdvancedToggle = (key) => setAdvancedPrefs({ ...advancedPrefs, [key]: !advancedPrefs?.[key] });
+            const advancedEnabled = (option) => option.key === 'smartHints' ? advancedPrefs?.smartHints !== false : advancedPrefs?.[option.key] === true;
+            const shortcutEnabled = (key) => advancedPrefs?.[key] !== false;
+
+            const StatPill = ({ icon, label, value }) => (
+                <div className="rounded-2xl bg-white/12 border border-white/15 px-4 py-3 backdrop-blur-xl">
+                    <div className="flex items-center gap-2 text-[10px] font-black text-white/60 uppercase tracking-wide"><Icon name={icon} className="w-3.5 h-3.5" />{label}</div>
+                    <div className="text-sm font-black mt-1 truncate">{value}</div>
+                </div>
+            );
+
+            const Switch = ({ enabled, tone = 'theme' }) => (
+                <span className={`w-12 h-7 rounded-full relative shrink-0 transition-all duration-200 ${enabled ? (tone === 'red' ? 'bg-red-500' : `bg-gradient-to-r ${t.gradient}`) : 'bg-slate-300 dark:bg-slate-700'}`}>
+                    <span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow-md transition-all duration-200 ${enabled ? 'left-[24px]' : 'left-[4px]'}`}></span>
+                </span>
+            );
+
+            const Section = ({ title, desc, icon, children, action }) => (
+                <section className="rounded-[2rem] bg-white/90 dark:bg-slate-900/88 border border-slate-200/70 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 sm:px-6 sm:py-5 flex items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center gap-3 min-w-0">
                             <div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name={icon} className="w-5 h-5" /></div>
                             <div className="min-w-0">
-                                <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white">{title}</h3>
-                                <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{desc}</p>
+                                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">{title}</h3>
+                                <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">{desc}</p>
                             </div>
                         </div>
-                        {right}
+                        {action}
                     </div>
-                    <div className="p-5 sm:p-6">{children}</div>
+                    <div className="p-3 sm:p-4">{children}</div>
                 </section>
             );
 
+            const Row = ({ icon, title, desc, active, onClick, children, danger = false, disabled = false }) => (
+                <button
+                    type="button"
+                    onClick={onClick}
+                    disabled={disabled}
+                    className={`w-full rounded-2xl px-4 py-4 flex items-center justify-between gap-4 text-left transition-all active:scale-[0.99] disabled:opacity-50 disabled:active:scale-100 ${active ? `${t.lightBg} ring-1 ${t.border}` : 'hover:bg-slate-50 dark:hover:bg-slate-800/70'} ${danger ? 'hover:bg-red-50 dark:hover:bg-red-900/20' : ''}`}
+                >
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${danger ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-300' : active ? `bg-gradient-to-br ${t.gradient} text-white shadow-sm` : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>
+                            <Icon name={icon} className="w-4.5 h-4.5" />
+                        </div>
+                        <div className="min-w-0">
+                            <div className={`text-sm font-black truncate ${danger ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-white'}`}>{title}</div>
+                            {desc && <div className="text-[11px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 leading-relaxed mt-0.5">{desc}</div>}
+                        </div>
+                    </div>
+                    {children}
+                </button>
+            );
+
+            const QuickActionCard = ({ action }) => {
+                const toneClass = action.tone === 'red'
+                    ? 'bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-800 text-red-700 dark:text-red-300'
+                    : action.tone === 'emerald'
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+                        : action.tone === 'orange'
+                            ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-800 text-orange-700 dark:text-orange-300'
+                            : 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300';
+                return (
+                    <button type="button" onClick={action.onClick} className={`rounded-2xl border p-4 text-left transition-all hover:scale-[1.01] active:scale-[0.98] ${toneClass}`}>
+                        <Icon name={action.icon} className="w-5 h-5 mb-3" />
+                        <div className="text-sm font-black">{action.label}</div>
+                        <div className="text-[11px] font-bold opacity-70 mt-1">{action.value}</div>
+                    </button>
+                );
+            };
+
             return (
-                <div className="settings-page-stable max-w-3xl mx-auto pb-10 space-y-5 sm:space-y-6">
-                    <div className="relative overflow-hidden rounded-[2.25rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
-                        <div className="absolute -top-20 -right-16 w-56 h-56 rounded-full bg-cyan-300/20 blur-3xl"></div>
-                        <div className="absolute bottom-0 left-16 w-60 h-32 rounded-full bg-violet-300/20 blur-3xl"></div>
-                        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 items-end">
-                            <div className="flex items-start gap-4 min-w-0">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
-                                <div className="min-w-0 pt-1">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.8.23
+                <div className="settings-page-stable max-w-4xl mx-auto pb-10 space-y-5 sm:space-y-6">
+                    <div className="relative overflow-hidden rounded-[2.25rem] bg-slate-950 text-white shadow-[0_24px_70px_-42px_rgba(15,23,42,0.9)] border border-white/10">
+                        <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient} opacity-35`}></div>
+                        <div className="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-white/10 blur-3xl"></div>
+                        <div className="relative z-10 p-5 sm:p-7">
+                            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5">
+                                <div className="flex items-center gap-4 min-w-0">
+                                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.65rem] bg-white/14 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
+                                    <div className="min-w-0">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
+                                            <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定
+                                        </div>
+                                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
+                                        <p className="text-sm text-white/65 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
                                     </div>
-                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
-                                    <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
                                 </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">廣播功課</div>
-                                    <div className="text-sm font-black mt-1">登入補領功課</div>
-                                </div>
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">通知</div>
-                                    <div className="text-sm font-black mt-1">{unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '全部已讀'}</div>
+                                <div className="grid grid-cols-2 gap-3 sm:min-w-[260px]">
+                                    <StatPill icon="palette" label="主題" value={THEME_CONFIG[themeColor]?.name || '靛藍'} />
+                                    <StatPill icon="layout-template" label="主頁" value={activeLayout.label} />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <SettingSection title="外觀個人化" desc="調整主題色、深色模式同整體介面密度，令電子手冊更貼合你嘅使用習慣。" icon="palette" right={<button type="button" onClick={onOpenAppearance} className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-700">進階外觀</button>}>
-                        <div className="space-y-5">
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">主題顏色</div>
-                                <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
+                    {quickActions.length > 0 && (
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                            {quickActions.map(action => <QuickActionCard key={action.label} action={action} />)}
+                        </div>
+                    )}
+
+                    <Section
+                        title="最常用設定"
+                        desc="將深色模式、主題色同進階外觀放喺最上面，少撳幾步就可以完成。"
+                        icon="sparkles"
+                        action={<button type="button" onClick={onOpenAppearance} className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-95">進階</button>}
+                    >
+                        <div className="space-y-2">
+                            <Row icon="moon" title="深色模式" desc="切換夜間閱讀介面。" active={isDarkMode} onClick={() => setIsDarkMode(!isDarkMode)}>
+                                <Switch enabled={isDarkMode} />
+                            </Row>
+                            <div className="rounded-2xl px-4 py-4">
+                                <div className="flex items-center justify-between gap-3 mb-3">
+                                    <div>
+                                        <div className="text-sm font-black text-slate-800 dark:text-white">主題顏色</div>
+                                        <div className="text-[11px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 mt-0.5">會套用到按鈕、提示同部分背景。</div>
+                                    </div>
+                                    <div className={`px-3 py-1 rounded-full ${t.lightBg} ${t.text} text-xs font-black shrink-0`}>{THEME_CONFIG[themeColor]?.name || '靛藍'}</div>
+                                </div>
+                                <div className="grid grid-cols-4 sm:grid-cols-7 gap-2.5">
                                     {themeEntries.map(([key, config]) => (
-                                        <button key={key} type="button" onClick={() => setThemeColor(key)} className={`rounded-[1.25rem] p-2 border transition-all active:scale-95 ${themeColor === key ? `${config.lightBg} ${config.border} shadow-md scale-[1.02]` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:scale-[1.02]'}`}>
-                                            <div className={`w-full h-10 rounded-xl bg-gradient-to-br ${config.gradient} mb-2`}></div>
-                                            <div className={`text-[11px] font-black ${themeColor === key ? config.text : 'text-slate-400'}`}>{config.name}</div>
+                                        <button key={key} type="button" onClick={() => setThemeColor(key)} className={`group rounded-2xl border p-2.5 transition-all active:scale-95 ${themeColor === key ? 'border-slate-900 dark:border-white bg-slate-50 dark:bg-slate-800 shadow-sm' : 'border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'}`} aria-label={config.name}>
+                                            <div className={`w-full aspect-square rounded-xl bg-gradient-to-br ${themeSwatches[key] || themeSwatches.indigo} shadow-inner relative`}>
+                                                {themeColor === key && <div className="absolute inset-0 flex items-center justify-center"><span className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center shadow"><Icon name="check" className="w-3.5 h-3.5 text-slate-900" /></span></div>}
+                                            </div>
+                                            <div className="text-[10px] font-black text-slate-500 dark:text-slate-400 mt-1.5 truncate text-center">{config.name}</div>
                                         </button>
                                     ))}
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <button type="button" onClick={() => setIsDarkMode(false)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${!isDarkMode ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="sun" className="w-5 h-5" /><div><div className="font-black text-sm">淺色模式</div><div className="text-[11px] font-bold opacity-75">乾淨清爽</div></div></button>
-                                <button type="button" onClick={() => setIsDarkMode(true)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${isDarkMode ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="moon" className="w-5 h-5" /><div><div className="font-black text-sm">深色模式</div><div className="text-[11px] font-bold opacity-75">夜晚護眼</div></div></button>
-                            </div>
                         </div>
-                    </SettingSection>
+                    </Section>
 
-                    <SettingSection title="主頁排版設計" desc="像真正 App 設定一樣，自行決定主頁要完整、極簡，還是逐項開關。" icon="layout-template">
-                        <div className="space-y-4">
+                    <Section title="主頁排版" desc="由簡到繁選擇主頁密度；需要微調時直接使用自定義區塊。" icon="layout-template">
+                        <div className="space-y-3">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                {layoutOptions.map(opt => (
-                                    <button key={opt.value} type="button" onClick={() => setLayoutMode(opt.value)} className={`p-4 rounded-[1.5rem] border text-left transition-all active:scale-95 ${layoutMode === opt.value ? `${t.lightBg} ${t.border} ${t.text} shadow-md` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300 hover:border-slate-300'}`}>
-                                        <Icon name={opt.icon} className="w-5 h-5 mb-3" />
-                                        <div className="font-black text-sm">{opt.label}</div>
-                                        <div className="text-[11px] font-bold opacity-70 mt-1 leading-relaxed">{opt.desc}</div>
+                                {layoutOptions.map(option => (
+                                    <button key={option.value} type="button" onClick={() => setLayoutMode(option.value)} className={`rounded-2xl border p-4 text-left transition-all active:scale-[0.98] ${layoutMode === option.value ? `${t.lightBg} ${t.border} shadow-sm` : 'bg-slate-50 dark:bg-slate-800/70 border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800'}`}>
+                                        <div className="flex items-center justify-between gap-3 mb-3">
+                                            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center ${layoutMode === option.value ? `bg-gradient-to-br ${t.gradient} text-white` : 'bg-white dark:bg-slate-900 text-slate-500 border border-slate-100 dark:border-slate-700'}`}><Icon name={option.icon} className="w-5 h-5" /></div>
+                                            {layoutMode === option.value && <Icon name="check-circle-2" className={`w-5 h-5 ${t.text}`} />}
+                                        </div>
+                                        <div className="font-black text-sm text-slate-800 dark:text-white">{option.label}</div>
+                                        <div className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{option.desc}</div>
                                     </button>
                                 ))}
                             </div>
-                            <div className={`rounded-[1.75rem] border p-4 transition-all ${layoutMode === 'custom' ? 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50/60 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700 opacity-75'}`}>
-                                <div className="flex items-center justify-between gap-3 mb-3">
+                            <div className="rounded-[1.75rem] bg-slate-50/80 dark:bg-slate-950/30 border border-slate-100 dark:border-slate-800 p-3 sm:p-4">
+                                <div className="px-1 pb-3 flex items-center justify-between gap-3">
                                     <div>
-                                        <div className="font-black text-sm text-slate-800 dark:text-white">自定義主頁區塊</div>
-                                        <div className="text-[11px] font-bold text-slate-400">選擇「自定義」後，以下開關會套用到主頁。</div>
+                                        <div className="font-black text-sm text-slate-800 dark:text-white">自定義區塊</div>
+                                        <div className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">撳任何一項會自動切換到自定義模式。</div>
                                     </div>
+                                    <div className={`px-3 py-1 rounded-full text-[10px] font-black ${layoutMode === 'custom' ? `${t.lightBg} ${t.text}` : 'bg-slate-200 dark:bg-slate-800 text-slate-500'}`}>{layoutMode === 'custom' ? '已啟用' : '未啟用'}</div>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {customBlocks.map(block => (
-                                        <button key={block.key} type="button" onClick={() => { setLayoutMode('custom'); handleCustomToggle(block.key); }} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${customLayout[block.key] ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                                            <div className="flex items-start gap-3 min-w-0">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${customLayout[block.key] ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={block.icon} className="w-4 h-4" /></div>
-                                                <div><div className="font-black text-sm text-slate-800 dark:text-white">{block.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{block.desc}</div></div>
-                                            </div>
-                                            <div className={`w-12 h-7 rounded-full relative shrink-0 transition-all ${customLayout[block.key] ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow transition-all ${customLayout[block.key] ? 'left-[24px]' : 'left-[4px]'}`}></span></div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </SettingSection>
-
-                    <SettingSection title="高級體驗自定義" desc="微調動畫、文字、玻璃效果同快捷入口，令 iPad / 手機使用更貼近你習慣。" icon="sliders-horizontal">
-                        <div className="space-y-5">
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">體驗開關</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {advancedOptions.map(opt => {
-                                        const actualEnabled = opt.key === 'smartHints' ? advancedPrefs?.smartHints !== false : advancedPrefs?.[opt.key] === true;
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    {customBlocks.map(block => {
+                                        const enabled = customLayout?.[block.key] !== false;
                                         return (
-                                            <button key={opt.key} type="button" onClick={() => handleAdvancedToggle(opt.key)} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${actualEnabled ? `${t.lightBg} ${t.border}` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                                                <div className="flex items-start gap-3 min-w-0">
-                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${actualEnabled ? `bg-gradient-to-br ${t.gradient} text-white` : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={opt.icon} className="w-4 h-4" /></div>
-                                                    <div><div className="font-black text-sm text-slate-800 dark:text-white">{opt.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{opt.desc}</div></div>
-                                                </div>
-                                                <div className={`w-11 h-6 rounded-full relative shrink-0 transition-all ${actualEnabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white shadow transition-all ${actualEnabled ? 'left-[21px]' : 'left-[3px]'}`}></span></div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">快捷入口顯示</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {quickActionOptions.map(opt => {
-                                        const enabled = advancedPrefs?.[opt.key] !== false;
-                                        return (
-                                            <button key={opt.key} type="button" onClick={() => handleAdvancedToggle(opt.key)} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${enabled ? 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 opacity-75'}`}>
-                                                <div className="flex items-start gap-3 min-w-0">
-                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${enabled ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={opt.icon} className="w-4 h-4" /></div>
-                                                    <div><div className="font-black text-sm text-slate-800 dark:text-white">{opt.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{opt.desc}</div></div>
-                                                </div>
-                                                <div className={`w-11 h-6 rounded-full relative shrink-0 transition-all ${enabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white shadow transition-all ${enabled ? 'left-[21px]' : 'left-[3px]'}`}></span></div>
-                                            </button>
+                                            <Row key={block.key} icon={block.icon} title={block.label} desc={block.desc} active={layoutMode === 'custom' && enabled} onClick={() => handleCustomToggle(block.key)}>
+                                                <Switch enabled={enabled} />
+                                            </Row>
                                         );
                                     })}
                                 </div>
                             </div>
                         </div>
-                    </SettingSection>
+                    </Section>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <SettingSection title="通知與提醒" desc="管理通知中心、未讀提醒同版本更新資訊。" icon="bell-ring" right={unreadNotificationCount > 0 ? <span className="px-2.5 py-1 rounded-full bg-red-500 text-white text-[10px] font-black">{unreadNotificationCount}</span> : null}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showNotificationShortcut !== false && <button type="button" onClick={onOpenNotifications} className="p-4 rounded-2xl bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="bell" className="w-5 h-5 text-orange-500 mb-2" /><div className="font-black text-sm text-orange-700 dark:text-orange-300">打開通知中心</div><div className="text-[11px] font-bold text-orange-600/70 dark:text-orange-200/70 mt-1">查看廣播、更新、過期功課</div></button>}
-                                {advancedPrefs?.showClassShortcut !== false && <button type="button" onClick={onGoClass} className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school-2" className="w-5 h-5 text-emerald-500 mb-2" /><div className="font-black text-sm text-emerald-700 dark:text-emerald-300">查看班級廣播</div><div className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-200/70 mt-1">查看老師發放的功課</div></button>}
-                            </div>
-                        </SettingSection>
-                        <SettingSection title="科目與帳號" desc="管理科目顏色、帳戶操作及登出。" icon="user-cog">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showSubjectShortcut !== false && <button type="button" onClick={onOpenSubjects} className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school" className="w-5 h-5 text-indigo-500 mb-2" /><div className="font-black text-sm text-indigo-700 dark:text-indigo-300">科目管理</div><div className="text-[11px] font-bold text-indigo-600/70 dark:text-indigo-200/70 mt-1">自訂科目、排序、顏色</div></button>}
-                                {advancedPrefs?.showAccountShortcut !== false && <button type="button" onClick={onLogout} className="p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="log-out" className="w-5 h-5 text-red-500 mb-2" /><div className="font-black text-sm text-red-700 dark:text-red-300">登出帳號</div><div className="text-[11px] font-bold text-red-600/70 dark:text-red-200/70 mt-1">切換或重新登入</div></button>}
-                            </div>
-                        </SettingSection>
-                    </div>
+                    <Section title="閱讀與操作體驗" desc="針對手機、iPad、低效能裝置，調整動畫、文字同卡片清晰度。" icon="sliders-horizontal">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            {advancedOptions.map(option => {
+                                const enabled = advancedEnabled(option);
+                                return (
+                                    <Row key={option.key} icon={option.icon} title={option.label} desc={option.desc} active={enabled} onClick={() => handleAdvancedToggle(option.key)}>
+                                        <Switch enabled={enabled} />
+                                    </Row>
+                                );
+                            })}
+                        </div>
+                    </Section>
+
+                    <Section title="快捷入口管理" desc="決定設定頁頂部要顯示邊啲快捷按鈕；唔常用可以隱藏。" icon="panel-top-open">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            {shortcutOptions.map(option => {
+                                const enabled = shortcutEnabled(option.key);
+                                return (
+                                    <Row key={option.key} icon={option.icon} title={option.label} desc={option.desc} active={enabled} onClick={() => handleAdvancedToggle(option.key)}>
+                                        <Switch enabled={enabled} />
+                                    </Row>
+                                );
+                            })}
+                        </div>
+                    </Section>
+
+                    <Section title="帳號與管理" desc="常用工具集中喺底部，避免誤按登出。" icon="user-cog">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <Row icon="bell" title="通知中心" desc={unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '暫無未讀'} active={false} onClick={onOpenNotifications}>
+                                <Icon name="chevron-right" className="w-4 h-4 text-slate-400" />
+                            </Row>
+                            <Row icon="book-marked" title="科目管理" desc="自訂科目與顏色" active={false} onClick={onOpenSubjects}>
+                                <Icon name="chevron-right" className="w-4 h-4 text-slate-400" />
+                            </Row>
+                            <Row icon="log-out" title="登出帳號" desc="切換或重新登入" active={false} danger onClick={onLogout}>
+                                <Icon name="chevron-right" className="w-4 h-4 text-red-300" />
+                            </Row>
+                        </div>
+                    </Section>
                 </div>
             );
         }
@@ -3249,7 +3122,6 @@ function App() {
             }, [viewMode]);
 
             useEffect(() => { safeStorageSet('isDarkMode', String(isDarkMode)); if (isDarkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark'); }, [isDarkMode]);
-            useEffect(() => { try { document.documentElement.dataset.themeColor = themeColor || 'indigo'; } catch(e) {} }, [themeColor]);
             useEffect(() => { safeStorageSet('themeColor', themeColor); safeStorageSet('layoutMode', layoutMode); safeStorageSet('customLayout', JSON.stringify(customLayout)); }, [themeColor, layoutMode, customLayout]);
             useEffect(() => {
                 safeStorageSet('advancedPrefs', JSON.stringify(advancedPrefs));
@@ -4051,7 +3923,7 @@ function App() {
             if (systemConfig?.blacklistEnabled && !isAdmin && systemConfig?.blacklistedEmails?.includes(user.email)) return <BlockScreen type="access_denied" customTitle="帳號停權" customMessage="您的帳號已被管理員列入黑名單，無法存取本系統。" user={user} />;
 
             return (
-                <div className={`modern-app-shell min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-slate-900 font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
+                <div className={`min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-slate-900 font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
                     
                     <div className={`fixed top-4 sm:top-8 left-1/2 transform -translate-x-1/2 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${toast.isVisible ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-full opacity-0 scale-95 pointer-events-none'}`}>
                         <div className={`px-5 py-3 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-xl flex items-center gap-3 font-bold text-sm tracking-wide border ${toast.type === 'error' ? 'bg-red-500/95 text-white border-red-400' : 'bg-slate-900/95 text-white border-slate-800 dark:bg-white/95 dark:text-slate-900 dark:border-white/50'}`}>
@@ -4072,9 +3944,9 @@ function App() {
                         </div>
                     )}
 
-                    <div className="modern-app-container max-w-[1200px] mx-auto relative z-10 transition-all duration-500">
+                    <div className="max-w-[1200px] mx-auto relative z-10 transition-all duration-500">
                         {viewMode !== 'admin' && (
-                        <header className="modern-topbar flex items-center justify-between mb-8 max-w-3xl mx-auto glass-card bg-white/80 dark:bg-slate-900/80 px-5 py-4 rounded-[2rem]">
+                        <header className="flex items-center justify-between mb-8 max-w-3xl mx-auto glass-card bg-white/80 dark:bg-slate-900/80 px-5 py-4 rounded-[2rem]">
                             <div className="flex items-center gap-3">
                                 <div className={`w-11 h-11 rounded-2xl flex items-center justify-center bg-gradient-to-br ${t.gradient} text-white shadow-lg`}>
                                     <Icon name={viewMode === 'settings' ? "sliders-horizontal" : viewMode === 'timetable' || viewMode === 'timetable_edit' ? "calendar-clock" : viewMode === 'history' ? "timer" : "book-open"} className="w-6 h-6" />
@@ -4113,7 +3985,7 @@ function App() {
                         )}
 
                         {viewMode !== 'admin' && (
-                            <div key={`${viewMode}-${appMode}`} className="modern-content-stack animate-item">
+                            <div key={`${viewMode}-${appMode}`} className="animate-item">
                                 {viewMode === 'timetable' ? ( <div className="max-w-3xl mx-auto"><Timetable currentDay={currentTimetableDay} config={timetableConfig} onDayChange={setCurrentTimetableDay} subjects={subjects} globalNow={globalNow} /></div> ) : 
                                  viewMode === 'timetable_edit' ? ( <TimetableEditor initialConfig={timetableConfig} onSave={saveTimetableConfig} onCancel={() => setViewMode('timetable')} subjects={subjects} triggerConfirm={triggerConfirm} /> ) :
                                  viewMode === 'settings' ? ( <UserSettingsPage
@@ -4138,10 +4010,10 @@ function App() {
                                     onLogout={handleLogout}
                                  /> ) : (
                                 
-                                <div className="modern-page-narrow max-w-3xl mx-auto pt-2">
+                                <div className="max-w-3xl mx-auto pt-2">
                                     {/* Cards */}
                                     {viewMode === 'current' && isVisible('cards') && (
-                                        <div className="modern-summary-grid grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6 animate-fadeIn">
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6 animate-fadeIn">
                                             <button onClick={() => openQuickView('today')} className="col-span-2 sm:col-span-1 relative overflow-hidden glass-card bg-white/90 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex justify-between items-center shadow-sm hover:shadow-md transition-all group hover:-translate-y-0.5 border border-white/40">
                                                 <div className="flex flex-col items-start gap-1 z-10 w-full">
                                                     <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-sm"></div>今日急件</div>
@@ -4175,7 +4047,7 @@ function App() {
                                     {(viewMode === 'current' || viewMode === 'history') && appMode === 'personal' && (
                                         <>
                                             {isVisible('input') && (
-                                                <form onSubmit={handleSubmit} className="modern-input-card relative z-20 mb-8 flex flex-col gap-4 p-5 sm:p-6 glass-card bg-white/80 dark:bg-slate-900/80 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all border border-white/60">
+                                                <form onSubmit={handleSubmit} className="relative z-20 mb-8 flex flex-col gap-4 p-5 sm:p-6 glass-card bg-white/80 dark:bg-slate-900/80 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all border border-white/60">
                                                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                                         <div className="flex bg-slate-100/80 dark:bg-slate-800/80 p-1.5 rounded-2xl w-full sm:w-auto shadow-inner">
                                                             <button type="button" onClick={()=>setInputType('homework')} className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${inputType === 'homework' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>功課</button>
@@ -4229,7 +4101,7 @@ function App() {
 
                                             {isVisible('list') && (
                                                 <>
-                                                    <div className="modern-list-toolbar flex flex-col sm:flex-row justify-between items-center gap-3 mb-6 relative">
+                                                    <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-6 relative">
                                                         <div className={`flex items-center gap-2 w-full sm:w-auto overflow-x-auto scrollbar-hide pb-1 transition-opacity ${!isListVisible ? 'opacity-50' : 'opacity-100'}`}>
                                                             <span className="text-slate-400 text-xs font-bold whitespace-nowrap">篩選:</span>
                                                             <button onClick={() => handleFilterChange('全部')} className={`flex-shrink-0 px-2.5 py-1 rounded text-[10px] font-bold border transition-all ${filterSubject === '全部' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'}`}>全部</button>
@@ -4259,7 +4131,7 @@ function App() {
                                                             const subjectStyle = subjects.find(s => s.name === item.subject)?.color || 'bg-slate-100 text-slate-600 border-slate-200';
                                                             
                                                             return (
-                                                                <div key={item.id} style={{ animationDelay: `${index * 0.05}s` }} className={`modern-task-card animate-item glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl p-5 shadow-sm border border-white/40 transition-all hover:shadow-md hover:-translate-y-0.5 group ${isExiting ? 'scale-95 opacity-0' : ''}`}>
+                                                                <div key={item.id} style={{ animationDelay: `${index * 0.05}s` }} className={`animate-item glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl p-5 shadow-sm border border-white/40 transition-all hover:shadow-md hover:-translate-y-0.5 group ${isExiting ? 'scale-95 opacity-0' : ''}`}>
                                                                     <div className="flex items-start gap-4">
                                                                         {/* Snappy Checkbox Animation */}
                                                                         <button onClick={() => handleToggle(item.id, item.completed)} className={`mt-0.5 w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-200 ${isCompleted ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50 hover:border-emerald-400 dark:hover:border-emerald-500'}`}>
@@ -4337,7 +4209,7 @@ function App() {
                                                     const targetClass = systemClasses.find(c => c.code === targetCode);
                                                     const targetName = targetCode === '全校' ? '全校' : (targetClass?.name || targetCode);
                                                     return (
-                                                        <div key={task.id} style={{ animationDelay: `${idx * 0.05}s` }} className="modern-task-card animate-item glass-card bg-white/80 dark:bg-slate-800/80 p-5 rounded-2xl shadow-sm border border-white/50 dark:border-slate-700 relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-md">
+                                                        <div key={task.id} style={{ animationDelay: `${idx * 0.05}s` }} className="animate-item glass-card bg-white/80 dark:bg-slate-800/80 p-5 rounded-2xl shadow-sm border border-white/50 dark:border-slate-700 relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-md">
                                                             {task.forceExpired && <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/50 backdrop-blur-[1px] z-20 flex items-center justify-center pointer-events-none"><span className="bg-red-500 text-white font-bold px-4 py-2 rounded-xl shadow-lg rotate-[-6deg]">已撤回 / 已失效</span></div>}
                                                             <div className="relative z-10 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                                                                 <div className="min-w-0 flex-1">
@@ -4347,7 +4219,7 @@ function App() {
                                                                             <span className="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-2.5 py-1 rounded font-bold">{targetName}</span>
                                                                             {!task.forceExpired && (
                                                                                 <span className={`text-[10px] px-2.5 py-1 rounded font-bold ${isDelivered ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-300' : isDelivering ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300' : 'bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-300'}`}>
-                                                                                    {isDelivered ? '已接收' : isDelivering ? '處理中' : '登入後接收'}
+                                                                                    {isDelivered ? '已加入個人清單' : isDelivering ? '自動加入中' : '登入後自動加入'}
                                                                                 </span>
                                                                             )}
                                                                         </div>
@@ -4372,7 +4244,7 @@ function App() {
                         )}
                     </div>
 
-                                        <div className="modern-dynamic-island fixed bottom-6 left-1/2 -translate-x-1/2 glass-card bg-white/90 dark:bg-slate-800/90 rounded-full p-2 shadow-lg border border-white/50 dark:border-slate-700/50 z-[100] flex items-center justify-between gap-1 sm:gap-2 max-w-[95%] overflow-x-auto dynamic-island-scroll">
+                                        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 glass-card bg-white/90 dark:bg-slate-800/90 rounded-full p-2 shadow-lg border border-white/50 dark:border-slate-700/50 z-[100] flex items-center justify-between gap-1 sm:gap-2 max-w-[95%] overflow-x-auto dynamic-island-scroll">
                         <NavItem icon="book-open" label="主頁" active={viewMode === 'current' && appMode === 'personal'} onClick={() => { setViewMode('current'); setAppMode('personal'); setIsListVisible(true); }} t={t} />
                         <NavItem icon="school" label="班級" active={viewMode === 'current' && appMode === 'class'} onClick={() => { setViewMode('current'); setAppMode('class'); setIsListVisible(true); }} t={t} />
                         <NavItem icon="calendar-clock" label="時間表" active={viewMode === 'timetable' || viewMode === 'timetable_edit'} onClick={() => { setViewMode('timetable'); setIsListVisible(true); }} t={t} />
@@ -4519,10 +4391,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.8.25-modern-app-layout | based-on-uploaded-v1.8.24 | modern-layout-only | original-functions-preserved -->
-    <!-- ehandbook-build: v1.8.25-modern-app-layout -->
-<!-- ehandbook-layout-note: modern-app-layout-only -->
+<!-- VERSION_CHECK: v1.8.24-class-page-clean-update-notice | based-on-uploaded-v1.8.17 | google-auth-flow-rebuilt | original-functions-preserved -->
+    <!-- ehandbook-build: v1.8.24-class-page-clean-update-notice -->
 </body>
 </html>
 
-<!-- ehandbook_v1.8.25_modern_app_layout: modern app layout refreshed; all original functions preserved. -->
+<!-- ehandbook_v1.8.24_class_page_clean_update_notice: class page manual status removed; built-in update popup added. -->
+
+<!-- v1.8.24-class-page-clean-update-notice: students auto-claim broadcast assignments on login; no class page manual join controls. -->
