@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.9.01 Modern App UI + Animations + 已交功課功能：全面現代化設計，保留所有原有功能 -->
+    <!-- 電子手冊 Pro v1.9.02-perfect-display：全站顯示方式、排版層級、手機/iPad 安全區、玻璃卡片、底部導航、設定頁與班級頁視覺全面整理；保留原有 Firebase、登入、功課、時間表、班級、通知、後台與 AdSense/Analytics 邏輯。 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -14,6 +14,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#4f46e5">
+
+    <script>
+      try {
+        var savedThemeColor = localStorage.getItem('themeColor') || 'indigo';
+        document.documentElement.dataset.themeColor = savedThemeColor;
+        if (localStorage.getItem('isDarkMode') === 'true') document.documentElement.classList.add('dark');
+      } catch(e) {}
+    </script>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,8 +31,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.9.01">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.9.01"; console.log("電子手冊 Pro v1.8.24-class-page-clean-update-notice loaded");</script>
+    <meta name="ehandbook-version" content="v1.9.02-perfect-display">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.9.02-perfect-display"; console.log("電子手冊 Pro v1.9.02-perfect-display loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -223,6 +231,160 @@
         .settings-page-stable { animation: none !important; will-change: auto; transform: translateZ(0); }
         .settings-page-stable * { backface-visibility: hidden; }
         .settings-page-stable .settings-live-indicator { transition: none !important; }
+
+
+        /* ── v1.9.02 PERFECT DISPLAY PATCH ─────────────────────────────
+           本次更新只做顯示方式、排版層級、響應式與流暢度優化；不刪除任何功能邏輯。
+           覆蓋路徑建議：/rchw/index.html；測試版建議先放 backup/v1.9.02-perfect-display.html。
+        */
+        :root {
+            --eh-accent-rgb: 79 70 229;
+            --eh-accent-2-rgb: 59 130 246;
+            --eh-surface-rgb: 255 255 255;
+            --eh-page-max: 1180px;
+            --eh-readable-max: 860px;
+            --eh-safe-bottom: env(safe-area-inset-bottom, 0px);
+            --eh-safe-top: env(safe-area-inset-top, 0px);
+        }
+        html[data-theme-color="indigo"] { --eh-accent-rgb: 79 70 229; --eh-accent-2-rgb: 37 99 235; }
+        html[data-theme-color="rose"]    { --eh-accent-rgb: 225 29 72; --eh-accent-2-rgb: 236 72 153; }
+        html[data-theme-color="emerald"] { --eh-accent-rgb: 5 150 105; --eh-accent-2-rgb: 20 184 166; }
+        html[data-theme-color="amber"]   { --eh-accent-rgb: 245 158 11; --eh-accent-2-rgb: 249 115 22; }
+        html[data-theme-color="violet"]  { --eh-accent-rgb: 124 58 237; --eh-accent-2-rgb: 147 51 234; }
+        html[data-theme-color="sky"]     { --eh-accent-rgb: 14 165 233; --eh-accent-2-rgb: 59 130 246; }
+        html[data-theme-color="zinc"]    { --eh-accent-rgb: 63 63 70; --eh-accent-2-rgb: 51 65 85; }
+
+        html { scroll-behavior: smooth; background: #f8fafc; }
+        html.dark { background: #050b16; }
+        body { min-height: 100dvh; overflow-x: hidden; text-rendering: optimizeLegibility; }
+        button, input, textarea { touch-action: manipulation; }
+        input, textarea { font-size: 16px; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .eh-shell {
+            min-height: 100dvh;
+            padding-left: max(1rem, env(safe-area-inset-left, 0px));
+            padding-right: max(1rem, env(safe-area-inset-right, 0px));
+            padding-bottom: calc(8.5rem + var(--eh-safe-bottom));
+            background:
+                radial-gradient(circle at 18% 8%, rgb(var(--eh-accent-rgb) / 0.14), transparent 34rem),
+                radial-gradient(circle at 88% 18%, rgb(var(--eh-accent-2-rgb) / 0.10), transparent 30rem),
+                linear-gradient(180deg, rgba(248,250,252,0.98) 0%, rgba(241,245,249,0.96) 100%);
+        }
+        .dark .eh-shell {
+            background:
+                radial-gradient(circle at 18% 8%, rgb(var(--eh-accent-rgb) / 0.17), transparent 34rem),
+                radial-gradient(circle at 88% 18%, rgb(var(--eh-accent-2-rgb) / 0.10), transparent 30rem),
+                linear-gradient(180deg, #050b16 0%, #07111f 100%);
+        }
+        .eh-content { width: min(var(--eh-page-max), calc(100vw - 2rem)); margin-inline: auto; }
+        .eh-page-panel { width: 100%; margin-inline: auto; }
+        .eh-page-panel > .max-w-3xl,
+        .eh-page-panel > .max-w-4xl,
+        .eh-page-panel > .max-w-5xl,
+        .eh-page-panel > .max-w-6xl { width: 100%; }
+
+        .eh-topbar {
+            position: sticky;
+            top: calc(0.85rem + var(--eh-safe-top));
+            z-index: 80;
+            width: min(var(--eh-readable-max), calc(100vw - 2rem));
+            min-height: 4.15rem;
+            box-shadow: 0 18px 60px -34px rgba(15,23,42,0.55), inset 0 1px 0 rgba(255,255,255,0.75);
+        }
+        .dark .eh-topbar { box-shadow: 0 18px 60px -34px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.05); }
+
+        .glass-card,
+        .eh-page-panel .bg-white,
+        .eh-page-panel .dark\:bg-slate-800,
+        .eh-page-panel .dark\:bg-slate-900 { background-clip: padding-box; }
+        .eh-page-panel .glass-card,
+        .eh-page-panel section,
+        .eh-page-panel form,
+        .eh-page-panel .rounded-3xl,
+        .eh-page-panel .rounded-\[2rem\] { scroll-margin-top: 6rem; }
+        .eh-page-panel .rounded-3xl,
+        .eh-page-panel .rounded-\[2rem\],
+        .eh-page-panel .rounded-\[2\.2rem\] { border-color: rgba(255,255,255,0.72); }
+        .dark .eh-page-panel .rounded-3xl,
+        .dark .eh-page-panel .rounded-\[2rem\],
+        .dark .eh-page-panel .rounded-\[2\.2rem\] { border-color: rgba(148,163,184,0.14); }
+
+        .eh-nav {
+            width: min(720px, calc(100vw - 1.25rem));
+            bottom: calc(1rem + var(--eh-safe-bottom));
+            min-height: 4rem;
+            border-radius: 999px;
+            box-shadow:
+                0 24px 80px -28px rgba(15,23,42,0.55),
+                0 10px 26px -18px rgb(var(--eh-accent-rgb) / 0.45),
+                inset 0 1px 0 rgba(255,255,255,0.84);
+        }
+        .dark .eh-nav {
+            box-shadow:
+                0 26px 90px -28px rgba(0,0,0,0.92),
+                0 10px 28px -20px rgb(var(--eh-accent-rgb) / 0.40),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        .eh-nav-item { min-width: 2.75rem; will-change: transform; }
+        .eh-nav-item:focus-visible { outline: 3px solid rgb(var(--eh-accent-rgb) / 0.28); outline-offset: 3px; }
+        .eh-nav-item:active { transform: scale(0.96); }
+
+        .settings-page-stable { width: min(var(--eh-readable-max), 100%); margin-inline: auto; }
+        .settings-page-stable section { box-shadow: 0 18px 60px -44px rgba(15,23,42,0.55); }
+        .settings-page-stable button { min-height: 2.65rem; }
+
+        .comfort-spacing-mode .eh-page-panel { --eh-card-gap: 1.1rem; }
+        .comfort-spacing-mode .eh-page-panel .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.9rem; }
+        .comfort-spacing-mode .eh-page-panel .space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 1.1rem; }
+        .comfort-spacing-mode .eh-page-panel .space-y-5 > :not([hidden]) ~ :not([hidden]) { margin-top: 1.25rem; }
+
+        @media (hover: hover) and (pointer: fine) {
+            .eh-page-panel button:hover,
+            .eh-topbar button:hover,
+            .eh-nav button:hover { transform: translateY(-1px); }
+            .eh-page-panel .glass-card:hover { box-shadow: 0 18px 70px -44px rgba(15,23,42,0.65); }
+            .dark .eh-page-panel .glass-card:hover { box-shadow: 0 20px 80px -46px rgba(0,0,0,0.85); }
+        }
+        @media (max-width: 640px) {
+            .eh-shell {
+                padding-top: calc(0.8rem + var(--eh-safe-top));
+                padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+                padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+                padding-bottom: calc(7.4rem + var(--eh-safe-bottom));
+            }
+            .eh-content { width: min(100%, calc(100vw - 1.25rem)); }
+            .eh-topbar {
+                top: calc(0.55rem + var(--eh-safe-top));
+                width: min(100%, calc(100vw - 1.25rem));
+                min-height: 3.85rem;
+                border-radius: 1.35rem;
+                padding: 0.72rem 0.78rem;
+                margin-bottom: 1rem;
+            }
+            .eh-topbar h1 { font-size: 0.92rem; }
+            .eh-topbar p { font-size: 0.65rem; }
+            .eh-nav {
+                width: min(100%, calc(100vw - 0.9rem));
+                min-height: 3.65rem;
+                padding: 0.42rem;
+                gap: 0.1rem;
+                justify-content: flex-start;
+            }
+            .eh-nav-item { height: 2.65rem; min-width: 2.65rem; }
+            .eh-nav-item span { font-size: 0.72rem; }
+            .eh-page-panel .grid { gap: 0.9rem; }
+            .eh-page-panel table { font-size: 0.82rem; }
+            .eh-page-panel input,
+            .eh-page-panel textarea { font-size: 16px; }
+        }
+        @media (min-width: 900px) {
+            .eh-page-panel:has(.settings-page-stable) { max-width: var(--eh-readable-max); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .animate-blob, .animate-marquee, .animate-fadeIn, .animate-item, .nav-boot { animation: none !important; }
+        }
+
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -317,7 +479,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.01',
+                version: 'v1.9.02-perfect-display',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -416,17 +578,17 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.9.01',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.9.02-perfect-display',
             title: '電子手冊已更新',
             summary: [
-                '班級廣播頁面已清走手動加入提示，只保留功課內容和狀態。',
-                '學生登入後會自動補領應收廣播功課，不需要再按任何加入或補領按鈕。',
-                '新版會內建更新彈窗，之後部署新版時可自動向用戶顯示更新內容。'
+                '全站顯示方式已重新整理，卡片、標題、列表、底部導航和設定頁更一致。',
+                '手機、iPad 和桌面顯示加入安全區與更穩定的間距，操作時不容易擠壓或遮擋。',
+                '保留原有登入、功課、時間表、班級廣播、通知、設定和管理後台功能。'
             ].join('\n'),
             guide: [
-                '管理員照常發放廣播功課。',
-                '學生打開主頁或班級廣播頁即可查看功課。',
-                '下次更新只需要更新程式內的版本資訊，用戶開頁會自動看到更新說明。'
+                '可直接覆蓋 /rchw/index.html 使用。',
+                '建議先在 backup/ 路徑試開，確認登入與資料讀取正常後再替換正式檔。',
+                '若畫面仍有舊樣式，請清除瀏覽器快取後重新整理。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
@@ -869,7 +1031,7 @@
 
                                 <div className="flex flex-col gap-2.5">
                                     {[
-                                        {icon:'check-circle-2', text:'自動同步廣播功課', col:'text-emerald-400', bg:'bg-emerald-500/10'},
+                                        {icon:'check-circle-2', text:'自動接收廣播功課', col:'text-emerald-400', bg:'bg-emerald-500/10'},
                                         {icon:'calendar-clock',  text:'智能時間表追蹤',  col:'text-sky-400',    bg:'bg-sky-500/10'},
                                         {icon:'send',           text:'一鍵標記已交功課',col:'text-violet-400', bg:'bg-violet-500/10'},
                                     ].map((f,i) => (
@@ -987,7 +1149,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-200 dark:text-slate-800 select-none">v1.9.01</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-200 dark:text-slate-800 select-none">v1.9.02-perfect-display</div>
                             </div>
                         </div>
                     </div>
@@ -2844,7 +3006,7 @@
 
         function NavItem({ id, icon, label, active, onClick, t }) {
             return (
-                <button onClick={onClick} className={`relative flex items-center justify-center h-11 rounded-full transition-all duration-300 ease-out overflow-visible ${active ? `${t.lightBg} ${t.text} px-4 shadow-sm` : 'w-11 px-0 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'}`}>
+                <button onClick={onClick} className={`eh-nav-item relative flex items-center justify-center h-11 rounded-full transition-all duration-300 ease-out overflow-visible ${active ? `${t.lightBg} ${t.text} px-4 shadow-sm` : 'w-11 px-0 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'}`}>
                     <Icon name={icon} className={`w-[18px] h-[18px] shrink-0 transition-transform duration-300 ${active ? 'scale-110' : ''}`} />
                     <span className={`font-bold text-[13px] whitespace-nowrap transition-all duration-300 ease-out overflow-hidden ${active ? 'max-w-[100px] opacity-100 ml-1.5' : 'max-w-0 opacity-0 ml-0'}`}>
                         {label}
@@ -3209,7 +3371,12 @@ function App() {
             }, [viewMode]);
 
             useEffect(() => { safeStorageSet('isDarkMode', String(isDarkMode)); if (isDarkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark'); }, [isDarkMode]);
-            useEffect(() => { safeStorageSet('themeColor', themeColor); safeStorageSet('layoutMode', layoutMode); safeStorageSet('customLayout', JSON.stringify(customLayout)); }, [themeColor, layoutMode, customLayout]);
+            useEffect(() => {
+                safeStorageSet('themeColor', themeColor);
+                safeStorageSet('layoutMode', layoutMode);
+                safeStorageSet('customLayout', JSON.stringify(customLayout));
+                try { document.documentElement.dataset.themeColor = themeColor || 'indigo'; } catch(e) {}
+            }, [themeColor, layoutMode, customLayout]);
             useEffect(() => {
                 safeStorageSet('advancedPrefs', JSON.stringify(advancedPrefs));
                 const root = document.documentElement;
@@ -4015,7 +4182,7 @@ function App() {
             if (systemConfig?.blacklistEnabled && !isAdmin && systemConfig?.blacklistedEmails?.includes(user.email)) return <BlockScreen type="access_denied" customTitle="帳號停權" customMessage="您的帳號已被管理員列入黑名單，無法存取本系統。" user={user} />;
 
             return (
-                <div className={`min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-[#060c18] font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
+                <div className={`eh-shell min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-[#060c18] font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
                     {/* Subtle dot grid overlay */}
                     <div className="fixed inset-0 z-0 pointer-events-none bg-dot-grid opacity-100"></div>
                     
@@ -4043,9 +4210,9 @@ function App() {
                         </div>
                     )}
 
-                    <div className="max-w-[1200px] mx-auto relative z-10 transition-all duration-500">
+                    <div className="eh-content max-w-[1200px] mx-auto relative z-10 transition-all duration-500">
                         {viewMode !== 'admin' && (
-                        <header className="flex items-center justify-between mb-6 max-w-3xl mx-auto glass-card px-4 py-3 rounded-[1.6rem] border border-white/65 dark:border-slate-700/40 animate-fadeIn">
+                        <header className="eh-topbar flex items-center justify-between mb-6 max-w-3xl mx-auto glass-card px-4 py-3 rounded-[1.6rem] border border-white/65 dark:border-slate-700/40 animate-fadeIn">
                             <div className="flex items-center gap-3">
                                 <div className={`w-9 h-9 rounded-[12px] flex items-center justify-center bg-gradient-to-br ${t.gradient} text-white shadow-md shrink-0`}>
                                     <Icon name={viewMode === 'settings' ? "sliders-horizontal" : viewMode === 'timetable' || viewMode === 'timetable_edit' ? "calendar-clock" : viewMode === 'history' ? "timer" : "book-open"} className="w-4 h-4" />
@@ -4080,7 +4247,7 @@ function App() {
                         )}
 
                         {viewMode !== 'admin' && (
-                            <div key={`${viewMode}-${appMode}`} className="animate-item">
+                            <div key={`${viewMode}-${appMode}`} className="eh-page-panel animate-item">
                                 {viewMode === 'timetable' ? ( <div className="max-w-3xl mx-auto"><Timetable currentDay={currentTimetableDay} config={timetableConfig} onDayChange={setCurrentTimetableDay} subjects={subjects} globalNow={globalNow} /></div> ) : 
                                  viewMode === 'timetable_edit' ? ( <TimetableEditor initialConfig={timetableConfig} onSave={saveTimetableConfig} onCancel={() => setViewMode('timetable')} subjects={subjects} triggerConfirm={triggerConfirm} /> ) :
                                  viewMode === 'settings' ? ( <UserSettingsPage
@@ -4385,7 +4552,7 @@ function App() {
                                                                             <span className="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-2.5 py-1 rounded font-bold">{targetName}</span>
                                                                             {!task.forceExpired && (
                                                                                 <span className={`text-[10px] px-2.5 py-1 rounded font-bold ${isDelivered ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-300' : isDelivering ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300' : 'bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-300'}`}>
-                                                                                    {isDelivered ? '已加入個人清單' : isDelivering ? '自動加入中' : '登入後自動加入'}
+                                                                                    {isDelivered ? '已加入個人手冊' : isDelivering ? '自動加入中' : '登入後自動加入'}
                                                                                 </span>
                                                                             )}
                                                                         </div>
@@ -4410,7 +4577,7 @@ function App() {
                         )}
                     </div>
 
-                                        <div className="nav-boot fixed bottom-5 left-1/2 -translate-x-1/2 glass-card rounded-full px-2.5 py-2 shadow-2xl shadow-slate-900/10 dark:shadow-black/55 border border-white/70 dark:border-slate-700/40 z-[100] flex items-center justify-between gap-1 sm:gap-1.5 max-w-[96%] overflow-x-auto dynamic-island-scroll backdrop-blur-3xl">
+                                        <div className="eh-nav nav-boot fixed bottom-5 left-1/2 -translate-x-1/2 glass-card rounded-full px-2.5 py-2 shadow-2xl shadow-slate-900/10 dark:shadow-black/55 border border-white/70 dark:border-slate-700/40 z-[100] flex items-center justify-between gap-1 sm:gap-1.5 max-w-[96%] overflow-x-auto dynamic-island-scroll backdrop-blur-3xl">
                         <NavItem icon="book-open" label="主頁" active={viewMode === 'current' && appMode === 'personal'} onClick={() => { setViewMode('current'); setAppMode('personal'); setIsListVisible(true); }} t={t} />
                         <NavItem icon="school" label="班級" active={viewMode === 'current' && appMode === 'class'} onClick={() => { setViewMode('current'); setAppMode('class'); setIsListVisible(true); }} t={t} />
                         <NavItem icon="calendar-clock" label="時間表" active={viewMode === 'timetable' || viewMode === 'timetable_edit'} onClick={() => { setViewMode('timetable'); setIsListVisible(true); }} t={t} />
@@ -4557,11 +4724,17 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.9.01 | based-on-uploaded-v1.8.17 | google-auth-flow-rebuilt | original-functions-preserved -->
-    <!-- ehandbook-build: v1.9.01 -->
+<!-- VERSION_CHECK: v1.9.02-perfect-display | based-on-uploaded-v1.9.01 | display-layout-polish | original-functions-preserved -->
+    <!-- ehandbook-build: v1.9.02-perfect-display -->
 </body>
 </html>
 
 <!-- ehandbook_v1.8.24_class_page_clean_update_notice: class page manual status removed; built-in update popup added. -->
 
-<!-- v1.9.01: students auto-claim broadcast assignments on login; no class page manual join controls. -->
+<!-- v1.9.02-perfect-display: students auto-claim broadcast assignments on login; no class page manual join controls. -->
+<!-- v1.9.02-perfect-display update-notes:
+1. 完善全站顯示方式：主容器、頁面寬度、玻璃卡片、列表、設定頁、通知彈窗與底部導航的視覺層級。
+2. 加入 themeColor 對應 CSS 變數，背景與陰影會跟隨用戶主題色自然變化。
+3. 加入手機 / iPad safe-area、100dvh、16px input 防縮放與更穩定的底部 Dock 顯示。
+4. 保留 Firebase、Google/Email 登入、個人功課、已交功課、時間表、科目、班級廣播、通知中心、管理後台、更新彈窗等原有功能邏輯。
+-->
