@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.9.02-perfect-display：全站顯示方式、排版層級、手機/iPad 安全區、玻璃卡片、底部導航、設定頁與班級頁視覺全面整理；保留原有 Firebase、登入、功課、時間表、班級、通知、後台與 AdSense/Analytics 邏輯。 -->
+    <!-- 電子手冊 Pro v1.9.04-master-polish：整體 App 質感重整、主頁專注總覽、卡片操作永久可見、置中靈動島、通知提示高對比、手機/iPad 閱讀與操作優化；保留所有原有功能與 Firebase 資料邏輯。 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -11,9 +11,8 @@
       gtag('config', 'G-8VCPLTE2QT');
     </script>
 
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4156749891284054"
-        crossorigin="anonymous"></script>
+    <!-- AdSense：保留電子手冊 Pro 原有廣告設定，不影響登入、Firebase 或資料庫邏輯 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4156749891284054" crossorigin="anonymous"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -35,8 +34,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.9.03-centered-island-visible-actions">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.9.03-centered-island-visible-actions"; console.log("電子手冊 Pro v1.9.03-centered-island-visible-actions loaded");</script>
+    <meta name="ehandbook-version" content="v1.9.04-master-polish">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.9.04-master-polish"; console.log("電子手冊 Pro v1.9.04-master-polish loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -239,7 +238,7 @@
 
         /* ── v1.9.03 CENTERED ISLAND + VISIBLE ACTIONS PATCH ─────────────────────────────
            本次更新只做顯示方式、排版層級、響應式與流暢度優化；不刪除任何功能邏輯。
-           覆蓋路徑建議：/rchw/index.html；測試版建議先放 backup/v1.9.03-centered-island-visible-actions.html。
+           覆蓋路徑建議：/rchw/index.html；測試版建議先放 backup/v1.9.04-master-polish.html。
         */
         :root {
             --eh-accent-rgb: 79 70 229;
@@ -457,6 +456,202 @@
                 min-width: 2.6rem !important;
             }
         }
+
+
+        /* ── v1.9.04 MASTER POLISH PATCH ──────────────────────────────
+           本次更新：以「真正手機 App」為方向重整顯示層；保留所有 Firebase、登入、功課、時間表、班級、通知、後台、AdSense 功能。
+           主要目標：更乾淨的頁面節奏、更清楚的卡片操作、更穩定的 iPad / 手機顯示、更高對比通知提示。
+        */
+        :root {
+            --eh-card-radius: 1.65rem;
+            --eh-panel-radius: 2rem;
+            --eh-soft-border: rgba(255,255,255,0.72);
+            --eh-card-shadow: 0 20px 70px -48px rgba(15,23,42,0.7), 0 1px 2px rgba(15,23,42,0.04);
+            --eh-card-shadow-hover: 0 26px 90px -52px rgba(15,23,42,0.9), 0 8px 24px -18px rgb(var(--eh-accent-rgb) / 0.16);
+        }
+        .dark {
+            --eh-soft-border: rgba(148,163,184,0.14);
+            --eh-card-shadow: 0 22px 76px -50px rgba(0,0,0,0.92), 0 1px 2px rgba(0,0,0,0.3);
+            --eh-card-shadow-hover: 0 28px 96px -54px rgba(0,0,0,1), 0 8px 24px -18px rgb(var(--eh-accent-rgb) / 0.16);
+        }
+        .eh-shell {
+            background:
+                radial-gradient(circle at 18% 0%, rgb(var(--eh-accent-rgb) / 0.13), transparent 31rem),
+                radial-gradient(circle at 92% 10%, rgb(var(--eh-accent-2-rgb) / 0.09), transparent 28rem),
+                linear-gradient(180deg, rgba(248,250,252,0.98) 0%, rgba(243,246,250,0.98) 48%, rgba(239,244,250,0.98) 100%) !important;
+        }
+        .dark .eh-shell {
+            background:
+                radial-gradient(circle at 18% 0%, rgb(var(--eh-accent-rgb) / 0.16), transparent 31rem),
+                radial-gradient(circle at 92% 10%, rgb(var(--eh-accent-2-rgb) / 0.09), transparent 28rem),
+                linear-gradient(180deg, #040914 0%, #07111f 50%, #050b16 100%) !important;
+        }
+        .bg-dot-grid { opacity: 0.72 !important; background-size: 38px 38px !important; }
+        .eh-content { width: min(1060px, calc(100vw - 1.35rem)) !important; }
+        .eh-page-panel > .max-w-3xl { max-width: 860px !important; }
+        .eh-page-panel .glass-card,
+        .eh-page-panel section,
+        .eh-page-panel form,
+        .eh-page-panel .rounded-3xl,
+        .eh-page-panel .rounded-\[2rem\] {
+            box-shadow: var(--eh-card-shadow);
+        }
+        .eh-topbar {
+            width: min(860px, calc(100vw - 1.35rem)) !important;
+            border-radius: 1.55rem !important;
+            background: rgba(255,255,255,0.82) !important;
+            border-color: rgba(255,255,255,0.72) !important;
+        }
+        .dark .eh-topbar {
+            background: rgba(7,13,26,0.82) !important;
+            border-color: rgba(148,163,184,0.14) !important;
+        }
+        .eh-focus-strip { transform: translateZ(0); }
+        .eh-focus-strip > div::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255,255,255,0.16), transparent 42%, rgba(255,255,255,0.08));
+            mix-blend-mode: soft-light;
+        }
+        .eh-focus-metric:hover { background: rgba(255,255,255,0.2); transform: translateY(-1px); }
+        .focus-first-mode .eh-focus-strip { display: block; }
+        .focus-first-mode .eh-add-form { margin-top: 0.5rem; }
+
+        .eh-add-form {
+            border-radius: 2.1rem !important;
+            border: 1px solid var(--eh-soft-border) !important;
+            background: rgba(255,255,255,0.84) !important;
+            box-shadow: var(--eh-card-shadow) !important;
+        }
+        .dark .eh-add-form { background: rgba(7,13,26,0.86) !important; }
+        .eh-add-form input[type="text"] { letter-spacing: -0.02em; }
+        .eh-add-form:focus-within {
+            box-shadow: 0 24px 90px -50px rgb(var(--eh-accent-rgb) / 0.55), 0 0 0 1px rgb(var(--eh-accent-rgb) / 0.22) !important;
+            transform: translateY(-1px);
+        }
+
+        .task-overdue, .task-today, .task-soon, .task-safe, .task-done {
+            border-radius: var(--eh-card-radius) !important;
+            background: rgba(255,255,255,0.86) !important;
+            border: 1px solid rgba(255,255,255,0.72) !important;
+            box-shadow: var(--eh-card-shadow) !important;
+        }
+        .dark .task-overdue,
+        .dark .task-today,
+        .dark .task-soon,
+        .dark .task-safe,
+        .dark .task-done {
+            background: rgba(7,13,26,0.86) !important;
+            border-color: rgba(148,163,184,0.14) !important;
+        }
+        .task-overdue:hover, .task-today:hover, .task-soon:hover, .task-safe:hover, .task-done:hover {
+            transform: translateY(-2px) scale(1.002) !important;
+            box-shadow: var(--eh-card-shadow-hover) !important;
+        }
+        .task-overdue { border-left-width: 5px !important; }
+        .task-today { border-left-width: 5px !important; }
+        .task-soon { border-left-width: 5px !important; }
+        .task-safe { border-left-width: 5px !important; }
+        .task-done { border-left-width: 5px !important; opacity: 0.86; }
+
+        .eh-task-action-strip,
+        .eh-quick-action-strip,
+        .eh-submit-action-visible {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+        .eh-task-action-strip button,
+        .eh-quick-action-strip button {
+            width: 2rem;
+            height: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.95rem !important;
+            background: rgba(248,250,252,0.92) !important;
+            border: 1px solid rgba(226,232,240,0.9) !important;
+            color: #64748b !important;
+        }
+        .dark .eh-task-action-strip button,
+        .dark .eh-quick-action-strip button {
+            background: rgba(15,23,42,0.9) !important;
+            border-color: rgba(51,65,85,0.9) !important;
+            color: #cbd5e1 !important;
+        }
+        .eh-task-action-strip button:hover,
+        .eh-quick-action-strip button:hover { transform: translateY(-1px) scale(1.03); }
+        .eh-submit-action-visible {
+            min-height: 2rem;
+            border-radius: 0.95rem !important;
+            background: rgba(255,255,255,0.95) !important;
+            color: #0369a1 !important;
+            border-color: rgba(125,211,252,0.8) !important;
+        }
+        .dark .eh-submit-action-visible {
+            background: rgba(8,47,73,0.42) !important;
+            color: #7dd3fc !important;
+            border-color: rgba(56,189,248,0.28) !important;
+        }
+
+        .eh-nav {
+            bottom: calc(1rem + var(--eh-safe-bottom)) !important;
+            padding: 0.5rem 0.58rem !important;
+            background: rgba(255,255,255,0.84) !important;
+            border: 1px solid rgba(255,255,255,0.72) !important;
+            box-shadow: 0 22px 72px -30px rgba(15,23,42,0.48), inset 0 1px 0 rgba(255,255,255,0.86) !important;
+        }
+        .dark .eh-nav {
+            background: rgba(7,13,26,0.84) !important;
+            border-color: rgba(148,163,184,0.14) !important;
+            box-shadow: 0 26px 86px -30px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+        }
+        .eh-nav-item {
+            height: 2.72rem !important;
+            min-width: 2.72rem !important;
+            border-radius: 999px !important;
+        }
+        .eh-nav-item[aria-current="page"] {
+            box-shadow: 0 12px 26px -18px rgb(var(--eh-accent-rgb) / 0.7) !important;
+        }
+
+        .eh-toast-card {
+            min-width: min(92vw, 340px) !important;
+            max-width: min(92vw, 460px) !important;
+            line-height: 1.35;
+            letter-spacing: -0.01em;
+            border-radius: 1.25rem !important;
+        }
+        .eh-toast-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.56);
+        }
+
+        .settings-page-stable section,
+        .settings-page-stable > div:first-child {
+            box-shadow: var(--eh-card-shadow) !important;
+        }
+        .settings-page-stable button { -webkit-tap-highlight-color: transparent; }
+
+        @media (max-width: 640px) {
+            .eh-content { width: min(100%, calc(100vw - 1rem)) !important; }
+            .eh-topbar { width: min(100%, calc(100vw - 1rem)) !important; }
+            .eh-focus-strip { margin-bottom: 1rem; }
+            .eh-focus-strip h2 { font-size: 1.45rem; }
+            .eh-focus-strip .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .eh-add-form { border-radius: 1.65rem !important; }
+            .task-overdue, .task-today, .task-soon, .task-safe, .task-done { border-radius: 1.35rem !important; }
+            .eh-task-action-strip button,
+            .eh-quick-action-strip button { width: 2.05rem; height: 2.05rem; }
+            .eh-nav { max-width: calc(100vw - 0.75rem) !important; }
+        }
+
 </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -551,7 +746,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.02-perfect-display',
+                version: 'v1.9.04-master-polish',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -650,7 +845,7 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.9.03-centered-island-visible-actions',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.9.04-master-polish',
             title: '電子手冊已更新',
             summary: [
                 '全站顯示方式已重新整理，卡片、標題、列表、底部導航和設定頁更一致。',
@@ -1221,7 +1416,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-200 dark:text-slate-800 select-none">v1.9.02-perfect-display</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-200 dark:text-slate-800 select-none">v1.9.04-master-polish</div>
                             </div>
                         </div>
                     </div>
@@ -1380,14 +1575,12 @@
                                 {layoutMode === 'custom' && (
                                     <div className="mt-3 space-y-2 p-3 bg-slate-50/50 dark:bg-slate-900/30 rounded-xl border border-slate-100 dark:border-slate-800">
                                         {[{ key: 'cards', label: '狀態卡片' }, { key: 'timetable', label: '流動時間表' }, { key: 'input', label: '新增欄位' }, { key: 'list', label: '任務列表' }].map(item => (
-                                            <label key={item.key} className="flex items-center justify-between cursor-pointer group">
+                                            <button key={item.key} type="button" role="switch" aria-checked={!!customLayout[item.key]} onClick={() => handleCustomToggle(item.key)} className="flex items-center justify-between cursor-pointer group w-full text-left active:scale-[0.99] transition-transform">
                                                 <span className="text-sm font-bold text-slate-600 dark:text-slate-400">{item.label}</span>
-                                                <div className="relative w-12 h-7 shrink-0">
-                                                    <input type="checkbox" className="sr-only peer" checked={customLayout[item.key]} onChange={() => handleCustomToggle(item.key)} />
-                                                    <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-indigo-500 transition-colors shadow-inner"></div>
-                                                    <div className="absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform peer-checked:translate-x-[20px] shadow-sm border border-slate-300 dark:border-slate-600"></div>
-                                                </div>
-                                            </label>
+                                                <span className={`relative w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner ${customLayout[item.key] ? 'bg-indigo-500' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                                                    <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${customLayout[item.key] ? 'translate-x-[20px]' : ''}`}></span>
+                                                </span>
+                                            </button>
                                         ))}
                                     </div>
                                 )}
@@ -2986,10 +3179,12 @@
                                             <textarea rows="4" placeholder={"例如：\n1. 按右上角小鈴鐺查看通知\n2. 有新廣播功課時，打開通知中心查看\n3. 廣播功課會出現在個人手冊"} value={updateGuideInput} onChange={e => setUpdateGuideInput(e.target.value)} className="mt-1 w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-all resize-none"></textarea>
                                         </div>
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 p-4">
-                                            <label className="flex items-center gap-3 cursor-pointer">
-                                                <input type="checkbox" checked={updatePopupEnabledInput} onChange={e => setUpdatePopupEnabledInput(e.target.checked)} className="w-4 h-4 accent-indigo-600" />
+                                            <button type="button" role="switch" aria-checked={!!updatePopupEnabledInput} onClick={() => setUpdatePopupEnabledInput(!updatePopupEnabledInput)} className="flex items-center gap-3 cursor-pointer text-left active:scale-[0.99] transition-transform">
+                                                <span className={`relative w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner ${updatePopupEnabledInput ? 'bg-indigo-500' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                                                    <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${updatePopupEnabledInput ? 'translate-x-[20px]' : ''}`}></span>
+                                                </span>
                                                 <span className="text-sm font-black text-indigo-700 dark:text-indigo-300">啟用自動彈窗</span>
-                                            </label>
+                                            </button>
                                             <button onClick={handlePublishUpdateNotice} className="bg-indigo-600 text-white px-5 py-3 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 active:scale-95 shadow-sm"><Icon name="send" className="w-4 h-4"/> 發佈更新彈窗</button>
                                         </div>
                                         <div className="rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-900/40 p-4">
@@ -3019,11 +3214,10 @@
                                 <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
                                     <div className="p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
                                         <h4 className="font-bold flex items-center gap-2 dark:text-white"><Icon name="check-circle-2" className="w-5 h-5 text-emerald-500"/> 白名單系統</h4>
-                                        <label className="relative cursor-pointer w-12 h-7 shrink-0">
-                                            <input type="checkbox" className="sr-only peer" checked={systemConfig?.whitelistEnabled || false} onChange={(e) => updateConfig('whitelistEnabled', e.target.checked)} />
-                                            <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-emerald-500 transition-colors shadow-inner"></div>
-                                            <div className="absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform peer-checked:translate-x-[20px] shadow-sm border border-slate-300 dark:border-slate-600"></div>
-                                        </label>
+                                        <button type="button" role="switch" aria-checked={!!systemConfig?.whitelistEnabled} onClick={() => updateConfig('whitelistEnabled', !(systemConfig?.whitelistEnabled || false))} className="relative cursor-pointer w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner active:scale-95">
+                                            <span className={`absolute inset-0 rounded-full transition-colors ${systemConfig?.whitelistEnabled ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700'}`}></span>
+                                            <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${systemConfig?.whitelistEnabled ? 'translate-x-[20px]' : ''}`}></span>
+                                        </button>
                                     </div>
                                     <div className="p-6">
                                         <form onSubmit={handleAddWhitelist} className="flex gap-3 mb-6">
@@ -3046,11 +3240,10 @@
                                 <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
                                     <div className="p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
                                         <h4 className="font-bold flex items-center gap-2 dark:text-white"><Icon name="alert-circle" className="w-5 h-5 text-red-500"/> 黑名單系統</h4>
-                                        <label className="relative cursor-pointer w-12 h-7 shrink-0">
-                                            <input type="checkbox" className="sr-only peer" checked={systemConfig?.blacklistEnabled || false} onChange={(e) => updateConfig('blacklistEnabled', e.target.checked)} />
-                                            <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-red-500 transition-colors shadow-inner"></div>
-                                            <div className="absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform peer-checked:translate-x-[20px] shadow-sm border border-slate-300 dark:border-slate-600"></div>
-                                        </label>
+                                        <button type="button" role="switch" aria-checked={!!systemConfig?.blacklistEnabled} onClick={() => updateConfig('blacklistEnabled', !(systemConfig?.blacklistEnabled || false))} className="relative cursor-pointer w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner active:scale-95">
+                                            <span className={`absolute inset-0 rounded-full transition-colors ${systemConfig?.blacklistEnabled ? 'bg-red-500' : 'bg-slate-200 dark:bg-slate-700'}`}></span>
+                                            <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${systemConfig?.blacklistEnabled ? 'translate-x-[20px]' : ''}`}></span>
+                                        </button>
                                     </div>
                                     <div className="p-6">
                                         <form onSubmit={handleAddBlacklist} className="flex gap-3 mb-6">
@@ -3078,7 +3271,7 @@
 
         function NavItem({ id, icon, label, active, onClick, t }) {
             return (
-                <button onClick={onClick} className={`eh-nav-item relative flex items-center justify-center h-11 rounded-full transition-all duration-300 ease-out overflow-visible ${active ? `${t.lightBg} ${t.text} px-4 shadow-sm` : 'w-11 px-0 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'}`}>
+                <button onClick={onClick} aria-current={active ? "page" : undefined} className={`eh-nav-item relative flex items-center justify-center h-11 rounded-full transition-all duration-300 ease-out overflow-visible ${active ? `${t.lightBg} ${t.text} px-4 shadow-sm` : 'w-11 px-0 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'}`}>
                     <Icon name={icon} className={`w-[18px] h-[18px] shrink-0 transition-transform duration-300 ${active ? 'scale-110' : ''}`} />
                     <span className={`font-bold text-[13px] whitespace-nowrap transition-all duration-300 ease-out overflow-hidden ${active ? 'max-w-[100px] opacity-100 ml-1.5' : 'max-w-0 opacity-0 ml-0'}`}>
                         {label}
@@ -3169,7 +3362,7 @@
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.8.23
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.9.04
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
@@ -3456,6 +3649,7 @@ function App() {
                 root.classList.toggle('large-text-mode', !!advancedPrefs.largeText);
                 root.classList.toggle('clean-glass-mode', !!advancedPrefs.cleanGlass);
                 root.classList.toggle('comfort-spacing-mode', advancedPrefs.comfortSpacing !== false);
+                root.classList.toggle('focus-first-mode', !!advancedPrefs.focusFirst);
             }, [advancedPrefs]);
 
             useEffect(() => {
@@ -4312,6 +4506,45 @@ function App() {
                         </header>
                         )}
 
+                        {viewMode === 'current' && appMode === 'personal' && (
+                            <section className="eh-focus-strip max-w-3xl mx-auto mb-6 animate-fadeIn">
+                                <div className={`relative overflow-hidden rounded-[2rem] bg-gradient-to-br ${t.gradient} text-white border border-white/20 shadow-[0_28px_90px_-42px_rgba(15,23,42,0.85)]`}>
+                                    <div className="absolute -top-20 -right-12 w-60 h-60 bg-white/18 rounded-full blur-3xl pointer-events-none"></div>
+                                    <div className="absolute bottom-[-4rem] left-10 w-56 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+                                    <div className="relative z-10 p-5 sm:p-6">
+                                        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+                                            <div className="min-w-0">
+                                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-[11px] font-black mb-3 backdrop-blur-xl">
+                                                    <Icon name="sparkles" className="w-3.5 h-3.5" /> 今日專注模式
+                                                </div>
+                                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">先處理今日，再放心放學。</h2>
+                                                <p className="text-sm font-bold text-white/75 mt-2">所有功能保留，但主頁會更快讓你知道而家要做咩。</p>
+                                            </div>
+                                            <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:w-[360px]">
+                                                <button type="button" onClick={() => openQuickView('today')} className="eh-focus-metric rounded-[1.35rem] bg-white/14 border border-white/18 p-3 text-left backdrop-blur-xl active:scale-95 transition-all">
+                                                    <div className="text-[10px] font-black text-white/60 uppercase">今日</div>
+                                                    <div className="text-2xl font-black leading-none mt-1">{counts.today}</div>
+                                                </button>
+                                                <button type="button" onClick={() => openQuickView('test')} className="eh-focus-metric rounded-[1.35rem] bg-white/14 border border-white/18 p-3 text-left backdrop-blur-xl active:scale-95 transition-all">
+                                                    <div className="text-[10px] font-black text-white/60 uppercase">測驗</div>
+                                                    <div className="text-2xl font-black leading-none mt-1">{counts.test}</div>
+                                                </button>
+                                                <div className="eh-focus-metric rounded-[1.35rem] bg-white/14 border border-white/18 p-3 text-left backdrop-blur-xl">
+                                                    <div className="text-[10px] font-black text-white/60 uppercase">完成</div>
+                                                    <div className="text-2xl font-black leading-none mt-1">{counts.progressPercent}%</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="mt-5 flex flex-wrap gap-2">
+                                            <button type="button" onClick={() => { const el = document.querySelector('.eh-add-form input'); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => { try { el.focus(); } catch(e) {} }, 280); } }} className="px-4 py-2.5 rounded-2xl bg-white text-slate-900 text-xs font-black shadow-lg shadow-black/10 active:scale-95 flex items-center gap-2"><Icon name="plus" className="w-4 h-4" /> 新增紀錄</button>
+                                            <button type="button" onClick={() => openQuickView('today')} className="px-4 py-2.5 rounded-2xl bg-white/14 border border-white/20 text-white text-xs font-black active:scale-95 flex items-center gap-2"><Icon name="list-checks" className="w-4 h-4" /> 查看今日</button>
+                                            <button type="button" onClick={handleClearExpired} className="px-4 py-2.5 rounded-2xl bg-white/14 border border-white/20 text-white text-xs font-black active:scale-95 flex items-center gap-2"><Icon name="archive-x" className="w-4 h-4" /> 清理過期</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        )}
+
                         {viewMode === 'admin' && (
                             <div className="animate-item">
                                 <AdminConsole db={db} systemConfig={systemConfig} systemClasses={systemClasses} onBack={() => {setViewMode('current'); setAppMode('personal');}} subjects={subjects} triggerAlert={triggerAlert} triggerConfirm={triggerConfirm} />
@@ -4394,21 +4627,19 @@ function App() {
                                     {(viewMode === 'current' || viewMode === 'history') && appMode === 'personal' && (
                                         <>
                                             {isVisible('input') && (
-                                                <form onSubmit={handleSubmit} className="relative z-20 mb-8 flex flex-col gap-4 p-5 sm:p-6 glass-card bg-white/85 dark:bg-slate-900/80 rounded-[2rem] shadow-sm hover:shadow-md transition-all border border-white/65 dark:border-slate-700/50">
+                                                <form onSubmit={handleSubmit} className="eh-add-form relative z-20 mb-8 flex flex-col gap-4 p-5 sm:p-6 glass-card bg-white/85 dark:bg-slate-900/80 rounded-[2rem] shadow-sm hover:shadow-md transition-all border border-white/65 dark:border-slate-700/50">
                                                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                                         <div className="flex bg-slate-100/80 dark:bg-slate-800/80 p-1.5 rounded-2xl w-full sm:w-auto shadow-inner">
                                                             <button type="button" onClick={()=>setInputType('homework')} className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${inputType === 'homework' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>功課</button>
                                                             <button type="button" onClick={()=>setInputType('assessment')} className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${inputType === 'assessment' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>測驗</button>
                                                         </div>
                                                         {isAdmin && (
-                                                            <label className={`w-full sm:w-auto flex items-center justify-between sm:justify-start cursor-pointer gap-4 px-4 py-2.5 rounded-2xl border-2 transition-all ${isBroadcast ? 'bg-orange-50 border-orange-300' : 'bg-slate-50 border-slate-100 hover:border-slate-300'}`}>
+                                                            <button type="button" role="switch" aria-checked={!!isBroadcast} onClick={() => setIsBroadcast(!isBroadcast)} className={`w-full sm:w-auto flex items-center justify-between sm:justify-start cursor-pointer gap-4 px-4 py-2.5 rounded-2xl border-2 transition-all active:scale-[0.98] ${isBroadcast ? 'bg-orange-50 border-orange-300' : 'bg-slate-50 border-slate-100 hover:border-slate-300'}`}>
                                                                 <div className="flex items-center gap-2.5"><Icon name="bell" className={`w-5 h-5 ${isBroadcast ? 'text-orange-500 animate-pulse' : 'text-slate-400'}`} /><span className={`text-sm font-bold ${isBroadcast ? 'text-orange-700' : 'text-slate-500'}`}>全校廣播發佈</span></div>
-                                                                <div className="relative w-12 h-7 shrink-0">
-                                                                    <input type="checkbox" className="sr-only peer" checked={isBroadcast} onChange={e => setIsBroadcast(e.target.checked)} />
-                                                                    <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 rounded-full peer-checked:bg-orange-500 transition-colors shadow-inner"></div>
-                                                                    <div className="absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform peer-checked:translate-x-[20px] shadow-sm border border-slate-300 dark:border-slate-600"></div>
-                                                                </div>
-                                                            </label>
+                                                                <span className={`relative w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner ${isBroadcast ? 'bg-orange-500' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                                                                    <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${isBroadcast ? 'translate-x-[20px]' : ''}`}></span>
+                                                                </span>
+                                                            </button>
                                                         )}
                                                     </div>
 
@@ -4796,17 +5027,19 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.9.02-perfect-display | based-on-uploaded-v1.9.01 | display-layout-polish | original-functions-preserved -->
-    <!-- ehandbook-build: v1.9.02-perfect-display -->
+<!-- VERSION_CHECK: v1.9.04-master-polish | based-on-v1.9.03 | full-display-upgrade | original-functions-preserved | database-logic-unchanged -->
+    <!-- ehandbook-build: v1.9.04-master-polish -->
 </body>
 </html>
 
 <!-- ehandbook_v1.8.24_class_page_clean_update_notice: class page manual status removed; built-in update popup added. -->
 
-<!-- v1.9.02-perfect-display: students auto-claim broadcast assignments on login; no class page manual join controls. -->
-<!-- v1.9.02-perfect-display update-notes:
+<!-- v1.9.04-master-polish: students auto-claim broadcast assignments on login; no class page manual join controls. -->
+<!-- v1.9.04-master-polish update-notes:
 1. 完善全站顯示方式：主容器、頁面寬度、玻璃卡片、列表、設定頁、通知彈窗與底部導航的視覺層級。
 2. 加入 themeColor 對應 CSS 變數，背景與陰影會跟隨用戶主題色自然變化。
 3. 加入手機 / iPad safe-area、100dvh、16px input 防縮放與更穩定的底部 Dock 顯示。
 4. 保留 Firebase、Google/Email 登入、個人功課、已交功課、時間表、科目、班級廣播、通知中心、管理後台、更新彈窗等原有功能邏輯。
 -->
+
+<!-- v1.9.04-master-polish update-notes: master visual polish, focus overview, permanent action buttons, centered compact island, high-contrast toast, iPad/mobile safe display. No Firebase/database logic removed. -->
