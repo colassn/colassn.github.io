@@ -3,65 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二手書回收雲端管理系統 Ultimate</title>
+    <title>二手書回收管理系統 - 專業版</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
-                        accent: { 50: '#fdf4ff', 100: '#fae8ff', 500: '#d946ef', 600: '#c026d3' },
-                        warning: { 50: '#fffbeb', 500: '#f59e0b', 600: '#d97706' }
+                    fontFamily: {
+                        sans: ['"SF Pro Text"', '"SF Pro Display"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif', '"Noto Sans HK"'],
                     },
-                    animation: { 'fade-in-up': 'fadeInUp 0.3s ease-out forwards' },
-                    keyframes: {
-                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(5px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    colors: {
+                        brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' },
+                        surface: '#ffffff',
+                        background: '#f8fafc',
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                        'floating': '0 10px 40px rgba(0, 0, 0, 0.08)',
                     }
                 }
             }
         }
     </script>
+    <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;600;700&display=swap');
         
         body {
-            background: linear-gradient(-45deg, #e0f2fe, #fdf4ff, #ede9fe, #f0fdf4);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            min-height: 100vh;
-            font-family: 'Noto Sans HK', sans-serif;
-        }
-        
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            background-color: #f8fafc; /* Slate 50 */
+            color: #0f172a; /* Slate 900 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-        }
-
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 100%);
-            border: 1px solid rgba(255, 255, 255, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
+        /* 現代化滾動條 */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
+
+        .app-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+            border-color: #0284c7;
+        }
+
         @media print {
             body * { visibility: hidden; }
             #receipt-modal, #receipt-modal * { visibility: visible; }
@@ -70,14 +69,14 @@
         }
     </style>
 </head>
-<body class="p-3 md:p-6 text-slate-800">
+<body class="p-4 md:p-6 lg:p-8 h-screen flex flex-col">
 
-    <div id="root"></div>
+    <div id="root" class="h-full"></div>
 
     <script type="text/babel" data-type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const { useState, useEffect, useMemo } = React;
 
@@ -95,16 +94,29 @@
         const db = getFirestore(app);
         const appId = 'book-recycling-manager';
 
+        // 預設快捷書單 (移除 Emoji，純文字，專業感)
         const COMMON_BOOKS_SHORTCUTS = [
-            { title: "Form 2 全套齊書", price: 400, icon: "🎒", isPackage: true },
-            { title: "Form 3 全套齊書", price: 450, icon: "🎒", isPackage: true },
-            { title: "中文", price: 40, icon: "📖" },
-            { title: "English", price: 40, icon: "🅰️" },
-            { title: "Maths", price: 40, icon: "📐" },
-            { title: "科學", price: 35, icon: "🔬" },
-            { title: "中史", price: 30, icon: "📜" },
-            { title: "西史", price: 30, icon: "🏛️" }
+            { title: "F.2 全套書", price: 400, isPackage: true },
+            { title: "F.3 全套書", price: 450, isPackage: true },
+            { title: "中國語文", price: 40 },
+            { title: "英國語文", price: 40 },
+            { title: "數學", price: 40 },
+            { title: "綜合科學", price: 35 },
+            { title: "中國歷史", price: 30 },
+            { title: "世界歷史", price: 30 },
+            { title: "地理", price: 30 }
         ];
+
+        // ---- SVG Icons Components (專業化圖標) ----
+        const IconSearch = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>;
+        const IconUser = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
+        const IconPrinter = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>;
+        const IconDownload = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>;
+        const IconChart = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>;
+        const IconTrash = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>;
+        const IconEdit = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>;
+        const IconCheck = () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>;
+        const IconX = () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 
         function App() {
             const [user, setUser] = useState(null);
@@ -112,9 +124,7 @@
             const [students, setStudents] = useState([]);
             const [loading, setLoading] = useState(true);
             
-            // 收書員名稱 (利用 LocalStorage 記住，防止刷新後流失)
             const [collectorName, setCollectorName] = useState(() => localStorage.getItem("collectorName") || "");
-
             const [search, setSearch] = useState("");
             const [sortBy, setSortBy] = useState("form");
             const [activeId, setActiveId] = useState(null);
@@ -128,13 +138,13 @@
 
             const [showExportModal, setShowExportModal] = useState(false);
             const [showReceiptModal, setShowReceiptModal] = useState(false);
-            const [showCollectorStatsModal, setShowCollectorStatsModal] = useState(false); // 新增總結面板狀態
+            const [showCollectorStatsModal, setShowCollectorStatsModal] = useState(false);
             
             const [toast, setToast] = useState({ show: false, message: "", type: "info" });
 
             const showToast = (message, type = "success") => {
                 setToast({ show: true, message, type });
-                setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+                setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3500);
             };
 
             useEffect(() => {
@@ -142,7 +152,7 @@
             }, [collectorName]);
 
             useEffect(() => {
-                signInAnonymously(auth).catch(() => showToast("連線驗證失敗", "error"));
+                signInAnonymously(auth).catch(() => showToast("系統連線失敗", "error"));
                 return onAuthStateChanged(auth, (usr) => {
                     setUser(usr);
                     setDbConnected(!!usr);
@@ -169,14 +179,16 @@
                 return Math.max(0, base - deduct);
             };
 
+            // 全局統計
             const stats = useMemo(() => {
-                let totalAccepted = 0, totalAmount = 0;
+                let totalAccepted = 0, totalAmount = 0, totalRejected = 0;
                 students.forEach(s => {
                     (s.books || []).forEach(b => {
                         if (b.status === 'accepted') { totalAccepted++; totalAmount += getActualPrice(b); }
+                        else { totalRejected++; }
                     });
                 });
-                return { totalAccepted, totalAmount };
+                return { totalAccepted, totalAmount, totalRejected };
             }, [students]);
 
             const activeStats = useMemo(() => {
@@ -187,16 +199,13 @@
                 }, { total: 0 });
             }, [activeStudent]);
 
-            // 計算收書員分類數據 (Collector Stats Logic)
             const collectorStats = useMemo(() => {
                 const statsMap = {};
                 students.forEach(student => {
                     (student.books || []).forEach(book => {
                         if (book.status === 'accepted') {
-                            const cName = book.collectedBy || '未記名 (系統預設)';
-                            if (!statsMap[cName]) {
-                                statsMap[cName] = { count: 0, total: 0, items: [] };
-                            }
+                            const cName = book.collectedBy || '未指派';
+                            if (!statsMap[cName]) statsMap[cName] = { count: 0, total: 0, items: [] };
                             statsMap[cName].count += 1;
                             const price = getActualPrice(book);
                             statsMap[cName].total += price;
@@ -230,9 +239,8 @@
             const handleAddBook = async (title, priceStr) => {
                 if (!activeStudent || !title.trim()) return;
                 
-                // 防呆機制：強制要求輸入收書員名稱
                 if (!collectorName.trim()) {
-                    showToast("⚠️ 請先在右上角輸入你的「收書員名稱」！", "error");
+                    showToast("請先在右上角輸入你的收書員名稱", "error");
                     document.getElementById('collector-input').focus();
                     return;
                 }
@@ -245,13 +253,12 @@
                     deduction: 0,
                     deductionReason: "",
                     status: 'accepted',
-                    collectedBy: collectorName.trim(), // 綁定收書員名稱
+                    collectedBy: collectorName.trim(),
                     createdAt: new Date().toISOString()
                 };
                 
                 try {
                     await updateDoc(docRef, { books: [...(activeStudent.books || []), newBook] });
-                    showToast(`✅ 已新增: ${title}`);
                     setCustomBookName("");
                 } catch (err) { showToast("寫入失敗", "error"); }
             };
@@ -263,7 +270,7 @@
             const handleToggleBookStatus = async (bookId) => {
                 if (!activeStudent) return;
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
-                const updatedBooks = activeStudent.books.map(b => b.id === bookId ? { ...b, status: b.status === 'accepted' ? 'rejected' : 'accepted', rejectReason: b.status === 'accepted' ? '改版不收' : '' } : b);
+                const updatedBooks = activeStudent.books.map(b => b.id === bookId ? { ...b, status: b.status === 'accepted' ? 'rejected' : 'accepted', rejectReason: b.status === 'accepted' ? '不符合回收標準' : '' } : b);
                 await updateDoc(docRef, { books: updatedBooks });
             };
 
@@ -279,7 +286,6 @@
                 const updatedBooks = activeStudent.books.map(b => b.id === bookId ? { ...b, deduction: Number(tempDeduction) || 0, deductionReason: tempDeductReason.trim() } : b);
                 await updateDoc(docRef, { books: updatedBooks });
                 setEditingDeductionId(null);
-                showToast("扣減設定已儲存");
             };
 
             const generateExportData = () => {
@@ -300,9 +306,9 @@
                             if (b.status === 'accepted') {
                                 const deductText = b.deduction > 0 ? `(扣$${b.deduction}:${b.deductionReason})` : '';
                                 const collectorText = b.collectedBy ? `[經手:${b.collectedBy}]` : '';
-                                return `✅${b.title}${deductText}${collectorText}`;
+                                return `[收] ${b.title}${deductText}${collectorText}`;
                             } else {
-                                return `❌[退]${b.title}`;
+                                return `[退] ${b.title}`;
                             }
                         }).join(', ');
                         const total = acceptedBooks.reduce((sum, b) => sum + getActualPrice(b), 0);
@@ -325,296 +331,322 @@
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(blob);
-                link.download = `收書紀錄_${new Date().toISOString().split('T')[0]}.csv`;
+                link.download = `BookRecycling_Export_${new Date().toISOString().split('T')[0]}.csv`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
             };
 
             return (
-                <div class="max-w-[1400px] mx-auto pb-12 animate-fade-in-up">
+                <div class="max-w-[1440px] mx-auto w-full h-full flex flex-col font-sans">
                     
+                    {/* Toast Notification (Sleek Dark) */}
                     {toast.show && (
-                        <div class="fixed top-6 right-6 z-50 px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 bg-slate-900 text-white font-medium">
-                            <span>{toast.type === 'error' ? '⚠️' : '✨'}</span>
-                            <span>{toast.message}</span>
+                        <div class={`fixed top-6 right-6 z-50 px-5 py-3 rounded-lg shadow-floating flex items-center gap-3 text-sm font-medium text-white transition-opacity duration-300 ${toast.type === 'error' ? 'bg-red-600' : 'bg-slate-900'}`}>
+                            {toast.message}
                         </div>
                     )}
 
-                    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4 px-2">
-                        <div>
-                            <h1 class="text-3xl lg:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-accent-600">
-                                ♻️ 二手書回收系統 Pro Max
-                            </h1>
-                            <div class="flex items-center gap-3 mt-2 text-sm text-slate-500 font-medium">
-                                <span class={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${dbConnected ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                                    <span class={`w-2 h-2 rounded-full ${dbConnected ? 'bg-emerald-500' : 'bg-amber-400'}`}></span>
-                                    {dbConnected ? "實時雲端同步中" : "連線中..."}
-                                </span>
-                                <span>Po Kok Secondary School</span>
+                    {/* Top Navigation Bar */}
+                    <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-4 border-b border-slate-200 gap-4 shrink-0">
+                        <div class="flex items-center gap-4">
+                            <div>
+                                <h1 class="text-xl md:text-2xl font-bold tracking-tight text-slate-900">收書管理系統</h1>
+                                <div class="flex items-center gap-2 mt-1 text-xs text-slate-500">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class={`block w-2 h-2 rounded-full ${dbConnected ? 'bg-green-500' : 'bg-amber-500'}`}></span>
+                                        {dbConnected ? "系統在線" : "連線中..."}
+                                    </span>
+                                    <span class="text-slate-300">|</span>
+                                    <span>Po Kok Secondary School</span>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-                            {/* 收書員名稱輸入框 */}
-                            <div class="flex items-center bg-white border border-slate-200 rounded-2xl p-1 shadow-sm w-full sm:w-auto">
-                                <span class="pl-3 pr-2 text-slate-400">👤</span>
+                        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                            {/* 經手人 Input */}
+                            <div class="flex items-center bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm transition-colors focus-within:border-brand-500 flex-1 md:flex-none">
+                                <span class="text-slate-400 mr-2"><IconUser /></span>
                                 <input 
-                                    id="collector-input"
-                                    type="text" 
-                                    placeholder="輸入你的名字 (如: A)" 
-                                    value={collectorName}
-                                    onChange={(e) => setCollectorName(e.target.value)}
-                                    class="py-2 pr-4 bg-transparent border-none text-sm font-bold focus:outline-none focus:ring-0 text-brand-700 w-full sm:w-40"
+                                    id="collector-input" type="text" placeholder="經手人代號 (如: A)" 
+                                    value={collectorName} onChange={(e) => setCollectorName(e.target.value)}
+                                    class="bg-transparent border-none text-sm focus:outline-none w-full md:w-32 text-slate-900 font-medium"
                                 />
                             </div>
                             
-                            <button onClick={() => setShowCollectorStatsModal(true)} class="w-full sm:w-auto px-5 py-3 bg-brand-600 text-white hover:bg-brand-700 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md flex justify-center gap-2">
-                                📊 收書員對數
+                            <button onClick={() => setShowCollectorStatsModal(true)} class="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center gap-2">
+                                <IconChart /> 對數總結
                             </button>
-                            <button onClick={() => setShowExportModal(true)} class="w-full sm:w-auto px-5 py-3 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md flex justify-center">
-                                📤 匯出
+                            <button onClick={() => setShowExportModal(true)} class="px-4 py-2 bg-slate-900 text-white hover:bg-slate-800 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center gap-2">
+                                <IconDownload /> 匯出資料
                             </button>
                         </div>
                     </header>
 
-                    {loading ? (
-                        <div class="glass-panel rounded-3xl p-16 text-center animate-pulse font-bold text-slate-500">載入數據中...</div>
-                    ) : (
-                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-                            
-                            {/* Left Panel */}
-                            <div class="lg:col-span-4 glass-panel rounded-3xl p-5 flex flex-col h-[750px]">
-                                <input 
-                                    type="text" placeholder="🔍 搜尋姓名/班級..." value={search} onChange={(e) => setSearch(e.target.value)}
-                                    class="w-full px-5 py-3 mb-3 bg-white/60 border border-white rounded-2xl focus:ring-2 focus:ring-brand-400 shadow-sm"
-                                />
-                                <div class="flex gap-2 mb-4">
-                                    {['form', 'name', 'amount'].map(type => (
-                                        <button 
-                                            key={type} onClick={() => setSortBy(type)}
-                                            class={`flex-1 py-1.5 text-xs font-bold rounded-xl transition-all ${sortBy === type ? 'bg-brand-600 text-white shadow-md' : 'bg-white/50 text-slate-500 hover:bg-white'}`}
-                                        >
-                                            {type === 'form' ? '按班級' : type === 'name' ? '按姓名' : '按高消費'}
-                                        </button>
-                                    ))}
-                                </div>
-                                
-                                <div class="flex-1 overflow-y-auto space-y-2 pr-2">
-                                    {processedStudents.map(student => {
-                                        const isSelected = student.docId === activeId;
-                                        const sPayout = (student.books || []).reduce((sum, b) => b.status === 'accepted' ? sum + getActualPrice(b) : sum, 0);
-                                        return (
-                                            <div 
-                                                key={student.docId} onClick={() => setActiveId(student.docId)}
-                                                class={`p-4 rounded-2xl cursor-pointer transition-all border flex justify-between items-center ${isSelected ? 'bg-brand-600 text-white border-brand-600 shadow-lg scale-[1.02]' : 'glass-card hover:bg-white border-transparent'}`}
-                                            >
-                                                <div>
-                                                    <div class="font-bold flex items-center gap-2">
-                                                        <span class={`text-[10px] px-2 py-0.5 rounded-lg font-black uppercase tracking-wider ${isSelected ? 'bg-white/20' : 'bg-slate-100 text-slate-500'}`}>F.{student.form}</span>
-                                                        <span class="text-base">{student.name}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="text-right">
-                                                    {sPayout > 0 && <div class="text-lg font-black mt-1">${sPayout}</div>}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
+                    {/* Global Stats Overview (Minimalist) */}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 shrink-0">
+                        <div class="app-card p-4">
+                            <p class="text-xs font-medium text-slate-500 mb-1">成功回收總數</p>
+                            <p class="text-2xl font-bold text-slate-900">{stats.totalAccepted} <span class="text-sm font-normal text-slate-400">本/套</span></p>
+                        </div>
+                        <div class="app-card p-4">
+                            <p class="text-xs font-medium text-slate-500 mb-1">折實應付總額</p>
+                            <p class="text-2xl font-bold text-brand-600">${stats.totalAmount}</p>
+                        </div>
+                        <div class="app-card p-4">
+                            <p class="text-xs font-medium text-slate-500 mb-1">退回數量</p>
+                            <p class="text-2xl font-bold text-slate-900">{stats.totalRejected} <span class="text-sm font-normal text-slate-400">本</span></p>
+                        </div>
+                        <div class="app-card p-4 flex flex-col justify-center">
+                            <p class="text-xs font-medium text-slate-500 mb-1">系統時間</p>
+                            <p class="text-sm font-medium text-slate-900">{new Date().toLocaleDateString('zh-HK')}</p>
+                        </div>
+                    </div>
 
-                            {/* Right Panel Workspace */}
-                            {activeStudent ? (
-                                <div class="lg:col-span-8 glass-panel rounded-3xl p-6 lg:p-8 flex flex-col h-[750px]">
-                                    
-                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end pb-6 border-b border-slate-200/50 mb-6">
-                                        <div>
-                                            <h2 class="text-3xl font-black text-slate-800">{activeStudent.name} <span class="text-lg text-slate-400 font-medium ml-2">Form {activeStudent.form}</span></h2>
-                                        </div>
-                                        <div class="flex items-center gap-4 mt-4 sm:mt-0">
-                                            <div class="text-right">
-                                                <p class="text-xs font-bold text-slate-400 mb-1">本單結算</p>
-                                                <p class="text-4xl font-black text-emerald-500">${activeStats.total}</p>
+                    {/* Main Layout */}
+                    <div class="flex-1 flex flex-col md:flex-row gap-6 min-h-0 pb-6">
+                        
+                        {/* Sidebar: Student List */}
+                        <div class="w-full md:w-80 lg:w-96 flex flex-col gap-4 shrink-0 h-full">
+                            <div class="relative">
+                                <span class="absolute left-3 top-2.5 text-slate-400"><IconSearch /></span>
+                                <input 
+                                    type="text" placeholder="搜尋姓名或班級..." value={search} onChange={(e) => setSearch(e.target.value)}
+                                    class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 shadow-sm"
+                                />
+                            </div>
+                            
+                            <div class="flex bg-slate-200/50 p-1 rounded-lg shrink-0">
+                                {['form', 'name', 'amount'].map(type => (
+                                    <button 
+                                        key={type} onClick={() => setSortBy(type)}
+                                        class={`flex-1 py-1 text-xs font-medium rounded-md transition-colors ${sortBy === type ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                    >
+                                        {type === 'form' ? '班級' : type === 'name' ? '姓名' : '金額'}
+                                    </button>
+                                ))}
+                            </div>
+                            
+                            <div class="flex-1 overflow-y-auto app-card p-2 space-y-1">
+                                {loading ? (
+                                    <div class="p-4 text-center text-sm text-slate-400">載入數據中...</div>
+                                ) : processedStudents.map(student => {
+                                    const isSelected = student.docId === activeId;
+                                    const sPayout = (student.books || []).reduce((sum, b) => b.status === 'accepted' ? sum + getActualPrice(b) : sum, 0);
+                                    return (
+                                        <div 
+                                            key={student.docId} onClick={() => setActiveId(student.docId)}
+                                            class={`px-3 py-3 rounded-lg cursor-pointer transition-colors flex justify-between items-center ${isSelected ? 'bg-brand-50 border border-brand-200' : 'hover:bg-slate-50 border border-transparent'}`}
+                                        >
+                                            <div>
+                                                <div class={`text-sm font-medium ${isSelected ? 'text-brand-900' : 'text-slate-900'}`}>
+                                                    <span class="text-xs text-slate-500 mr-2 font-normal">F.{student.form}</span>
+                                                    {student.name}
+                                                </div>
                                             </div>
-                                            <div class="w-px h-12 bg-slate-200 hidden sm:block"></div>
-                                            <button onClick={() => setShowReceiptModal(true)} class="px-4 py-3 bg-slate-800 text-white hover:bg-slate-900 rounded-2xl font-bold shadow-lg flex items-center gap-2">
-                                                <span>🖨️</span> 印單
+                                            {sPayout > 0 && <div class={`text-sm font-semibold ${isSelected ? 'text-brand-600' : 'text-slate-600'}`}>${sPayout}</div>}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Main Workspace */}
+                        <div class="flex-1 app-card flex flex-col h-full min-w-0 overflow-hidden">
+                            {activeStudent ? (
+                                <div class="flex flex-col h-full">
+                                    {/* Workspace Header */}
+                                    <div class="px-6 py-5 border-b border-slate-200 flex flex-wrap justify-between items-center gap-4 bg-white rounded-t-16 shrink-0">
+                                        <div>
+                                            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                                                {activeStudent.name}
+                                                <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs rounded font-medium border border-slate-200">Form {activeStudent.form}</span>
+                                            </h2>
+                                            <p class="text-sm text-slate-500 mt-1 flex items-center gap-1.5">
+                                                <IconUser /> 聯絡電話: {activeStudent.phone || '無紀錄'}
+                                            </p>
+                                        </div>
+                                        <div class="flex items-center gap-6">
+                                            <div class="text-right">
+                                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">本單應付</p>
+                                                <p class="text-3xl font-bold text-brand-600 leading-none">${activeStats.total}</p>
+                                            </div>
+                                            <button onClick={() => setShowReceiptModal(true)} class="px-4 py-2.5 bg-slate-900 text-white hover:bg-slate-800 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center gap-2">
+                                                <IconPrinter /> 列印收據
                                             </button>
                                         </div>
                                     </div>
 
-                                    {/* 預設套餐與書籍 Shortcuts */}
-                                    <div class="mb-5">
-                                        <div class="flex flex-wrap gap-2">
-                                            {COMMON_BOOKS_SHORTCUTS.map(sc => (
-                                                <button 
-                                                    key={sc.title} onClick={() => handleAddBook(sc.title, sc.price)}
-                                                    class={`px-4 py-2.5 rounded-2xl text-sm font-bold transition-all hover:-translate-y-1 hover:shadow-md flex items-center gap-2 ${sc.isPackage ? 'bg-indigo-50 border-2 border-indigo-100 text-indigo-700' : 'glass-card hover:bg-white text-slate-700'}`}
-                                                >
-                                                    <span>{sc.icon} {sc.title}</span>
-                                                    <span class={`${sc.isPackage ? 'bg-indigo-600 text-white' : 'bg-brand-50 text-brand-600'} px-2 py-0.5 rounded-lg`}>${sc.price}</span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <div class="flex gap-3 mb-6 bg-white/50 p-3 rounded-2xl border border-white">
-                                        <input 
-                                            type="text" placeholder="✍️ 其他書名/自訂項目" 
-                                            value={customBookName} onChange={(e) => setCustomBookName(e.target.value)} onKeyDown={handleKeyDown}
-                                            class="flex-1 px-4 py-3 bg-white border-none rounded-xl text-sm focus:ring-2 focus:ring-brand-400 shadow-sm"
-                                        />
-                                        <input 
-                                            type="number" value={customBookPrice} onChange={(e) => setCustomBookPrice(e.target.value)} onKeyDown={handleKeyDown}
-                                            class="w-24 px-3 py-3 bg-white border-none rounded-xl text-sm font-black focus:ring-2 focus:ring-brand-400 shadow-sm"
-                                        />
-                                        <button onClick={() => handleAddBook(customBookName, customBookPrice)} class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md">加入</button>
-                                    </div>
-
-                                    {/* Book List & Deductions */}
-                                    <div class="flex-1 overflow-y-auto space-y-3 pr-2">
-                                        {(activeStudent.books || []).map(b => {
-                                            const isAccepted = b.status === 'accepted';
-                                            const basePrice = Number(b.basePrice !== undefined ? b.basePrice : b.price || 0);
-                                            const deduction = Number(b.deduction || 0);
-                                            const actualPrice = Math.max(0, basePrice - deduction);
-                                            const isEditing = editingDeductionId === b.id;
-
-                                            return (
-                                                <div key={b.id} class={`p-4 rounded-2xl border-2 transition-all flex flex-col gap-3 ${isAccepted ? 'bg-white border-white shadow-sm' : 'bg-rose-50/50 border-rose-100 opacity-80'}`}>
-                                                    <div class="flex justify-between items-center">
-                                                        <div class="flex items-center gap-4">
-                                                            <div class={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${isAccepted ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
-                                                                {isAccepted ? '✅' : '❌'}
-                                                            </div>
-                                                            <div>
-                                                                <p class={`font-bold text-base ${!isAccepted && 'line-through text-slate-400'}`}>{b.title}</p>
-                                                                <div class="flex items-center gap-2 mt-0.5">
-                                                                    <span class="text-xs text-slate-400">標準價: ${basePrice}</span>
-                                                                    {deduction > 0 && isAccepted && (
-                                                                        <span class="text-[10px] bg-warning-50 text-warning-600 px-1.5 py-0.5 rounded font-bold">
-                                                                            已扣 ${deduction} ({b.deductionReason})
-                                                                        </span>
-                                                                    )}
-                                                                    {/* 顯示收書員名稱 */}
-                                                                    {b.collectedBy && isAccepted && (
-                                                                        <span class="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-medium flex items-center gap-1">
-                                                                            👤 經手: {b.collectedBy}
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="flex items-center gap-3">
-                                                            {isAccepted && (
-                                                                <div class="text-right mr-2">
-                                                                    <p class="text-xl font-black text-emerald-600">${actualPrice}</p>
-                                                                </div>
-                                                            )}
-                                                            {isAccepted && (
-                                                                <button 
-                                                                    onClick={() => {
-                                                                        if(isEditing){ setEditingDeductionId(null); } 
-                                                                        else {
-                                                                            setEditingDeductionId(b.id);
-                                                                            setTempDeduction(b.deduction || "");
-                                                                            setTempDeductReason(b.deductionReason || "");
-                                                                        }
-                                                                    }}
-                                                                    class="p-2 text-slate-400 hover:text-warning-600 hover:bg-warning-50 rounded-xl transition-all" title="扣減/備註"
-                                                                >
-                                                                    🔧
-                                                                </button>
-                                                            )}
-                                                            <button onClick={() => handleToggleBookStatus(b.id)} class={`px-3 py-2 text-xs rounded-xl font-bold ${isAccepted ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'}`}>
-                                                                {isAccepted ? "不收" : "恢復"}
-                                                            </button>
-                                                            <button onClick={() => handleDeleteBook(b.id)} class="p-2 text-slate-300 hover:text-rose-500 rounded-xl">🗑️</button>
-                                                        </div>
-                                                    </div>
-
-                                                    {isEditing && isAccepted && (
-                                                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex gap-3 animate-fade-in-up items-end">
-                                                            <div class="w-24">
-                                                                <label class="block text-[10px] font-bold text-slate-400 mb-1">扣減金額 ($)</label>
-                                                                <input type="number" value={tempDeduction} onChange={e => setTempDeduction(e.target.value)} class="w-full px-2 py-2 text-sm border border-slate-300 rounded-lg" />
-                                                            </div>
-                                                            <div class="flex-1">
-                                                                <label class="block text-[10px] font-bold text-slate-400 mb-1">扣減原因 (例如：冇小冊子)</label>
-                                                                <input type="text" value={tempDeductReason} onChange={e => setTempDeductReason(e.target.value)} class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg" />
-                                                            </div>
-                                                            <button onClick={() => handleSaveDeduction(b.id)} class="px-4 py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900">確認</button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                        {(!activeStudent.books || activeStudent.books.length === 0) && (
-                                            <div class="h-full flex flex-col justify-center items-center text-slate-400">
-                                                <span class="text-5xl mb-3 opacity-50">📖</span>
-                                                <p class="font-bold">尚未登記任何書籍</p>
+                                    {/* Action Area (Scrollable body) */}
+                                    <div class="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+                                        
+                                        {/* Quick Add Pills */}
+                                        <div class="mb-6">
+                                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">快捷登記</p>
+                                            <div class="flex flex-wrap gap-2">
+                                                {COMMON_BOOKS_SHORTCUTS.map(sc => (
+                                                    <button 
+                                                        key={sc.title} onClick={() => handleAddBook(sc.title, sc.price)}
+                                                        class={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors flex items-center gap-2 shadow-sm ${sc.isPackage ? 'bg-slate-900 text-white border-slate-900 hover:bg-slate-800' : 'bg-white text-slate-700 border-slate-200 hover:border-brand-300 hover:bg-brand-50'}`}
+                                                    >
+                                                        {sc.title}
+                                                        <span class={`text-xs px-1.5 py-0.5 rounded-full ${sc.isPackage ? 'bg-slate-700' : 'bg-slate-100 text-slate-500'}`}>${sc.price}</span>
+                                                    </button>
+                                                ))}
                                             </div>
-                                        )}
+                                        </div>
+
+                                        {/* Custom Add Row */}
+                                        <div class="flex gap-3 mb-8 items-end max-w-2xl">
+                                            <div class="flex-1">
+                                                <label class="block text-xs font-medium text-slate-500 mb-1.5">其他書籍名稱</label>
+                                                <input type="text" placeholder="輸入書名..." value={customBookName} onChange={(e) => setCustomBookName(e.target.value)} onKeyDown={handleKeyDown} class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm shadow-sm" />
+                                            </div>
+                                            <div class="w-24">
+                                                <label class="block text-xs font-medium text-slate-500 mb-1.5">單價 ($)</label>
+                                                <input type="number" value={customBookPrice} onChange={(e) => setCustomBookPrice(e.target.value)} onKeyDown={handleKeyDown} class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm shadow-sm" />
+                                            </div>
+                                            <button onClick={() => handleAddBook(customBookName, customBookPrice)} class="px-5 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg text-sm font-medium shadow-sm transition-colors h-[38px]">新增</button>
+                                        </div>
+
+                                        {/* Book List Table */}
+                                        <div>
+                                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">已登記項目</p>
+                                            
+                                            {(!activeStudent.books || activeStudent.books.length === 0) ? (
+                                                <div class="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-white">
+                                                    <p class="text-sm text-slate-500 font-medium">尚未為此學生登記任何書籍</p>
+                                                </div>
+                                            ) : (
+                                                <div class="space-y-3">
+                                                    {(activeStudent.books || []).map(b => {
+                                                        const isAccepted = b.status === 'accepted';
+                                                        const basePrice = Number(b.basePrice !== undefined ? b.basePrice : b.price || 0);
+                                                        const deduction = Number(b.deduction || 0);
+                                                        const actualPrice = Math.max(0, basePrice - deduction);
+                                                        const isEditing = editingDeductionId === b.id;
+
+                                                        return (
+                                                            <div key={b.id} class={`bg-white border rounded-xl overflow-hidden shadow-sm transition-colors ${isAccepted ? 'border-slate-200' : 'border-red-200 bg-red-50/30'}`}>
+                                                                <div class="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                                                    
+                                                                    <div class="flex items-start gap-3">
+                                                                        <div class={`mt-0.5 flex-shrink-0 ${isAccepted ? 'text-green-500' : 'text-red-500'}`}>
+                                                                            {isAccepted ? <IconCheck /> : <IconX />}
+                                                                        </div>
+                                                                        <div>
+                                                                            <p class={`text-sm font-semibold ${!isAccepted && 'line-through text-slate-400'}`}>{b.title}</p>
+                                                                            <div class="flex flex-wrap items-center gap-2 mt-1.5 text-xs">
+                                                                                <span class="text-slate-500">定價: ${basePrice}</span>
+                                                                                {deduction > 0 && isAccepted && (
+                                                                                    <span class="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium border border-amber-200">
+                                                                                        - ${deduction} ({b.deductionReason})
+                                                                                    </span>
+                                                                                )}
+                                                                                {b.collectedBy && isAccepted && (
+                                                                                    <span class="text-slate-400 flex items-center gap-1">
+                                                                                        • 經手: {b.collectedBy}
+                                                                                    </span>
+                                                                                )}
+                                                                                {!isAccepted && (
+                                                                                    <span class="text-red-500 font-medium">已標記為退回</span>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="flex items-center gap-3 w-full sm:w-auto justify-end border-t sm:border-0 pt-3 sm:pt-0 border-slate-100">
+                                                                        {isAccepted && <div class="text-lg font-bold text-slate-900 mr-2">${actualPrice}</div>}
+                                                                        
+                                                                        <div class="flex items-center gap-1">
+                                                                            {isAccepted && (
+                                                                                <button onClick={() => {
+                                                                                    if(isEditing){ setEditingDeductionId(null); } 
+                                                                                    else { setEditingDeductionId(b.id); setTempDeduction(b.deduction || ""); setTempDeductReason(b.deductionReason || ""); }
+                                                                                }} class="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-md transition-colors" title="設定扣減">
+                                                                                    <IconEdit />
+                                                                                </button>
+                                                                            )}
+                                                                            <button onClick={() => handleToggleBookStatus(b.id)} class="px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100 rounded-md border border-slate-200 bg-white transition-colors">
+                                                                                {isAccepted ? "設為退回" : "恢復接收"}
+                                                                            </button>
+                                                                            <button onClick={() => handleDeleteBook(b.id)} class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="刪除紀錄">
+                                                                                <IconTrash />
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Deduction Panel (Inline) */}
+                                                                {isEditing && isAccepted && (
+                                                                    <div class="bg-slate-50 border-t border-slate-200 p-3 flex flex-wrap gap-3 items-end">
+                                                                        <div class="w-24">
+                                                                            <label class="block text-xs text-slate-500 mb-1">扣減金額 ($)</label>
+                                                                            <input type="number" value={tempDeduction} onChange={e => setTempDeduction(e.target.value)} class="w-full px-2 py-1.5 text-sm border border-slate-300 rounded" />
+                                                                        </div>
+                                                                        <div class="flex-1 min-w-[150px]">
+                                                                            <label class="block text-xs text-slate-500 mb-1">扣減原因 (例: 缺頁)</label>
+                                                                            <input type="text" value={tempDeductReason} onChange={e => setTempDeductReason(e.target.value)} class="w-full px-2 py-1.5 text-sm border border-slate-300 rounded" />
+                                                                        </div>
+                                                                        <button onClick={() => handleSaveDeduction(b.id)} class="px-4 py-1.5 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-800">
+                                                                            儲存
+                                                                        </button>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ) : (
-                                <div class="lg:col-span-8 glass-panel rounded-3xl flex items-center justify-center text-slate-400 font-bold text-lg">
-                                    👈 請先從左側選擇一位同學
+                                <div class="h-full flex flex-col justify-center items-center text-slate-400 bg-slate-50/50">
+                                    <IconUser />
+                                    <p class="text-sm font-medium mt-2">請從左側名單選擇一位學生以管理書單</p>
                                 </div>
                             )}
                         </div>
-                    )}
+                    </div>
 
-                    {/* 收書員業績總結面板 (Collector Stats Modal) */}
+                    {/* MODALS */}
+                    
+                    {/* Collector Stats Modal */}
                     {showCollectorStatsModal && (
-                        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                            <div class="bg-white rounded-[2rem] max-w-4xl w-full p-8 shadow-2xl flex flex-col max-h-[90vh]">
+                        <div class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                            <div class="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-floating flex flex-col max-h-[85vh]">
                                 <div class="flex justify-between items-center mb-6">
-                                    <h3 class="text-2xl font-black text-slate-800 flex items-center gap-2">
-                                        📊 員工收書對數總結
-                                    </h3>
-                                    <button onClick={() => setShowCollectorStatsModal(false)} class="text-slate-400 hover:text-slate-600 font-bold text-xl">✕</button>
+                                    <h3 class="text-xl font-bold text-slate-900">經手人業績總結</h3>
+                                    <button onClick={() => setShowCollectorStatsModal(false)} class="text-slate-400 hover:text-slate-600"><IconX /></button>
                                 </div>
-                                
-                                <div class="overflow-y-auto flex-1 pr-2">
+                                <div class="overflow-y-auto flex-1 pr-2 space-y-4">
                                     {Object.keys(collectorStats).length === 0 ? (
-                                        <div class="text-center py-10 text-slate-400 font-bold">目前沒有任何已成功回收嘅書本紀錄。</div>
-                                    ) : (
-                                        <div class="space-y-6">
-                                            {Object.entries(collectorStats).map(([cName, cData]) => (
-                                                <div key={cName} class="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-sm">
-                                                    <div class="flex justify-between items-center mb-4 border-b border-slate-200 pb-3">
-                                                        <div class="flex items-center gap-3">
-                                                            <div class="w-10 h-10 bg-brand-100 text-brand-600 rounded-xl flex justify-center items-center text-lg">👤</div>
-                                                            <h4 class="text-xl font-black text-slate-700">{cName}</h4>
-                                                        </div>
-                                                        <div class="text-right">
-                                                            <div class="text-sm font-bold text-slate-500">處理總數: {cData.count} 本</div>
-                                                            <div class="text-2xl font-black text-emerald-600">支出: ${cData.total}</div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="space-y-2">
-                                                        {cData.items.map(item => (
-                                                            <div key={item.id} class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 text-sm">
-                                                                <div>
-                                                                    <span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-xs font-bold mr-2">F.{item.studentForm} {item.studentName}</span>
-                                                                    <span class="font-bold text-slate-700">{item.bookTitle}</span>
-                                                                </div>
-                                                                <div class="font-bold text-emerald-600">${item.price}</div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
+                                        <p class="text-center py-8 text-sm text-slate-500">暫無回收紀錄。</p>
+                                    ) : Object.entries(collectorStats).map(([cName, cData]) => (
+                                        <div key={cName} class="border border-slate-200 rounded-xl overflow-hidden">
+                                            <div class="bg-slate-50 px-4 py-3 flex justify-between items-center border-b border-slate-200">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-6 h-6 rounded bg-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold">{cName.charAt(0).toUpperCase()}</span>
+                                                    <span class="font-semibold text-slate-900">{cName}</span>
                                                 </div>
-                                            ))}
+                                                <div class="text-sm font-medium text-slate-600">
+                                                    共 {cData.count} 項 <span class="mx-2 text-slate-300">|</span> <span class="text-slate-900 font-bold">${cData.total}</span>
+                                                </div>
+                                            </div>
+                                            <div class="divide-y divide-slate-100 bg-white">
+                                                {cData.items.map(item => (
+                                                    <div key={item.id} class="px-4 py-2 flex justify-between items-center text-sm">
+                                                        <div class="text-slate-600">
+                                                            <span class="text-xs bg-slate-100 px-1.5 py-0.5 rounded mr-2">F.{item.studentForm} {item.studentName}</span>
+                                                            {item.bookTitle}
+                                                        </div>
+                                                        <div class="font-medium text-slate-900">${item.price}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
-                                
-                                <div class="mt-6 text-right border-t border-slate-100 pt-4">
-                                    <button onClick={() => setShowCollectorStatsModal(false)} class="px-6 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition-all">關閉對數面板</button>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -622,70 +654,72 @@
 
                     {/* Export Modal */}
                     {showExportModal && (
-                        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-                            <div class="bg-white rounded-[2rem] max-w-2xl w-full p-8 shadow-2xl">
-                                <h3 class="text-2xl font-black text-slate-800 mb-6">📤 匯出資料</h3>
-                                <textarea readOnly value={generateExportData().textContent} onClick={(e) => e.target.select()} class="w-full h-40 font-mono text-xs p-4 bg-slate-50 border border-slate-200 rounded-2xl mb-6" />
+                        <div class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                            <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-floating">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-xl font-bold text-slate-900">匯出數據</h3>
+                                    <button onClick={() => setShowExportModal(false)} class="text-slate-400 hover:text-slate-600"><IconX /></button>
+                                </div>
+                                <textarea readOnly value={generateExportData().textContent} onClick={(e) => e.target.select()} class="w-full h-32 font-mono text-xs p-3 bg-slate-50 border border-slate-200 rounded-lg mb-4 text-slate-600 focus:outline-none focus:border-brand-500" />
                                 <div class="flex justify-end gap-3">
-                                    <button onClick={handleDownloadCSV} class="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700">⬇️ 下載 CSV 檔案</button>
-                                    <button onClick={() => setShowExportModal(false)} class="px-6 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl">關閉</button>
+                                    <button onClick={() => setShowExportModal(false)} class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium">取消</button>
+                                    <button onClick={handleDownloadCSV} class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-medium flex items-center gap-2"><IconDownload /> 下載 CSV</button>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    {/* Receipt Modal */}
+                    {/* Receipt Modal (Printable) */}
                     {showReceiptModal && activeStudent && (
-                        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 no-print">
-                            <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-                                <div id="receipt-modal" class="p-8 bg-white text-black overflow-y-auto">
-                                    <div class="text-center mb-6 pb-6 border-b-2 border-dashed border-gray-300">
-                                        <h2 class="text-2xl font-black mb-1">二手書回收單據</h2>
-                                        <p class="text-xs text-gray-400 mt-2">列印時間: {new Date().toLocaleString()}</p>
+                        <div class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center p-4 z-50 no-print">
+                            <div class="bg-white rounded-2xl max-w-md w-full shadow-floating overflow-hidden flex flex-col max-h-[85vh]">
+                                <div id="receipt-modal" class="p-8 bg-white text-slate-900 overflow-y-auto font-sans">
+                                    <div class="text-center mb-6 pb-6 border-b border-slate-200">
+                                        <h2 class="text-xl font-bold mb-1 tracking-tight">二手書回收單據</h2>
+                                        <p class="text-xs text-slate-500">Po Kok Secondary School</p>
+                                        <p class="text-xs text-slate-400 mt-2">{new Date().toLocaleString('zh-HK')}</p>
                                     </div>
-                                    <div class="mb-6">
-                                        <p class="font-bold text-lg mb-1">學生: {activeStudent.name}</p>
-                                        <p class="text-gray-600">班級: F.{activeStudent.form} &nbsp;|&nbsp; 電話: {activeStudent.phone}</p>
+                                    <div class="mb-6 text-sm">
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-slate-500">學生姓名:</span>
+                                            <span class="font-semibold">{activeStudent.name}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-slate-500">班級 / 電話:</span>
+                                            <span>F.{activeStudent.form} / {activeStudent.phone || '--'}</span>
+                                        </div>
                                     </div>
                                     <table class="w-full text-left mb-6 text-sm">
                                         <thead>
-                                            <tr class="border-b-2 border-gray-800">
-                                                <th class="py-2">書籍明細</th>
-                                                <th class="py-2 text-right">金額</th>
+                                            <tr class="border-b border-slate-800">
+                                                <th class="py-2 font-medium">項目明細</th>
+                                                <th class="py-2 font-medium text-right">金額</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="divide-y divide-slate-100">
                                             {(activeStudent.books || []).map((b, i) => (
-                                                <tr key={i} class="border-b border-gray-200">
+                                                <tr key={i}>
                                                     <td class="py-3">
-                                                        {b.title}
-                                                        {b.status === 'accepted' && b.deduction > 0 && (
-                                                            <div class="text-[10px] text-gray-500 mt-0.5">- 扣減: {b.deductionReason} (-${b.deduction})</div>
-                                                        )}
-                                                        {b.status === 'accepted' && b.collectedBy && (
-                                                            <div class="text-[10px] text-gray-400 mt-0.5">經手人: {b.collectedBy}</div>
-                                                        )}
+                                                        <div class={b.status === 'rejected' ? 'text-slate-400 line-through' : 'text-slate-900'}>{b.title}</div>
+                                                        {b.status === 'accepted' && b.deduction > 0 && <div class="text-xs text-slate-500 mt-0.5">扣除: {b.deductionReason} (-${b.deduction})</div>}
                                                     </td>
-                                                    <td class="py-3 text-right font-mono">{b.status === 'accepted' ? `$${getActualPrice(b)}` : '$0'}</td>
+                                                    <td class="py-3 text-right font-medium text-slate-900">{b.status === 'accepted' ? `$${getActualPrice(b)}` : '$0'}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
                                     </table>
-                                    <div class="text-right text-xl font-black">
-                                        實付金額: <span class="text-3xl ml-2">${activeStats.total}</span>
-                                    </div>
-                                    <div class="mt-12 text-center text-xs text-gray-500">
-                                        <p>請妥善保存此單據以作核對之用。謝謝！</p>
+                                    <div class="flex justify-between items-center pt-4 border-t border-slate-800">
+                                        <span class="font-medium">實付總額</span>
+                                        <span class="text-2xl font-bold">${activeStats.total}</span>
                                     </div>
                                 </div>
-                                <div class="p-4 bg-slate-50 flex justify-end gap-3 no-print">
-                                    <button onClick={() => window.print()} class="px-6 py-2.5 bg-brand-600 text-white font-bold rounded-xl">確認列印</button>
-                                    <button onClick={() => setShowReceiptModal(false)} class="px-6 py-2.5 bg-slate-200 text-slate-700 font-bold rounded-xl">取消</button>
+                                <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 no-print shrink-0">
+                                    <button onClick={() => setShowReceiptModal(false)} class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium">關閉</button>
+                                    <button onClick={() => window.print()} class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-medium flex items-center gap-2"><IconPrinter /> 確認列印</button>
                                 </div>
                             </div>
                         </div>
                     )}
-
                 </div>
             );
         }
