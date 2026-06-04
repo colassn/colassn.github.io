@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.9.04-master-polish：整體 App 質感重整、主頁專注總覽、卡片操作永久可見、置中靈動島、通知提示高對比、手機/iPad 閱讀與操作優化；保留所有原有功能與 Firebase 資料邏輯。 -->
+    <!-- 電子手冊 Pro v1.9.05-layout-refresh：主頁版面大更新、取消原有今天動態框、全新 Today Hub、柔和背景、設定頁現代化、全站卡片與表單排版優化；保留所有原有功能與 Firebase 資料邏輯。 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -10,9 +10,6 @@
       gtag('js', new Date());
       gtag('config', 'G-8VCPLTE2QT');
     </script>
-
-    <!-- AdSense：保留電子手冊 Pro 原有廣告設定，不影響登入、Firebase 或資料庫邏輯 -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4156749891284054" crossorigin="anonymous"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -34,8 +31,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.9.04-master-polish">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.9.04-master-polish"; console.log("電子手冊 Pro v1.9.04-master-polish loaded");</script>
+    <meta name="ehandbook-version" content="v1.9.05-layout-refresh">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.9.05-layout-refresh"; console.log("電子手冊 Pro v1.9.05-layout-refresh loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -238,7 +235,7 @@
 
         /* ── v1.9.03 CENTERED ISLAND + VISIBLE ACTIONS PATCH ─────────────────────────────
            本次更新只做顯示方式、排版層級、響應式與流暢度優化；不刪除任何功能邏輯。
-           覆蓋路徑建議：/rchw/index.html；測試版建議先放 backup/v1.9.04-master-polish.html。
+           覆蓋路徑建議：/rchw/index.html；測試版建議先放 backup/v1.9.05-layout-refresh.html。
         */
         :root {
             --eh-accent-rgb: 79 70 229;
@@ -458,7 +455,7 @@
         }
 
 
-        /* ── v1.9.04 MASTER POLISH PATCH ──────────────────────────────
+        /* ── v1.9.05 LAYOUT REFRESH PATCH ──────────────────────────────
            本次更新：以「真正手機 App」為方向重整顯示層；保留所有 Firebase、登入、功課、時間表、班級、通知、後台、AdSense 功能。
            主要目標：更乾淨的頁面節奏、更清楚的卡片操作、更穩定的 iPad / 手機顯示、更高對比通知提示。
         */
@@ -652,6 +649,295 @@
             .eh-nav { max-width: calc(100vw - 0.75rem) !important; }
         }
 
+
+        /* ── v1.9.05 LAYOUT REFRESH PATCH ──────────────────────────────
+           本次更新：取消原有今天動態卡片區，改成全新 Today Hub；重整背景、課堂卡片、設定頁與全站排版。
+           保留所有 Firebase / 登入 / 功課 / 時間表 / 班級 / 通知 / 後台 / AdSense 功能與資料庫邏輯。
+        */
+        :root {
+            --eh-page-bg-1: 244 248 251;
+            --eh-page-bg-2: 238 244 249;
+            --eh-ink: 15 23 42;
+            --eh-muted: 100 116 139;
+            --eh-surface: 255 255 255;
+        }
+        .dark {
+            --eh-page-bg-1: 5 10 20;
+            --eh-page-bg-2: 9 17 31;
+            --eh-ink: 248 250 252;
+            --eh-muted: 148 163 184;
+            --eh-surface: 8 13 25;
+        }
+        body {
+            background:
+                radial-gradient(circle at 18% 10%, rgb(var(--eh-accent-rgb) / 0.13), transparent 28rem),
+                radial-gradient(circle at 84% 3%, rgb(var(--eh-accent-2-rgb) / 0.10), transparent 26rem),
+                linear-gradient(145deg, rgb(var(--eh-page-bg-1)), rgb(var(--eh-page-bg-2))) !important;
+        }
+        .eh-shell {
+            background:
+                radial-gradient(ellipse 48rem 30rem at 12% -10%, rgb(var(--eh-accent-rgb) / 0.12), transparent 60%),
+                radial-gradient(ellipse 34rem 24rem at 100% 4%, rgb(var(--eh-accent-2-rgb) / 0.10), transparent 58%),
+                radial-gradient(ellipse 42rem 26rem at 46% 104%, rgba(14,165,233,0.07), transparent 56%),
+                linear-gradient(180deg, rgba(250,252,255,0.98) 0%, rgba(242,247,251,0.98) 55%, rgba(237,243,249,0.98) 100%) !important;
+        }
+        .dark .eh-shell {
+            background:
+                radial-gradient(ellipse 48rem 30rem at 12% -10%, rgb(var(--eh-accent-rgb) / 0.18), transparent 60%),
+                radial-gradient(ellipse 34rem 24rem at 100% 4%, rgb(var(--eh-accent-2-rgb) / 0.10), transparent 58%),
+                radial-gradient(ellipse 42rem 26rem at 46% 104%, rgba(14,165,233,0.08), transparent 56%),
+                linear-gradient(180deg, #030816 0%, #07111f 55%, #050a14 100%) !important;
+        }
+        .bg-dot-grid {
+            background-image:
+                radial-gradient(circle, rgb(var(--eh-accent-rgb) / 0.045) 1px, transparent 1px) !important;
+            background-size: 30px 30px !important;
+            opacity: 0.55 !important;
+        }
+        .glass-card,
+        .eh-topbar,
+        .eh-add-form,
+        .settings-page-stable section {
+            backdrop-filter: blur(24px) saturate(170%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+        }
+        .eh-content { width: min(1040px, calc(100vw - 1.5rem)) !important; }
+        .eh-page-panel > .max-w-3xl { max-width: 900px !important; }
+        .eh-topbar {
+            width: min(900px, calc(100vw - 1.5rem)) !important;
+            padding: 0.78rem 0.92rem !important;
+            border-radius: 1.35rem !important;
+            background: rgba(255,255,255,0.78) !important;
+            box-shadow: 0 18px 54px -36px rgba(15,23,42,0.36), inset 0 1px 0 rgba(255,255,255,0.78) !important;
+        }
+        .dark .eh-topbar {
+            background: rgba(8,13,25,0.78) !important;
+            box-shadow: 0 20px 58px -34px rgba(0,0,0,0.84), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+        }
+
+        .eh-today-home { margin-bottom: 1.15rem; }
+        .eh-today-board {
+            position: relative;
+            overflow: hidden;
+            border-radius: 2.05rem;
+            border: 1px solid rgba(255,255,255,0.72);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.70)),
+                radial-gradient(circle at 0% 0%, rgb(var(--eh-accent-rgb) / 0.12), transparent 32rem),
+                radial-gradient(circle at 100% 0%, rgb(var(--eh-accent-2-rgb) / 0.10), transparent 26rem);
+            box-shadow: 0 28px 95px -54px rgba(15,23,42,0.48), inset 0 1px 0 rgba(255,255,255,0.92);
+        }
+        .dark .eh-today-board {
+            border-color: rgba(148,163,184,0.14);
+            background:
+                linear-gradient(135deg, rgba(8,13,25,0.92), rgba(10,17,31,0.74)),
+                radial-gradient(circle at 0% 0%, rgb(var(--eh-accent-rgb) / 0.22), transparent 30rem),
+                radial-gradient(circle at 100% 0%, rgb(var(--eh-accent-2-rgb) / 0.12), transparent 28rem);
+            box-shadow: 0 30px 105px -50px rgba(0,0,0,0.88), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+        .eh-today-board::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(15,23,42,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.025) 1px, transparent 1px);
+            background-size: 34px 34px;
+            mask-image: radial-gradient(circle at 35% 20%, black 0%, transparent 74%);
+            -webkit-mask-image: radial-gradient(circle at 35% 20%, black 0%, transparent 74%);
+            pointer-events: none;
+        }
+        .dark .eh-today-board::before { background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px); }
+        .eh-today-board-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1.618fr 1fr;
+            gap: 1.15rem;
+            padding: 1.18rem;
+        }
+        .eh-today-copy {
+            padding: 0.85rem;
+            min-width: 0;
+        }
+        .eh-today-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.42rem;
+            padding: 0.42rem 0.72rem;
+            border-radius: 999px;
+            background: rgb(var(--eh-accent-rgb) / 0.10);
+            color: rgb(var(--eh-accent-rgb));
+            border: 1px solid rgb(var(--eh-accent-rgb) / 0.12);
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+        }
+        .eh-today-title {
+            margin-top: 0.85rem;
+            max-width: 12.5em;
+            color: rgb(var(--eh-ink));
+            font-size: clamp(1.75rem, 4vw, 2.75rem);
+            line-height: 1.04;
+            font-weight: 950;
+            letter-spacing: -0.055em;
+        }
+        .eh-today-subtitle {
+            margin-top: 0.65rem;
+            max-width: 32rem;
+            color: rgb(var(--eh-muted));
+            font-size: 0.9rem;
+            line-height: 1.65;
+            font-weight: 760;
+        }
+        .eh-today-actions { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.55rem; }
+        .eh-today-action {
+            min-height: 2.45rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.42rem;
+            border-radius: 999px;
+            padding: 0 0.95rem;
+            font-size: 0.76rem;
+            font-weight: 950;
+            border: 1px solid rgba(226,232,240,0.78);
+            background: rgba(255,255,255,0.82);
+            color: #334155;
+            box-shadow: 0 10px 32px -22px rgba(15,23,42,0.4);
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .dark .eh-today-action { background: rgba(15,23,42,0.64); border-color: rgba(51,65,85,0.72); color: #e2e8f0; }
+        .eh-today-action:hover { transform: translateY(-1px); box-shadow: 0 14px 36px -24px rgba(15,23,42,0.55); }
+        .eh-today-action.primary { background: rgb(var(--eh-accent-rgb)); border-color: rgb(var(--eh-accent-rgb)); color: white; }
+        .eh-today-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 0.7rem;
+            align-content: stretch;
+        }
+        .eh-today-stat {
+            min-height: 5.4rem;
+            border-radius: 1.35rem;
+            padding: 0.95rem;
+            background: rgba(255,255,255,0.78);
+            border: 1px solid rgba(255,255,255,0.82);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.82), 0 12px 34px -28px rgba(15,23,42,0.55);
+            text-align: left;
+            transition: transform 0.18s ease;
+        }
+        .dark .eh-today-stat { background: rgba(15,23,42,0.54); border-color: rgba(148,163,184,0.14); box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
+        button.eh-today-stat:hover { transform: translateY(-1px); }
+        .eh-today-stat .label { color: rgb(var(--eh-muted)); font-size: 0.64rem; font-weight: 950; letter-spacing: 0.08em; text-transform: uppercase; }
+        .eh-today-stat .value { margin-top: 0.3rem; color: rgb(var(--eh-ink)); font-size: 1.75rem; font-weight: 950; line-height: 1; letter-spacing: -0.05em; }
+        .eh-today-progress {
+            grid-column: 1 / -1;
+            min-height: 4.5rem;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            gap: 0.9rem;
+        }
+        .eh-progress-ring {
+            width: 3.2rem;
+            height: 3.2rem;
+            border-radius: 999px;
+            background: conic-gradient(rgb(var(--eh-accent-rgb)) var(--eh-pct, 0%), rgba(226,232,240,0.75) 0);
+            display: grid;
+            place-items: center;
+        }
+        .eh-progress-ring::after {
+            content: attr(data-pct);
+            width: 2.38rem;
+            height: 2.38rem;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            background: rgb(var(--eh-surface));
+            color: rgb(var(--eh-ink));
+            font-size: 0.7rem;
+            font-weight: 950;
+        }
+
+        .eh-lesson-card {
+            border: 1px solid rgba(255,255,255,0.72) !important;
+            background: rgba(255,255,255,0.78) !important;
+            box-shadow: 0 22px 72px -50px rgba(15,23,42,0.52), inset 0 1px 0 rgba(255,255,255,0.78) !important;
+            backdrop-filter: blur(24px) saturate(170%);
+            -webkit-backdrop-filter: blur(24px) saturate(170%);
+        }
+        .dark .eh-lesson-card {
+            border-color: rgba(148,163,184,0.14) !important;
+            background: rgba(8,13,25,0.76) !important;
+            box-shadow: 0 24px 84px -48px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+        }
+        .eh-lesson-accent { background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb))); }
+        .eh-add-form {
+            background: rgba(255,255,255,0.80) !important;
+            border-radius: 1.8rem !important;
+        }
+        .eh-add-form input,
+        .eh-add-form textarea,
+        .eh-add-form button {
+            font-size: 16px;
+        }
+        .task-overdue, .task-today, .task-soon, .task-safe, .task-done {
+            background: rgba(255,255,255,0.82) !important;
+            border-radius: 1.45rem !important;
+            box-shadow: 0 18px 62px -48px rgba(15,23,42,0.48), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+        }
+        .dark .task-overdue, .dark .task-today, .dark .task-soon, .dark .task-safe, .dark .task-done { background: rgba(8,13,25,0.76) !important; }
+        .settings-page-stable.eh-settings-modern { max-width: 980px !important; }
+        .eh-settings-modern {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.05rem !important;
+        }
+        .eh-settings-hero {
+            border-radius: 2.15rem !important;
+            background:
+                radial-gradient(circle at 12% 0%, rgb(var(--eh-accent-rgb) / 0.28), transparent 22rem),
+                linear-gradient(135deg, rgba(15,23,42,0.96), rgba(30,41,59,0.90)) !important;
+            box-shadow: 0 32px 100px -56px rgba(15,23,42,0.95) !important;
+        }
+        .dark .eh-settings-hero { background: linear-gradient(135deg, rgba(2,6,23,0.96), rgba(15,23,42,0.92)) !important; }
+        .eh-settings-section {
+            border-radius: 1.8rem !important;
+            background: rgba(255,255,255,0.80) !important;
+            border: 1px solid rgba(255,255,255,0.72) !important;
+            box-shadow: 0 20px 74px -52px rgba(15,23,42,0.55), inset 0 1px 0 rgba(255,255,255,0.75) !important;
+        }
+        .dark .eh-settings-section { background: rgba(8,13,25,0.78) !important; border-color: rgba(148,163,184,0.14) !important; }
+        .eh-settings-section > div:first-child { padding: 1.15rem 1.25rem !important; }
+        .eh-settings-section > div:last-child { padding: 1.15rem 1.25rem !important; }
+        .eh-settings-section button { min-height: 2.75rem; }
+        .eh-nav { background: rgba(255,255,255,0.78) !important; }
+        .dark .eh-nav { background: rgba(8,13,25,0.78) !important; }
+
+        @media (min-width: 900px) {
+            .eh-settings-modern { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+            .eh-settings-modern > .eh-settings-hero,
+            .eh-settings-modern > section:first-of-type { grid-column: 1 / -1; }
+        }
+        @media (max-width: 760px) {
+            .eh-content { width: min(100%, calc(100vw - 1rem)) !important; }
+            .eh-topbar { width: min(100%, calc(100vw - 1rem)) !important; }
+            .eh-today-board-grid { grid-template-columns: 1fr; padding: 0.9rem; gap: 0.65rem; }
+            .eh-today-copy { padding: 0.65rem; }
+            .eh-today-title { font-size: 1.82rem; }
+            .eh-today-subtitle { font-size: 0.82rem; }
+            .eh-today-stats { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 0.42rem; }
+            .eh-today-stat { min-height: 4.45rem; border-radius: 1.05rem; padding: 0.68rem; }
+            .eh-today-stat .value { font-size: 1.35rem; }
+            .eh-today-progress { grid-column: 1 / -1; grid-template-columns: auto 1fr; min-height: 4rem; }
+            .eh-progress-ring { width: 2.8rem; height: 2.8rem; }
+            .eh-progress-ring::after { width: 2.08rem; height: 2.08rem; font-size: 0.62rem; }
+            .eh-lesson-card { border-radius: 1.35rem !important; }
+            .settings-page-stable.eh-settings-modern { max-width: 100% !important; }
+            .eh-settings-section { border-radius: 1.45rem !important; }
+        }
+        @media (max-width: 420px) {
+            .eh-today-stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+            .eh-today-progress { grid-column: 1 / -1; }
+        }
+
 </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -746,7 +1032,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.04-master-polish',
+                version: 'v1.9.05-layout-refresh',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -845,12 +1131,12 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.9.04-master-polish',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.9.05-layout-refresh',
             title: '電子手冊已更新',
             summary: [
-                '全站顯示方式已重新整理，卡片、標題、列表、底部導航和設定頁更一致。',
-                '手機、iPad 和桌面顯示加入安全區與更穩定的間距，操作時不容易擠壓或遮擋。',
-                '保留原有登入、功課、時間表、班級廣播、通知、設定和管理後台功能。'
+                '主頁已取消原有今天動態框，改為全新 Today Hub，畫面更乾淨。',
+                '全站背景、卡片、表單、設定頁與底部導航已重新打磨，更適合 iPad 與手機。',
+                '保留原有登入、功課、時間表、班級廣播、通知、設定、管理後台和廣告設定。'
             ].join('\n'),
             guide: [
                 '可直接覆蓋 /rchw/index.html 使用。',
@@ -859,7 +1145,7 @@
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-05-26T22:45:00+08:00',
+            publishedAt: '2026-06-03T15:45:00+08:00',
             source: 'built-in'
         };
 
@@ -1416,7 +1702,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-200 dark:text-slate-800 select-none">v1.9.04-master-polish</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-200 dark:text-slate-800 select-none">v1.9.05-layout-refresh</div>
                             </div>
                         </div>
                     </div>
@@ -1427,7 +1713,15 @@
 
         function CurrentLessonWidget({ config, t, onClick, globalNow }) {
             const now = globalNow || new Date(); const day = now.getDay();
-            if (day === 0 || day === 6) return <div className="glass-card rounded-2xl p-4 mb-6 text-center"><div className="font-bold text-slate-500 flex items-center justify-center gap-2"><Icon name="coffee" className="w-5 h-5 text-orange-500"/> 放假啦！好好休息</div></div>;
+            if (day === 0 || day === 6) return (
+                <button type="button" onClick={onClick} className="eh-lesson-card w-full mb-5 rounded-[1.55rem] p-4 text-left flex items-center justify-between gap-4 active:scale-[0.99] transition-all">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-11 h-11 rounded-[1rem] bg-orange-50 dark:bg-orange-900/20 text-orange-500 flex items-center justify-center shrink-0"><Icon name="coffee" className="w-5 h-5" /></div>
+                        <div className="min-w-0"><div className="text-[11px] font-black text-slate-400 uppercase tracking-widest">今日課堂</div><div className="font-black text-slate-800 dark:text-white truncate">放假啦，好好休息</div></div>
+                    </div>
+                    <Icon name="chevron-right" className="w-5 h-5 text-slate-300" />
+                </button>
+            );
             
             const schedule = generateFullSchedule(config, now);
             const currentMs = now.getTime(); let currentSlot = null, nextSlot = null, status = 'ended';
@@ -1439,36 +1733,30 @@
             }
             if (!currentSlot && !nextSlot) status = 'ended';
             const diff = currentSlot ? (currentSlot.end.getTime() - currentMs) : (nextSlot ? (nextSlot.start.getTime() - currentMs) : 0);
+            const percent = currentSlot ? Math.max(0, Math.min(100, 100 - (diff / (currentSlot.end - currentSlot.start)) * 100)) : 0;
+            const statusText = status === 'current' ? '正在上課' : status === 'break' ? '小息時間' : status === 'not-started' ? '準備上課' : '已放學';
+            const mainText = status === 'ended' ? '今日課堂已完成' : (currentSlot ? currentSlot.subjectName : (nextSlot?.subjectName || '準備開始'));
+            const subText = status === 'ended' ? '可以專心處理功課同溫習' : status === 'current' ? `距離下課剩餘 ${formatCountdown(diff)}` : `距離開始 ${formatCountdown(diff)}`;
 
             return (
-                <div onClick={onClick} className="cursor-pointer mb-6 relative overflow-hidden rounded-2xl p-[2px] shadow-lg hover:scale-[1.01] transition-transform duration-300">
-                    <div className="absolute inset-0 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-500 animate-gradient-x"></div>
-                    <div className="relative glass-card bg-white/90 dark:bg-slate-900/90 rounded-2xl p-4 flex items-center justify-between h-full">
-                        <div className={`absolute top-0 left-0 h-[2px] transition-all duration-1000 ${status === 'current' ? 'bg-fuchsia-500 shadow-[0_0_10px_rgba(217,70,239,0.8)]' : 'bg-transparent'}`} style={{ width: currentSlot ? `${100 - (diff / (currentSlot.end - currentSlot.start)) * 100}%` : '0%' }}></div>
-                        
-                        <div className="flex-1 text-left min-w-0 z-10">
-                            <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase mb-0.5 flex items-center gap-1">
-                                {status === 'current' ? <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> : <Icon name="clock" className="w-3 h-3"/>}
-                                {status === 'current' ? '正在上課' : status === 'break' ? '小息時間' : status === 'not-started' ? '準備上課' : '放學'}
-                            </div>
-                            <div className="font-black text-xl text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-300 truncate">
-                                {status === 'ended' ? '🎉 是日已完結' : (currentSlot ? currentSlot.subjectName : '---')}
+                <button type="button" onClick={onClick} className="eh-lesson-card w-full mb-5 rounded-[1.55rem] p-4 text-left active:scale-[0.99] transition-all relative overflow-hidden">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 eh-lesson-accent opacity-90"></div>
+                    {status === 'current' && <div className="absolute left-0 top-0 h-1 eh-lesson-accent transition-all duration-1000" style={{ width: `${percent}%` }}></div>}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-12 h-12 rounded-[1.15rem] bg-slate-100/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0"><Icon name={status === 'current' ? 'timer' : status === 'break' ? 'cup-soda' : status === 'ended' ? 'party-popper' : 'calendar-clock'} className="w-5 h-5" /></div>
+                            <div className="min-w-0">
+                                <div className="flex items-center gap-2 text-[11px] font-black text-slate-400 uppercase tracking-widest"><span className={`w-2 h-2 rounded-full ${status === 'current' ? 'bg-emerald-500 animate-pulse' : status === 'break' ? 'bg-orange-500' : 'bg-slate-300'}`}></span>{statusText}</div>
+                                <div className="font-black text-lg sm:text-xl text-slate-850 dark:text-white truncate tracking-tight">{mainText}</div>
+                                <div className="text-xs font-bold text-slate-400 truncate">{subText}</div>
                             </div>
                         </div>
-
-                        {(status !== 'ended') && (
-                            <div className="flex-1 text-center z-10">
-                                <div className={`text-3xl font-black font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-br ${status === 'current' ? 'from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400' : 'from-slate-400 to-slate-600'}`}>{formatCountdown(diff)}</div>
-                                <div className="text-[9px] text-slate-400 font-bold tracking-widest uppercase">{status === 'current' ? 'REMAINING' : 'NEXT LESSON'}</div>
-                            </div>
-                        )}
-
-                        <div className="flex-1 text-right min-w-0 pl-2 z-10">
-                            <div className="text-[10px] text-slate-400 font-bold uppercase mb-0.5">下一節</div>
-                            <div className="font-bold text-sm text-slate-600 dark:text-slate-300 truncate">{nextSlot ? nextSlot.subjectName : '放學'}</div>
+                        <div className="flex items-center gap-2 sm:justify-end shrink-0">
+                            {status !== 'ended' && <div className="px-3 py-2 rounded-2xl bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70"><div className="text-[9px] font-black text-slate-400 uppercase">下一節</div><div className="text-sm font-black text-slate-700 dark:text-slate-200 max-w-[7rem] truncate">{nextSlot ? nextSlot.subjectName : '放學'}</div></div>}
+                            <div className="w-9 h-9 rounded-full bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center text-slate-400"><Icon name="chevron-right" className="w-4 h-4" /></div>
                         </div>
                     </div>
-                </div>
+                </button>
             );
         }
 
@@ -1575,7 +1863,7 @@
                                 {layoutMode === 'custom' && (
                                     <div className="mt-3 space-y-2 p-3 bg-slate-50/50 dark:bg-slate-900/30 rounded-xl border border-slate-100 dark:border-slate-800">
                                         {[{ key: 'cards', label: '狀態卡片' }, { key: 'timetable', label: '流動時間表' }, { key: 'input', label: '新增欄位' }, { key: 'list', label: '任務列表' }].map(item => (
-                                            <button key={item.key} type="button" role="switch" aria-checked={!!customLayout[item.key]} onClick={() => handleCustomToggle(item.key)} className="flex items-center justify-between cursor-pointer group w-full text-left active:scale-[0.99] transition-transform">
+                                            <button key={item.key} type="button" role="switch" aria-checked={!!customLayout[item.key]} onClick={() => handleCustomToggle(item.key)} className="w-full flex items-center justify-between cursor-pointer group text-left active:scale-[0.99] transition-all">
                                                 <span className="text-sm font-bold text-slate-600 dark:text-slate-400">{item.label}</span>
                                                 <span className={`relative w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner ${customLayout[item.key] ? 'bg-indigo-500' : 'bg-slate-200 dark:bg-slate-700'}`}>
                                                     <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${customLayout[item.key] ? 'translate-x-[20px]' : ''}`}></span>
@@ -3179,8 +3467,8 @@
                                             <textarea rows="4" placeholder={"例如：\n1. 按右上角小鈴鐺查看通知\n2. 有新廣播功課時，打開通知中心查看\n3. 廣播功課會出現在個人手冊"} value={updateGuideInput} onChange={e => setUpdateGuideInput(e.target.value)} className="mt-1 w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-indigo-500 outline-none dark:text-white transition-all resize-none"></textarea>
                                         </div>
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 p-4">
-                                            <button type="button" role="switch" aria-checked={!!updatePopupEnabledInput} onClick={() => setUpdatePopupEnabledInput(!updatePopupEnabledInput)} className="flex items-center gap-3 cursor-pointer text-left active:scale-[0.99] transition-transform">
-                                                <span className={`relative w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner ${updatePopupEnabledInput ? 'bg-indigo-500' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                                            <button type="button" role="switch" aria-checked={!!updatePopupEnabledInput} onClick={() => setUpdatePopupEnabledInput(!updatePopupEnabledInput)} className="flex items-center gap-3 cursor-pointer active:scale-[0.99] transition-all text-left">
+                                                <span className={`relative w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner ${updatePopupEnabledInput ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-700'}`}>
                                                     <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${updatePopupEnabledInput ? 'translate-x-[20px]' : ''}`}></span>
                                                 </span>
                                                 <span className="text-sm font-black text-indigo-700 dark:text-indigo-300">啟用自動彈窗</span>
@@ -3214,8 +3502,7 @@
                                 <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
                                     <div className="p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
                                         <h4 className="font-bold flex items-center gap-2 dark:text-white"><Icon name="check-circle-2" className="w-5 h-5 text-emerald-500"/> 白名單系統</h4>
-                                        <button type="button" role="switch" aria-checked={!!systemConfig?.whitelistEnabled} onClick={() => updateConfig('whitelistEnabled', !(systemConfig?.whitelistEnabled || false))} className="relative cursor-pointer w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner active:scale-95">
-                                            <span className={`absolute inset-0 rounded-full transition-colors ${systemConfig?.whitelistEnabled ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700'}`}></span>
+                                        <button type="button" role="switch" aria-checked={!!systemConfig?.whitelistEnabled} onClick={() => updateConfig('whitelistEnabled', !(systemConfig?.whitelistEnabled || false))} className={`relative cursor-pointer w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner ${systemConfig?.whitelistEnabled ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700'}`}>
                                             <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${systemConfig?.whitelistEnabled ? 'translate-x-[20px]' : ''}`}></span>
                                         </button>
                                     </div>
@@ -3240,8 +3527,7 @@
                                 <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
                                     <div className="p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
                                         <h4 className="font-bold flex items-center gap-2 dark:text-white"><Icon name="alert-circle" className="w-5 h-5 text-red-500"/> 黑名單系統</h4>
-                                        <button type="button" role="switch" aria-checked={!!systemConfig?.blacklistEnabled} onClick={() => updateConfig('blacklistEnabled', !(systemConfig?.blacklistEnabled || false))} className="relative cursor-pointer w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner active:scale-95">
-                                            <span className={`absolute inset-0 rounded-full transition-colors ${systemConfig?.blacklistEnabled ? 'bg-red-500' : 'bg-slate-200 dark:bg-slate-700'}`}></span>
+                                        <button type="button" role="switch" aria-checked={!!systemConfig?.blacklistEnabled} onClick={() => updateConfig('blacklistEnabled', !(systemConfig?.blacklistEnabled || false))} className={`relative cursor-pointer w-12 h-7 shrink-0 rounded-full transition-colors shadow-inner ${systemConfig?.blacklistEnabled ? 'bg-red-500' : 'bg-slate-200 dark:bg-slate-700'}`}>
                                             <span className={`absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform shadow-sm border border-slate-300 dark:border-slate-600 ${systemConfig?.blacklistEnabled ? 'translate-x-[20px]' : ''}`}></span>
                                         </button>
                                     </div>
@@ -3313,7 +3599,7 @@
                 { value: 'custom', label: '自定義', desc: '自己決定主頁每個區塊是否顯示', icon: 'sliders-horizontal' }
             ];
             const customBlocks = [
-                { key: 'cards', label: '狀態卡片', desc: '今日急件、明日預告、測驗考試統計', icon: 'columns-3' },
+                { key: 'cards', label: 'Today Hub', desc: '全新今日面板，包含今日、明日、測驗和完成進度', icon: 'panel-top' },
                 { key: 'timetable', label: '即時課堂', desc: '顯示目前課節、倒數及下一節', icon: 'calendar-clock' },
                 { key: 'input', label: '新增功課欄', desc: '主頁直接新增功課或測驗', icon: 'square-pen' },
                 { key: 'list', label: '任務列表', desc: '顯示個人手冊功課列表', icon: 'list-checks' }
@@ -3337,7 +3623,7 @@
             const themeEntries = Object.entries(THEME_CONFIG);
 
             const SettingSection = ({ title, desc, icon, children, right }) => (
-                <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
+                <section className="eh-settings-section rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
                     <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
                         <div className="flex items-start gap-3 min-w-0">
                             <div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name={icon} className="w-5 h-5" /></div>
@@ -3353,8 +3639,8 @@
             );
 
             return (
-                <div className="settings-page-stable max-w-3xl mx-auto pb-10 space-y-5 sm:space-y-6">
-                    <div className="relative overflow-hidden rounded-[2.25rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
+                <div className="settings-page-stable eh-settings-modern max-w-5xl mx-auto pb-10 space-y-5 sm:space-y-6">
+                    <div className="eh-settings-hero relative overflow-hidden rounded-[2.25rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
                         <div className="absolute -top-20 -right-16 w-56 h-56 rounded-full bg-cyan-300/20 blur-3xl"></div>
                         <div className="absolute bottom-0 left-16 w-60 h-32 rounded-full bg-violet-300/20 blur-3xl"></div>
                         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 items-end">
@@ -3362,7 +3648,7 @@
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.9.04
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.9.05
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
@@ -4506,39 +4792,46 @@ function App() {
                         </header>
                         )}
 
-                        {viewMode === 'current' && appMode === 'personal' && (
-                            <section className="eh-focus-strip max-w-3xl mx-auto mb-6 animate-fadeIn">
-                                <div className={`relative overflow-hidden rounded-[2rem] bg-gradient-to-br ${t.gradient} text-white border border-white/20 shadow-[0_28px_90px_-42px_rgba(15,23,42,0.85)]`}>
-                                    <div className="absolute -top-20 -right-12 w-60 h-60 bg-white/18 rounded-full blur-3xl pointer-events-none"></div>
-                                    <div className="absolute bottom-[-4rem] left-10 w-56 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-                                    <div className="relative z-10 p-5 sm:p-6">
-                                        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-                                            <div className="min-w-0">
-                                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-[11px] font-black mb-3 backdrop-blur-xl">
-                                                    <Icon name="sparkles" className="w-3.5 h-3.5" /> 今日專注模式
-                                                </div>
-                                                <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">先處理今日，再放心放學。</h2>
-                                                <p className="text-sm font-bold text-white/75 mt-2">所有功能保留，但主頁會更快讓你知道而家要做咩。</p>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:w-[360px]">
-                                                <button type="button" onClick={() => openQuickView('today')} className="eh-focus-metric rounded-[1.35rem] bg-white/14 border border-white/18 p-3 text-left backdrop-blur-xl active:scale-95 transition-all">
-                                                    <div className="text-[10px] font-black text-white/60 uppercase">今日</div>
-                                                    <div className="text-2xl font-black leading-none mt-1">{counts.today}</div>
-                                                </button>
-                                                <button type="button" onClick={() => openQuickView('test')} className="eh-focus-metric rounded-[1.35rem] bg-white/14 border border-white/18 p-3 text-left backdrop-blur-xl active:scale-95 transition-all">
-                                                    <div className="text-[10px] font-black text-white/60 uppercase">測驗</div>
-                                                    <div className="text-2xl font-black leading-none mt-1">{counts.test}</div>
-                                                </button>
-                                                <div className="eh-focus-metric rounded-[1.35rem] bg-white/14 border border-white/18 p-3 text-left backdrop-blur-xl">
-                                                    <div className="text-[10px] font-black text-white/60 uppercase">完成</div>
-                                                    <div className="text-2xl font-black leading-none mt-1">{counts.progressPercent}%</div>
-                                                </div>
+                        {viewMode === 'current' && appMode === 'personal' && isVisible('cards') && (
+                            <section className="eh-today-home max-w-3xl mx-auto animate-fadeIn">
+                                <div className="eh-today-board">
+                                    <div className="eh-today-board-grid">
+                                        <div className="eh-today-copy">
+                                            <div className="eh-today-eyebrow"><Icon name="sparkles" className="w-3.5 h-3.5" /> TODAY HUB</div>
+                                            <h2 className="eh-today-title">{counts.today > 0 ? `今日有 ${counts.today} 件要處理` : '今日暫時好清爽'}</h2>
+                                            <p className="eh-today-subtitle">我幫你將重點收埋成一塊乾淨面板：先睇今日，再睇明日同測驗；唔再用原本嗰排大動態卡。</p>
+                                            <div className="eh-today-actions">
+                                                <button type="button" onClick={() => { const el = document.querySelector('.eh-add-form input'); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => { try { el.focus(); } catch(e) {} }, 280); } }} className="eh-today-action primary"><Icon name="plus" className="w-4 h-4" /> 新增紀錄</button>
+                                                <button type="button" onClick={() => openQuickView('today')} className="eh-today-action"><Icon name="list-checks" className="w-4 h-4" /> 今日</button>
+                                                <button type="button" onClick={() => openQuickView('test')} className="eh-today-action"><Icon name="pencil" className="w-4 h-4" /> 測驗</button>
+                                                <button type="button" onClick={handleClearExpired} className="eh-today-action"><Icon name="archive-x" className="w-4 h-4" /> 清理過期</button>
                                             </div>
                                         </div>
-                                        <div className="mt-5 flex flex-wrap gap-2">
-                                            <button type="button" onClick={() => { const el = document.querySelector('.eh-add-form input'); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => { try { el.focus(); } catch(e) {} }, 280); } }} className="px-4 py-2.5 rounded-2xl bg-white text-slate-900 text-xs font-black shadow-lg shadow-black/10 active:scale-95 flex items-center gap-2"><Icon name="plus" className="w-4 h-4" /> 新增紀錄</button>
-                                            <button type="button" onClick={() => openQuickView('today')} className="px-4 py-2.5 rounded-2xl bg-white/14 border border-white/20 text-white text-xs font-black active:scale-95 flex items-center gap-2"><Icon name="list-checks" className="w-4 h-4" /> 查看今日</button>
-                                            <button type="button" onClick={handleClearExpired} className="px-4 py-2.5 rounded-2xl bg-white/14 border border-white/20 text-white text-xs font-black active:scale-95 flex items-center gap-2"><Icon name="archive-x" className="w-4 h-4" /> 清理過期</button>
+                                        <div className="eh-today-stats">
+                                            <button type="button" onClick={() => openQuickView('today')} className="eh-today-stat">
+                                                <div className="label">今日</div>
+                                                <div className="value">{counts.today}</div>
+                                            </button>
+                                            <button type="button" onClick={() => openQuickView('tomorrow')} className="eh-today-stat">
+                                                <div className="label">明日</div>
+                                                <div className="value">{counts.tomorrow}</div>
+                                            </button>
+                                            <button type="button" onClick={() => openQuickView('test')} className="eh-today-stat">
+                                                <div className="label">測驗</div>
+                                                <div className="value">{counts.test}</div>
+                                            </button>
+                                            <button type="button" onClick={() => openQuickView('future')} className="eh-today-stat">
+                                                <div className="label">日後</div>
+                                                <div className="value">{counts.future}</div>
+                                            </button>
+                                            <div className="eh-today-stat eh-today-progress">
+                                                <div className="eh-progress-ring" data-pct={`${counts.progressPercent}%`} style={{ '--eh-pct': `${counts.progressPercent}%` }}></div>
+                                                <div>
+                                                    <div className="label">完成進度</div>
+                                                    <div className="text-sm font-black text-slate-700 dark:text-slate-200 mt-1">{counts.progressPercent === 100 ? '目前狀態良好' : '繼續完成今日項目'}</div>
+                                                    <div className="text-[11px] font-bold text-slate-400 mt-1">完成後主頁會自動變乾淨。</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -4578,49 +4871,7 @@ function App() {
                                  /> ) : (
                                 
                                 <div className="max-w-3xl mx-auto pt-2">
-                                    {/* Cards */}
-                                    {viewMode === 'current' && isVisible('cards') && (
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
-                                            {/* Today card */}
-                                            <button onClick={() => openQuickView('today')} className="col-span-2 sm:col-span-1 relative overflow-hidden shimmer glass-card rounded-[1.4rem] p-4 sm:p-5 flex justify-between items-center shadow-sm card-lift group active:scale-[0.97] text-left">
-                                                <div className="flex flex-col items-start gap-1 z-10 w-full">
-                                                    <div className="flex items-center gap-1.5 mb-0.5">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                                                        <span className="text-slate-400 text-[10px] font-black uppercase tracking-wider">今日急件</span>
-                                                    </div>
-                                                    <div className="text-transparent bg-clip-text bg-gradient-to-br from-red-500 to-rose-600 font-black text-[2.4rem] sm:text-[2.8rem] tracking-tight leading-none">{counts.today}</div>
-                                                    <div className="w-full mt-2.5">
-                                                        <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-1.5">
-                                                            <span>完成進度</span>
-                                                            <span className="text-slate-600 dark:text-slate-300 font-black">{counts.progressPercent}%</span>
-                                                        </div>
-                                                        <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-700/50 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-gradient-to-r from-red-500 to-rose-500 rounded-full transition-all duration-1000 ease-out" style={{ width: `${counts.progressPercent}%` }}></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <Icon name="calendar-clock" className="absolute -bottom-4 -right-4 w-[72px] h-[72px] text-red-500/6 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 z-0 pointer-events-none" />
-                                            </button>
-                                            {/* Tomorrow card */}
-                                            <button onClick={() => openQuickView('tomorrow')} className="col-span-1 relative overflow-hidden shimmer glass-card rounded-[1.4rem] p-4 sm:p-5 flex flex-col justify-center items-start shadow-sm card-lift group active:scale-[0.97] text-left">
-                                                <div className="flex items-center gap-1.5 mb-1 z-10">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-                                                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-wider">明日</span>
-                                                </div>
-                                                <div className="text-orange-500 font-black text-[1.8rem] sm:text-[2.1rem] z-10 leading-none">{counts.tomorrow}</div>
-                                                <Icon name="sun" className="absolute -bottom-3 -right-2 w-11 h-11 text-orange-500/7 group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
-                                            </button>
-                                            {/* Test card */}
-                                            <button onClick={() => openQuickView('test')} className="col-span-1 relative overflow-hidden shimmer glass-card rounded-[1.4rem] p-4 sm:p-5 flex flex-col justify-center items-start shadow-sm card-lift group active:scale-[0.97] text-left">
-                                                <div className="flex items-center gap-1.5 mb-1 z-10">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-violet-500"></div>
-                                                    <span className="text-slate-400 text-[10px] font-black uppercase tracking-wider">測驗</span>
-                                                </div>
-                                                <div className="text-violet-500 font-black text-[1.8rem] sm:text-[2.1rem] z-10 leading-none">{counts.test}</div>
-                                                <Icon name="pencil" className="absolute -bottom-3 -right-2 w-11 h-11 text-violet-500/7 group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
-                                            </button>
-                                        </div>
-                                    )}
+                                    {/* v1.9.05：原有今天動態卡片已取消，今日/明日/測驗/進度集中到上方 Today Hub。 */}
 
                                     {viewMode === 'current' && isVisible('timetable') && <CurrentLessonWidget config={timetableConfig} t={t} onClick={() => setViewMode('timetable')} globalNow={globalNow} />}
 
@@ -5027,19 +5278,22 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.9.04-master-polish | based-on-v1.9.03 | full-display-upgrade | original-functions-preserved | database-logic-unchanged -->
-    <!-- ehandbook-build: v1.9.04-master-polish -->
+<!-- VERSION_CHECK: v1.9.05-layout-refresh | based-on-v1.9.03 | full-display-upgrade | original-functions-preserved | database-logic-unchanged -->
+    <!-- ehandbook-build: v1.9.05-layout-refresh -->
 </body>
 </html>
 
 <!-- ehandbook_v1.8.24_class_page_clean_update_notice: class page manual status removed; built-in update popup added. -->
 
-<!-- v1.9.04-master-polish: students auto-claim broadcast assignments on login; no class page manual join controls. -->
-<!-- v1.9.04-master-polish update-notes:
+<!-- v1.9.05-layout-refresh: students auto-claim broadcast assignments on login; no class page manual join controls. -->
+<!-- v1.9.05-layout-refresh update-notes:
 1. 完善全站顯示方式：主容器、頁面寬度、玻璃卡片、列表、設定頁、通知彈窗與底部導航的視覺層級。
 2. 加入 themeColor 對應 CSS 變數，背景與陰影會跟隨用戶主題色自然變化。
 3. 加入手機 / iPad safe-area、100dvh、16px input 防縮放與更穩定的底部 Dock 顯示。
 4. 保留 Firebase、Google/Email 登入、個人功課、已交功課、時間表、科目、班級廣播、通知中心、管理後台、更新彈窗等原有功能邏輯。
 -->
 
-<!-- v1.9.04-master-polish update-notes: master visual polish, focus overview, permanent action buttons, centered compact island, high-contrast toast, iPad/mobile safe display. No Firebase/database logic removed. -->
+<!-- v1.9.05-layout-refresh update-notes: master visual polish, focus overview, permanent action buttons, centered compact island, high-contrast toast, iPad/mobile safe display. No Firebase/database logic removed. -->
+
+<!-- VERSION_CHECK: v1.9.05-layout-refresh | based-on-v1.9.04-master-polish | today-dynamic-box-replaced | background-polished | settings-modernized | database-logic-unchanged | features-preserved -->
+<!-- v1.9.05-layout-refresh update-notes: removed the original today dynamic cards, added a new Today Hub, softened the full-site background, redesigned current lesson card, and upgraded settings layout without deleting Firebase/data features. -->
