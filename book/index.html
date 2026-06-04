@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二手書回收雲端管理系統 Pro Max</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
+                        accent: { 50: '#fdf4ff', 100: '#fae8ff', 500: '#d946ef', 600: '#c026d3' },
+                        warning: { 50: '#fffbeb', 500: '#f59e0b', 600: '#d97706' }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(5px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
+        
+        body {
+            background: linear-gradient(-45deg, #e0f2fe, #fdf4ff, #ede9fe, #f0fdf4);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            font-family: 'Noto Sans HK', sans-serif;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 100%);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #receipt-modal, #receipt-modal * { visibility: visible; }
+            #receipt-modal { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6 text-slate-800">
+
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, collection, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const { useState, useEffect, useMemo } = React;
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC5AFCRymqpPuLpz7hOMcN5CZF7X7P8OVI",
+            authDomain: "book-24526.firebaseapp.com",
+            projectId: "book-24526",
+            storageBucket: "book-24526.firebasestorage.app",
+            messagingSenderId: "1088251457442",
+            appId: "1:1088251457442:web:c93b01f90fabdfb4e6ccfb"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'book-recycling-manager';
+
+        // 📌 [自定義區域] 你可以喺度隨意修改/新增套餐或書籍價錢！
+        const COMMON_BOOKS_SHORTCUTS = [
+            { title: "Form 2 全套齊書", price: 400, icon: "🎒", isPackage: true }, // 新增：全套齊書套餐
+            { title: "Form 3 全套齊書", price: 450, icon: "🎒", isPackage: true },
+            { title: "中文", price: 40, icon: "📖" },
+            { title: "English", price: 40, icon: "🅰️" },
+            { title: "Maths", price: 40, icon: "📐" },
+            { title: "科學", price: 35, icon: "🔬" },
+            { title: "中史", price: 30, icon: "📜" },
+            { title: "西史", price: 30, icon: "🏛️" }
+        ];
+
+        function App() {
+            const [user, setUser] = useState(null);
+            const [dbConnected, setDbConnected] = useState(false);
+            const [students, setStudents] = useState([]);
+            const [loading, setLoading] = useState(true);
+            
+            const [search, setSearch] = useState("");
+            const [sortBy, setSortBy] = useState("form");
+            const [activeId, setActiveId] = useState(null);
+            
+            const [customBookName, setCustomBookName] = useState("");
+            const [customBookPrice, setCustomBookPrice] = useState("40");
+            
+            // 用來控制邊本書打開咗「扣錢面板」
+            const [editingDeductionId, setEditingDeductionId] = useState(null);
+            const [tempDeduction, setTempDeduction] = useState("");
+            const [tempDeductReason, setTempDeductReason] = useState("");
+
+            const [showExportModal, setShowExportModal] = useState(false);
+            const [showReceiptModal, setShowReceiptModal] = useState(false);
+            const [toast, setToast] = useState({ show: false, message: "", type: "info" });
+
+            const showToast = (message, type = "success") => {
+                setToast({ show: true, message, type });
+                setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+            };
+
+            useEffect(() => {
+                signInAnonymously(auth).catch(() => showToast("連線驗證失敗", "error"));
+                return onAuthStateChanged(auth, (usr) => {
+                    setUser(usr);
+                    setDbConnected(!!usr);
+                });
+            }, []);
+
+            useEffect(() => {
+                if (!user) return;
+                const q = collection(db, 'artifacts', appId, 'public', 'data', 'students');
+                return onSnapshot(q, (snapshot) => {
+                    const list = [];
+                    snapshot.forEach((doc) => list.push({ docId: doc.id, ...doc.data() }));
+                    setStudents(list);
+                    if (list.length > 0 && !activeId) setActiveId(list[0].docId);
+                    setLoading(false);
+                });
+            }, [user, activeId]);
+
+            const activeStudent = useMemo(() => students.find(s => s.docId === activeId) || null, [students, activeId]);
+
+            // 計算真實價格 (兼容舊數據的 price 與新數據的 basePrice - deduction)
+            const getActualPrice = (book) => {
+                const base = Number(book.basePrice !== undefined ? book.basePrice : book.price || 0);
+                const deduct = Number(book.deduction || 0);
+                return Math.max(0, base - deduct);
+            };
+
+            const stats = useMemo(() => {
+                let totalAccepted = 0, totalAmount = 0;
+                students.forEach(s => {
+                    (s.books || []).forEach(b => {
+                        if (b.status === 'accepted') { 
+                            totalAccepted++; 
+                            totalAmount += getActualPrice(b); 
+                        }
+                    });
+                });
+                return { totalAccepted, totalAmount };
+            }, [students]);
+
+            const activeStats = useMemo(() => {
+                if (!activeStudent) return { total: 0 };
+                return (activeStudent.books || []).reduce((acc, b) => {
+                    if (b.status === 'accepted') acc.total += getActualPrice(b);
+                    return acc;
+                }, { total: 0 });
+            }, [activeStudent]);
+
+            const processedStudents = useMemo(() => {
+                let filtered = students.filter(s => 
+                    s.name.includes(search) || 
+                    s.phone.includes(search) || 
+                    `f.${s.form}`.toLowerCase().includes(search.toLowerCase())
+                );
+                return filtered.sort((a, b) => {
+                    if (sortBy === 'name') return a.name.localeCompare(b.name, 'zh-HK');
+                    if (sortBy === 'amount') {
+                        const amountA = (a.books || []).reduce((sum, bk) => bk.status === 'accepted' ? sum + getActualPrice(bk) : sum, 0);
+                        const amountB = (b.books || []).reduce((sum, bk) => bk.status === 'accepted' ? sum + getActualPrice(bk) : sum, 0);
+                        return amountB - amountA;
+                    }
+                    if (a.form !== b.form) return a.form - b.form;
+                    return (a.order || 0) - (b.order || 0);
+                });
+            }, [students, search, sortBy]);
+
+            // 新增書本 / 套餐
+            const handleAddBook = async (title, priceStr) => {
+                if (!activeStudent || !title.trim()) return;
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
+                const newBook = {
+                    id: `${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+                    title: title.trim(),
+                    basePrice: Number(priceStr) || 0,
+                    deduction: 0,
+                    deductionReason: "",
+                    status: 'accepted',
+                    createdAt: new Date().toISOString()
+                };
+                
+                try {
+                    await updateDoc(docRef, { books: [...(activeStudent.books || []), newBook] });
+                    showToast(`✅ 已新增: ${title}`);
+                    setCustomBookName("");
+                } catch (err) { showToast("寫入失敗", "error"); }
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Enter') handleAddBook(customBookName, customBookPrice);
+            };
+
+            const handleToggleBookStatus = async (bookId) => {
+                if (!activeStudent) return;
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
+                const updatedBooks = activeStudent.books.map(b => 
+                    b.id === bookId ? { ...b, status: b.status === 'accepted' ? 'rejected' : 'accepted', rejectReason: b.status === 'accepted' ? '改版不收' : '' } : b
+                );
+                await updateDoc(docRef, { books: updatedBooks });
+            };
+
+            const handleDeleteBook = async (bookId) => {
+                if (!activeStudent) return;
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
+                await updateDoc(docRef, { books: activeStudent.books.filter(b => b.id !== bookId) });
+            };
+
+            // 儲存扣錢設定
+            const handleSaveDeduction = async (bookId) => {
+                if (!activeStudent) return;
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
+                const updatedBooks = activeStudent.books.map(b => {
+                    if (b.id === bookId) {
+                        return { 
+                            ...b, 
+                            deduction: Number(tempDeduction) || 0,
+                            deductionReason: tempDeductReason.trim()
+                        };
+                    }
+                    return b;
+                });
+                await updateDoc(docRef, { books: updatedBooks });
+                setEditingDeductionId(null);
+                showToast("扣減設定已儲存");
+            };
+
+            // 匯出功能
+            const generateExportData = () => {
+                const sortedForExcel = [...students].sort((a, b) => (a.order || 0) - (b.order || 0));
+                let textContent = "";
+                let csvContent = "\uFEFF班級,姓名,電話號碼,總金額,已收書籍明細,退回書籍\n";
+
+                sortedForExcel.forEach(s => {
+                    const books = s.books || [];
+                    if (books.length === 0) {
+                        textContent += "\t\n";
+                        csvContent += `${s.form},${s.name},${s.phone},0,,\n`;
+                    } else {
+                        const acceptedBooks = books.filter(b => b.status === 'accepted');
+                        const rejectedBooks = books.filter(b => b.status === 'rejected');
+                        
+                        // 文字版 (For Excel Paste)
+                        const allDetails = books.map(b => {
+                            if (b.status === 'accepted') {
+                                const deductText = b.deduction > 0 ? `(扣$${b.deduction}:${b.deductionReason})` : '';
+                                return `✅${b.title}${deductText}`;
+                            } else {
+                                return `❌[退]${b.title}`;
+                            }
+                        }).join(', ');
+                        const total = acceptedBooks.reduce((sum, b) => sum + getActualPrice(b), 0);
+                        textContent += `${allDetails}\t${total}\n`;
+
+                        // CSV 版
+                        const acceptedStr = acceptedBooks.map(b => {
+                            const deductText = b.deduction > 0 ? ` [扣$${b.deduction}: ${b.deductionReason}]` : '';
+                            return `${b.title}($${getActualPrice(b)}${deductText})`;
+                        }).join('; ');
+                        const rejectedStr = rejectedBooks.map(b => b.title).join('; ');
+                        csvContent += `${s.form},${s.name},${s.phone},${total},"${acceptedStr}","${rejectedStr}"\n`;
+                    }
+                });
+                return { textContent, csvContent };
+            };
+
+            const handleDownloadCSV = () => {
+                const { csvContent } = generateExportData();
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `收書紀錄_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            return (
+                <div class="max-w-[1400px] mx-auto pb-12 animate-fade-in-up">
+                    
+                    {toast.show && (
+                        <div class="fixed top-6 right-6 z-50 px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 bg-slate-900 text-white font-medium">
+                            <span>{toast.type === 'error' ? '⚠️' : '✨'}</span>
+                            <span>{toast.message}</span>
+                        </div>
+                    )}
+
+                    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4 px-2">
+                        <div>
+                            <h1 class="text-3xl lg:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-accent-600">
+                                ♻️ 二手書回收系統 Pro Max
+                            </h1>
+                            <div class="flex items-center gap-3 mt-2 text-sm text-slate-500 font-medium">
+                                <span class={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${dbConnected ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                                    <span class={`w-2 h-2 rounded-full ${dbConnected ? 'bg-emerald-500' : 'bg-amber-400'}`}></span>
+                                    {dbConnected ? "實時雲端同步中" : "連線中..."}
+                                </span>
+                            </div>
+                        </div>
+                        <button onClick={() => setShowExportModal(true)} class="px-5 py-2.5 bg-white text-brand-700 hover:bg-brand-50 border border-brand-200 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md">
+                            📤 匯出資料 (Excel)
+                        </button>
+                    </header>
+
+                    <section class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+                        <div class="glass-panel rounded-3xl p-5 flex items-center gap-5">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-100 to-brand-200 flex items-center justify-center text-2xl">📚</div>
+                            <div>
+                                <p class="text-sm text-slate-500 font-bold mb-1">成功回收總量</p>
+                                <p class="text-3xl font-black text-slate-800">{stats.totalAccepted} <span class="text-lg text-slate-400 font-medium">本/套</span></p>
+                            </div>
+                        </div>
+                        <div class="glass-panel rounded-3xl p-5 flex items-center gap-5">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center text-2xl">💵</div>
+                            <div>
+                                <p class="text-sm text-slate-500 font-bold mb-1">折實應付總額</p>
+                                <p class="text-3xl font-black text-emerald-600">${stats.totalAmount}</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    {loading ? (
+                        <div class="glass-panel rounded-3xl p-16 text-center animate-pulse">載入數據中...</div>
+                    ) : (
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+                            
+                            {/* Left Panel */}
+                            <div class="lg:col-span-4 glass-panel rounded-3xl p-5 flex flex-col h-[750px]">
+                                <input 
+                                    type="text" placeholder="🔍 搜尋姓名/班級..." value={search} onChange={(e) => setSearch(e.target.value)}
+                                    class="w-full px-5 py-3 mb-3 bg-white/60 border border-white rounded-2xl focus:ring-2 focus:ring-brand-400 shadow-sm"
+                                />
+                                <div class="flex gap-2 mb-4">
+                                    {['form', 'name', 'amount'].map(type => (
+                                        <button 
+                                            key={type} onClick={() => setSortBy(type)}
+                                            class={`flex-1 py-1.5 text-xs font-bold rounded-xl transition-all ${sortBy === type ? 'bg-brand-600 text-white shadow-md' : 'bg-white/50 text-slate-500 hover:bg-white'}`}
+                                        >
+                                            {type === 'form' ? '按班級' : type === 'name' ? '按姓名' : '按高消費'}
+                                        </button>
+                                    ))}
+                                </div>
+                                
+                                <div class="flex-1 overflow-y-auto space-y-2 pr-2">
+                                    {processedStudents.map(student => {
+                                        const isSelected = student.docId === activeId;
+                                        const sPayout = (student.books || []).reduce((sum, b) => b.status === 'accepted' ? sum + getActualPrice(b) : sum, 0);
+                                        return (
+                                            <div 
+                                                key={student.docId} onClick={() => setActiveId(student.docId)}
+                                                class={`p-4 rounded-2xl cursor-pointer transition-all border flex justify-between items-center ${isSelected ? 'bg-brand-600 text-white border-brand-600 shadow-lg scale-[1.02]' : 'glass-card hover:bg-white border-transparent'}`}
+                                            >
+                                                <div>
+                                                    <div class="font-bold flex items-center gap-2">
+                                                        <span class={`text-[10px] px-2 py-0.5 rounded-lg font-black uppercase tracking-wider ${isSelected ? 'bg-white/20' : 'bg-slate-100 text-slate-500'}`}>F.{student.form}</span>
+                                                        <span class="text-base">{student.name}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="text-right">
+                                                    {sPayout > 0 && <div class="text-lg font-black mt-1">${sPayout}</div>}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Right Panel Workspace */}
+                            {activeStudent ? (
+                                <div class="lg:col-span-8 glass-panel rounded-3xl p-6 lg:p-8 flex flex-col h-[750px]">
+                                    
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end pb-6 border-b border-slate-200/50 mb-6">
+                                        <div>
+                                            <h2 class="text-3xl font-black text-slate-800">{activeStudent.name} <span class="text-lg text-slate-400 font-medium ml-2">Form {activeStudent.form}</span></h2>
+                                        </div>
+                                        <div class="flex items-center gap-4 mt-4 sm:mt-0">
+                                            <div class="text-right">
+                                                <p class="text-xs font-bold text-slate-400 mb-1">本單結算</p>
+                                                <p class="text-4xl font-black text-emerald-500">${activeStats.total}</p>
+                                            </div>
+                                            <div class="w-px h-12 bg-slate-200 hidden sm:block"></div>
+                                            <button onClick={() => setShowReceiptModal(true)} class="px-4 py-3 bg-slate-800 text-white hover:bg-slate-900 rounded-2xl font-bold shadow-lg">
+                                                🖨️ 印單
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* 預設套餐與書籍 Shortcuts */}
+                                    <div class="mb-5">
+                                        <div class="flex flex-wrap gap-2">
+                                            {COMMON_BOOKS_SHORTCUTS.map(sc => (
+                                                <button 
+                                                    key={sc.title} onClick={() => handleAddBook(sc.title, sc.price)}
+                                                    class={`px-4 py-2.5 rounded-2xl text-sm font-bold transition-all hover:-translate-y-1 hover:shadow-md flex items-center gap-2 ${sc.isPackage ? 'bg-indigo-50 border-2 border-indigo-100 text-indigo-700' : 'glass-card hover:bg-white text-slate-700'}`}
+                                                >
+                                                    <span>{sc.icon} {sc.title}</span>
+                                                    <span class={`${sc.isPackage ? 'bg-indigo-600 text-white' : 'bg-brand-50 text-brand-600'} px-2 py-0.5 rounded-lg`}>${sc.price}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div class="flex gap-3 mb-6 bg-white/50 p-3 rounded-2xl border border-white">
+                                        <input 
+                                            type="text" placeholder="✍️ 其他書名/自訂項目" 
+                                            value={customBookName} onChange={(e) => setCustomBookName(e.target.value)} onKeyDown={handleKeyDown}
+                                            class="flex-1 px-4 py-3 bg-white border-none rounded-xl text-sm focus:ring-2 focus:ring-brand-400 shadow-sm"
+                                        />
+                                        <input 
+                                            type="number" value={customBookPrice} onChange={(e) => setCustomBookPrice(e.target.value)} onKeyDown={handleKeyDown}
+                                            class="w-24 px-3 py-3 bg-white border-none rounded-xl text-sm font-black focus:ring-2 focus:ring-brand-400 shadow-sm"
+                                        />
+                                        <button onClick={() => handleAddBook(customBookName, customBookPrice)} class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md">加入</button>
+                                    </div>
+
+                                    {/* Book List & Deductions */}
+                                    <div class="flex-1 overflow-y-auto space-y-3 pr-2">
+                                        {(activeStudent.books || []).map(b => {
+                                            const isAccepted = b.status === 'accepted';
+                                            const basePrice = Number(b.basePrice !== undefined ? b.basePrice : b.price || 0);
+                                            const deduction = Number(b.deduction || 0);
+                                            const actualPrice = Math.max(0, basePrice - deduction);
+                                            const isEditing = editingDeductionId === b.id;
+
+                                            return (
+                                                <div key={b.id} class={`p-4 rounded-2xl border-2 transition-all flex flex-col gap-3 ${isAccepted ? 'bg-white border-white shadow-sm' : 'bg-rose-50/50 border-rose-100 opacity-80'}`}>
+                                                    
+                                                    {/* Main Row */}
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="flex items-center gap-4">
+                                                            <div class={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${isAccepted ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
+                                                                {isAccepted ? '✅' : '❌'}
+                                                            </div>
+                                                            <div>
+                                                                <p class={`font-bold text-base ${!isAccepted && 'line-through text-slate-400'}`}>{b.title}</p>
+                                                                <div class="flex items-center gap-2 mt-0.5">
+                                                                    <span class="text-xs text-slate-400">標準價: ${basePrice}</span>
+                                                                    {deduction > 0 && isAccepted && (
+                                                                        <span class="text-[10px] bg-warning-50 text-warning-600 px-1.5 py-0.5 rounded font-bold">
+                                                                            已扣 ${deduction} ({b.deductionReason})
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex items-center gap-3">
+                                                            {isAccepted && (
+                                                                <div class="text-right mr-2">
+                                                                    <p class="text-xl font-black text-emerald-600">${actualPrice}</p>
+                                                                </div>
+                                                            )}
+                                                            {/* 扣錢 Toggle Button */}
+                                                            {isAccepted && (
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        if(isEditing){ setEditingDeductionId(null); } 
+                                                                        else {
+                                                                            setEditingDeductionId(b.id);
+                                                                            setTempDeduction(b.deduction || "");
+                                                                            setTempDeductReason(b.deductionReason || "");
+                                                                        }
+                                                                    }}
+                                                                    class="p-2 text-slate-400 hover:text-warning-600 hover:bg-warning-50 rounded-xl transition-all" title="扣減/備註"
+                                                                >
+                                                                    🔧
+                                                                </button>
+                                                            )}
+                                                            <button onClick={() => handleToggleBookStatus(b.id)} class={`px-3 py-2 text-xs rounded-xl font-bold ${isAccepted ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'}`}>
+                                                                {isAccepted ? "不收" : "恢復"}
+                                                            </button>
+                                                            <button onClick={() => handleDeleteBook(b.id)} class="p-2 text-slate-300 hover:text-rose-500 rounded-xl">🗑️</button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* 扣錢編輯面板 (Slide down) */}
+                                                    {isEditing && isAccepted && (
+                                                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex gap-3 animate-fade-in-up items-end">
+                                                            <div class="w-24">
+                                                                <label class="block text-[10px] font-bold text-slate-400 mb-1">扣減金額 ($)</label>
+                                                                <input 
+                                                                    type="number" value={tempDeduction} onChange={e => setTempDeduction(e.target.value)}
+                                                                    class="w-full px-2 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-warning-400"
+                                                                />
+                                                            </div>
+                                                            <div class="flex-1">
+                                                                <label class="block text-[10px] font-bold text-slate-400 mb-1">扣減原因 (例如：冇小冊子)</label>
+                                                                <input 
+                                                                    type="text" value={tempDeductReason} onChange={e => setTempDeductReason(e.target.value)}
+                                                                    class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-warning-400"
+                                                                />
+                                                            </div>
+                                                            <button 
+                                                                onClick={() => handleSaveDeduction(b.id)}
+                                                                class="px-4 py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900"
+                                                            >
+                                                                確認扣減
+                                                            </button>
+                                                        </div>
+                                                    )}
+
+                                                </div>
+                                            );
+                                        })}
+                                        {(!activeStudent.books || activeStudent.books.length === 0) && (
+                                            <div class="h-full flex flex-col justify-center items-center text-slate-400">
+                                                <span class="text-5xl mb-3 opacity-50">📖</span>
+                                                <p class="font-bold">尚未登記任何書籍</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div class="lg:col-span-8 glass-panel rounded-3xl flex items-center justify-center text-slate-400 font-bold text-lg">
+                                    👈 請先從左側選擇一位同學
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Export Modal */}
+                    {showExportModal && (
+                        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                            <div class="bg-white rounded-[2rem] max-w-2xl w-full p-8 shadow-2xl">
+                                <h3 class="text-2xl font-black text-slate-800 mb-6">📤 匯出資料 (已支援扣錢紀錄)</h3>
+                                <textarea readOnly value={generateExportData().textContent} onClick={(e) => e.target.select()} class="w-full h-40 font-mono text-xs p-4 bg-slate-50 border border-slate-200 rounded-2xl mb-6" />
+                                <div class="flex justify-end gap-3">
+                                    <button onClick={handleDownloadCSV} class="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700">⬇️ 下載 CSV 檔案</button>
+                                    <button onClick={() => setShowExportModal(false)} class="px-6 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl">關閉</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Receipt Modal */}
+                    {showReceiptModal && activeStudent && (
+                        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 no-print">
+                            <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+                                <div id="receipt-modal" class="p-8 bg-white text-black overflow-y-auto">
+                                    <div class="text-center mb-6 pb-6 border-b-2 border-dashed border-gray-300">
+                                        <h2 class="text-2xl font-black mb-1">二手書回收單據</h2>
+                                        <p class="text-xs text-gray-400 mt-2">列印時間: {new Date().toLocaleString()}</p>
+                                    </div>
+                                    <div class="mb-6">
+                                        <p class="font-bold text-lg mb-1">學生: {activeStudent.name}</p>
+                                        <p class="text-gray-600">班級: F.{activeStudent.form} &nbsp;|&nbsp; 電話: {activeStudent.phone}</p>
+                                    </div>
+                                    <table class="w-full text-left mb-6 text-sm">
+                                        <thead>
+                                            <tr class="border-b-2 border-gray-800">
+                                                <th class="py-2">書籍明細</th>
+                                                <th class="py-2 text-right">金額</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {(activeStudent.books || []).map((b, i) => (
+                                                <tr key={i} class="border-b border-gray-200">
+                                                    <td class="py-3">
+                                                        {b.title}
+                                                        {b.status === 'accepted' && b.deduction > 0 && (
+                                                            <div class="text-[10px] text-gray-500 mt-0.5">- 扣減: {b.deductionReason} (-${b.deduction})</div>
+                                                        )}
+                                                        {b.status === 'rejected' && <span class="text-red-500 ml-2">(退回)</span>}
+                                                    </td>
+                                                    <td class="py-3 text-right font-mono">{b.status === 'accepted' ? `$${getActualPrice(b)}` : '$0'}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right text-xl font-black">
+                                        實付金額: <span class="text-3xl ml-2">${activeStats.total}</span>
+                                    </div>
+                                    <div class="mt-12 text-center text-xs text-gray-500">
+                                        <p>請妥善保存此單據以作核對之用。謝謝！</p>
+                                    </div>
+                                </div>
+                                <div class="p-4 bg-slate-50 flex justify-end gap-3 no-print">
+                                    <button onClick={() => window.print()} class="px-6 py-2.5 bg-brand-600 text-white font-bold rounded-xl">確認列印</button>
+                                    <button onClick={() => setShowReceiptModal(false)} class="px-6 py-2.5 bg-slate-200 text-slate-700 font-bold rounded-xl">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
