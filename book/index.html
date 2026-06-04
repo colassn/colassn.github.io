@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二手書回收雲端管理系統 Pro Max</title>
+    <title>二手書回收雲端管理系統 Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -14,14 +14,9 @@
                         accent: { 50: '#fdf4ff', 100: '#fae8ff', 500: '#d946ef', 600: '#c026d3' },
                         warning: { 50: '#fffbeb', 500: '#f59e0b', 600: '#d97706' }
                     },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.3s ease-out forwards',
-                    },
+                    animation: { 'fade-in-up': 'fadeInUp 0.3s ease-out forwards' },
                     keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(5px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
+                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(5px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                     }
                 }
             }
@@ -66,7 +61,7 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
+        
         @media print {
             body * { visibility: hidden; }
             #receipt-modal, #receipt-modal * { visibility: visible; }
@@ -100,9 +95,8 @@
         const db = getFirestore(app);
         const appId = 'book-recycling-manager';
 
-        // 📌 [自定義區域] 你可以喺度隨意修改/新增套餐或書籍價錢！
         const COMMON_BOOKS_SHORTCUTS = [
-            { title: "Form 2 全套齊書", price: 400, icon: "🎒", isPackage: true }, // 新增：全套齊書套餐
+            { title: "Form 2 全套齊書", price: 400, icon: "🎒", isPackage: true },
             { title: "Form 3 全套齊書", price: 450, icon: "🎒", isPackage: true },
             { title: "中文", price: 40, icon: "📖" },
             { title: "English", price: 40, icon: "🅰️" },
@@ -118,6 +112,9 @@
             const [students, setStudents] = useState([]);
             const [loading, setLoading] = useState(true);
             
+            // 收書員名稱 (利用 LocalStorage 記住，防止刷新後流失)
+            const [collectorName, setCollectorName] = useState(() => localStorage.getItem("collectorName") || "");
+
             const [search, setSearch] = useState("");
             const [sortBy, setSortBy] = useState("form");
             const [activeId, setActiveId] = useState(null);
@@ -125,19 +122,24 @@
             const [customBookName, setCustomBookName] = useState("");
             const [customBookPrice, setCustomBookPrice] = useState("40");
             
-            // 用來控制邊本書打開咗「扣錢面板」
             const [editingDeductionId, setEditingDeductionId] = useState(null);
             const [tempDeduction, setTempDeduction] = useState("");
             const [tempDeductReason, setTempDeductReason] = useState("");
 
             const [showExportModal, setShowExportModal] = useState(false);
             const [showReceiptModal, setShowReceiptModal] = useState(false);
+            const [showCollectorStatsModal, setShowCollectorStatsModal] = useState(false); // 新增總結面板狀態
+            
             const [toast, setToast] = useState({ show: false, message: "", type: "info" });
 
             const showToast = (message, type = "success") => {
                 setToast({ show: true, message, type });
                 setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
             };
+
+            useEffect(() => {
+                localStorage.setItem("collectorName", collectorName);
+            }, [collectorName]);
 
             useEffect(() => {
                 signInAnonymously(auth).catch(() => showToast("連線驗證失敗", "error"));
@@ -161,7 +163,6 @@
 
             const activeStudent = useMemo(() => students.find(s => s.docId === activeId) || null, [students, activeId]);
 
-            // 計算真實價格 (兼容舊數據的 price 與新數據的 basePrice - deduction)
             const getActualPrice = (book) => {
                 const base = Number(book.basePrice !== undefined ? book.basePrice : book.price || 0);
                 const deduct = Number(book.deduction || 0);
@@ -172,10 +173,7 @@
                 let totalAccepted = 0, totalAmount = 0;
                 students.forEach(s => {
                     (s.books || []).forEach(b => {
-                        if (b.status === 'accepted') { 
-                            totalAccepted++; 
-                            totalAmount += getActualPrice(b); 
-                        }
+                        if (b.status === 'accepted') { totalAccepted++; totalAmount += getActualPrice(b); }
                     });
                 });
                 return { totalAccepted, totalAmount };
@@ -189,12 +187,34 @@
                 }, { total: 0 });
             }, [activeStudent]);
 
+            // 計算收書員分類數據 (Collector Stats Logic)
+            const collectorStats = useMemo(() => {
+                const statsMap = {};
+                students.forEach(student => {
+                    (student.books || []).forEach(book => {
+                        if (book.status === 'accepted') {
+                            const cName = book.collectedBy || '未記名 (系統預設)';
+                            if (!statsMap[cName]) {
+                                statsMap[cName] = { count: 0, total: 0, items: [] };
+                            }
+                            statsMap[cName].count += 1;
+                            const price = getActualPrice(book);
+                            statsMap[cName].total += price;
+                            statsMap[cName].items.push({
+                                studentName: student.name,
+                                studentForm: student.form,
+                                bookTitle: book.title,
+                                price: price,
+                                id: book.id
+                            });
+                        }
+                    });
+                });
+                return statsMap;
+            }, [students]);
+
             const processedStudents = useMemo(() => {
-                let filtered = students.filter(s => 
-                    s.name.includes(search) || 
-                    s.phone.includes(search) || 
-                    `f.${s.form}`.toLowerCase().includes(search.toLowerCase())
-                );
+                let filtered = students.filter(s => s.name.includes(search) || s.phone.includes(search) || `f.${s.form}`.toLowerCase().includes(search.toLowerCase()));
                 return filtered.sort((a, b) => {
                     if (sortBy === 'name') return a.name.localeCompare(b.name, 'zh-HK');
                     if (sortBy === 'amount') {
@@ -207,9 +227,16 @@
                 });
             }, [students, search, sortBy]);
 
-            // 新增書本 / 套餐
             const handleAddBook = async (title, priceStr) => {
                 if (!activeStudent || !title.trim()) return;
+                
+                // 防呆機制：強制要求輸入收書員名稱
+                if (!collectorName.trim()) {
+                    showToast("⚠️ 請先在右上角輸入你的「收書員名稱」！", "error");
+                    document.getElementById('collector-input').focus();
+                    return;
+                }
+
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
                 const newBook = {
                     id: `${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
@@ -218,6 +245,7 @@
                     deduction: 0,
                     deductionReason: "",
                     status: 'accepted',
+                    collectedBy: collectorName.trim(), // 綁定收書員名稱
                     createdAt: new Date().toISOString()
                 };
                 
@@ -235,9 +263,7 @@
             const handleToggleBookStatus = async (bookId) => {
                 if (!activeStudent) return;
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
-                const updatedBooks = activeStudent.books.map(b => 
-                    b.id === bookId ? { ...b, status: b.status === 'accepted' ? 'rejected' : 'accepted', rejectReason: b.status === 'accepted' ? '改版不收' : '' } : b
-                );
+                const updatedBooks = activeStudent.books.map(b => b.id === bookId ? { ...b, status: b.status === 'accepted' ? 'rejected' : 'accepted', rejectReason: b.status === 'accepted' ? '改版不收' : '' } : b);
                 await updateDoc(docRef, { books: updatedBooks });
             };
 
@@ -247,26 +273,15 @@
                 await updateDoc(docRef, { books: activeStudent.books.filter(b => b.id !== bookId) });
             };
 
-            // 儲存扣錢設定
             const handleSaveDeduction = async (bookId) => {
                 if (!activeStudent) return;
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
-                const updatedBooks = activeStudent.books.map(b => {
-                    if (b.id === bookId) {
-                        return { 
-                            ...b, 
-                            deduction: Number(tempDeduction) || 0,
-                            deductionReason: tempDeductReason.trim()
-                        };
-                    }
-                    return b;
-                });
+                const updatedBooks = activeStudent.books.map(b => b.id === bookId ? { ...b, deduction: Number(tempDeduction) || 0, deductionReason: tempDeductReason.trim() } : b);
                 await updateDoc(docRef, { books: updatedBooks });
                 setEditingDeductionId(null);
                 showToast("扣減設定已儲存");
             };
 
-            // 匯出功能
             const generateExportData = () => {
                 const sortedForExcel = [...students].sort((a, b) => (a.order || 0) - (b.order || 0));
                 let textContent = "";
@@ -281,11 +296,11 @@
                         const acceptedBooks = books.filter(b => b.status === 'accepted');
                         const rejectedBooks = books.filter(b => b.status === 'rejected');
                         
-                        // 文字版 (For Excel Paste)
                         const allDetails = books.map(b => {
                             if (b.status === 'accepted') {
                                 const deductText = b.deduction > 0 ? `(扣$${b.deduction}:${b.deductionReason})` : '';
-                                return `✅${b.title}${deductText}`;
+                                const collectorText = b.collectedBy ? `[經手:${b.collectedBy}]` : '';
+                                return `✅${b.title}${deductText}${collectorText}`;
                             } else {
                                 return `❌[退]${b.title}`;
                             }
@@ -293,10 +308,10 @@
                         const total = acceptedBooks.reduce((sum, b) => sum + getActualPrice(b), 0);
                         textContent += `${allDetails}\t${total}\n`;
 
-                        // CSV 版
                         const acceptedStr = acceptedBooks.map(b => {
                             const deductText = b.deduction > 0 ? ` [扣$${b.deduction}: ${b.deductionReason}]` : '';
-                            return `${b.title}($${getActualPrice(b)}${deductText})`;
+                            const collectorText = b.collectedBy ? ` [經手: ${b.collectedBy}]` : '';
+                            return `${b.title}($${getActualPrice(b)})${deductText}${collectorText}`;
                         }).join('; ');
                         const rejectedStr = rejectedBooks.map(b => b.title).join('; ');
                         csvContent += `${s.form},${s.name},${s.phone},${total},"${acceptedStr}","${rejectedStr}"\n`;
@@ -336,32 +351,35 @@
                                     <span class={`w-2 h-2 rounded-full ${dbConnected ? 'bg-emerald-500' : 'bg-amber-400'}`}></span>
                                     {dbConnected ? "實時雲端同步中" : "連線中..."}
                                 </span>
+                                <span>Po Kok Secondary School</span>
                             </div>
                         </div>
-                        <button onClick={() => setShowExportModal(true)} class="px-5 py-2.5 bg-white text-brand-700 hover:bg-brand-50 border border-brand-200 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md">
-                            📤 匯出資料 (Excel)
-                        </button>
+                        
+                        <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                            {/* 收書員名稱輸入框 */}
+                            <div class="flex items-center bg-white border border-slate-200 rounded-2xl p-1 shadow-sm w-full sm:w-auto">
+                                <span class="pl-3 pr-2 text-slate-400">👤</span>
+                                <input 
+                                    id="collector-input"
+                                    type="text" 
+                                    placeholder="輸入你的名字 (如: A)" 
+                                    value={collectorName}
+                                    onChange={(e) => setCollectorName(e.target.value)}
+                                    class="py-2 pr-4 bg-transparent border-none text-sm font-bold focus:outline-none focus:ring-0 text-brand-700 w-full sm:w-40"
+                                />
+                            </div>
+                            
+                            <button onClick={() => setShowCollectorStatsModal(true)} class="w-full sm:w-auto px-5 py-3 bg-brand-600 text-white hover:bg-brand-700 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md flex justify-center gap-2">
+                                📊 收書員對數
+                            </button>
+                            <button onClick={() => setShowExportModal(true)} class="w-full sm:w-auto px-5 py-3 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md flex justify-center">
+                                📤 匯出
+                            </button>
+                        </div>
                     </header>
 
-                    <section class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
-                        <div class="glass-panel rounded-3xl p-5 flex items-center gap-5">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-100 to-brand-200 flex items-center justify-center text-2xl">📚</div>
-                            <div>
-                                <p class="text-sm text-slate-500 font-bold mb-1">成功回收總量</p>
-                                <p class="text-3xl font-black text-slate-800">{stats.totalAccepted} <span class="text-lg text-slate-400 font-medium">本/套</span></p>
-                            </div>
-                        </div>
-                        <div class="glass-panel rounded-3xl p-5 flex items-center gap-5">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center text-2xl">💵</div>
-                            <div>
-                                <p class="text-sm text-slate-500 font-bold mb-1">折實應付總額</p>
-                                <p class="text-3xl font-black text-emerald-600">${stats.totalAmount}</p>
-                            </div>
-                        </div>
-                    </section>
-
                     {loading ? (
-                        <div class="glass-panel rounded-3xl p-16 text-center animate-pulse">載入數據中...</div>
+                        <div class="glass-panel rounded-3xl p-16 text-center animate-pulse font-bold text-slate-500">載入數據中...</div>
                     ) : (
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
                             
@@ -420,8 +438,8 @@
                                                 <p class="text-4xl font-black text-emerald-500">${activeStats.total}</p>
                                             </div>
                                             <div class="w-px h-12 bg-slate-200 hidden sm:block"></div>
-                                            <button onClick={() => setShowReceiptModal(true)} class="px-4 py-3 bg-slate-800 text-white hover:bg-slate-900 rounded-2xl font-bold shadow-lg">
-                                                🖨️ 印單
+                                            <button onClick={() => setShowReceiptModal(true)} class="px-4 py-3 bg-slate-800 text-white hover:bg-slate-900 rounded-2xl font-bold shadow-lg flex items-center gap-2">
+                                                <span>🖨️</span> 印單
                                             </button>
                                         </div>
                                     </div>
@@ -465,8 +483,6 @@
 
                                             return (
                                                 <div key={b.id} class={`p-4 rounded-2xl border-2 transition-all flex flex-col gap-3 ${isAccepted ? 'bg-white border-white shadow-sm' : 'bg-rose-50/50 border-rose-100 opacity-80'}`}>
-                                                    
-                                                    {/* Main Row */}
                                                     <div class="flex justify-between items-center">
                                                         <div class="flex items-center gap-4">
                                                             <div class={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${isAccepted ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
@@ -481,6 +497,12 @@
                                                                             已扣 ${deduction} ({b.deductionReason})
                                                                         </span>
                                                                     )}
+                                                                    {/* 顯示收書員名稱 */}
+                                                                    {b.collectedBy && isAccepted && (
+                                                                        <span class="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-medium flex items-center gap-1">
+                                                                            👤 經手: {b.collectedBy}
+                                                                        </span>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -491,7 +513,6 @@
                                                                     <p class="text-xl font-black text-emerald-600">${actualPrice}</p>
                                                                 </div>
                                                             )}
-                                                            {/* 扣錢 Toggle Button */}
                                                             {isAccepted && (
                                                                 <button 
                                                                     onClick={() => {
@@ -514,32 +535,19 @@
                                                         </div>
                                                     </div>
 
-                                                    {/* 扣錢編輯面板 (Slide down) */}
                                                     {isEditing && isAccepted && (
                                                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex gap-3 animate-fade-in-up items-end">
                                                             <div class="w-24">
                                                                 <label class="block text-[10px] font-bold text-slate-400 mb-1">扣減金額 ($)</label>
-                                                                <input 
-                                                                    type="number" value={tempDeduction} onChange={e => setTempDeduction(e.target.value)}
-                                                                    class="w-full px-2 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-warning-400"
-                                                                />
+                                                                <input type="number" value={tempDeduction} onChange={e => setTempDeduction(e.target.value)} class="w-full px-2 py-2 text-sm border border-slate-300 rounded-lg" />
                                                             </div>
                                                             <div class="flex-1">
                                                                 <label class="block text-[10px] font-bold text-slate-400 mb-1">扣減原因 (例如：冇小冊子)</label>
-                                                                <input 
-                                                                    type="text" value={tempDeductReason} onChange={e => setTempDeductReason(e.target.value)}
-                                                                    class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-warning-400"
-                                                                />
+                                                                <input type="text" value={tempDeductReason} onChange={e => setTempDeductReason(e.target.value)} class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg" />
                                                             </div>
-                                                            <button 
-                                                                onClick={() => handleSaveDeduction(b.id)}
-                                                                class="px-4 py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900"
-                                                            >
-                                                                確認扣減
-                                                            </button>
+                                                            <button onClick={() => handleSaveDeduction(b.id)} class="px-4 py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900">確認</button>
                                                         </div>
                                                     )}
-
                                                 </div>
                                             );
                                         })}
@@ -559,11 +567,64 @@
                         </div>
                     )}
 
+                    {/* 收書員業績總結面板 (Collector Stats Modal) */}
+                    {showCollectorStatsModal && (
+                        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                            <div class="bg-white rounded-[2rem] max-w-4xl w-full p-8 shadow-2xl flex flex-col max-h-[90vh]">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="text-2xl font-black text-slate-800 flex items-center gap-2">
+                                        📊 員工收書對數總結
+                                    </h3>
+                                    <button onClick={() => setShowCollectorStatsModal(false)} class="text-slate-400 hover:text-slate-600 font-bold text-xl">✕</button>
+                                </div>
+                                
+                                <div class="overflow-y-auto flex-1 pr-2">
+                                    {Object.keys(collectorStats).length === 0 ? (
+                                        <div class="text-center py-10 text-slate-400 font-bold">目前沒有任何已成功回收嘅書本紀錄。</div>
+                                    ) : (
+                                        <div class="space-y-6">
+                                            {Object.entries(collectorStats).map(([cName, cData]) => (
+                                                <div key={cName} class="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-sm">
+                                                    <div class="flex justify-between items-center mb-4 border-b border-slate-200 pb-3">
+                                                        <div class="flex items-center gap-3">
+                                                            <div class="w-10 h-10 bg-brand-100 text-brand-600 rounded-xl flex justify-center items-center text-lg">👤</div>
+                                                            <h4 class="text-xl font-black text-slate-700">{cName}</h4>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <div class="text-sm font-bold text-slate-500">處理總數: {cData.count} 本</div>
+                                                            <div class="text-2xl font-black text-emerald-600">支出: ${cData.total}</div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="space-y-2">
+                                                        {cData.items.map(item => (
+                                                            <div key={item.id} class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 text-sm">
+                                                                <div>
+                                                                    <span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-xs font-bold mr-2">F.{item.studentForm} {item.studentName}</span>
+                                                                    <span class="font-bold text-slate-700">{item.bookTitle}</span>
+                                                                </div>
+                                                                <div class="font-bold text-emerald-600">${item.price}</div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                <div class="mt-6 text-right border-t border-slate-100 pt-4">
+                                    <button onClick={() => setShowCollectorStatsModal(false)} class="px-6 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition-all">關閉對數面板</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Export Modal */}
                     {showExportModal && (
                         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
                             <div class="bg-white rounded-[2rem] max-w-2xl w-full p-8 shadow-2xl">
-                                <h3 class="text-2xl font-black text-slate-800 mb-6">📤 匯出資料 (已支援扣錢紀錄)</h3>
+                                <h3 class="text-2xl font-black text-slate-800 mb-6">📤 匯出資料</h3>
                                 <textarea readOnly value={generateExportData().textContent} onClick={(e) => e.target.select()} class="w-full h-40 font-mono text-xs p-4 bg-slate-50 border border-slate-200 rounded-2xl mb-6" />
                                 <div class="flex justify-end gap-3">
                                     <button onClick={handleDownloadCSV} class="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700">⬇️ 下載 CSV 檔案</button>
@@ -601,7 +662,9 @@
                                                         {b.status === 'accepted' && b.deduction > 0 && (
                                                             <div class="text-[10px] text-gray-500 mt-0.5">- 扣減: {b.deductionReason} (-${b.deduction})</div>
                                                         )}
-                                                        {b.status === 'rejected' && <span class="text-red-500 ml-2">(退回)</span>}
+                                                        {b.status === 'accepted' && b.collectedBy && (
+                                                            <div class="text-[10px] text-gray-400 mt-0.5">經手人: {b.collectedBy}</div>
+                                                        )}
                                                     </td>
                                                     <td class="py-3 text-right font-mono">{b.status === 'accepted' ? `$${getActualPrice(b)}` : '$0'}</td>
                                                 </tr>
