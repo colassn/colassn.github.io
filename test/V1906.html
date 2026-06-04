@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.9.05-layout-refresh：主頁版面大更新、取消原有今天動態框、全新 Today Hub、柔和背景、設定頁現代化、全站卡片與表單排版優化；保留所有原有功能與 Firebase 資料邏輯。 -->
+    <!-- 電子手冊 Pro v1.9.06-golden-interface-rebuild：黃金比例介面重建、全站背景重塑、Today Studio、設定 Studio、卡片與表單節奏重排；保留所有原有功能與 Firebase 資料邏輯。 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -10,6 +10,8 @@
       gtag('js', new Date());
       gtag('config', 'G-8VCPLTE2QT');
     </script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4156749891284054" crossorigin="anonymous"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -31,8 +33,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.9.05-layout-refresh">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.9.05-layout-refresh"; console.log("電子手冊 Pro v1.9.05-layout-refresh loaded");</script>
+    <meta name="ehandbook-version" content="v1.9.06-golden-interface-rebuild">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.9.06-golden-interface-rebuild"; console.log("電子手冊 Pro v1.9.06-golden-interface-rebuild loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -235,7 +237,7 @@
 
         /* ── v1.9.03 CENTERED ISLAND + VISIBLE ACTIONS PATCH ─────────────────────────────
            本次更新只做顯示方式、排版層級、響應式與流暢度優化；不刪除任何功能邏輯。
-           覆蓋路徑建議：/rchw/index.html；測試版建議先放 backup/v1.9.05-layout-refresh.html。
+           覆蓋路徑建議：/rchw/index.html；測試版建議先放 backup/v1.9.06-golden-interface-rebuild.html。
         */
         :root {
             --eh-accent-rgb: 79 70 229;
@@ -938,6 +940,346 @@
             .eh-today-progress { grid-column: 1 / -1; }
         }
 
+
+
+        /* ── v1.9.06 GOLDEN INTERFACE REBUILD ───────────────────────────
+           本次更新：按 1.618 黃金比例重建主頁、背景、卡片節奏與設定 Studio。
+           只改顯示層與排版層；保留 Firebase、資料庫、登入、功課、時間表、班級、通知、後台、AdSense 功能。
+        */
+        :root {
+            --eh-golden: 1.618;
+            --eh-radius-xl: 2.15rem;
+            --eh-radius-lg: 1.55rem;
+            --eh-radius-md: 1.15rem;
+            --eh-page-max: 1056px;
+            --eh-text-strong: 15 23 42;
+            --eh-text-soft: 100 116 139;
+            --eh-warm-surface: 255 255 255;
+            --eh-line-soft: 226 232 240;
+            --eh-shadow-calm: 0 24px 80px -58px rgba(15,23,42,0.48), 0 1px 2px rgba(15,23,42,0.045), inset 0 1px 0 rgba(255,255,255,0.8);
+            --eh-shadow-lift: 0 30px 90px -60px rgba(15,23,42,0.62), 0 10px 28px -24px rgb(var(--eh-accent-rgb) / 0.28), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        .dark {
+            --eh-text-strong: 248 250 252;
+            --eh-text-soft: 148 163 184;
+            --eh-warm-surface: 8 13 25;
+            --eh-line-soft: 51 65 85;
+            --eh-shadow-calm: 0 26px 90px -58px rgba(0,0,0,0.92), 0 1px 2px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.05);
+            --eh-shadow-lift: 0 32px 100px -58px rgba(0,0,0,1), 0 10px 30px -24px rgb(var(--eh-accent-rgb) / 0.22), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+        html { background: rgb(246 248 251); }
+        body {
+            color: rgb(var(--eh-text-strong));
+            background:
+                radial-gradient(ellipse 52rem 32rem at 8% -8%, rgb(var(--eh-accent-rgb) / 0.105), transparent 64%),
+                radial-gradient(ellipse 42rem 26rem at 104% 0%, rgb(var(--eh-accent-2-rgb) / 0.08), transparent 62%),
+                linear-gradient(135deg, #f8fafc 0%, #f2f6fa 42%, #eef4f8 100%) !important;
+        }
+        .dark body,
+        .dark html { background: #050b15; }
+        .eh-shell {
+            background:
+                radial-gradient(ellipse 58rem 34rem at -8% -10%, rgb(var(--eh-accent-rgb) / 0.115), transparent 62%),
+                radial-gradient(ellipse 44rem 28rem at 105% 4%, rgb(var(--eh-accent-2-rgb) / 0.085), transparent 58%),
+                radial-gradient(ellipse 40rem 24rem at 44% 108%, rgba(45,212,191,0.055), transparent 62%),
+                linear-gradient(180deg, rgba(250,252,255,0.99) 0%, rgba(245,248,251,0.985) 48%, rgba(239,245,249,0.99) 100%) !important;
+        }
+        .dark .eh-shell {
+            background:
+                radial-gradient(ellipse 58rem 34rem at -8% -10%, rgb(var(--eh-accent-rgb) / 0.18), transparent 62%),
+                radial-gradient(ellipse 44rem 28rem at 105% 4%, rgb(var(--eh-accent-2-rgb) / 0.11), transparent 58%),
+                radial-gradient(ellipse 40rem 24rem at 44% 108%, rgba(45,212,191,0.06), transparent 62%),
+                linear-gradient(180deg, #030712 0%, #07111f 52%, #050b15 100%) !important;
+        }
+        .bg-dot-grid {
+            background-image:
+                linear-gradient(rgba(15,23,42,0.022) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15,23,42,0.022) 1px, transparent 1px) !important;
+            background-size: 36px 36px !important;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.52), transparent 82%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.52), transparent 82%);
+            opacity: 1 !important;
+        }
+        .dark .bg-dot-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px) !important;
+        }
+        .eh-content { width: min(var(--eh-page-max), calc(100vw - 1.5rem)) !important; }
+        .eh-page-panel > .max-w-3xl,
+        .eh-today-home,
+        .eh-topbar { max-width: 900px !important; width: min(900px, calc(100vw - 1.5rem)) !important; }
+        .eh-topbar {
+            border-radius: 1.45rem !important;
+            background: rgba(255,255,255,0.78) !important;
+            border: 1px solid rgba(255,255,255,0.72) !important;
+            box-shadow: var(--eh-shadow-calm) !important;
+            backdrop-filter: blur(26px) saturate(170%) !important;
+            -webkit-backdrop-filter: blur(26px) saturate(170%) !important;
+        }
+        .dark .eh-topbar { background: rgba(8,13,25,0.78) !important; border-color: rgba(148,163,184,0.14) !important; }
+
+        /* Today Studio */
+        .eh-today-home { margin-bottom: 1.05rem !important; }
+        .eh-today-board {
+            border-radius: 2.25rem !important;
+            border: 1px solid rgba(255,255,255,0.76) !important;
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.90), rgba(255,255,255,0.66)),
+                radial-gradient(ellipse 30rem 18rem at 8% 8%, rgb(var(--eh-accent-rgb) / 0.16), transparent 66%),
+                radial-gradient(ellipse 26rem 16rem at 100% 4%, rgb(var(--eh-accent-2-rgb) / 0.11), transparent 64%) !important;
+            box-shadow: var(--eh-shadow-calm) !important;
+        }
+        .dark .eh-today-board {
+            border-color: rgba(148,163,184,0.14) !important;
+            background:
+                linear-gradient(135deg, rgba(8,13,25,0.88), rgba(8,13,25,0.66)),
+                radial-gradient(ellipse 30rem 18rem at 8% 8%, rgb(var(--eh-accent-rgb) / 0.24), transparent 66%),
+                radial-gradient(ellipse 26rem 16rem at 100% 4%, rgb(var(--eh-accent-2-rgb) / 0.14), transparent 64%) !important;
+        }
+        .eh-today-board-grid {
+            grid-template-columns: minmax(0, 1.618fr) minmax(280px, 1fr) !important;
+            gap: clamp(0.85rem, 2.4vw, 1.5rem) !important;
+            padding: clamp(1rem, 2.4vw, 1.45rem) !important;
+            align-items: stretch;
+        }
+        .eh-today-copy {
+            min-height: 17rem;
+            padding: clamp(1rem, 2.2vw, 1.65rem) !important;
+            border-radius: 1.8rem;
+            background: linear-gradient(135deg, rgb(var(--eh-accent-rgb) / 0.09), rgba(255,255,255,0.30));
+            border: 1px solid rgba(255,255,255,0.50);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .dark .eh-today-copy { background: linear-gradient(135deg, rgb(var(--eh-accent-rgb) / 0.16), rgba(15,23,42,0.24)); border-color: rgba(148,163,184,0.12); }
+        .eh-today-eyebrow { background: rgba(255,255,255,0.72) !important; width: max-content; color: rgb(var(--eh-accent-rgb)) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.72); }
+        .dark .eh-today-eyebrow { background: rgba(15,23,42,0.58) !important; }
+        .eh-today-title { font-size: clamp(2rem, 4.6vw, 3.35rem) !important; line-height: 0.98 !important; max-width: 10.5em !important; letter-spacing: -0.065em !important; }
+        .eh-today-subtitle { max-width: 34rem !important; color: rgb(var(--eh-text-soft)) !important; }
+        .eh-today-actions { margin-top: 1.25rem !important; }
+        .eh-today-action { border-radius: 1.1rem !important; min-height: 2.75rem !important; padding: 0 1rem !important; background: rgba(255,255,255,0.74) !important; border-color: rgba(226,232,240,0.74) !important; }
+        .eh-today-action.primary { background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb))) !important; border-color: transparent !important; }
+        .dark .eh-today-action { background: rgba(15,23,42,0.58) !important; border-color: rgba(51,65,85,0.72) !important; }
+        .eh-today-stats { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+        .eh-today-stat {
+            min-height: 5.8rem !important;
+            border-radius: 1.45rem !important;
+            background: rgba(255,255,255,0.72) !important;
+            border: 1px solid rgba(255,255,255,0.70) !important;
+        }
+        .dark .eh-today-stat { background: rgba(15,23,42,0.52) !important; border-color: rgba(148,163,184,0.13) !important; }
+        .eh-today-stat .value { font-size: 1.9rem !important; }
+        .eh-today-progress { min-height: 6rem !important; }
+
+        /* Global cards, forms, list */
+        .glass-card,
+        .eh-add-form,
+        .eh-lesson-card,
+        .settings-page-stable section,
+        .task-overdue,
+        .task-today,
+        .task-soon,
+        .task-safe,
+        .task-done {
+            box-shadow: var(--eh-shadow-calm) !important;
+        }
+        .eh-add-form {
+            border-radius: 2rem !important;
+            background: rgba(255,255,255,0.78) !important;
+            border: 1px solid rgba(255,255,255,0.72) !important;
+            padding: clamp(1rem, 2.4vw, 1.35rem) !important;
+        }
+        .dark .eh-add-form { background: rgba(8,13,25,0.78) !important; border-color: rgba(148,163,184,0.14) !important; }
+        .task-overdue,
+        .task-today,
+        .task-soon,
+        .task-safe,
+        .task-done {
+            border-radius: 1.45rem !important;
+            background: rgba(255,255,255,0.78) !important;
+            border-top: 1px solid rgba(255,255,255,0.72) !important;
+            border-right: 1px solid rgba(255,255,255,0.72) !important;
+            border-bottom: 1px solid rgba(255,255,255,0.72) !important;
+        }
+        .dark .task-overdue,
+        .dark .task-today,
+        .dark .task-soon,
+        .dark .task-safe,
+        .dark .task-done { background: rgba(8,13,25,0.76) !important; border-color: rgba(148,163,184,0.14) !important; }
+        .task-overdue:hover,
+        .task-today:hover,
+        .task-soon:hover,
+        .task-safe:hover,
+        .task-done:hover { box-shadow: var(--eh-shadow-lift) !important; }
+
+        /* Settings Studio */
+        .settings-page-stable.eh-settings-studio {
+            width: min(1120px, calc(100vw - 1.5rem)) !important;
+            max-width: 1120px !important;
+            display: grid;
+            grid-template-columns: minmax(280px, 0.618fr) minmax(0, 1fr);
+            gap: clamp(1rem, 2.4vw, 1.35rem);
+            align-items: start;
+        }
+        .eh-settings-side {
+            position: sticky;
+            top: calc(1rem + env(safe-area-inset-top, 0px));
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .eh-settings-profile-card,
+        .eh-studio-card,
+        .eh-settings-header-strip,
+        .eh-studio-quick {
+            background: rgba(255,255,255,0.78);
+            border: 1px solid rgba(255,255,255,0.72);
+            box-shadow: var(--eh-shadow-calm);
+            backdrop-filter: blur(26px) saturate(170%);
+            -webkit-backdrop-filter: blur(26px) saturate(170%);
+        }
+        .dark .eh-settings-profile-card,
+        .dark .eh-studio-card,
+        .dark .eh-settings-header-strip,
+        .dark .eh-studio-quick { background: rgba(8,13,25,0.78); border-color: rgba(148,163,184,0.14); }
+        .eh-settings-profile-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 2.15rem;
+            padding: 1.15rem;
+        }
+        .eh-settings-profile-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 18rem 12rem at 20% 0%, rgb(var(--eh-accent-rgb) / 0.16), transparent 66%);
+            pointer-events: none;
+        }
+        .eh-settings-avatar {
+            position: relative;
+            z-index: 1;
+            width: 4.7rem;
+            height: 4.7rem;
+            border-radius: 1.55rem;
+            display: grid;
+            place-items: center;
+            color: white;
+            background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb)));
+            font-size: 1.8rem;
+            font-weight: 950;
+            box-shadow: 0 18px 44px -24px rgb(var(--eh-accent-rgb));
+        }
+        .eh-settings-profile-copy { position: relative; z-index: 1; margin-top: 1rem; }
+        .eh-settings-kicker { display: inline-flex; padding: 0.35rem 0.65rem; border-radius: 999px; background: rgb(var(--eh-accent-rgb) / 0.10); color: rgb(var(--eh-accent-rgb)); font-size: 0.65rem; font-weight: 950; letter-spacing: 0.06em; }
+        .eh-settings-profile-copy h2 { margin-top: 0.7rem; font-size: clamp(1.55rem, 4vw, 2.2rem); line-height: 1; letter-spacing: -0.055em; font-weight: 950; color: rgb(var(--eh-text-strong)); }
+        .eh-settings-profile-copy p { margin-top: 0.45rem; font-size: 0.78rem; line-height: 1.5; font-weight: 750; color: rgb(var(--eh-text-soft)); word-break: break-all; }
+        .eh-settings-profile-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-top: 1rem; }
+        .eh-settings-profile-grid div { min-height: 4.15rem; border-radius: 1.15rem; background: rgba(255,255,255,0.58); border: 1px solid rgba(255,255,255,0.58); padding: 0.78rem; }
+        .dark .eh-settings-profile-grid div { background: rgba(15,23,42,0.46); border-color: rgba(148,163,184,0.12); }
+        .eh-settings-profile-grid span { display: block; color: rgb(var(--eh-text-soft)); font-size: 0.64rem; font-weight: 900; letter-spacing: 0.07em; }
+        .eh-settings-profile-grid strong { display: block; margin-top: 0.35rem; color: rgb(var(--eh-text-strong)); font-size: 0.88rem; font-weight: 950; }
+        .eh-settings-side-actions { display: grid; grid-template-columns: 1fr; gap: 0.65rem; }
+        .eh-studio-quick { min-height: 4.65rem; border-radius: 1.35rem; padding: 0.88rem; text-align: left; display: grid; grid-template-columns: auto 1fr; column-gap: 0.7rem; align-items: center; transition: transform .18s ease, box-shadow .18s ease; }
+        .eh-studio-quick:hover { transform: translateY(-1px); box-shadow: var(--eh-shadow-lift); }
+        .eh-studio-quick span { grid-row: span 2; width: 2.5rem; height: 2.5rem; border-radius: 1rem; display: grid; place-items: center; }
+        .eh-studio-quick strong { color: rgb(var(--eh-text-strong)); font-size: 0.88rem; font-weight: 950; }
+        .eh-studio-quick small { color: rgb(var(--eh-text-soft)); font-size: 0.7rem; font-weight: 760; }
+        .eh-studio-quick.amber span { background: rgba(245,158,11,0.12); color: #d97706; }
+        .eh-studio-quick.emerald span { background: rgba(16,185,129,0.12); color: #059669; }
+        .eh-studio-quick.indigo span { background: rgb(var(--eh-accent-rgb) / 0.12); color: rgb(var(--eh-accent-rgb)); }
+        .eh-studio-quick.red span { background: rgba(239,68,68,0.12); color: #dc2626; }
+        .eh-settings-main { display: flex; flex-direction: column; gap: 0.9rem; min-width: 0; }
+        .eh-settings-header-strip { border-radius: 1.85rem; padding: clamp(1rem, 2.4vw, 1.3rem); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .eh-settings-header-strip span { color: rgb(var(--eh-accent-rgb)); font-size: 0.68rem; font-weight: 950; letter-spacing: 0.08em; text-transform: uppercase; }
+        .eh-settings-header-strip h2 { margin-top: 0.35rem; color: rgb(var(--eh-text-strong)); font-size: clamp(1.5rem, 3.5vw, 2.15rem); line-height: 1.02; font-weight: 950; letter-spacing: -0.055em; }
+        .eh-settings-header-strip p { margin-top: 0.45rem; max-width: 38rem; color: rgb(var(--eh-text-soft)); font-size: 0.84rem; line-height: 1.6; font-weight: 760; }
+        .eh-settings-header-strip button { min-height: 2.75rem; border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.45rem; padding: 0 1rem; background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb))); color: white; font-size: 0.78rem; font-weight: 950; box-shadow: 0 18px 44px -26px rgb(var(--eh-accent-rgb)); }
+        .eh-studio-card { border-radius: 1.85rem; overflow: hidden; }
+        .eh-studio-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.05rem 1.1rem; border-bottom: 1px solid rgb(var(--eh-line-soft) / 0.50); }
+        .eh-studio-card-title-wrap { display: flex; align-items: flex-start; gap: 0.78rem; min-width: 0; }
+        .eh-studio-card-icon { width: 2.65rem; height: 2.65rem; border-radius: 1rem; display: grid; place-items: center; color: rgb(var(--eh-accent-rgb)); background: rgb(var(--eh-accent-rgb) / 0.11); flex-shrink: 0; }
+        .eh-studio-card h3 { color: rgb(var(--eh-text-strong)); font-size: 1.02rem; font-weight: 950; letter-spacing: -0.025em; }
+        .eh-studio-card p { margin-top: 0.25rem; color: rgb(var(--eh-text-soft)); font-size: 0.78rem; line-height: 1.52; font-weight: 740; }
+        .eh-studio-card-body { padding: 1.1rem; }
+        .eh-settings-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 1.9rem; border-radius: 999px; padding: 0 0.72rem; background: rgb(var(--eh-accent-rgb) / 0.10); color: rgb(var(--eh-accent-rgb)); font-size: 0.68rem; font-weight: 950; white-space: nowrap; }
+        .eh-theme-rack { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 0.55rem; }
+        .eh-theme-chip { min-height: 4.1rem; border-radius: 1.15rem; border: 1px solid rgb(var(--eh-line-soft) / 0.52); background: rgba(248,250,252,0.62); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.45rem; transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+        .dark .eh-theme-chip { background: rgba(15,23,42,0.46); }
+        .eh-theme-chip.active { background: rgb(var(--eh-accent-rgb) / 0.10); border-color: rgb(var(--eh-accent-rgb) / 0.26); transform: translateY(-1px); }
+        .eh-theme-dot { width: 1.75rem; height: 1.75rem; border-radius: 0.72rem; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35); }
+        .eh-theme-chip strong { font-size: 0.68rem; font-weight: 950; color: rgb(var(--eh-text-soft)); }
+        .eh-theme-chip.active strong { color: rgb(var(--eh-accent-rgb)); }
+        .eh-mode-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 0.85rem; }
+        .eh-mode-pair button { border-radius: 1.2rem; min-height: 4.2rem; padding: 0.82rem; display: flex; align-items: center; gap: 0.72rem; text-align: left; background: rgba(248,250,252,0.60); border: 1px solid rgb(var(--eh-line-soft) / 0.52); color: rgb(var(--eh-text-soft)); }
+        .dark .eh-mode-pair button { background: rgba(15,23,42,0.46); }
+        .eh-mode-pair button.active { background: rgb(var(--eh-accent-rgb) / 0.10); border-color: rgb(var(--eh-accent-rgb) / 0.25); color: rgb(var(--eh-accent-rgb)); }
+        .eh-mode-pair strong { display: block; font-size: 0.9rem; font-weight: 950; color: rgb(var(--eh-text-strong)); }
+        .eh-mode-pair small { display: block; margin-top: 0.15rem; font-size: 0.7rem; font-weight: 750; color: rgb(var(--eh-text-soft)); }
+        .eh-layout-choice-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; }
+        .eh-layout-choice { min-height: 8.2rem; border-radius: 1.25rem; padding: 0.95rem; text-align: left; display: flex; flex-direction: column; align-items: flex-start; background: rgba(248,250,252,0.60); border: 1px solid rgb(var(--eh-line-soft) / 0.52); transition: transform .18s ease, background .18s ease; }
+        .dark .eh-layout-choice { background: rgba(15,23,42,0.46); }
+        .eh-layout-choice span { width: 2.65rem; height: 2.65rem; border-radius: 1rem; display: grid; place-items: center; color: rgb(var(--eh-text-soft)); background: rgba(255,255,255,0.60); border: 1px solid rgba(255,255,255,0.44); }
+        .dark .eh-layout-choice span { background: rgba(2,6,23,0.36); border-color: rgba(148,163,184,0.10); }
+        .eh-layout-choice strong { margin-top: 0.7rem; color: rgb(var(--eh-text-strong)); font-size: 0.92rem; font-weight: 950; }
+        .eh-layout-choice small { margin-top: 0.25rem; color: rgb(var(--eh-text-soft)); font-size: 0.7rem; line-height: 1.45; font-weight: 740; }
+        .eh-layout-choice.active { background: rgb(var(--eh-accent-rgb) / 0.10); border-color: rgb(var(--eh-accent-rgb) / 0.28); transform: translateY(-1px); }
+        .eh-layout-choice.active span { color: white; background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb))); }
+        .eh-settings-golden-row { display: grid; grid-template-columns: minmax(0, 1.618fr) minmax(260px, 1fr); gap: 0.9rem; align-items: start; }
+        .eh-studio-switch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.62rem; }
+        .eh-studio-switch-grid.compact { grid-template-columns: 1fr; }
+        .eh-studio-switch-row { min-height: 4.3rem; border-radius: 1.15rem; padding: 0.78rem; display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; text-align: left; background: rgba(248,250,252,0.62); border: 1px solid rgb(var(--eh-line-soft) / 0.52); transition: transform .18s ease, background .18s ease, border-color .18s ease; }
+        .dark .eh-studio-switch-row { background: rgba(15,23,42,0.46); }
+        .eh-studio-switch-row:hover { transform: translateY(-1px); }
+        .eh-studio-switch-row.is-on { background: rgb(var(--eh-accent-rgb) / 0.09); border-color: rgb(var(--eh-accent-rgb) / 0.22); }
+        .eh-studio-switch-copy { display: flex; align-items: center; gap: 0.7rem; min-width: 0; }
+        .eh-studio-mini-icon { width: 2.45rem; height: 2.45rem; border-radius: 0.95rem; display: grid; place-items: center; flex-shrink: 0; color: rgb(var(--eh-text-soft)); background: rgba(255,255,255,0.58); border: 1px solid rgba(255,255,255,0.42); }
+        .dark .eh-studio-mini-icon { background: rgba(2,6,23,0.34); border-color: rgba(148,163,184,0.10); }
+        .eh-studio-switch-row.is-on .eh-studio-mini-icon { color: white; background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb))); }
+        .eh-studio-switch-copy strong { display: block; color: rgb(var(--eh-text-strong)); font-size: 0.82rem; font-weight: 950; }
+        .eh-studio-switch-copy small { display: block; margin-top: 0.15rem; color: rgb(var(--eh-text-soft)); font-size: 0.68rem; line-height: 1.4; font-weight: 740; }
+        .eh-studio-switch { width: 2.65rem; height: 1.55rem; border-radius: 999px; flex-shrink: 0; position: relative; background: #cbd5e1; transition: background .18s ease; }
+        .dark .eh-studio-switch { background: #334155; }
+        .eh-studio-switch i { position: absolute; top: 0.19rem; left: 0.2rem; width: 1.17rem; height: 1.17rem; border-radius: 999px; background: white; box-shadow: 0 4px 12px rgba(15,23,42,0.22); transition: transform .18s ease; }
+        .eh-studio-switch-row.is-on .eh-studio-switch { background: rgb(var(--eh-accent-rgb)); }
+        .eh-studio-switch-row.is-on .eh-studio-switch i { transform: translateX(1.08rem); }
+
+        @media (max-width: 980px) {
+            .settings-page-stable.eh-settings-studio { grid-template-columns: 1fr; }
+            .eh-settings-side { position: static; display: grid; grid-template-columns: 1fr; }
+            .eh-settings-side-actions { grid-template-columns: repeat(2, minmax(0,1fr)); }
+            .eh-settings-golden-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 760px) {
+            .eh-content,
+            .eh-page-panel > .max-w-3xl,
+            .eh-today-home,
+            .eh-topbar,
+            .settings-page-stable.eh-settings-studio { width: min(100%, calc(100vw - 1rem)) !important; }
+            .eh-today-board { border-radius: 1.65rem !important; }
+            .eh-today-board-grid { grid-template-columns: 1fr !important; padding: 0.8rem !important; }
+            .eh-today-copy { min-height: auto; border-radius: 1.35rem; }
+            .eh-today-title { font-size: 2rem !important; }
+            .eh-today-stats { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+            .eh-settings-profile-card,
+            .eh-studio-card,
+            .eh-settings-header-strip { border-radius: 1.45rem; }
+            .eh-settings-header-strip { flex-direction: column; align-items: stretch; }
+            .eh-theme-rack { grid-template-columns: repeat(4, minmax(0,1fr)); }
+            .eh-mode-pair,
+            .eh-layout-choice-grid,
+            .eh-studio-switch-grid,
+            .eh-settings-side-actions { grid-template-columns: 1fr; }
+            .eh-layout-choice { min-height: auto; }
+            .eh-studio-switch-row { min-height: 4.1rem; }
+        }
+        @media (max-width: 420px) {
+            .eh-theme-rack { grid-template-columns: repeat(2, minmax(0,1fr)); }
+            .eh-settings-profile-grid { grid-template-columns: 1fr 1fr; }
+            .eh-today-stats { grid-template-columns: 1fr !important; }
+        }
+
 </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -1032,7 +1374,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.05-layout-refresh',
+                version: 'v1.9.06-golden-interface-rebuild',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -1131,11 +1473,11 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.9.05-layout-refresh',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.9.06-golden-interface-rebuild',
             title: '電子手冊已更新',
             summary: [
                 '主頁已取消原有今天動態框，改為全新 Today Hub，畫面更乾淨。',
-                '全站背景、卡片、表單、設定頁與底部導航已重新打磨，更適合 iPad 與手機。',
+                '全站介面已按黃金比例重新整理，主頁、設定頁、卡片與背景更乾淨、更像真正 App。',
                 '保留原有登入、功課、時間表、班級廣播、通知、設定、管理後台和廣告設定。'
             ].join('\n'),
             guide: [
@@ -1660,7 +2002,7 @@
                                     <div>
                                         <label className="text-[11px] font-black text-slate-400 dark:text-slate-500 ml-1 uppercase tracking-wider">Email</label>
                                         <div className="relative mt-1.5">
-                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400"><Icon name="mail" className="w-4.5 h-4.5" /></div>
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400"><Icon name="mail" className="w-4 h-4" /></div>
                                             <input type="email"
                                                 className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 focus:ring-4 focus:ring-indigo-500/12 focus:border-indigo-500 transition-all font-semibold text-sm dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600"
                                                 placeholder="name@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
@@ -1673,7 +2015,7 @@
                                                 <button type="button" onClick={() => setIsResetMode(true)} className="text-[11px] font-black text-indigo-500 dark:text-indigo-400 hover:opacity-75 transition-opacity">忘記密碼？</button>
                                             </div>
                                             <div className="relative">
-                                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400"><Icon name="lock" className="w-4.5 h-4.5" /></div>
+                                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400"><Icon name="lock" className="w-4 h-4" /></div>
                                                 <input type="password"
                                                     className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 focus:ring-4 focus:ring-indigo-500/12 focus:border-indigo-500 transition-all font-semibold text-sm dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600"
                                                     placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
@@ -1702,7 +2044,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-200 dark:text-slate-800 select-none">v1.9.05-layout-refresh</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-200 dark:text-slate-800 select-none">v1.9.06-golden-interface-rebuild</div>
                             </div>
                         </div>
                     </div>
@@ -3593,186 +3935,164 @@
             const displayName = userProfile?.displayName || user?.displayName || '學生';
             const email = user?.email || userProfile?.email || '';
             const initial = String(displayName || email || 'E').trim().charAt(0).toUpperCase();
+            const themeEntries = Object.entries(THEME_CONFIG);
+            const activeTheme = THEME_CONFIG[themeColor] || THEME_CONFIG.indigo;
             const layoutOptions = [
-                { value: 'normal', label: '完整模式', desc: '顯示主頁卡片、時間表、輸入欄同任務列表', icon: 'layout-dashboard' },
-                { value: 'minimal', label: '極簡模式', desc: '只保留重要卡片同任務列表，主頁更乾淨', icon: 'minimize-2' },
-                { value: 'custom', label: '自定義', desc: '自己決定主頁每個區塊是否顯示', icon: 'sliders-horizontal' }
+                { value: 'normal', label: '標準', desc: '保留完整主頁、快速新增、課堂提示和任務列表。', icon: 'layout-dashboard' },
+                { value: 'minimal', label: '極簡', desc: '減少主頁資訊量，適合只想快速查看待辦。', icon: 'minimize-2' },
+                { value: 'custom', label: '自訂', desc: '按自己習慣逐項開關主頁區塊。', icon: 'sliders-horizontal' }
             ];
             const customBlocks = [
-                { key: 'cards', label: 'Today Hub', desc: '全新今日面板，包含今日、明日、測驗和完成進度', icon: 'panel-top' },
-                { key: 'timetable', label: '即時課堂', desc: '顯示目前課節、倒數及下一節', icon: 'calendar-clock' },
-                { key: 'input', label: '新增功課欄', desc: '主頁直接新增功課或測驗', icon: 'square-pen' },
-                { key: 'list', label: '任務列表', desc: '顯示個人手冊功課列表', icon: 'list-checks' }
+                { key: 'cards', label: 'Today Studio', desc: '黃金比例今日面板，集中今日、測驗、明日與完成進度。', icon: 'panel-top' },
+                { key: 'timetable', label: '即時課堂', desc: '顯示目前課節、倒數與下一節。', icon: 'calendar-clock' },
+                { key: 'input', label: '新增功課欄', desc: '主頁直接新增功課或測驗。', icon: 'square-pen' },
+                { key: 'list', label: '任務列表', desc: '顯示個人手冊功課列表。', icon: 'list-checks' }
             ];
             const advancedOptions = [
-                { key: 'largeText', label: '大字體模式', desc: 'iPad 同手機閱讀更舒服，適合長時間使用', icon: 'text' },
-                { key: 'reduceMotion', label: '減少動畫', desc: '降低過場動畫，頁面操作更穩定', icon: 'wind' },
-                { key: 'cleanGlass', label: '清晰玻璃模式', desc: '降低磨砂透明度，文字更清楚', icon: 'glass-water' },
-                { key: 'comfortSpacing', label: '舒適間距', desc: '設定卡片與文字呼吸感更強', icon: 'move-horizontal' },
-                { key: 'smartHints', label: '智能提示', desc: '保留過期、時間表等使用提示', icon: 'sparkles' },
-                { key: 'focusFirst', label: '專注優先', desc: '主頁更重視今日任務與待辦事項', icon: 'target' }
+                { key: 'largeText', label: '大字體模式', desc: 'iPad 同手機閱讀更舒服。', icon: 'text' },
+                { key: 'reduceMotion', label: '減少動畫', desc: '降低過場動畫，操作更穩定。', icon: 'wind' },
+                { key: 'cleanGlass', label: '清晰玻璃模式', desc: '降低磨砂透明，文字更清楚。', icon: 'glass-water' },
+                { key: 'comfortSpacing', label: '舒適間距', desc: '卡片和文字呼吸感更強。', icon: 'move-horizontal' },
+                { key: 'smartHints', label: '智能提示', desc: '保留過期、時間表等使用提示。', icon: 'sparkles' },
+                { key: 'focusFirst', label: '專注優先', desc: '主頁更重視今日任務與待辦。', icon: 'target' }
             ];
             const quickActionOptions = [
-                { key: 'showClassShortcut', label: '班級廣播快捷', desc: '在設定頁快速查看班級廣播', icon: 'school-2' },
-                { key: 'showNotificationShortcut', label: '通知快捷', desc: '在設定頁快速打開通知中心', icon: 'bell' },
-                { key: 'showSubjectShortcut', label: '科目快捷', desc: '方便快速進入科目管理', icon: 'book-marked' },
-                { key: 'showAccountShortcut', label: '帳號操作', desc: '顯示登出與帳號相關操作', icon: 'user-cog' }
+                { key: 'showClassShortcut', label: '班級廣播快捷', desc: '在設定頁快速查看班級廣播。', icon: 'school-2' },
+                { key: 'showNotificationShortcut', label: '通知快捷', desc: '快速打開通知中心。', icon: 'bell' },
+                { key: 'showSubjectShortcut', label: '科目快捷', desc: '快速進入科目管理。', icon: 'book-marked' },
+                { key: 'showAccountShortcut', label: '帳號操作', desc: '顯示登出與帳號相關操作。', icon: 'user-cog' }
             ];
-            const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout[key] });
+            const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout?.[key] });
             const handleAdvancedToggle = (key) => setAdvancedPrefs({ ...advancedPrefs, [key]: !advancedPrefs?.[key] });
-            const themeEntries = Object.entries(THEME_CONFIG);
+            const enabledCustomCount = customBlocks.filter(block => customLayout?.[block.key] !== false).length;
+            const enabledAdvancedCount = advancedOptions.filter(opt => advancedPrefs?.[opt.key] === true).length;
+            const enabledQuickCount = quickActionOptions.filter(opt => advancedPrefs?.[opt.key] !== false).length;
 
-            const SettingSection = ({ title, desc, icon, children, right }) => (
-                <section className="eh-settings-section rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
-                    <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
-                        <div className="flex items-start gap-3 min-w-0">
-                            <div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name={icon} className="w-5 h-5" /></div>
-                            <div className="min-w-0">
-                                <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white">{title}</h3>
-                                <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{desc}</p>
+            const StudioCard = ({ title, desc, icon, children, className = '', right }) => (
+                <section className={`eh-studio-card ${className}`}>
+                    <div className="eh-studio-card-head">
+                        <div className="eh-studio-card-title-wrap">
+                            <div className="eh-studio-card-icon"><Icon name={icon} className="w-4 h-4" /></div>
+                            <div>
+                                <h3>{title}</h3>
+                                <p>{desc}</p>
                             </div>
                         </div>
                         {right}
                     </div>
-                    <div className="p-5 sm:p-6">{children}</div>
+                    <div className="eh-studio-card-body">{children}</div>
                 </section>
             );
 
-            return (
-                <div className="settings-page-stable eh-settings-modern max-w-5xl mx-auto pb-10 space-y-5 sm:space-y-6">
-                    <div className="eh-settings-hero relative overflow-hidden rounded-[2.25rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
-                        <div className="absolute -top-20 -right-16 w-56 h-56 rounded-full bg-cyan-300/20 blur-3xl"></div>
-                        <div className="absolute bottom-0 left-16 w-60 h-32 rounded-full bg-violet-300/20 blur-3xl"></div>
-                        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 items-end">
-                            <div className="flex items-start gap-4 min-w-0">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
-                                <div className="min-w-0 pt-1">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.9.05
-                                    </div>
-                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
-                                    <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">廣播功課</div>
-                                    <div className="text-sm font-black mt-1">登入補領功課</div>
-                                </div>
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">通知</div>
-                                    <div className="text-sm font-black mt-1">{unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '全部已讀'}</div>
-                                </div>
-                            </div>
-                        </div>
+            const SwitchRow = ({ icon, label, desc, enabled, onClick }) => (
+                <button type="button" onClick={onClick} className={`eh-studio-switch-row ${enabled ? 'is-on' : 'is-off'}`}>
+                    <div className="eh-studio-switch-copy">
+                        <span className="eh-studio-mini-icon"><Icon name={icon} className="w-4 h-4" /></span>
+                        <span>
+                            <strong>{label}</strong>
+                            <small>{desc}</small>
+                        </span>
                     </div>
+                    <span className="eh-studio-switch" aria-hidden="true"><i></i></span>
+                </button>
+            );
 
-                    <SettingSection title="外觀個人化" desc="調整主題色、深色模式同整體介面密度，令電子手冊更貼合你嘅使用習慣。" icon="palette" right={<button type="button" onClick={onOpenAppearance} className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-700">進階外觀</button>}>
-                        <div className="space-y-5">
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">主題顏色</div>
-                                <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
-                                    {themeEntries.map(([key, config]) => (
-                                        <button key={key} type="button" onClick={() => setThemeColor(key)} className={`rounded-[1.25rem] p-2 border transition-all active:scale-95 ${themeColor === key ? `${config.lightBg} ${config.border} shadow-md scale-[1.02]` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:scale-[1.02]'}`}>
-                                            <div className={`w-full h-10 rounded-xl bg-gradient-to-br ${config.gradient} mb-2`}></div>
-                                            <div className={`text-[11px] font-black ${themeColor === key ? config.text : 'text-slate-400'}`}>{config.name}</div>
-                                        </button>
-                                    ))}
-                                </div>
+            const QuickButton = ({ onClick, icon, label, desc, tone = 'neutral' }) => (
+                <button type="button" onClick={onClick} className={`eh-studio-quick ${tone}`}>
+                    <span><Icon name={icon} className="w-5 h-5" /></span>
+                    <strong>{label}</strong>
+                    <small>{desc}</small>
+                </button>
+            );
+
+            return (
+                <div className="settings-page-stable eh-settings-studio mx-auto pb-10">
+                    <aside className="eh-settings-side">
+                        <div className="eh-settings-profile-card">
+                            <div className="eh-settings-avatar">{initial}</div>
+                            <div className="eh-settings-profile-copy">
+                                <span className="eh-settings-kicker">設定中心 · v1.9.06</span>
+                                <h2>{displayName}</h2>
+                                <p>{email || '個人化你的電子手冊'}</p>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <button type="button" onClick={() => setIsDarkMode(false)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${!isDarkMode ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="sun" className="w-5 h-5" /><div><div className="font-black text-sm">淺色模式</div><div className="text-[11px] font-bold opacity-75">乾淨清爽</div></div></button>
-                                <button type="button" onClick={() => setIsDarkMode(true)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${isDarkMode ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="moon" className="w-5 h-5" /><div><div className="font-black text-sm">深色模式</div><div className="text-[11px] font-bold opacity-75">夜晚護眼</div></div></button>
+                            <div className="eh-settings-profile-grid">
+                                <div><span>主題</span><strong>{activeTheme.name}</strong></div>
+                                <div><span>模式</span><strong>{isDarkMode ? '深色' : '淺色'}</strong></div>
+                                <div><span>主頁</span><strong>{layoutMode === 'custom' ? '自訂' : layoutMode === 'minimal' ? '極簡' : '標準'}</strong></div>
+                                <div><span>通知</span><strong>{unreadNotificationCount > 0 ? `${unreadNotificationCount} 未讀` : '已清'}</strong></div>
                             </div>
                         </div>
-                    </SettingSection>
 
-                    <SettingSection title="主頁排版設計" desc="像真正 App 設定一樣，自行決定主頁要完整、極簡，還是逐項開關。" icon="layout-template">
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                {layoutOptions.map(opt => (
-                                    <button key={opt.value} type="button" onClick={() => setLayoutMode(opt.value)} className={`p-4 rounded-[1.5rem] border text-left transition-all active:scale-95 ${layoutMode === opt.value ? `${t.lightBg} ${t.border} ${t.text} shadow-md` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300 hover:border-slate-300'}`}>
-                                        <Icon name={opt.icon} className="w-5 h-5 mb-3" />
-                                        <div className="font-black text-sm">{opt.label}</div>
-                                        <div className="text-[11px] font-bold opacity-70 mt-1 leading-relaxed">{opt.desc}</div>
+                        <div className="eh-settings-side-actions">
+                            {advancedPrefs?.showNotificationShortcut !== false && <QuickButton onClick={onOpenNotifications} icon="bell" label="通知中心" desc="查看提醒與更新" tone="amber" />}
+                            {advancedPrefs?.showClassShortcut !== false && <QuickButton onClick={onGoClass} icon="school-2" label="班級廣播" desc="查看老師發放" tone="emerald" />}
+                            {advancedPrefs?.showSubjectShortcut !== false && <QuickButton onClick={onOpenSubjects} icon="book-marked" label="科目管理" desc="整理科目顏色" tone="indigo" />}
+                            {advancedPrefs?.showAccountShortcut !== false && <QuickButton onClick={onLogout} icon="log-out" label="登出帳號" desc="切換使用者" tone="red" />}
+                        </div>
+                    </aside>
+
+                    <main className="eh-settings-main">
+                        <div className="eh-settings-header-strip">
+                            <div>
+                                <span>Golden Interface</span>
+                                <h2>把介面調到你最順手</h2>
+                                <p>這一頁重新按 1.618 比例排版：左邊是帳號與快捷入口，右邊是主要設定，閱讀路線更自然。</p>
+                            </div>
+                            <button type="button" onClick={onOpenAppearance}><Icon name="wand-2" className="w-4 h-4" /> 進階外觀</button>
+                        </div>
+
+                        <StudioCard title="外觀與主題" desc="選擇顏色、深淺模式，讓背景和卡片更協調。" icon="palette" className="eh-studio-card-feature">
+                            <div className="eh-theme-rack">
+                                {themeEntries.map(([key, config]) => (
+                                    <button key={key} type="button" onClick={() => setThemeColor(key)} className={`eh-theme-chip ${themeColor === key ? 'active' : ''}`}>
+                                        <span className={`eh-theme-dot bg-gradient-to-br ${config.gradient}`}></span>
+                                        <strong>{config.name}</strong>
                                     </button>
                                 ))}
                             </div>
-                            <div className={`rounded-[1.75rem] border p-4 transition-all ${layoutMode === 'custom' ? 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50/60 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700 opacity-75'}`}>
-                                <div className="flex items-center justify-between gap-3 mb-3">
-                                    <div>
-                                        <div className="font-black text-sm text-slate-800 dark:text-white">自定義主頁區塊</div>
-                                        <div className="text-[11px] font-bold text-slate-400">選擇「自定義」後，以下開關會套用到主頁。</div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div className="eh-mode-pair">
+                                <button type="button" onClick={() => setIsDarkMode(false)} className={!isDarkMode ? 'active' : ''}><Icon name="sun" className="w-5 h-5" /><span><strong>淺色</strong><small>乾淨、明亮、適合白天</small></span></button>
+                                <button type="button" onClick={() => setIsDarkMode(true)} className={isDarkMode ? 'active' : ''}><Icon name="moon" className="w-5 h-5" /><span><strong>深色</strong><small>低亮度、適合夜晚</small></span></button>
+                            </div>
+                        </StudioCard>
+
+                        <StudioCard title="主頁架構" desc="選擇主頁資訊密度。標準、極簡、自訂三種模式會保留所有功能，只改顯示方式。" icon="layout-template" right={<span className="eh-settings-pill">{layoutMode === 'custom' ? `${enabledCustomCount}/${customBlocks.length}` : layoutMode === 'minimal' ? '極簡' : '標準'}</span>}>
+                            <div className="eh-layout-choice-grid">
+                                {layoutOptions.map(opt => (
+                                    <button key={opt.value} type="button" onClick={() => setLayoutMode(opt.value)} className={`eh-layout-choice ${layoutMode === opt.value ? 'active' : ''}`}>
+                                        <span><Icon name={opt.icon} className="w-5 h-5" /></span>
+                                        <strong>{opt.label}</strong>
+                                        <small>{opt.desc}</small>
+                                    </button>
+                                ))}
+                            </div>
+                            {layoutMode === 'custom' && (
+                                <div className="eh-studio-switch-grid mt-4">
                                     {customBlocks.map(block => (
-                                        <button key={block.key} type="button" onClick={() => { setLayoutMode('custom'); handleCustomToggle(block.key); }} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${customLayout[block.key] ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                                            <div className="flex items-start gap-3 min-w-0">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${customLayout[block.key] ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={block.icon} className="w-4 h-4" /></div>
-                                                <div><div className="font-black text-sm text-slate-800 dark:text-white">{block.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{block.desc}</div></div>
-                                            </div>
-                                            <div className={`w-12 h-7 rounded-full relative shrink-0 transition-all ${customLayout[block.key] ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow transition-all ${customLayout[block.key] ? 'left-[24px]' : 'left-[4px]'}`}></span></div>
-                                        </button>
+                                        <SwitchRow key={block.key} icon={block.icon} label={block.label} desc={block.desc} enabled={customLayout?.[block.key] !== false} onClick={() => handleCustomToggle(block.key)} />
                                     ))}
                                 </div>
-                            </div>
-                        </div>
-                    </SettingSection>
+                            )}
+                        </StudioCard>
 
-                    <SettingSection title="高級體驗自定義" desc="微調動畫、文字、玻璃效果同快捷入口，令 iPad / 手機使用更貼近你習慣。" icon="sliders-horizontal">
-                        <div className="space-y-5">
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">體驗開關</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {advancedOptions.map(opt => {
-                                        const actualEnabled = opt.key === 'smartHints' ? advancedPrefs?.smartHints !== false : advancedPrefs?.[opt.key] === true;
-                                        return (
-                                            <button key={opt.key} type="button" onClick={() => handleAdvancedToggle(opt.key)} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${actualEnabled ? `${t.lightBg} ${t.border}` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                                                <div className="flex items-start gap-3 min-w-0">
-                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${actualEnabled ? `bg-gradient-to-br ${t.gradient} text-white` : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={opt.icon} className="w-4 h-4" /></div>
-                                                    <div><div className="font-black text-sm text-slate-800 dark:text-white">{opt.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{opt.desc}</div></div>
-                                                </div>
-                                                <div className={`w-11 h-6 rounded-full relative shrink-0 transition-all ${actualEnabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white shadow transition-all ${actualEnabled ? 'left-[21px]' : 'left-[3px]'}`}></span></div>
-                                            </button>
-                                        );
-                                    })}
+                        <div className="eh-settings-golden-row">
+                            <StudioCard title="閱讀與動效" desc="調整字體、動畫、玻璃效果和間距。" icon="sliders-horizontal" right={<span className="eh-settings-pill">{enabledAdvancedCount} 開啟</span>}>
+                                <div className="eh-studio-switch-grid">
+                                    {advancedOptions.map(opt => (
+                                        <SwitchRow key={opt.key} icon={opt.icon} label={opt.label} desc={opt.desc} enabled={advancedPrefs?.[opt.key] === true} onClick={() => handleAdvancedToggle(opt.key)} />
+                                    ))}
                                 </div>
-                            </div>
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">快捷入口顯示</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {quickActionOptions.map(opt => {
-                                        const enabled = advancedPrefs?.[opt.key] !== false;
-                                        return (
-                                            <button key={opt.key} type="button" onClick={() => handleAdvancedToggle(opt.key)} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${enabled ? 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 opacity-75'}`}>
-                                                <div className="flex items-start gap-3 min-w-0">
-                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${enabled ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={opt.icon} className="w-4 h-4" /></div>
-                                                    <div><div className="font-black text-sm text-slate-800 dark:text-white">{opt.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{opt.desc}</div></div>
-                                                </div>
-                                                <div className={`w-11 h-6 rounded-full relative shrink-0 transition-all ${enabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white shadow transition-all ${enabled ? 'left-[21px]' : 'left-[3px]'}`}></span></div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        </div>
-                    </SettingSection>
+                            </StudioCard>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <SettingSection title="通知與提醒" desc="管理通知中心、未讀提醒同版本更新資訊。" icon="bell-ring" right={unreadNotificationCount > 0 ? <span className="px-2.5 py-1 rounded-full bg-red-500 text-white text-[10px] font-black">{unreadNotificationCount}</span> : null}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showNotificationShortcut !== false && <button type="button" onClick={onOpenNotifications} className="p-4 rounded-2xl bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="bell" className="w-5 h-5 text-orange-500 mb-2" /><div className="font-black text-sm text-orange-700 dark:text-orange-300">打開通知中心</div><div className="text-[11px] font-bold text-orange-600/70 dark:text-orange-200/70 mt-1">查看廣播、更新、過期功課</div></button>}
-                                {advancedPrefs?.showClassShortcut !== false && <button type="button" onClick={onGoClass} className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school-2" className="w-5 h-5 text-emerald-500 mb-2" /><div className="font-black text-sm text-emerald-700 dark:text-emerald-300">查看班級廣播</div><div className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-200/70 mt-1">查看老師發放的功課</div></button>}
-                            </div>
-                        </SettingSection>
-                        <SettingSection title="科目與帳號" desc="管理科目顏色、帳戶操作及登出。" icon="user-cog">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showSubjectShortcut !== false && <button type="button" onClick={onOpenSubjects} className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school" className="w-5 h-5 text-indigo-500 mb-2" /><div className="font-black text-sm text-indigo-700 dark:text-indigo-300">科目管理</div><div className="text-[11px] font-bold text-indigo-600/70 dark:text-indigo-200/70 mt-1">自訂科目、排序、顏色</div></button>}
-                                {advancedPrefs?.showAccountShortcut !== false && <button type="button" onClick={onLogout} className="p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="log-out" className="w-5 h-5 text-red-500 mb-2" /><div className="font-black text-sm text-red-700 dark:text-red-300">登出帳號</div><div className="text-[11px] font-bold text-red-600/70 dark:text-red-200/70 mt-1">切換或重新登入</div></button>}
-                            </div>
-                        </SettingSection>
-                    </div>
+                            <StudioCard title="快捷入口" desc="控制設定頁側邊快捷卡片。" icon="mouse-pointer-2" right={<span className="eh-settings-pill">{enabledQuickCount}/{quickActionOptions.length}</span>}>
+                                <div className="eh-studio-switch-grid compact">
+                                    {quickActionOptions.map(opt => (
+                                        <SwitchRow key={opt.key} icon={opt.icon} label={opt.label} desc={opt.desc} enabled={advancedPrefs?.[opt.key] !== false} onClick={() => handleAdvancedToggle(opt.key)} />
+                                    ))}
+                                </div>
+                            </StudioCard>
+                        </div>
+                    </main>
                 </div>
             );
         }
@@ -4797,9 +5117,9 @@ function App() {
                                 <div className="eh-today-board">
                                     <div className="eh-today-board-grid">
                                         <div className="eh-today-copy">
-                                            <div className="eh-today-eyebrow"><Icon name="sparkles" className="w-3.5 h-3.5" /> TODAY HUB</div>
-                                            <h2 className="eh-today-title">{counts.today > 0 ? `今日有 ${counts.today} 件要處理` : '今日暫時好清爽'}</h2>
-                                            <p className="eh-today-subtitle">我幫你將重點收埋成一塊乾淨面板：先睇今日，再睇明日同測驗；唔再用原本嗰排大動態卡。</p>
+                                            <div className="eh-today-eyebrow"><Icon name="sparkles" className="w-3.5 h-3.5" /> TODAY STUDIO</div>
+                                            <h2 className="eh-today-title">{counts.today > 0 ? `今日有 ${counts.today} 件要處理` : '今日狀態很乾淨'}</h2>
+                                            <p className="eh-today-subtitle">以黃金比例重新排版：左邊放重點行動，右邊放精簡數據，保持清楚、不擠迫。</p>
                                             <div className="eh-today-actions">
                                                 <button type="button" onClick={() => { const el = document.querySelector('.eh-add-form input'); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => { try { el.focus(); } catch(e) {} }, 280); } }} className="eh-today-action primary"><Icon name="plus" className="w-4 h-4" /> 新增紀錄</button>
                                                 <button type="button" onClick={() => openQuickView('today')} className="eh-today-action"><Icon name="list-checks" className="w-4 h-4" /> 今日</button>
@@ -4871,7 +5191,7 @@ function App() {
                                  /> ) : (
                                 
                                 <div className="max-w-3xl mx-auto pt-2">
-                                    {/* v1.9.05：原有今天動態卡片已取消，今日/明日/測驗/進度集中到上方 Today Hub。 */}
+                                    {/* v1.9.05：原有今天動態卡片已取消，今日/明日/測驗/進度集中到上方 Today Studio。 */}
 
                                     {viewMode === 'current' && isVisible('timetable') && <CurrentLessonWidget config={timetableConfig} t={t} onClick={() => setViewMode('timetable')} globalNow={globalNow} />}
 
@@ -5278,22 +5598,23 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v1.9.05-layout-refresh | based-on-v1.9.03 | full-display-upgrade | original-functions-preserved | database-logic-unchanged -->
-    <!-- ehandbook-build: v1.9.05-layout-refresh -->
+<!-- VERSION_CHECK: v1.9.06-golden-interface-rebuild | based-on-v1.9.03 | full-display-upgrade | original-functions-preserved | database-logic-unchanged -->
+    <!-- ehandbook-build: v1.9.06-golden-interface-rebuild -->
 </body>
 </html>
 
 <!-- ehandbook_v1.8.24_class_page_clean_update_notice: class page manual status removed; built-in update popup added. -->
 
-<!-- v1.9.05-layout-refresh: students auto-claim broadcast assignments on login; no class page manual join controls. -->
-<!-- v1.9.05-layout-refresh update-notes:
+<!-- v1.9.06-golden-interface-rebuild: students auto-claim broadcast assignments on login; no class page manual join controls. -->
+<!-- v1.9.06-golden-interface-rebuild update-notes:
 1. 完善全站顯示方式：主容器、頁面寬度、玻璃卡片、列表、設定頁、通知彈窗與底部導航的視覺層級。
 2. 加入 themeColor 對應 CSS 變數，背景與陰影會跟隨用戶主題色自然變化。
 3. 加入手機 / iPad safe-area、100dvh、16px input 防縮放與更穩定的底部 Dock 顯示。
 4. 保留 Firebase、Google/Email 登入、個人功課、已交功課、時間表、科目、班級廣播、通知中心、管理後台、更新彈窗等原有功能邏輯。
 -->
 
-<!-- v1.9.05-layout-refresh update-notes: master visual polish, focus overview, permanent action buttons, centered compact island, high-contrast toast, iPad/mobile safe display. No Firebase/database logic removed. -->
+<!-- v1.9.06-golden-interface-rebuild update-notes: master visual polish, focus overview, permanent action buttons, centered compact island, high-contrast toast, iPad/mobile safe display. No Firebase/database logic removed. -->
 
-<!-- VERSION_CHECK: v1.9.05-layout-refresh | based-on-v1.9.04-master-polish | today-dynamic-box-replaced | background-polished | settings-modernized | database-logic-unchanged | features-preserved -->
-<!-- v1.9.05-layout-refresh update-notes: removed the original today dynamic cards, added a new Today Hub, softened the full-site background, redesigned current lesson card, and upgraded settings layout without deleting Firebase/data features. -->
+<!-- VERSION_CHECK: v1.9.06-golden-interface-rebuild | based-on-v1.9.04-master-polish | today-dynamic-box-replaced | background-polished | settings-modernized | database-logic-unchanged | features-preserved -->
+<!-- v1.9.06-golden-interface-rebuild update-notes: removed the original today dynamic cards, added a new Today Hub, softened the full-site background, redesigned current lesson card, and upgraded settings layout without deleting Firebase/data features. -->
+<!-- VERSION_CHECK: v1.9.06-golden-interface-rebuild | based-on-v1.9.05-layout-refresh | golden-ratio-ui | settings-studio-rebuild | background-rebuilt | database-logic-unchanged | features-preserved -->
