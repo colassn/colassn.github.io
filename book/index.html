@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>收書管理系統 - 專業安全版</title>
+    <title>收書管理系統 - 專業穩定版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -16,9 +16,15 @@
             }
         }
     </script>
+    
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;600;700&display=swap');
@@ -35,29 +41,25 @@
 <body class="p-4 md:p-6 lg:p-8 h-screen flex flex-col">
 
     <div id="fallback-error" style="display: none; height: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-        <h2 style="color: #e11d48; font-size: 24px; margin-bottom: 10px;">⚠️ 系統載入失敗</h2>
-        <p style="color: #475569; margin-bottom: 20px;">請確保你不是在使用「無痕模式」，或嘗試轉用 Chrome 瀏覽器開啟。<br/>(瀏覽器可能封鎖了本機存取權限)</p>
+        <h2 style="color: #e11d48; font-size: 24px; margin-bottom: 10px;">⚠️ 系統載入發生錯誤</h2>
+        <p style="color: #475569; margin-bottom: 20px;">請確保網絡連線正常。如果你正在使用「無痕模式」，請轉用一般模式開啟。</p>
         <div id="error-log" style="background: #f1f5f9; padding: 15px; border-radius: 8px; color: #334155; max-width: 600px; text-align: left; font-size: 12px; font-family: monospace; word-break: break-all;"></div>
     </div>
 
     <div id="root" class="h-full"></div>
 
     <script>
-        // 捕捉任何致命錯誤並顯示在畫面上，避免白屏
         window.addEventListener('error', function(event) {
             document.getElementById('root').style.display = 'none';
             document.getElementById('fallback-error').style.display = 'flex';
-            document.getElementById('error-log').innerText = "錯誤詳情: " + event.message + "\n行數: " + event.lineno;
+            document.getElementById('error-log').innerText = "錯誤詳情: " + (event.message || "Script error.") + "\n(請檢查 Firebase 設定或使用 Chrome 瀏覽器)";
         });
     </script>
 
-    <script type="text/babel" data-type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, collection, onSnapshot, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+    <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
+        // Firebase 初始化 (Compat 版語法)
         const firebaseConfig = {
             apiKey: "AIzaSyC5AFCRymqpPuLpz7hOMcN5CZF7X7P8OVI",
             authDomain: "book-24526.firebaseapp.com",
@@ -67,12 +69,18 @@
             appId: "1:1088251457442:web:c93b01f90fabdfb4e6ccfb"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const auth = firebase.auth();
+        const db = firebase.firestore();
         const appId = 'book-recycling-manager';
 
-        // 預設書單
+        // 資料庫路徑參照 (修正版)
+        const getStudentsRef = () => db.collection('artifacts').doc(appId).collection('public').doc('data').collection('students');
+        const getCatalogRef = () => db.collection('artifacts').doc(appId).collection('config').doc('catalog');
+
         const DEFAULT_CATALOG = [
             { id: 'pkg1', title: "F.2 全套書", price: 400, isPackage: true },
             { id: 'pkg2', title: "F.3 全套書", price: 450, isPackage: true },
@@ -94,15 +102,12 @@
         const IconPlus = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
         const IconSettings = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>;
 
-        // 💡 解決崩潰核心：安全地讀取 LocalStorage
         const getSafeCollectorName = () => {
-            try { return localStorage.getItem("collectorName") || ""; } 
-            catch (e) { return ""; } // 如果瀏覽器封鎖，就傳回空字串，唔好崩潰
+            try { return localStorage.getItem("collectorName") || ""; } catch (e) { return ""; }
         };
 
         const setSafeCollectorName = (name) => {
-            try { localStorage.setItem("collectorName", name); } 
-            catch (e) { console.warn("LocalStorage is disabled by browser."); }
+            try { localStorage.setItem("collectorName", name); } catch (e) {}
         };
 
         function App() {
@@ -112,7 +117,6 @@
             const [catalog, setCatalog] = useState(DEFAULT_CATALOG); 
             const [loading, setLoading] = useState(true);
             
-            // 安全使用 LocalStorage
             const [collectorName, setCollectorName] = useState(getSafeCollectorName);
             
             const [search, setSearch] = useState("");
@@ -142,20 +146,15 @@
                 setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3500);
             };
 
-            // 安全寫入 LocalStorage
-            useEffect(() => {
-                setSafeCollectorName(collectorName);
-            }, [collectorName]);
+            useEffect(() => { setSafeCollectorName(collectorName); }, [collectorName]);
 
-            // 安全連線 Firebase
             useEffect(() => {
-                signInAnonymously(auth).catch((err) => {
-                    console.error(err);
-                    showToast("雲端連線失敗，請檢查網絡", "error");
+                auth.signInAnonymously().catch(err => {
+                    console.error("Auth Error:", err);
+                    showToast("身份驗證失敗", "error");
                 });
-                const unsub = onAuthStateChanged(auth, (usr) => { 
-                    setUser(usr); 
-                    setDbConnected(!!usr); 
+                const unsub = auth.onAuthStateChanged(usr => { 
+                    setUser(usr); setDbConnected(!!usr); 
                 });
                 return () => unsub();
             }, []);
@@ -163,31 +162,23 @@
             useEffect(() => {
                 if (!user) return;
                 
-                // 加入錯誤捕捉，防止無權限時崩潰
-                const unsubStudents = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'students'), 
-                    (snapshot) => {
-                        const list = [];
-                        snapshot.forEach((doc) => list.push({ docId: doc.id, ...doc.data() }));
-                        setStudents(list);
-                        if (list.length > 0 && !activeId) setActiveId(list[0].docId);
-                        setLoading(false);
-                    },
-                    (error) => {
-                        console.error("讀取學生失敗", error);
-                        setLoading(false);
-                    }
-                );
+                const unsubStudents = getStudentsRef().onSnapshot(snapshot => {
+                    const list = [];
+                    snapshot.forEach(doc => list.push({ docId: doc.id, ...doc.data() }));
+                    setStudents(list);
+                    if (list.length > 0 && !activeId) setActiveId(list[0].docId);
+                    setLoading(false);
+                }, err => {
+                    console.error("Fetch Students Error:", err);
+                    showToast("載入名單失敗", "error");
+                    setLoading(false);
+                });
                 
-                const unsubCatalog = onSnapshot(doc(db, 'artifacts', appId, 'public', 'config', 'catalog'), 
-                    (docSnap) => {
-                        if (docSnap.exists() && docSnap.data().items) {
-                            setCatalog(docSnap.data().items);
-                        }
-                    },
-                    (error) => {
-                        console.error("讀取書單失敗", error);
+                const unsubCatalog = getCatalogRef().onSnapshot(docSnap => {
+                    if (docSnap.exists && docSnap.data().items) {
+                        setCatalog(docSnap.data().items);
                     }
-                );
+                }, err => console.error("Fetch Catalog Error:", err));
 
                 return () => { unsubStudents(); unsubCatalog(); };
             }, [user, activeId]);
@@ -254,7 +245,7 @@
                 e.preventDefault();
                 if (!newStudent.name.trim()) return;
                 const newDocId = `student_${Date.now()}`;
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'students', newDocId), {
+                await getStudentsRef().doc(newDocId).set({
                     name: newStudent.name.trim(),
                     form: newStudent.form,
                     phone: newStudent.phone.trim() || "--",
@@ -268,8 +259,8 @@
             };
 
             const saveCatalogToDB = async (newCatalog) => {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'config', 'catalog'), { items: newCatalog }, { merge: true });
-                showToast("書單設定已同步至雲端");
+                await getCatalogRef().set({ items: newCatalog }, { merge: true });
+                showToast("書單設定已同步");
             };
 
             const handleAddCatalogItem = (e) => {
@@ -285,11 +276,10 @@
             const handleAddBook = async (title, priceStr) => {
                 if (!activeStudent || !title.trim()) return;
                 if (!collectorName.trim()) { 
-                    showToast("請先在右上角輸入你的經手人代號", "error"); 
+                    showToast("請先輸入經手人名稱", "error"); 
                     document.getElementById('collector-input').focus(); 
                     return; 
                 }
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId);
                 const newBook = {
                     id: `${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
                     title: title.trim(),
@@ -301,7 +291,7 @@
                     createdAt: new Date().toISOString()
                 };
                 try {
-                    await updateDoc(docRef, { books: [...(activeStudent.books || []), newBook] });
+                    await getStudentsRef().doc(activeStudent.docId).update({ books: [...(activeStudent.books || []), newBook] });
                     setCustomBookName("");
                 } catch (err) { showToast("寫入失敗", "error"); }
             };
@@ -311,12 +301,12 @@
             const handleToggleBookStatus = async (bookId) => {
                 if (!activeStudent) return;
                 const updatedBooks = activeStudent.books.map(b => b.id === bookId ? { ...b, status: b.status === 'accepted' ? 'rejected' : 'accepted', rejectReason: b.status === 'accepted' ? '退回' : '' } : b);
-                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId), { books: updatedBooks });
+                await getStudentsRef().doc(activeStudent.docId).update({ books: updatedBooks });
             };
 
             const handleDeleteBook = async (bookId) => {
                 if (!activeStudent) return;
-                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId), { books: activeStudent.books.filter(b => b.id !== bookId) });
+                await getStudentsRef().doc(activeStudent.docId).update({ books: activeStudent.books.filter(b => b.id !== bookId) });
             };
 
             const handleSaveBookEdits = async (bookId) => {
@@ -327,7 +317,7 @@
                     }
                     return b;
                 });
-                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'students', activeStudent.docId), { books: updatedBooks });
+                await getStudentsRef().doc(activeStudent.docId).update({ books: updatedBooks });
                 setEditingBookId(null);
             };
 
@@ -374,7 +364,7 @@
             };
 
             return (
-                <div class="max-w-[1440px] mx-auto w-full h-full flex flex-col font-sans relative animate-fade-in-up">
+                <div class="max-w-[1440px] mx-auto w-full h-full flex flex-col font-sans relative">
                     
                     {toast.show && (
                         <div class={`fixed top-6 right-6 z-50 px-5 py-3 rounded-lg shadow-floating flex items-center gap-3 text-sm font-medium text-white transition-opacity ${toast.type === 'error' ? 'bg-red-600' : 'bg-slate-900'}`}>
@@ -609,7 +599,7 @@
                                     {Object.entries(collectorStats).map(([cName, cData]) => (
                                         <div key={cName} class="border border-slate-200 rounded-xl overflow-hidden">
                                             <div class="bg-slate-50 px-4 py-3 flex justify-between items-center border-b border-slate-200">
-                                                <span class="font-semibold text-slate-900 flex items-center gap-2"><span class="w-6 h-6 rounded bg-brand-100 text-brand-700 flex justify-center items-center text-xs">{cName.charAt(0)}</span>{cName}</span>
+                                                <span class="font-semibold text-slate-900 flex items-center gap-2"><span class="w-6 h-6 rounded bg-brand-100 text-brand-700 flex justify-center items-center text-xs">{cName.charAt(0).toUpperCase()}</span>{cName}</span>
                                                 <div class="text-sm font-medium text-slate-600">共 {cData.count} 項 | <span class="text-slate-900 font-bold">${cData.total}</span></div>
                                             </div>
                                         </div>
