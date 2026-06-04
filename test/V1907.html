@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.9.06-golden-interface-rebuild：黃金比例介面重建、全站背景重塑、Today Studio、設定 Studio、卡片與表單節奏重排；保留所有原有功能與 Firebase 資料邏輯。 -->
+    <!-- 電子手冊 Pro v1.9.07-settings-focus-rebuild：重建設定頁、專注主頁任務工具列與搜尋篩選；保留所有原有功能與 Firebase 資料邏輯。 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -33,8 +33,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.9.06-golden-interface-rebuild">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.9.06-golden-interface-rebuild"; console.log("電子手冊 Pro v1.9.06-golden-interface-rebuild loaded");</script>
+    <meta name="ehandbook-version" content="v1.9.07-settings-focus-rebuild">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.9.07-settings-focus-rebuild"; console.log("電子手冊 Pro v1.9.06-golden-interface-rebuild loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -1280,6 +1280,216 @@
             .eh-today-stats { grid-template-columns: 1fr !important; }
         }
 
+
+        /* ── v1.9.07 SETTINGS + FOCUS LIST REBUILD ──────────────────────
+           本次更新：設定頁整個改成分頁式 App Settings；專注主頁任務搜尋 / 篩選 / 排序工具列重做。
+           只改顯示層與互動回饋；保留 Firebase、資料庫、登入、功課、時間表、班級、通知、後台、AdSense 功能。
+        */
+        @keyframes ehSoftRise { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes ehTapGlow { 0% { box-shadow: 0 0 0 0 rgb(var(--eh-accent-rgb) / .18); } 100% { box-shadow: 0 0 0 12px transparent; } }
+        @keyframes ehPanelSwap { from { opacity: 0; transform: translateX(10px) scale(.992); filter: blur(5px); } to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); } }
+
+        .eh-settings-reborn {
+            width: min(980px, calc(100vw - 1.25rem)) !important;
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+        }
+        .eh-settings-hero2,
+        .eh-settings-tabs2,
+        .eh-settings-panel2,
+        .eh-setting-tile,
+        .eh-setting-mode-card,
+        .eh-setting-action2 {
+            background: rgba(255,255,255,.78);
+            border: 1px solid rgba(255,255,255,.72);
+            box-shadow: var(--eh-shadow-calm);
+            backdrop-filter: blur(26px) saturate(170%);
+            -webkit-backdrop-filter: blur(26px) saturate(170%);
+        }
+        .dark .eh-settings-hero2,
+        .dark .eh-settings-tabs2,
+        .dark .eh-settings-panel2,
+        .dark .eh-setting-tile,
+        .dark .eh-setting-mode-card,
+        .dark .eh-setting-action2 {
+            background: rgba(8,13,25,.78);
+            border-color: rgba(148,163,184,.14);
+        }
+        .eh-settings-hero2 {
+            position: relative;
+            overflow: hidden;
+            border-radius: 2.1rem;
+            padding: clamp(1rem, 2.4vw, 1.35rem);
+            display: grid;
+            grid-template-columns: minmax(0, 1.618fr) minmax(220px, .8fr);
+            gap: 1rem;
+            align-items: stretch;
+            animation: ehSoftRise .38s cubic-bezier(.16,1,.3,1) both;
+        }
+        .eh-settings-hero2::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 26rem 16rem at 8% 0%, rgb(var(--eh-accent-rgb) / .16), transparent 68%),
+                radial-gradient(ellipse 22rem 14rem at 100% 20%, rgb(var(--eh-accent-2-rgb) / .11), transparent 64%);
+            pointer-events: none;
+        }
+        .eh-settings-identity2 { position: relative; z-index: 1; display: flex; align-items: center; gap: 1rem; min-width: 0; }
+        .eh-settings-avatar2 {
+            width: 4.5rem; height: 4.5rem; border-radius: 1.45rem; display: grid; place-items: center; flex-shrink: 0;
+            color: white; font-size: 1.75rem; font-weight: 950;
+            background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb)));
+            box-shadow: 0 18px 44px -24px rgb(var(--eh-accent-rgb));
+        }
+        .eh-settings-identity2 small { display: inline-flex; padding: .33rem .62rem; border-radius: 999px; background: rgb(var(--eh-accent-rgb) / .1); color: rgb(var(--eh-accent-rgb)); font-size: .64rem; font-weight: 950; letter-spacing: .06em; }
+        .eh-settings-identity2 h2 { margin-top: .55rem; color: rgb(var(--eh-text-strong)); font-size: clamp(1.5rem, 3.6vw, 2.25rem); line-height: 1; font-weight: 950; letter-spacing: -.06em; }
+        .eh-settings-identity2 p { margin-top: .34rem; max-width: 100%; color: rgb(var(--eh-text-soft)); font-size: .78rem; line-height: 1.45; font-weight: 760; word-break: break-all; }
+        .eh-settings-hero-stats2 { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: .62rem; }
+        .eh-settings-hero-stat2 { border-radius: 1.15rem; padding: .8rem; background: rgba(255,255,255,.56); border: 1px solid rgba(255,255,255,.56); }
+        .dark .eh-settings-hero-stat2 { background: rgba(15,23,42,.42); border-color: rgba(148,163,184,.12); }
+        .eh-settings-hero-stat2 span { display: block; font-size: .62rem; color: rgb(var(--eh-text-soft)); font-weight: 900; letter-spacing: .07em; }
+        .eh-settings-hero-stat2 strong { display: block; margin-top: .35rem; font-size: .9rem; color: rgb(var(--eh-text-strong)); font-weight: 950; }
+
+        .eh-settings-tabs2 {
+            border-radius: 1.45rem;
+            padding: .42rem;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0,1fr));
+            gap: .35rem;
+            animation: ehSoftRise .38s cubic-bezier(.16,1,.3,1) .04s both;
+        }
+        .eh-settings-tab2 {
+            min-height: 4.25rem;
+            border-radius: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .24rem;
+            color: rgb(var(--eh-text-soft));
+            font-weight: 950;
+            transition: transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+        }
+        .eh-settings-tab2 small { font-size: .62rem; font-weight: 850; opacity: .78; }
+        .eh-settings-tab2:active,
+        .eh-setting-tile:active,
+        .eh-setting-mode-card:active,
+        .eh-layout-choice:active,
+        .eh-theme-chip:active,
+        .eh-task-filter-pill:active,
+        .eh-task-toolbar-action:active { transform: scale(.975); animation: ehTapGlow .32s ease-out; }
+        .eh-settings-tab2.active {
+            color: rgb(var(--eh-accent-rgb));
+            background: rgb(var(--eh-accent-rgb) / .1);
+            box-shadow: inset 0 0 0 1px rgb(var(--eh-accent-rgb) / .16);
+        }
+        .eh-settings-panel2 {
+            border-radius: 1.85rem;
+            padding: clamp(.95rem, 2.2vw, 1.25rem);
+            animation: ehPanelSwap .28s cubic-bezier(.16,1,.3,1) both;
+        }
+        .eh-settings-panel-head2 { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgb(var(--eh-line-soft) / .48); margin-bottom: 1rem; }
+        .eh-settings-panel-head2 span { color: rgb(var(--eh-accent-rgb)); font-size: .66rem; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+        .eh-settings-panel-head2 h3 { margin-top: .32rem; color: rgb(var(--eh-text-strong)); font-size: clamp(1.35rem, 3.2vw, 2rem); line-height: 1.04; font-weight: 950; letter-spacing: -.05em; }
+        .eh-settings-panel-head2 p { margin-top: .38rem; color: rgb(var(--eh-text-soft)); font-size: .8rem; line-height: 1.55; font-weight: 760; max-width: 42rem; }
+        .eh-settings-panel-badge2 { display: inline-flex; align-items: center; justify-content: center; min-height: 2rem; border-radius: 999px; padding: 0 .75rem; background: rgb(var(--eh-accent-rgb) / .1); color: rgb(var(--eh-accent-rgb)); font-size: .68rem; font-weight: 950; white-space: nowrap; }
+        .eh-settings-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .72rem; }
+        .eh-settings-grid2.three { grid-template-columns: repeat(3, minmax(0,1fr)); }
+        .eh-settings-grid2.one { grid-template-columns: 1fr; }
+        .eh-setting-tile { min-height: 4.75rem; border-radius: 1.25rem; padding: .82rem; display: flex; align-items: center; justify-content: space-between; gap: .85rem; text-align: left; transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease; }
+        .eh-setting-tile:hover { transform: translateY(-1px); box-shadow: var(--eh-shadow-lift); }
+        .eh-setting-tile.is-on { background: rgb(var(--eh-accent-rgb) / .085); border-color: rgb(var(--eh-accent-rgb) / .22); }
+        .eh-setting-copy2 { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+        .eh-setting-icon2 { width: 2.55rem; height: 2.55rem; border-radius: 1rem; display: grid; place-items: center; flex-shrink: 0; color: rgb(var(--eh-text-soft)); background: rgba(248,250,252,.62); border: 1px solid rgb(var(--eh-line-soft) / .44); }
+        .dark .eh-setting-icon2 { background: rgba(2,6,23,.34); }
+        .eh-setting-tile.is-on .eh-setting-icon2 { color: white; background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb))); }
+        .eh-setting-copy2 strong { display: block; color: rgb(var(--eh-text-strong)); font-size: .86rem; font-weight: 950; }
+        .eh-setting-copy2 small { display: block; margin-top: .16rem; color: rgb(var(--eh-text-soft)); font-size: .69rem; line-height: 1.38; font-weight: 750; }
+        .eh-setting-switch2 { width: 2.7rem; height: 1.55rem; border-radius: 999px; position: relative; flex-shrink: 0; background: #cbd5e1; transition: background .18s ease; }
+        .dark .eh-setting-switch2 { background: #334155; }
+        .eh-setting-switch2 i { position: absolute; top: .19rem; left: .2rem; width: 1.17rem; height: 1.17rem; border-radius: 999px; background: white; box-shadow: 0 4px 12px rgba(15,23,42,.22); transition: transform .18s cubic-bezier(.34,1.56,.64,1); }
+        .eh-setting-tile.is-on .eh-setting-switch2 { background: rgb(var(--eh-accent-rgb)); }
+        .eh-setting-tile.is-on .eh-setting-switch2 i { transform: translateX(1.08rem); }
+        .eh-setting-mode-card { min-height: 7.1rem; border-radius: 1.25rem; padding: 1rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; text-align: left; transition: transform .18s ease, background .18s ease, border-color .18s ease; }
+        .eh-setting-mode-card.active { background: rgb(var(--eh-accent-rgb) / .1); border-color: rgb(var(--eh-accent-rgb) / .26); transform: translateY(-1px); }
+        .eh-setting-mode-card span { width: 2.65rem; height: 2.65rem; border-radius: 1rem; display: grid; place-items: center; color: rgb(var(--eh-text-soft)); background: rgba(248,250,252,.62); border: 1px solid rgb(var(--eh-line-soft) / .44); }
+        .eh-setting-mode-card.active span { color: white; background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb))); }
+        .eh-setting-mode-card strong { margin-top: .75rem; display: block; color: rgb(var(--eh-text-strong)); font-size: .95rem; font-weight: 950; }
+        .eh-setting-mode-card small { display: block; margin-top: .22rem; color: rgb(var(--eh-text-soft)); font-size: .72rem; line-height: 1.42; font-weight: 750; }
+        .eh-setting-action2 { min-height: 4.6rem; border-radius: 1.2rem; padding: .85rem; text-align: left; display: flex; align-items: center; gap: .75rem; transition: transform .18s ease, box-shadow .18s ease; }
+        .eh-setting-action2:hover { transform: translateY(-1px); box-shadow: var(--eh-shadow-lift); }
+        .eh-setting-action2 .icon { width: 2.55rem; height: 2.55rem; border-radius: 1rem; display: grid; place-items: center; flex-shrink: 0; }
+        .eh-setting-action2 strong { display: block; color: rgb(var(--eh-text-strong)); font-size: .86rem; font-weight: 950; }
+        .eh-setting-action2 small { display: block; margin-top: .16rem; color: rgb(var(--eh-text-soft)); font-size: .69rem; font-weight: 750; }
+        .eh-setting-action2.amber .icon { background: rgba(245,158,11,.12); color: #d97706; }
+        .eh-setting-action2.emerald .icon { background: rgba(16,185,129,.12); color: #059669; }
+        .eh-setting-action2.indigo .icon { background: rgb(var(--eh-accent-rgb) / .12); color: rgb(var(--eh-accent-rgb)); }
+        .eh-setting-action2.red .icon { background: rgba(239,68,68,.12); color: #dc2626; }
+
+        .eh-task-command-center {
+            border-radius: 1.75rem;
+            padding: .85rem;
+            margin-bottom: 1.15rem;
+            background: rgba(255,255,255,.78);
+            border: 1px solid rgba(255,255,255,.74);
+            box-shadow: var(--eh-shadow-calm);
+            backdrop-filter: blur(26px) saturate(170%);
+            -webkit-backdrop-filter: blur(26px) saturate(170%);
+            animation: ehSoftRise .34s cubic-bezier(.16,1,.3,1) both;
+        }
+        .dark .eh-task-command-center { background: rgba(8,13,25,.78); border-color: rgba(148,163,184,.14); }
+        .eh-task-command-top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .72rem; }
+        .eh-task-command-title { display: flex; align-items: center; gap: .7rem; min-width: 0; }
+        .eh-task-command-icon { width: 2.65rem; height: 2.65rem; border-radius: 1rem; display: grid; place-items: center; color: white; background: linear-gradient(135deg, rgb(var(--eh-accent-rgb)), rgb(var(--eh-accent-2-rgb))); box-shadow: 0 18px 40px -26px rgb(var(--eh-accent-rgb)); flex-shrink: 0; }
+        .eh-task-command-title h3 { color: rgb(var(--eh-text-strong)); font-size: 1.05rem; font-weight: 950; letter-spacing: -.035em; }
+        .eh-task-command-title p { margin-top: .1rem; color: rgb(var(--eh-text-soft)); font-size: .72rem; font-weight: 780; }
+        .eh-task-count-pill { min-height: 2.1rem; border-radius: 999px; padding: 0 .75rem; display: inline-flex; align-items: center; gap: .35rem; background: rgb(var(--eh-accent-rgb) / .1); color: rgb(var(--eh-accent-rgb)); font-size: .72rem; font-weight: 950; white-space: nowrap; }
+        .eh-task-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: .55rem; align-items: center; }
+        .eh-task-search-shell { position: relative; min-width: 0; }
+        .eh-task-search-shell .icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); color: rgb(var(--eh-text-soft)); pointer-events: none; }
+        .eh-task-search-input { width: 100%; height: 3rem; border-radius: 1.15rem; padding: 0 1rem 0 2.65rem; background: rgba(248,250,252,.64); border: 1px solid rgb(var(--eh-line-soft) / .58); color: rgb(var(--eh-text-strong)); font-size: .86rem; font-weight: 850; outline: none; transition: background .18s ease, border-color .18s ease, box-shadow .18s ease; }
+        .dark .eh-task-search-input { background: rgba(15,23,42,.48); }
+        .eh-task-search-input:focus { background: rgba(255,255,255,.86); border-color: rgb(var(--eh-accent-rgb) / .32); box-shadow: 0 0 0 4px rgb(var(--eh-accent-rgb) / .08); }
+        .dark .eh-task-search-input:focus { background: rgba(15,23,42,.76); }
+        .eh-task-toolbar-action { height: 3rem; border-radius: 1.15rem; padding: 0 .9rem; display: inline-flex; align-items: center; gap: .45rem; background: rgba(248,250,252,.64); border: 1px solid rgb(var(--eh-line-soft) / .58); color: rgb(var(--eh-text-soft)); font-size: .76rem; font-weight: 950; white-space: nowrap; transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease; }
+        .dark .eh-task-toolbar-action { background: rgba(15,23,42,.48); }
+        .eh-task-toolbar-action:hover { transform: translateY(-1px); color: rgb(var(--eh-accent-rgb)); border-color: rgb(var(--eh-accent-rgb) / .24); }
+        .eh-task-toolbar-action.danger { background: rgba(254,242,242,.78); color: #dc2626; border-color: rgba(248,113,113,.20); }
+        .dark .eh-task-toolbar-action.danger { background: rgba(127,29,29,.22); border-color: rgba(248,113,113,.14); }
+        .eh-task-sort-button { height: 3rem; border-radius: 1.15rem !important; padding: 0 .85rem !important; background: rgba(248,250,252,.64) !important; border: 1px solid rgb(var(--eh-line-soft) / .58) !important; color: rgb(var(--eh-text-strong)) !important; font-size: .76rem !important; font-weight: 950 !important; transition: transform .18s ease, border-color .18s ease !important; }
+        .dark .eh-task-sort-button { background: rgba(15,23,42,.48) !important; }
+        .eh-task-sort-button:active { transform: scale(.975); }
+        .eh-task-filter-row { margin-top: .62rem; display: flex; gap: .45rem; overflow-x: auto; padding: .12rem .05rem .18rem; scroll-snap-type: x proximity; }
+        .eh-task-filter-row::-webkit-scrollbar { display: none; }
+        .eh-task-filter-pill { scroll-snap-align: start; min-height: 2.35rem; border-radius: 999px; padding: 0 .9rem; display: inline-flex; align-items: center; gap: .35rem; flex-shrink: 0; border: 1px solid rgb(var(--eh-line-soft) / .58); background: rgba(248,250,252,.64); color: rgb(var(--eh-text-soft)); font-size: .74rem; font-weight: 950; transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease; }
+        .dark .eh-task-filter-pill { background: rgba(15,23,42,.48); }
+        .eh-task-filter-pill:hover { transform: translateY(-1px); color: rgb(var(--eh-accent-rgb)); }
+        .eh-task-filter-pill.active { color: rgb(var(--eh-accent-rgb)); background: rgb(var(--eh-accent-rgb) / .1); border-color: rgb(var(--eh-accent-rgb) / .24); box-shadow: inset 0 0 0 1px rgb(var(--eh-accent-rgb) / .08); }
+        .eh-task-list { display: flex; flex-direction: column; gap: .72rem; padding-bottom: 2.5rem; transition: opacity .3s ease; }
+        .eh-task-list > .glass-card { border-radius: 1.38rem !important; transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s ease, opacity .22s ease !important; }
+        .eh-task-list > .glass-card:hover { transform: translateY(-2px); box-shadow: var(--eh-shadow-lift) !important; }
+
+        @media (max-width: 760px) {
+            .eh-settings-reborn { width: min(100%, calc(100vw - 1rem)) !important; }
+            .eh-settings-hero2 { grid-template-columns: 1fr; border-radius: 1.55rem; }
+            .eh-settings-identity2 { align-items: flex-start; }
+            .eh-settings-avatar2 { width: 3.85rem; height: 3.85rem; border-radius: 1.25rem; font-size: 1.45rem; }
+            .eh-settings-tabs2 { grid-template-columns: repeat(5, minmax(4.5rem, 1fr)); overflow-x: auto; border-radius: 1.25rem; }
+            .eh-settings-tabs2::-webkit-scrollbar { display: none; }
+            .eh-settings-tab2 { min-height: 3.75rem; }
+            .eh-settings-tab2 small { display: none; }
+            .eh-settings-panel2 { border-radius: 1.45rem; }
+            .eh-settings-panel-head2 { flex-direction: column; }
+            .eh-settings-grid2,
+            .eh-settings-grid2.three { grid-template-columns: 1fr; }
+            .eh-task-command-center { border-radius: 1.35rem; }
+            .eh-task-command-top { align-items: flex-start; }
+            .eh-task-search-row { grid-template-columns: 1fr; }
+            .eh-task-toolbar-action, .eh-task-sort-button { width: 100%; justify-content: center; }
+        }
+
 </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -1374,7 +1584,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.06-golden-interface-rebuild',
+                version: 'v1.9.07-settings-focus-rebuild',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -1477,8 +1687,8 @@
             title: '電子手冊已更新',
             summary: [
                 '主頁已取消原有今天動態框，改為全新 Today Hub，畫面更乾淨。',
-                '全站介面已按黃金比例重新整理，主頁、設定頁、卡片與背景更乾淨、更像真正 App。',
-                '保留原有登入、功課、時間表、班級廣播、通知、設定、管理後台和廣告設定。'
+                '設定頁已重新設計成分頁式 App Settings，外觀、主頁、動效、快捷與帳號更清楚。',
+                '專注主頁下方的搜尋、篩選、排序與清理工具列已重新排版，按鈕有更明顯回饋。'
             ].join('\n'),
             guide: [
                 '可直接覆蓋 /rchw/index.html 使用。',
@@ -3932,18 +4142,19 @@
             onGoClass,
             onLogout
         }) {
+            const [settingsTab, setSettingsTab] = useState('appearance');
             const displayName = userProfile?.displayName || user?.displayName || '學生';
             const email = user?.email || userProfile?.email || '';
             const initial = String(displayName || email || 'E').trim().charAt(0).toUpperCase();
             const themeEntries = Object.entries(THEME_CONFIG);
             const activeTheme = THEME_CONFIG[themeColor] || THEME_CONFIG.indigo;
             const layoutOptions = [
-                { value: 'normal', label: '標準', desc: '保留完整主頁、快速新增、課堂提示和任務列表。', icon: 'layout-dashboard' },
-                { value: 'minimal', label: '極簡', desc: '減少主頁資訊量，適合只想快速查看待辦。', icon: 'minimize-2' },
+                { value: 'normal', label: '標準', desc: '完整顯示主頁、快速新增、課堂提示和任務列表。', icon: 'layout-dashboard' },
+                { value: 'minimal', label: '極簡', desc: '降低資訊密度，只保留核心待辦畫面。', icon: 'minimize-2' },
                 { value: 'custom', label: '自訂', desc: '按自己習慣逐項開關主頁區塊。', icon: 'sliders-horizontal' }
             ];
             const customBlocks = [
-                { key: 'cards', label: 'Today Studio', desc: '黃金比例今日面板，集中今日、測驗、明日與完成進度。', icon: 'panel-top' },
+                { key: 'cards', label: 'Today Studio', desc: '集中今日、測驗、明日與完成進度。', icon: 'panel-top' },
                 { key: 'timetable', label: '即時課堂', desc: '顯示目前課節、倒數與下一節。', icon: 'calendar-clock' },
                 { key: 'input', label: '新增功課欄', desc: '主頁直接新增功課或測驗。', icon: 'square-pen' },
                 { key: 'list', label: '任務列表', desc: '顯示個人手冊功課列表。', icon: 'list-checks' }
@@ -3962,86 +4173,48 @@
                 { key: 'showSubjectShortcut', label: '科目快捷', desc: '快速進入科目管理。', icon: 'book-marked' },
                 { key: 'showAccountShortcut', label: '帳號操作', desc: '顯示登出與帳號相關操作。', icon: 'user-cog' }
             ];
+            const settingsTabs = [
+                { key: 'appearance', label: '外觀', desc: '主題', icon: 'palette' },
+                { key: 'home', label: '主頁', desc: '架構', icon: 'layout-template' },
+                { key: 'motion', label: '閱讀', desc: '動效', icon: 'sliders-horizontal' },
+                { key: 'quick', label: '快捷', desc: '入口', icon: 'mouse-pointer-2' },
+                { key: 'account', label: '帳號', desc: '管理', icon: 'user-cog' }
+            ];
             const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout?.[key] });
             const handleAdvancedToggle = (key) => setAdvancedPrefs({ ...advancedPrefs, [key]: !advancedPrefs?.[key] });
             const enabledCustomCount = customBlocks.filter(block => customLayout?.[block.key] !== false).length;
             const enabledAdvancedCount = advancedOptions.filter(opt => advancedPrefs?.[opt.key] === true).length;
             const enabledQuickCount = quickActionOptions.filter(opt => advancedPrefs?.[opt.key] !== false).length;
+            const activeTabInfo = settingsTabs.find(tab => tab.key === settingsTab) || settingsTabs[0];
 
-            const StudioCard = ({ title, desc, icon, children, className = '', right }) => (
-                <section className={`eh-studio-card ${className}`}>
-                    <div className="eh-studio-card-head">
-                        <div className="eh-studio-card-title-wrap">
-                            <div className="eh-studio-card-icon"><Icon name={icon} className="w-4 h-4" /></div>
-                            <div>
-                                <h3>{title}</h3>
-                                <p>{desc}</p>
-                            </div>
-                        </div>
-                        {right}
-                    </div>
-                    <div className="eh-studio-card-body">{children}</div>
-                </section>
-            );
-
-            const SwitchRow = ({ icon, label, desc, enabled, onClick }) => (
-                <button type="button" onClick={onClick} className={`eh-studio-switch-row ${enabled ? 'is-on' : 'is-off'}`}>
-                    <div className="eh-studio-switch-copy">
-                        <span className="eh-studio-mini-icon"><Icon name={icon} className="w-4 h-4" /></span>
+            const ToggleTile = ({ icon, label, desc, enabled, onClick }) => (
+                <button type="button" onClick={onClick} className={`eh-setting-tile ${enabled ? 'is-on' : ''}`}>
+                    <div className="eh-setting-copy2">
+                        <span className="eh-setting-icon2"><Icon name={icon} className="w-4 h-4" /></span>
                         <span>
                             <strong>{label}</strong>
                             <small>{desc}</small>
                         </span>
                     </div>
-                    <span className="eh-studio-switch" aria-hidden="true"><i></i></span>
+                    <span className="eh-setting-switch2" aria-hidden="true"><i></i></span>
                 </button>
             );
 
-            const QuickButton = ({ onClick, icon, label, desc, tone = 'neutral' }) => (
-                <button type="button" onClick={onClick} className={`eh-studio-quick ${tone}`}>
-                    <span><Icon name={icon} className="w-5 h-5" /></span>
-                    <strong>{label}</strong>
-                    <small>{desc}</small>
+            const ActionButton = ({ onClick, icon, label, desc, tone = 'indigo' }) => (
+                <button type="button" onClick={onClick} className={`eh-setting-action2 ${tone}`}>
+                    <span className="icon"><Icon name={icon} className="w-5 h-5" /></span>
+                    <span><strong>{label}</strong><small>{desc}</small></span>
                 </button>
             );
 
-            return (
-                <div className="settings-page-stable eh-settings-studio mx-auto pb-10">
-                    <aside className="eh-settings-side">
-                        <div className="eh-settings-profile-card">
-                            <div className="eh-settings-avatar">{initial}</div>
-                            <div className="eh-settings-profile-copy">
-                                <span className="eh-settings-kicker">設定中心 · v1.9.06</span>
-                                <h2>{displayName}</h2>
-                                <p>{email || '個人化你的電子手冊'}</p>
+            const renderPanel = () => {
+                if (settingsTab === 'appearance') {
+                    return (
+                        <>
+                            <div className="eh-settings-panel-head2">
+                                <div><span>Appearance</span><h3>外觀要乾淨、舒服、唔搶眼</h3><p>主題色會影響背景、按鈕、重點卡片同回饋動畫。深色模式亦會同步保留玻璃質感。</p></div>
+                                <button type="button" onClick={onOpenAppearance} className="eh-settings-panel-badge2">進階外觀</button>
                             </div>
-                            <div className="eh-settings-profile-grid">
-                                <div><span>主題</span><strong>{activeTheme.name}</strong></div>
-                                <div><span>模式</span><strong>{isDarkMode ? '深色' : '淺色'}</strong></div>
-                                <div><span>主頁</span><strong>{layoutMode === 'custom' ? '自訂' : layoutMode === 'minimal' ? '極簡' : '標準'}</strong></div>
-                                <div><span>通知</span><strong>{unreadNotificationCount > 0 ? `${unreadNotificationCount} 未讀` : '已清'}</strong></div>
-                            </div>
-                        </div>
-
-                        <div className="eh-settings-side-actions">
-                            {advancedPrefs?.showNotificationShortcut !== false && <QuickButton onClick={onOpenNotifications} icon="bell" label="通知中心" desc="查看提醒與更新" tone="amber" />}
-                            {advancedPrefs?.showClassShortcut !== false && <QuickButton onClick={onGoClass} icon="school-2" label="班級廣播" desc="查看老師發放" tone="emerald" />}
-                            {advancedPrefs?.showSubjectShortcut !== false && <QuickButton onClick={onOpenSubjects} icon="book-marked" label="科目管理" desc="整理科目顏色" tone="indigo" />}
-                            {advancedPrefs?.showAccountShortcut !== false && <QuickButton onClick={onLogout} icon="log-out" label="登出帳號" desc="切換使用者" tone="red" />}
-                        </div>
-                    </aside>
-
-                    <main className="eh-settings-main">
-                        <div className="eh-settings-header-strip">
-                            <div>
-                                <span>Golden Interface</span>
-                                <h2>把介面調到你最順手</h2>
-                                <p>這一頁重新按 1.618 比例排版：左邊是帳號與快捷入口，右邊是主要設定，閱讀路線更自然。</p>
-                            </div>
-                            <button type="button" onClick={onOpenAppearance}><Icon name="wand-2" className="w-4 h-4" /> 進階外觀</button>
-                        </div>
-
-                        <StudioCard title="外觀與主題" desc="選擇顏色、深淺模式，讓背景和卡片更協調。" icon="palette" className="eh-studio-card-feature">
                             <div className="eh-theme-rack">
                                 {themeEntries.map(([key, config]) => (
                                     <button key={key} type="button" onClick={() => setThemeColor(key)} className={`eh-theme-chip ${themeColor === key ? 'active' : ''}`}>
@@ -4050,48 +4223,120 @@
                                     </button>
                                 ))}
                             </div>
-                            <div className="eh-mode-pair">
-                                <button type="button" onClick={() => setIsDarkMode(false)} className={!isDarkMode ? 'active' : ''}><Icon name="sun" className="w-5 h-5" /><span><strong>淺色</strong><small>乾淨、明亮、適合白天</small></span></button>
-                                <button type="button" onClick={() => setIsDarkMode(true)} className={isDarkMode ? 'active' : ''}><Icon name="moon" className="w-5 h-5" /><span><strong>深色</strong><small>低亮度、適合夜晚</small></span></button>
+                            <div className="eh-settings-grid2 mt-3">
+                                <button type="button" onClick={() => setIsDarkMode(false)} className={`eh-setting-mode-card ${!isDarkMode ? 'active' : ''}`}><span><Icon name="sun" className="w-5 h-5" /></span><div><strong>淺色模式</strong><small>明亮、低負擔，適合日間同課室使用。</small></div></button>
+                                <button type="button" onClick={() => setIsDarkMode(true)} className={`eh-setting-mode-card ${isDarkMode ? 'active' : ''}`}><span><Icon name="moon" className="w-5 h-5" /></span><div><strong>深色模式</strong><small>低亮度、減少刺眼，適合夜晚使用。</small></div></button>
                             </div>
-                        </StudioCard>
-
-                        <StudioCard title="主頁架構" desc="選擇主頁資訊密度。標準、極簡、自訂三種模式會保留所有功能，只改顯示方式。" icon="layout-template" right={<span className="eh-settings-pill">{layoutMode === 'custom' ? `${enabledCustomCount}/${customBlocks.length}` : layoutMode === 'minimal' ? '極簡' : '標準'}</span>}>
-                            <div className="eh-layout-choice-grid">
+                        </>
+                    );
+                }
+                if (settingsTab === 'home') {
+                    return (
+                        <>
+                            <div className="eh-settings-panel-head2">
+                                <div><span>Home Layout</span><h3>主頁顯示方式由你決定</h3><p>所有功能都會保留，呢度只控制主頁資訊密度同區塊顯示，方便你專注做功課。</p></div>
+                                <span className="eh-settings-panel-badge2">{layoutMode === 'custom' ? `${enabledCustomCount}/${customBlocks.length}` : layoutMode === 'minimal' ? '極簡' : '標準'}</span>
+                            </div>
+                            <div className="eh-settings-grid2 three">
                                 {layoutOptions.map(opt => (
-                                    <button key={opt.value} type="button" onClick={() => setLayoutMode(opt.value)} className={`eh-layout-choice ${layoutMode === opt.value ? 'active' : ''}`}>
+                                    <button key={opt.value} type="button" onClick={() => setLayoutMode(opt.value)} className={`eh-setting-mode-card ${layoutMode === opt.value ? 'active' : ''}`}>
                                         <span><Icon name={opt.icon} className="w-5 h-5" /></span>
-                                        <strong>{opt.label}</strong>
-                                        <small>{opt.desc}</small>
+                                        <div><strong>{opt.label}</strong><small>{opt.desc}</small></div>
                                     </button>
                                 ))}
                             </div>
                             {layoutMode === 'custom' && (
-                                <div className="eh-studio-switch-grid mt-4">
+                                <div className="eh-settings-grid2 mt-3">
                                     {customBlocks.map(block => (
-                                        <SwitchRow key={block.key} icon={block.icon} label={block.label} desc={block.desc} enabled={customLayout?.[block.key] !== false} onClick={() => handleCustomToggle(block.key)} />
+                                        <ToggleTile key={block.key} icon={block.icon} label={block.label} desc={block.desc} enabled={customLayout?.[block.key] !== false} onClick={() => handleCustomToggle(block.key)} />
                                     ))}
                                 </div>
                             )}
-                        </StudioCard>
-
-                        <div className="eh-settings-golden-row">
-                            <StudioCard title="閱讀與動效" desc="調整字體、動畫、玻璃效果和間距。" icon="sliders-horizontal" right={<span className="eh-settings-pill">{enabledAdvancedCount} 開啟</span>}>
-                                <div className="eh-studio-switch-grid">
-                                    {advancedOptions.map(opt => (
-                                        <SwitchRow key={opt.key} icon={opt.icon} label={opt.label} desc={opt.desc} enabled={advancedPrefs?.[opt.key] === true} onClick={() => handleAdvancedToggle(opt.key)} />
-                                    ))}
-                                </div>
-                            </StudioCard>
-
-                            <StudioCard title="快捷入口" desc="控制設定頁側邊快捷卡片。" icon="mouse-pointer-2" right={<span className="eh-settings-pill">{enabledQuickCount}/{quickActionOptions.length}</span>}>
-                                <div className="eh-studio-switch-grid compact">
-                                    {quickActionOptions.map(opt => (
-                                        <SwitchRow key={opt.key} icon={opt.icon} label={opt.label} desc={opt.desc} enabled={advancedPrefs?.[opt.key] !== false} onClick={() => handleAdvancedToggle(opt.key)} />
-                                    ))}
-                                </div>
-                            </StudioCard>
+                        </>
+                    );
+                }
+                if (settingsTab === 'motion') {
+                    return (
+                        <>
+                            <div className="eh-settings-panel-head2">
+                                <div><span>Reading & Motion</span><h3>動畫要有回饋，但唔可以卡</h3><p>你可以開啟大字體、清晰玻璃或減少動畫；每個開關都會即時反映喺全站顯示。</p></div>
+                                <span className="eh-settings-panel-badge2">{enabledAdvancedCount} 開啟</span>
+                            </div>
+                            <div className="eh-settings-grid2">
+                                {advancedOptions.map(opt => (
+                                    <ToggleTile key={opt.key} icon={opt.icon} label={opt.label} desc={opt.desc} enabled={advancedPrefs?.[opt.key] === true} onClick={() => handleAdvancedToggle(opt.key)} />
+                                ))}
+                            </div>
+                        </>
+                    );
+                }
+                if (settingsTab === 'quick') {
+                    return (
+                        <>
+                            <div className="eh-settings-panel-head2">
+                                <div><span>Quick Actions</span><h3>常用入口集中管理</h3><p>控制設定頁同主畫面相關快捷入口，保留功能但減少凌亂。</p></div>
+                                <span className="eh-settings-panel-badge2">{enabledQuickCount}/{quickActionOptions.length}</span>
+                            </div>
+                            <div className="eh-settings-grid2">
+                                {quickActionOptions.map(opt => (
+                                    <ToggleTile key={opt.key} icon={opt.icon} label={opt.label} desc={opt.desc} enabled={advancedPrefs?.[opt.key] !== false} onClick={() => handleAdvancedToggle(opt.key)} />
+                                ))}
+                            </div>
+                            <div className="eh-settings-grid2 mt-3">
+                                {advancedPrefs?.showNotificationShortcut !== false && <ActionButton onClick={onOpenNotifications} icon="bell" label="通知中心" desc="查看提醒與更新" tone="amber" />}
+                                {advancedPrefs?.showClassShortcut !== false && <ActionButton onClick={onGoClass} icon="school-2" label="班級廣播" desc="查看老師發放" tone="emerald" />}
+                                {advancedPrefs?.showSubjectShortcut !== false && <ActionButton onClick={onOpenSubjects} icon="book-marked" label="科目管理" desc="整理科目顏色" tone="indigo" />}
+                            </div>
+                        </>
+                    );
+                }
+                return (
+                    <>
+                        <div className="eh-settings-panel-head2">
+                            <div><span>Account</span><h3>帳號、通知同安全操作</h3><p>快速進入通知、科目管理、班級廣播，或者登出切換帳號。</p></div>
+                            <span className="eh-settings-panel-badge2">{unreadNotificationCount > 0 ? `${unreadNotificationCount} 未讀` : '已清'}</span>
                         </div>
+                        <div className="eh-settings-grid2">
+                            <ActionButton onClick={onOpenNotifications} icon="bell" label="通知中心" desc="最新提醒與更新紀錄" tone="amber" />
+                            <ActionButton onClick={onOpenSubjects} icon="book-marked" label="科目管理" desc="調整科目與顏色" tone="indigo" />
+                            <ActionButton onClick={onGoClass} icon="school-2" label="班級廣播" desc="查看班級功課" tone="emerald" />
+                            <ActionButton onClick={onLogout} icon="log-out" label="登出帳號" desc="安全離開或切換使用者" tone="red" />
+                        </div>
+                    </>
+                );
+            };
+
+            return (
+                <div className="settings-page-stable eh-settings-reborn mx-auto pb-10">
+                    <section className="eh-settings-hero2">
+                        <div className="eh-settings-identity2">
+                            <div className="eh-settings-avatar2">{initial}</div>
+                            <div className="min-w-0">
+                                <small>電子手冊 Pro · v1.9.07</small>
+                                <h2>{displayName}</h2>
+                                <p>{email || '個人化你的電子手冊'}</p>
+                            </div>
+                        </div>
+                        <div className="eh-settings-hero-stats2">
+                            <div className="eh-settings-hero-stat2"><span>主題</span><strong>{activeTheme.name}</strong></div>
+                            <div className="eh-settings-hero-stat2"><span>模式</span><strong>{isDarkMode ? '深色' : '淺色'}</strong></div>
+                            <div className="eh-settings-hero-stat2"><span>主頁</span><strong>{layoutMode === 'custom' ? '自訂' : layoutMode === 'minimal' ? '極簡' : '標準'}</strong></div>
+                            <div className="eh-settings-hero-stat2"><span>通知</span><strong>{unreadNotificationCount > 0 ? `${unreadNotificationCount} 未讀` : '已清'}</strong></div>
+                        </div>
+                    </section>
+
+                    <nav className="eh-settings-tabs2" aria-label="設定分類">
+                        {settingsTabs.map(tab => (
+                            <button key={tab.key} type="button" onClick={() => setSettingsTab(tab.key)} className={`eh-settings-tab2 ${settingsTab === tab.key ? 'active' : ''}`}>
+                                <Icon name={tab.icon} className="w-4 h-4" />
+                                <strong>{tab.label}</strong>
+                                <small>{tab.desc}</small>
+                            </button>
+                        ))}
+                    </nav>
+
+                    <main key={settingsTab} className="eh-settings-panel2">
+                        {renderPanel()}
                     </main>
                 </div>
             );
@@ -5250,25 +5495,39 @@ function App() {
 
                                             {isVisible('list') && (
                                                 <>
-                                                    <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-6 relative">
-                                                        <div className={`flex items-center gap-2 w-full sm:w-auto overflow-x-auto scrollbar-hide pb-1 transition-opacity ${!isListVisible ? 'opacity-50' : 'opacity-100'}`}>
-                                                            <span className="text-slate-400 text-xs font-bold whitespace-nowrap">篩選:</span>
-                                                            <button onClick={() => handleFilterChange('全部')} className={`flex-shrink-0 px-2.5 py-1 rounded text-[10px] font-bold border transition-all ${filterSubject === '全部' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'}`}>全部</button>
-                                                            {subjects.map(sub => ( <button key={sub.name} onClick={() => handleFilterChange(sub.name)} className={`flex-shrink-0 px-2.5 py-1 rounded text-[10px] font-bold border transition-all ${filterSubject === sub.name ? `${t.border} ${t.lightBg} ${t.text}` : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'}`}>{sub.name}</button> ))}
-                                                        </div>
-                                                        <div className="flex items-center gap-2 w-full sm:w-auto z-30">
-                                                            {/* NEW: Global Search Bar for Tasks */}
-                                                            <div className="relative w-full sm:w-auto flex-1 max-w-[150px] sm:max-w-[200px]">
-                                                                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400"><Icon name="search" className="w-3.5 h-3.5"/></div>
-                                                                <input type="text" placeholder="搜尋..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-8 pr-3 py-1.5 glass-card bg-white/70 dark:bg-slate-800/70 border border-white/50 dark:border-slate-700 rounded-lg text-xs font-bold focus:ring-2 focus:ring-indigo-400 outline-none transition-all dark:text-white placeholder:text-slate-400"/>
+                                                    <div className="eh-task-command-center">
+                                                        <div className="eh-task-command-top">
+                                                            <div className="eh-task-command-title">
+                                                                <span className="eh-task-command-icon"><Icon name={viewMode === 'history' ? 'history' : 'list-checks'} className="w-5 h-5" /></span>
+                                                                <div>
+                                                                    <h3>{viewMode === 'history' ? '歷史紀錄' : '專注清單'}</h3>
+                                                                    <p>{searchQuery || filterSubject !== '全部' ? '已套用搜尋或篩選' : '搜尋、篩選、排序集中處理'}</p>
+                                                                </div>
                                                             </div>
-                                                            {viewMode !== 'history' ? ( <button onClick={handleClearExpired} className="flex-shrink-0 text-xs font-bold bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 flex items-center gap-1"><Icon name="trash-2" className="w-3 h-3" /> 清理過期</button> ) : ( <button onClick={handleClearHistory} className="flex-shrink-0 text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 flex items-center gap-1"><Icon name="trash-2" className="w-3 h-3" /> 清理歷史</button> )}
-                                                            <span className="text-slate-400 text-xs font-bold whitespace-nowrap ml-1">排序:</span>
-                                                            <CustomDropdown value={sortOption} onChange={handleSortChange} options={[{ value: 'date_asc', label: '趕急先' }, { value: 'date_desc', label: '長遠先' }]} />
+                                                            <span className="eh-task-count-pill"><Icon name="layers-3" className="w-3.5 h-3.5" /> {displayedItems.length} 項</span>
+                                                        </div>
+
+                                                        <div className="eh-task-search-row">
+                                                            <div className="eh-task-search-shell">
+                                                                <span className="icon"><Icon name="search" className="w-4 h-4" /></span>
+                                                                <input type="text" placeholder="搜尋功課、測驗或科目…" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="eh-task-search-input" />
+                                                            </div>
+                                                            {viewMode !== 'history'
+                                                                ? <button type="button" onClick={handleClearExpired} className="eh-task-toolbar-action danger"><Icon name="trash-2" className="w-4 h-4" /> 清理過期</button>
+                                                                : <button type="button" onClick={handleClearHistory} className="eh-task-toolbar-action"><Icon name="trash-2" className="w-4 h-4" /> 清理歷史</button>
+                                                            }
+                                                            <CustomDropdown value={sortOption} onChange={handleSortChange} options={[{ value: 'date_asc', label: '趕急先' }, { value: 'date_desc', label: '長遠先' }]} customClasses="eh-task-sort-button flex items-center gap-2" />
+                                                        </div>
+
+                                                        <div className={`eh-task-filter-row transition-opacity ${!isListVisible ? 'opacity-50' : 'opacity-100'}`}>
+                                                            <button type="button" onClick={() => handleFilterChange('全部')} className={`eh-task-filter-pill ${filterSubject === '全部' ? 'active' : ''}`}><Icon name="sparkles" className="w-3.5 h-3.5" /> 全部</button>
+                                                            {subjects.map(sub => (
+                                                                <button key={sub.name} type="button" onClick={() => handleFilterChange(sub.name)} className={`eh-task-filter-pill ${filterSubject === sub.name ? 'active' : ''}`}>{sub.name}</button>
+                                                            ))}
                                                         </div>
                                                     </div>
 
-                                                    <div className={`space-y-3 pb-10 transition-opacity duration-300 ${!isListVisible ? 'opacity-0' : 'opacity-100'}`}>
+                                                    <div className={`eh-task-list transition-opacity duration-300 ${!isListVisible ? 'opacity-0' : 'opacity-100'}`}>
                                                         {displayedItems.length === 0 ? (
                                                             <div className="text-center py-20 animate-fadeIn">
                                                                 <div className={`inline-flex p-5 rounded-3xl ${t.lightBg} mb-4`}><Icon name="check-circle-2" className={`w-10 h-10 ${t.text}`} /></div>
@@ -5294,7 +5553,7 @@ function App() {
                                                             return (
                                                                 <div key={item.id}
                                                                     style={{ animationDelay: `${index * 0.045}s` }}
-                                                                    className={`animate-item glass-card rounded-[1.3rem] overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group ${accentClass} ${isExiting ? 'scale-95 opacity-0' : ''}`}>
+                                                                    className={`animate-item glass-card eh-task-card-v2 rounded-[1.3rem] overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md group ${accentClass} ${isExiting ? 'scale-95 opacity-0' : ''}`}>
                                                                     <div className="p-3.5 sm:p-4">
                                                                         <div className="flex items-start gap-3">
 
@@ -5616,5 +5875,5 @@ function App() {
 <!-- v1.9.06-golden-interface-rebuild update-notes: master visual polish, focus overview, permanent action buttons, centered compact island, high-contrast toast, iPad/mobile safe display. No Firebase/database logic removed. -->
 
 <!-- VERSION_CHECK: v1.9.06-golden-interface-rebuild | based-on-v1.9.04-master-polish | today-dynamic-box-replaced | background-polished | settings-modernized | database-logic-unchanged | features-preserved -->
-<!-- v1.9.06-golden-interface-rebuild update-notes: removed the original today dynamic cards, added a new Today Hub, softened the full-site background, redesigned current lesson card, and upgraded settings layout without deleting Firebase/data features. -->
+<!-- v1.9.07-settings-focus-rebuild update-notes: redesigned the settings page into a tabbed modern App Settings interface, upgraded focus-home search/filter/sort toolbar, and added stronger animation/tap feedback without deleting Firebase/data features. -->
 <!-- VERSION_CHECK: v1.9.06-golden-interface-rebuild | based-on-v1.9.05-layout-refresh | golden-ratio-ui | settings-studio-rebuild | background-rebuilt | database-logic-unchanged | features-preserved -->
