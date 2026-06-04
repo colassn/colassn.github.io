@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>收書管理系統 - 專業穩定版</title>
+    <title>收書管理系統 - 專業全功能版</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -17,11 +18,14 @@
         }
     </script>
     
+    <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
     
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <!-- Firebase Compat -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -52,14 +56,13 @@
         window.addEventListener('error', function(event) {
             document.getElementById('root').style.display = 'none';
             document.getElementById('fallback-error').style.display = 'flex';
-            document.getElementById('error-log').innerText = "錯誤詳情: " + (event.message || "Script error.") + "\n(請檢查 Firebase 設定或使用 Chrome 瀏覽器)";
+            document.getElementById('error-log').innerText = "錯誤詳情: " + (event.message || "Script error.") + "\n(請檢查網絡或使用 Chrome 瀏覽器)";
         });
     </script>
 
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
-        // Firebase 初始化 (Compat 版語法)
         const firebaseConfig = {
             apiKey: "AIzaSyC5AFCRymqpPuLpz7hOMcN5CZF7X7P8OVI",
             authDomain: "book-24526.firebaseapp.com",
@@ -69,15 +72,12 @@
             appId: "1:1088251457442:web:c93b01f90fabdfb4e6ccfb"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         
         const auth = firebase.auth();
         const db = firebase.firestore();
         const appId = 'book-recycling-manager';
 
-        // 資料庫路徑參照 (修正版)
         const getStudentsRef = () => db.collection('artifacts').doc(appId).collection('public').doc('data').collection('students');
         const getCatalogRef = () => db.collection('artifacts').doc(appId).collection('config').doc('catalog');
 
@@ -102,13 +102,8 @@
         const IconPlus = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
         const IconSettings = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>;
 
-        const getSafeCollectorName = () => {
-            try { return localStorage.getItem("collectorName") || ""; } catch (e) { return ""; }
-        };
-
-        const setSafeCollectorName = (name) => {
-            try { localStorage.setItem("collectorName", name); } catch (e) {}
-        };
+        const getSafeCollectorName = () => { try { return localStorage.getItem("collectorName") || ""; } catch (e) { return ""; } };
+        const setSafeCollectorName = (name) => { try { localStorage.setItem("collectorName", name); } catch (e) {} };
 
         function App() {
             const [user, setUser] = useState(null);
@@ -118,7 +113,8 @@
             const [loading, setLoading] = useState(true);
             
             const [collectorName, setCollectorName] = useState(getSafeCollectorName);
-            
+            const [filterCollector, setFilterCollector] = useState("all");
+
             const [search, setSearch] = useState("");
             const [sortBy, setSortBy] = useState("form");
             const [activeId, setActiveId] = useState(null);
@@ -131,55 +127,45 @@
             const [tempDeduction, setTempDeduction] = useState("");
             const [tempDeductReason, setTempDeductReason] = useState("");
 
+            // Modals
             const [showAddStudentModal, setShowAddStudentModal] = useState(false);
+            const [showEditStudentModal, setShowEditStudentModal] = useState(false); // 💡 新增：修改學生 Modal
             const [showSettingsModal, setShowSettingsModal] = useState(false);
             const [showExportModal, setShowExportModal] = useState(false);
             const [showReceiptModal, setShowReceiptModal] = useState(false);
             const [showCollectorStatsModal, setShowCollectorStatsModal] = useState(false);
             
+            // Forms State
             const [newStudent, setNewStudent] = useState({ form: "3", name: "", phone: "" });
+            const [editStudentData, setEditStudentData] = useState({ form: "3", name: "", phone: "" }); // 💡 新增：修改學生資料
+            
             const [newCatalogItem, setNewCatalogItem] = useState({ title: "", price: "40", isPackage: false });
+            const [editingCatalogId, setEditingCatalogId] = useState(null); // 💡 新增：修改書單項目 ID
 
             const [toast, setToast] = useState({ show: false, message: "", type: "info" });
-            const showToast = (message, type = "success") => {
-                setToast({ show: true, message, type });
-                setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3500);
-            };
+            const showToast = (message, type = "success") => { setToast({ show: true, message, type }); setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3500); };
 
             useEffect(() => { setSafeCollectorName(collectorName); }, [collectorName]);
 
             useEffect(() => {
-                auth.signInAnonymously().catch(err => {
-                    console.error("Auth Error:", err);
-                    showToast("身份驗證失敗", "error");
-                });
-                const unsub = auth.onAuthStateChanged(usr => { 
-                    setUser(usr); setDbConnected(!!usr); 
-                });
+                auth.signInAnonymously().catch(err => { showToast("身份驗證失敗", "error"); });
+                const unsub = auth.onAuthStateChanged(usr => { setUser(usr); setDbConnected(!!usr); });
                 return () => unsub();
             }, []);
 
             useEffect(() => {
                 if (!user) return;
-                
                 const unsubStudents = getStudentsRef().onSnapshot(snapshot => {
                     const list = [];
                     snapshot.forEach(doc => list.push({ docId: doc.id, ...doc.data() }));
                     setStudents(list);
                     if (list.length > 0 && !activeId) setActiveId(list[0].docId);
                     setLoading(false);
-                }, err => {
-                    console.error("Fetch Students Error:", err);
-                    showToast("載入名單失敗", "error");
-                    setLoading(false);
-                });
+                }, err => { showToast("載入名單失敗", "error"); setLoading(false); });
                 
                 const unsubCatalog = getCatalogRef().onSnapshot(docSnap => {
-                    if (docSnap.exists && docSnap.data().items) {
-                        setCatalog(docSnap.data().items);
-                    }
-                }, err => console.error("Fetch Catalog Error:", err));
-
+                    if (docSnap.exists && docSnap.data().items) setCatalog(docSnap.data().items);
+                });
                 return () => { unsubStudents(); unsubCatalog(); };
             }, [user, activeId]);
 
@@ -190,6 +176,14 @@
                 const deduct = Number(book.deduction || 0);
                 return Math.max(0, base - deduct);
             };
+
+            const uniqueCollectors = useMemo(() => {
+                const collectorsSet = new Set();
+                students.forEach(s => {
+                    (s.books || []).forEach(b => { if (b.status === 'accepted' && b.collectedBy) collectorsSet.add(b.collectedBy); });
+                });
+                return Array.from(collectorsSet).sort();
+            }, [students]);
 
             const stats = useMemo(() => {
                 let totalAccepted = 0, totalAmount = 0, totalRejected = 0;
@@ -218,9 +212,8 @@
                             const cName = book.collectedBy || '未指派';
                             if (!statsMap[cName]) statsMap[cName] = { count: 0, total: 0, items: [] };
                             statsMap[cName].count += 1;
-                            const price = getActualPrice(book);
-                            statsMap[cName].total += price;
-                            statsMap[cName].items.push({ studentName: student.name, studentForm: student.form, bookTitle: book.title, price: price, id: book.id });
+                            statsMap[cName].total += getActualPrice(book);
+                            statsMap[cName].items.push({ studentName: student.name, studentForm: student.form, bookTitle: book.title, price: getActualPrice(book), id: book.id });
                         }
                     });
                 });
@@ -229,6 +222,11 @@
 
             const processedStudents = useMemo(() => {
                 let filtered = students.filter(s => s.name.includes(search) || (s.phone && s.phone.includes(search)) || `f.${s.form}`.toLowerCase().includes(search.toLowerCase()));
+                
+                if (filterCollector !== "all") {
+                    filtered = filtered.filter(s => (s.books || []).some(b => b.status === 'accepted' && b.collectedBy === filterCollector));
+                }
+
                 return filtered.sort((a, b) => {
                     if (sortBy === 'name') return a.name.localeCompare(b.name, 'zh-HK');
                     if (sortBy === 'amount') {
@@ -239,56 +237,91 @@
                     if (a.form !== b.form) return a.form - b.form;
                     return (a.order || 0) - (b.order || 0);
                 });
-            }, [students, search, sortBy]);
+            }, [students, search, sortBy, filterCollector]);
 
+            // ---- 學生 CRUD ----
             const handleCreateStudent = async (e) => {
                 e.preventDefault();
                 if (!newStudent.name.trim()) return;
                 const newDocId = `student_${Date.now()}`;
-                await getStudentsRef().doc(newDocId).set({
-                    name: newStudent.name.trim(),
-                    form: newStudent.form,
-                    phone: newStudent.phone.trim() || "--",
-                    order: Date.now(),
-                    books: []
-                });
+                await getStudentsRef().doc(newDocId).set({ name: newStudent.name.trim(), form: newStudent.form, phone: newStudent.phone.trim() || "--", order: Date.now(), books: [] });
                 setActiveId(newDocId);
                 setShowAddStudentModal(false);
                 setNewStudent({ form: "3", name: "", phone: "" });
                 showToast(`已新增學生: ${newStudent.name}`);
             };
 
+            // 💡 學生修改
+            const openEditStudent = () => {
+                setEditStudentData({ name: activeStudent.name, form: activeStudent.form, phone: activeStudent.phone === "--" ? "" : activeStudent.phone });
+                setShowEditStudentModal(true);
+            };
+
+            const handleSaveStudentEdit = async (e) => {
+                e.preventDefault();
+                if (!editStudentData.name.trim()) return;
+                try {
+                    await getStudentsRef().doc(activeStudent.docId).update({
+                        name: editStudentData.name.trim(),
+                        form: editStudentData.form,
+                        phone: editStudentData.phone.trim() || "--"
+                    });
+                    setShowEditStudentModal(false);
+                    showToast("學生資料已更新");
+                } catch(e) { showToast("更新失敗", "error"); }
+            };
+
+            // 💡 學生刪除
+            const handleDeleteStudent = async () => {
+                if (window.confirm(`⚠️ 確定要刪除學生「${activeStudent.name}」及其所有收書紀錄嗎？\n此操作無法復原！`)) {
+                    try {
+                        await getStudentsRef().doc(activeStudent.docId).delete();
+                        setActiveId(null);
+                        showToast("已刪除學生紀錄");
+                    } catch(e) { showToast("刪除失敗", "error"); }
+                }
+            };
+
+            // ---- 書單設定 CRUD ----
             const saveCatalogToDB = async (newCatalog) => {
                 await getCatalogRef().set({ items: newCatalog }, { merge: true });
                 showToast("書單設定已同步");
             };
 
-            const handleAddCatalogItem = (e) => {
+            // 💡 書單新增與修改
+            const handleCatalogSubmit = (e) => {
                 e.preventDefault();
                 if (!newCatalogItem.title.trim()) return;
-                const newItem = { id: `cat_${Date.now()}`, title: newCatalogItem.title.trim(), price: Number(newCatalogItem.price) || 0, isPackage: newCatalogItem.isPackage };
-                saveCatalogToDB([...catalog, newItem]);
+                
+                if (editingCatalogId) {
+                    const updated = catalog.map(c => c.id === editingCatalogId ? { ...c, title: newCatalogItem.title.trim(), price: Number(newCatalogItem.price) || 0, isPackage: newCatalogItem.isPackage } : c);
+                    saveCatalogToDB(updated);
+                    setEditingCatalogId(null);
+                } else {
+                    const newItem = { id: `cat_${Date.now()}`, title: newCatalogItem.title.trim(), price: Number(newCatalogItem.price) || 0, isPackage: newCatalogItem.isPackage };
+                    saveCatalogToDB([...catalog, newItem]);
+                }
+                setNewCatalogItem({ title: "", price: "40", isPackage: false });
+            };
+
+            const handleEditCatalogClick = (item) => {
+                setNewCatalogItem({ title: item.title, price: item.price.toString(), isPackage: item.isPackage || false });
+                setEditingCatalogId(item.id);
+            };
+
+            const handleCancelCatalogEdit = () => {
+                setEditingCatalogId(null);
                 setNewCatalogItem({ title: "", price: "40", isPackage: false });
             };
 
             const handleDeleteCatalogItem = (id) => { saveCatalogToDB(catalog.filter(c => c.id !== id)); };
 
+            // ---- 學生書本 CRUD ----
             const handleAddBook = async (title, priceStr) => {
                 if (!activeStudent || !title.trim()) return;
-                if (!collectorName.trim()) { 
-                    showToast("請先輸入經手人名稱", "error"); 
-                    document.getElementById('collector-input').focus(); 
-                    return; 
-                }
+                if (!collectorName.trim()) { showToast("請先輸入經手人名稱", "error"); document.getElementById('collector-input').focus(); return; }
                 const newBook = {
-                    id: `${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-                    title: title.trim(),
-                    basePrice: Number(priceStr) || 0,
-                    deduction: 0,
-                    deductionReason: "",
-                    status: 'accepted',
-                    collectedBy: collectorName.trim(),
-                    createdAt: new Date().toISOString()
+                    id: `${Date.now()}_${Math.random().toString(36).substr(2, 5)}`, title: title.trim(), basePrice: Number(priceStr) || 0, deduction: 0, deductionReason: "", status: 'accepted', collectedBy: collectorName.trim(), createdAt: new Date().toISOString()
                 };
                 try {
                     await getStudentsRef().doc(activeStudent.docId).update({ books: [...(activeStudent.books || []), newBook] });
@@ -312,9 +345,7 @@
             const handleSaveBookEdits = async (bookId) => {
                 if (!activeStudent) return;
                 const updatedBooks = activeStudent.books.map(b => {
-                    if (b.id === bookId) {
-                        return { ...b, basePrice: Number(tempBasePrice) || 0, deduction: Number(tempDeduction) || 0, deductionReason: tempDeductReason.trim() };
-                    }
+                    if (b.id === bookId) return { ...b, basePrice: Number(tempBasePrice) || 0, deduction: Number(tempDeduction) || 0, deductionReason: tempDeductReason.trim() };
                     return b;
                 });
                 await getStudentsRef().doc(activeStudent.docId).update({ books: updatedBooks });
@@ -323,14 +354,11 @@
 
             const generateExportData = () => {
                 const sortedForExcel = [...students].sort((a, b) => (a.order || 0) - (b.order || 0));
-                let textContent = "";
-                let csvContent = "\uFEFF班級,姓名,電話號碼,總金額,已收書籍明細,退回書籍\n";
-
+                let textContent = ""; let csvContent = "\uFEFF班級,姓名,電話號碼,總金額,已收書籍明細,退回書籍\n";
                 sortedForExcel.forEach(s => {
                     const books = s.books || [];
-                    if (books.length === 0) {
-                        textContent += "\t\n"; csvContent += `${s.form},${s.name},${s.phone},0,,\n`;
-                    } else {
+                    if (books.length === 0) { textContent += "\t\n"; csvContent += `${s.form},${s.name},${s.phone},0,,\n`; } 
+                    else {
                         const acceptedBooks = books.filter(b => b.status === 'accepted');
                         const rejectedBooks = books.filter(b => b.status === 'rejected');
                         const allDetails = books.map(b => {
@@ -364,7 +392,7 @@
             };
 
             return (
-                <div class="max-w-[1440px] mx-auto w-full h-full flex flex-col font-sans relative">
+                <div class="max-w-[1440px] mx-auto w-full h-full flex flex-col font-sans relative animate-fade-in-up">
                     
                     {toast.show && (
                         <div class={`fixed top-6 right-6 z-50 px-5 py-3 rounded-lg shadow-floating flex items-center gap-3 text-sm font-medium text-white transition-opacity ${toast.type === 'error' ? 'bg-red-600' : 'bg-slate-900'}`}>
@@ -372,6 +400,7 @@
                         </div>
                     )}
 
+                    {/* Header */}
                     <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-4 border-b border-slate-200 gap-4 shrink-0">
                         <div>
                             <h1 class="text-xl md:text-2xl font-bold tracking-tight text-slate-900">收書管理系統</h1>
@@ -380,7 +409,6 @@
                                 {dbConnected ? "系統在線" : "連線中..."} <span class="text-slate-300">|</span> Po Kok Secondary School
                             </div>
                         </div>
-                        
                         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
                             <div class="flex items-center bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm focus-within:border-brand-500 flex-1 md:flex-none">
                                 <span class="text-slate-400 mr-2"><IconUser /></span>
@@ -398,6 +426,7 @@
                         </div>
                     </header>
 
+                    {/* Stats Overview */}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 shrink-0">
                         <div class="app-card p-4"><p class="text-xs font-medium text-slate-500 mb-1">成功回收總數</p><p class="text-2xl font-bold text-slate-900">{stats.totalAccepted} <span class="text-sm font-normal text-slate-400">本/套</span></p></div>
                         <div class="app-card p-4"><p class="text-xs font-medium text-slate-500 mb-1">折實應付總額</p><p class="text-2xl font-bold text-brand-600">${stats.totalAmount}</p></div>
@@ -406,33 +435,55 @@
                     </div>
 
                     <div class="flex-1 flex flex-col md:flex-row gap-6 min-h-0 pb-6">
-                        
-                        <div class="w-full md:w-80 lg:w-96 flex flex-col gap-4 shrink-0 h-full">
+                        {/* 左側 Sidebar */}
+                        <div class="w-full md:w-80 lg:w-96 flex flex-col gap-3 shrink-0 h-full">
                             <div class="flex gap-2">
                                 <div class="relative flex-1">
                                     <span class="absolute left-3 top-2.5 text-slate-400"><IconSearch /></span>
-                                    <input type="text" placeholder="搜尋..." value={search} onChange={(e) => setSearch(e.target.value)} class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:border-brand-500 shadow-sm" />
+                                    <input type="text" placeholder="搜尋姓名/班級..." value={search} onChange={(e) => setSearch(e.target.value)} class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:border-brand-500 shadow-sm" />
                                 </div>
                                 <button onClick={() => setShowAddStudentModal(true)} class="px-3 py-2 bg-brand-600 text-white hover:bg-brand-700 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center justify-center gap-1 shrink-0">
                                     <IconPlus /> 新增
                                 </button>
                             </div>
                             
+                            <div class="relative">
+                                <select value={filterCollector} onChange={(e) => setFilterCollector(e.target.value)} class="w-full pl-9 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:border-brand-500 shadow-sm cursor-pointer appearance-none">
+                                    <option value="all">顯示所有人 (不過濾)</option>
+                                    {uniqueCollectors.map(c => <option key={c} value={c}>篩選經手人: {c}</option>)}
+                                </select>
+                                <span class="absolute left-3 top-2 text-slate-400"><IconUser /></span>
+                                <span class="absolute right-3 top-2 text-slate-400 text-xs">▼</span>
+                            </div>
+
                             <div class="flex bg-slate-200/50 p-1 rounded-lg shrink-0">
                                 {['form', 'name', 'amount'].map(type => (
                                     <button key={type} onClick={() => setSortBy(type)} class={`flex-1 py-1 text-xs font-medium rounded-md transition-colors ${sortBy === type ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
-                                        {type === 'form' ? '班級' : type === 'name' ? '姓名' : '金額'}
+                                        {type === 'form' ? '按班級' : type === 'name' ? '按姓名' : '按金額'}
                                     </button>
                                 ))}
                             </div>
                             
                             <div class="flex-1 overflow-y-auto app-card p-2 space-y-1">
-                                {loading ? <div class="p-4 text-center text-sm text-slate-400">載入中...</div> : processedStudents.map(student => {
+                                {loading ? <div class="p-4 text-center text-sm text-slate-400">載入中...</div> : processedStudents.length === 0 ? (
+                                    <div class="p-8 text-center text-sm text-slate-400">沒有符合條件的名單</div>
+                                ) : processedStudents.map(student => {
                                     const isSelected = student.docId === activeId;
                                     const sPayout = (student.books || []).reduce((sum, b) => b.status === 'accepted' ? sum + getActualPrice(b) : sum, 0);
+                                    const studentCollectors = Array.from(new Set((student.books || []).filter(b => b.status === 'accepted' && b.collectedBy).map(b => b.collectedBy)));
+
                                     return (
                                         <div key={student.docId} onClick={() => setActiveId(student.docId)} class={`px-3 py-3 rounded-lg cursor-pointer transition-colors flex justify-between items-center ${isSelected ? 'bg-brand-50 border border-brand-200' : 'hover:bg-slate-50 border border-transparent'}`}>
-                                            <div class={`text-sm font-medium ${isSelected ? 'text-brand-900' : 'text-slate-900'}`}><span class="text-xs text-slate-500 mr-2 font-normal">F.{student.form}</span>{student.name}</div>
+                                            <div>
+                                                <div class={`text-sm font-medium ${isSelected ? 'text-brand-900' : 'text-slate-900'}`}>
+                                                    <span class="text-xs text-slate-500 mr-2 font-normal">F.{student.form}</span>{student.name}
+                                                </div>
+                                                {studentCollectors.length > 0 && (
+                                                    <div class="flex gap-1 mt-1.5">
+                                                        {studentCollectors.map(c => <span key={c} class={`text-[10px] px-1.5 py-0.5 rounded font-medium ${isSelected ? 'bg-brand-100 text-brand-700' : 'bg-slate-100 text-slate-500'}`}>經手: {c}</span>)}
+                                                    </div>
+                                                )}
+                                            </div>
                                             {sPayout > 0 && <div class={`text-sm font-semibold ${isSelected ? 'text-brand-600' : 'text-slate-600'}`}>${sPayout}</div>}
                                         </div>
                                     );
@@ -440,12 +491,21 @@
                             </div>
                         </div>
 
+                        {/* Right Panel Workspace */}
                         <div class="flex-1 app-card flex flex-col h-full min-w-0 overflow-hidden">
                             {activeStudent ? (
                                 <div class="flex flex-col h-full">
                                     <div class="px-6 py-5 border-b border-slate-200 flex flex-wrap justify-between items-center gap-4 bg-white rounded-t-16 shrink-0">
                                         <div>
-                                            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">{activeStudent.name}<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs rounded border border-slate-200">Form {activeStudent.form}</span></h2>
+                                            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                                                {activeStudent.name}
+                                                <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs rounded border border-slate-200">Form {activeStudent.form}</span>
+                                                {/* 💡 學生修改與刪除按鈕 */}
+                                                <div class="flex items-center gap-1 ml-2">
+                                                    <button onClick={openEditStudent} class="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-md transition-colors" title="修改學生資料"><IconEdit /></button>
+                                                    <button onClick={handleDeleteStudent} class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="刪除此學生紀錄"><IconTrash /></button>
+                                                </div>
+                                            </h2>
                                             <p class="text-sm text-slate-500 mt-1 flex items-center gap-1.5"><IconUser /> {activeStudent.phone || '無紀錄'}</p>
                                         </div>
                                         <div class="flex items-center gap-6">
@@ -471,7 +531,7 @@
                                         <div class="flex gap-3 mb-8 items-end max-w-2xl">
                                             <div class="flex-1"><label class="block text-xs font-medium text-slate-500 mb-1.5">其他書籍</label><input type="text" value={customBookName} onChange={e => setCustomBookName(e.target.value)} onKeyDown={handleKeyDown} class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm shadow-sm" /></div>
                                             <div class="w-24"><label class="block text-xs font-medium text-slate-500 mb-1.5">單價 ($)</label><input type="number" value={customBookPrice} onChange={e => setCustomBookPrice(e.target.value)} onKeyDown={handleKeyDown} class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm shadow-sm" /></div>
-                                            <button onClick={() => handleAddBook(customBookName, customBookPrice)} class="px-5 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg text-sm font-medium shadow-sm h-[38px]">新增</button>
+                                            <button onClick={() => handleAddBook(customBookName, customBookPrice)} class="px-5 py-2 bg-brand-600 text-white hover:bg-brand-700 rounded-lg text-sm font-medium shadow-sm h-[38px]">新增</button>
                                         </div>
 
                                         <div>
@@ -497,7 +557,7 @@
                                                                             <div class="flex flex-wrap items-center gap-2 mt-1.5 text-xs">
                                                                                 <span class="text-slate-500">原價設定: ${basePrice}</span>
                                                                                 {deduction > 0 && isAccepted && <span class="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium border border-amber-200">- ${deduction} ({b.deductionReason})</span>}
-                                                                                {b.collectedBy && isAccepted && <span class="text-slate-400">• 經手: {b.collectedBy}</span>}
+                                                                                {b.collectedBy && isAccepted && <span class="text-slate-400 font-medium bg-slate-100 px-1.5 py-0.5 rounded">經手: {b.collectedBy}</span>}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -543,6 +603,8 @@
                     </div>
 
                     {/* --- MODALS --- */}
+
+                    {/* 新增學生 Modal */}
                     {showAddStudentModal && (
                         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                             <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-floating">
@@ -557,6 +619,22 @@
                         </div>
                     )}
 
+                    {/* 💡 修改學生 Modal */}
+                    {showEditStudentModal && (
+                        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                            <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-floating">
+                                <div class="flex justify-between items-center mb-5"><h3 class="text-xl font-bold text-slate-900">修改學生資料</h3><button onClick={() => setShowEditStudentModal(false)} class="text-slate-400 hover:text-slate-600"><IconX /></button></div>
+                                <form onSubmit={handleSaveStudentEdit} class="space-y-4">
+                                    <div><label class="block text-sm font-medium text-slate-700 mb-1">班級 (Form)</label><select value={editStudentData.form} onChange={e => setEditStudentData({...editStudentData, form: e.target.value})} class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"><option value="1">Form 1</option><option value="2">Form 2</option><option value="3">Form 3</option><option value="4">Form 4</option><option value="5">Form 5</option><option value="6">Form 6</option></select></div>
+                                    <div><label class="block text-sm font-medium text-slate-700 mb-1">姓名</label><input type="text" required placeholder="例如: 陳大文" value={editStudentData.name} onChange={e => setEditStudentData({...editStudentData, name: e.target.value})} class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" /></div>
+                                    <div><label class="block text-sm font-medium text-slate-700 mb-1">電話 (選填)</label><input type="text" placeholder="例如: 98765432" value={editStudentData.phone} onChange={e => setEditStudentData({...editStudentData, phone: e.target.value})} class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" /></div>
+                                    <div class="mt-6 flex justify-end gap-3"><button type="button" onClick={() => setShowEditStudentModal(false)} class="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg text-sm">取消</button><button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-medium">儲存修改</button></div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 書單設定 Modal */}
                     {showSettingsModal && (
                         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                             <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-floating flex flex-col max-h-[85vh]">
@@ -564,11 +642,20 @@
                                     <div><h3 class="text-xl font-bold text-slate-900">總分類書單設定</h3><p class="text-xs text-slate-500 mt-1">喺度設定常用項目，所有人嘅「快捷登記」按鈕都會即時同步更新。</p></div>
                                     <button onClick={() => setShowSettingsModal(false)} class="text-slate-400 hover:text-slate-600"><IconX /></button>
                                 </div>
-                                <form onSubmit={handleAddCatalogItem} class="flex flex-wrap items-end gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 shrink-0">
+                                <form onSubmit={handleCatalogSubmit} class="flex flex-wrap items-end gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 shrink-0">
                                     <div class="flex-1 min-w-[150px]"><label class="block text-xs font-medium text-slate-600 mb-1">名稱</label><input type="text" required value={newCatalogItem.title} onChange={e=>setNewCatalogItem({...newCatalogItem, title: e.target.value})} class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg" placeholder="例: 中文"/></div>
                                     <div class="w-24"><label class="block text-xs font-medium text-slate-600 mb-1">預設價 $</label><input type="number" required value={newCatalogItem.price} onChange={e=>setNewCatalogItem({...newCatalogItem, price: e.target.value})} class="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg"/></div>
-                                    <div class="flex items-center gap-2 mb-2"><input type="checkbox" id="isPkg" checked={newCatalogItem.isPackage} onChange={e=>setNewCatalogItem({...newCatalogItem, isPackage: e.target.checked})} class="rounded border-slate-300" /><label htmlFor="isPkg" class="text-xs font-medium text-slate-600">設為黑色套餐</label></div>
-                                    <button type="submit" class="px-4 py-1.5 bg-slate-900 text-white rounded-lg text-sm h-[34px] mb-0.5">新增</button>
+                                    <div class="flex items-center gap-2 mb-2"><input type="checkbox" id="isPkg" checked={newCatalogItem.isPackage} onChange={e=>setNewCatalogItem({...newCatalogItem, isPackage: e.target.checked})} class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" /><label htmlFor="isPkg" class="text-xs font-medium text-slate-600">設為黑色套餐</label></div>
+                                    
+                                    {/* 💡 書單修改按鈕狀態 */}
+                                    {editingCatalogId ? (
+                                        <div class="flex gap-2">
+                                            <button type="submit" class="px-4 py-1.5 bg-brand-600 text-white rounded-lg text-sm h-[34px] mb-0.5 font-medium">更新</button>
+                                            <button type="button" onClick={handleCancelCatalogEdit} class="px-3 py-1.5 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm h-[34px] mb-0.5">取消</button>
+                                        </div>
+                                    ) : (
+                                        <button type="submit" class="px-4 py-1.5 bg-slate-900 text-white rounded-lg text-sm h-[34px] mb-0.5">新增</button>
+                                    )}
                                 </form>
                                 <div class="flex-1 overflow-y-auto border border-slate-200 rounded-xl">
                                     <table class="w-full text-left text-sm">
@@ -580,8 +667,12 @@
                                                 <tr key={item.id} class="hover:bg-slate-50">
                                                     <td class="px-4 py-2.5 font-medium text-slate-900">{item.title}</td>
                                                     <td class="px-4 py-2.5">${item.price}</td>
-                                                    <td class="px-4 py-2.5">{item.isPackage ? <span class="bg-slate-800 text-white text-[10px] px-1.5 py-0.5 rounded">套餐</span> : <span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.5 rounded">單本</span>}</td>
-                                                    <td class="px-4 py-2.5 text-right"><button onClick={()=>handleDeleteCatalogItem(item.id)} class="text-red-500 hover:bg-red-50 p-1 rounded"><IconTrash /></button></td>
+                                                    <td class="px-4 py-2.5">{item.isPackage ? <span class="bg-slate-800 text-white text-[10px] px-1.5 py-0.5 rounded">套餐款</span> : <span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.5 rounded">普通款</span>}</td>
+                                                    <td class="px-4 py-2.5 text-right flex justify-end gap-1">
+                                                        {/* 💡 新增：修改書單項目 */}
+                                                        <button onClick={()=>handleEditCatalogClick(item)} class="text-slate-400 hover:text-brand-600 hover:bg-brand-50 p-1.5 rounded transition-colors" title="修改"><IconEdit /></button>
+                                                        <button onClick={()=>handleDeleteCatalogItem(item.id)} class="text-slate-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition-colors" title="刪除"><IconTrash /></button>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -594,7 +685,7 @@
                     {showCollectorStatsModal && (
                         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                             <div class="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-floating flex flex-col max-h-[85vh]">
-                                <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-900">經手人對數總結</h3><button onClick={() => setShowCollectorStatsModal(false)} class="text-slate-400"><IconX /></button></div>
+                                <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold text-slate-900">經手人對數總結</h3><button onClick={() => setShowCollectorStatsModal(false)} class="text-slate-400 hover:text-slate-600"><IconX /></button></div>
                                 <div class="overflow-y-auto flex-1 space-y-4 pr-2">
                                     {Object.entries(collectorStats).map(([cName, cData]) => (
                                         <div key={cName} class="border border-slate-200 rounded-xl overflow-hidden">
@@ -611,7 +702,7 @@
 
                     {showExportModal && (
                         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                            <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-floating"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold">匯出數據</h3><button onClick={() => setShowExportModal(false)}><IconX /></button></div><textarea readOnly value={generateExportData().textContent} onClick={e => e.target.select()} class="w-full h-32 text-xs p-3 bg-slate-50 border rounded-lg mb-4" /><div class="flex justify-end gap-3"><button onClick={() => setShowExportModal(false)} class="px-4 py-2 border rounded-lg text-sm">取消</button><button onClick={handleDownloadCSV} class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm">下載 CSV</button></div></div>
+                            <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-floating"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold">匯出數據</h3><button onClick={() => setShowExportModal(false)} class="text-slate-400"><IconX /></button></div><textarea readOnly value={generateExportData().textContent} onClick={e => e.target.select()} class="w-full h-32 text-xs p-3 bg-slate-50 border rounded-lg mb-4" /><div class="flex justify-end gap-3"><button onClick={() => setShowExportModal(false)} class="px-4 py-2 border rounded-lg text-sm">取消</button><button onClick={handleDownloadCSV} class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm">下載 CSV</button></div></div>
                         </div>
                     )}
 
