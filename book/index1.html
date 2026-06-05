@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="book-pos-version" content="v1.2.5-balanced-position-fix">
-    <title>收書管理系統 - 全文字橫向修正版</title>
+    <meta name="book-pos-version" content="v1.2.7-catalog-save-ui-preserve">
+    <title>收書管理系統 - 書單儲存修正版</title>
     
     <!-- 
         更新說明 / Update Notes
-        Version: v1.2.5-balanced-position-fix
+        Version: v1.2.7-catalog-save-ui-preserve
         Date: 2026-06-05
         1. 在 v1.1.0 基礎上升級全站視覺，不改 Firebase / React / 單檔架構。
         2. 重畫主介面成 Premium POS App 風格：淺色漸變背景、玻璃 Header、柔和光暈、立體卡片。
@@ -19,6 +19,7 @@
         7. 繼續取消所有 瀏覽器原生 confirm / prompt / 原生 checkbox，保持 App 內自建元件。
         8. 移除所有 Menu / 年級 / 科目 / 書名按鈕嘅省略號，改為完整顯示文字。
         9. 重整購物車明細卡片，手機與 iPad 都以橫向資訊列顯示，避免文字被擠成直排。
+        10. v1.2.7 只修正書單價錢儲存：保留 v1.2.5 原有顏色與排版，加入本機備份 + Firebase 雲端同步保護。
     -->
 
     <!-- Tailwind CSS -->
@@ -343,6 +344,56 @@
             ]}
         ];
 
+        const CATALOG_STORAGE_KEY = `${appId}:catalog:items:v1`;
+
+        const createDefaultCatalog = () => {
+            const defaultCat = [];
+            ['1', '2', '3'].forEach(f => {
+                BOOK_TEMPLATES.forEach(subj => {
+                    subj.items.forEach((item, idx) => {
+                        defaultCat.push({
+                            id: `def_f${f}_${subj.s}_${idx}`,
+                            form: f,
+                            subject: subj.s,
+                            name: item.name,
+                            price: f === '3' ? item.f3Price : 0,
+                            isPackage: item.pkg
+                        });
+                    });
+                });
+            });
+            return defaultCat;
+        };
+
+        const cleanCatalogForSave = (items) => (Array.isArray(items) ? items : []).map((item, idx) => ({
+            id: item.id || `cat_${Date.now()}_${idx}`,
+            form: item.form || 'all',
+            subject: item.subject || '自訂',
+            name: item.name || item.title || '未命名',
+            price: Number(item.price) || 0,
+            isPackage: !!item.isPackage
+        }));
+
+        const readCatalogCache = () => {
+            try {
+                const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                if (parsed && Array.isArray(parsed.items) && parsed.items.length > 0) return cleanCatalogForSave(parsed.items);
+            } catch (e) {}
+            return null;
+        };
+
+        const writeCatalogCache = (items) => {
+            try {
+                localStorage.setItem(CATALOG_STORAGE_KEY, JSON.stringify({
+                    items: cleanCatalogForSave(items),
+                    savedAt: new Date().toISOString(),
+                    version: 'v1.2.7-catalog-save-ui-preserve'
+                }));
+            } catch (e) {}
+        };
+
         // ---- SVG Icons ----
         const IconSearch = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>;
         const IconUser = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
@@ -453,7 +504,7 @@
             const [user, setUser] = useState(null);
             const [dbConnected, setDbConnected] = useState(false);
             const [students, setStudents] = useState([]);
-            const [catalog, setCatalog] = useState([]); 
+            const [catalog, setCatalog] = useState(() => readCatalogCache() || []); 
             const [loading, setLoading] = useState(true);
             const [collectorName, setCollectorName] = useState(getSafeCollectorName);
             const [filterCollector, setFilterCollector] = useState("all");
@@ -587,18 +638,27 @@
                 }, () => { showToast("載入名單失敗", "error"); setLoading(false); });
                 const unsubCatalog = getCatalogRef().onSnapshot(docSnap => {
                     if (docSnap.exists && docSnap.data().items && docSnap.data().items.length > 0) {
-                        setCatalog(docSnap.data().items);
+                        const cloudCatalog = cleanCatalogForSave(docSnap.data().items);
+                        setCatalog(cloudCatalog);
+                        writeCatalogCache(cloudCatalog);
                     } else {
-                        let defaultCat = [];
-                        ['1', '2', '3'].forEach(f => {
-                            BOOK_TEMPLATES.forEach(subj => {
-                                subj.items.forEach((item, idx) => {
-                                    defaultCat.push({ id: `def_f${f}_${subj.s}_${idx}`, form: f, subject: subj.s, name: item.name, price: f === '3' ? item.f3Price : 0, isPackage: item.pkg });
-                                });
-                            });
-                        });
-                        setCatalog(defaultCat);
-                        getCatalogRef().set({ items: defaultCat });
+                        const cachedCatalog = readCatalogCache();
+                        const fallbackCatalog = cachedCatalog || createDefaultCatalog();
+                        setCatalog(fallbackCatalog);
+                        writeCatalogCache(fallbackCatalog);
+                        getCatalogRef().set({
+                            items: fallbackCatalog,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            updatedFrom: cachedCatalog ? 'local-cache-restore' : 'default-catalog-bootstrap'
+                        }, { merge: true }).catch(() => showToast('書單雲端初始化失敗，已暫存在本機', 'error'));
+                    }
+                }, () => {
+                    const cachedCatalog = readCatalogCache();
+                    if (cachedCatalog) {
+                        setCatalog(cachedCatalog);
+                        showToast('雲端書單暫時讀取失敗，已使用本機備份', 'error');
+                    } else {
+                        showToast('載入書單失敗', 'error');
                     }
                 });
                 return () => { unsubStudents(); unsubCatalog(); };
@@ -653,8 +713,23 @@
                 });
             }
 
-            async function saveCatalogToDB(newCatalog) { 
-                try { await getCatalogRef().set({ items: newCatalog }, { merge: true }); showToast("設定已儲存"); } catch(err) { showToast("儲存失敗", "error"); }
+            async function saveCatalogToDB(newCatalog) {
+                const cleanCatalog = cleanCatalogForSave(newCatalog);
+                setCatalog(cleanCatalog);
+                writeCatalogCache(cleanCatalog);
+                try {
+                    await getCatalogRef().set({
+                        items: cleanCatalog,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedFrom: 'settings-panel'
+                    }, { merge: true });
+                    showToast("書單設定已儲存");
+                    return true;
+                } catch(err) {
+                    console.error("Catalog save failed:", err);
+                    showToast("雲端儲存失敗，已暫存在本機", "error");
+                    return false;
+                }
             }
 
             function handleResetDefaultCatalog() {
@@ -665,14 +740,7 @@
                     confirmText: "載入預設",
                     cancelText: "取消",
                     onConfirm: async () => {
-                        let defaultCat = [];
-                        ['1', '2', '3'].forEach(f => {
-                            BOOK_TEMPLATES.forEach(subj => {
-                                subj.items.forEach((item, idx) => {
-                                    defaultCat.push({ id: `def_f${f}_${subj.s}_${idx}_${Date.now()}`, form: f, subject: subj.s, name: item.name, price: f === '3' ? item.f3Price : 0, isPackage: item.pkg });
-                                });
-                            });
-                        });
+                        const defaultCat = createDefaultCatalog().map((item, idx) => ({ ...item, id: `${item.id}_${Date.now()}_${idx}` }));
                         await saveCatalogToDB(defaultCat);
                     }
                 });
