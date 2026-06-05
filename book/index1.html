@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="book-pos-version" content="v1.2.1-price-only-ui-fix">
-    <title>收書管理系統 - 原價簡潔版</title>
+    <meta name="book-pos-version" content="v1.2.2-full-text-horizontal-ui">
+    <title>收書管理系統 - 全文字橫向修正版</title>
     
     <!-- 
         更新說明 / Update Notes
-        Version: v1.2.0-premium-pos-ui
+        Version: v1.2.2-full-text-horizontal-ui
         Date: 2026-06-05
         1. 在 v1.1.0 基礎上升級全站視覺，不改 Firebase / React / 單檔架構。
         2. 重畫主介面成 Premium POS App 風格：淺色漸變背景、玻璃 Header、柔和光暈、立體卡片。
@@ -17,6 +17,8 @@
         5. 設定頁改為更大更清晰的管理面板，手機為底部抽屜，iPad / Desktop 為大視窗。
         6. 加入自建排序快捷鍵、玻璃感底部導航、低卡頓微互動動畫。
         7. 繼續取消所有 瀏覽器原生 confirm / prompt / 原生 checkbox，保持 App 內自建元件。
+        8. 移除所有 Menu / 年級 / 科目 / 書名按鈕嘅省略號，改為完整顯示文字。
+        9. 重整購物車明細卡片，手機與 iPad 都以橫向資訊列顯示，避免文字被擠成直排。
     -->
 
     <!-- Tailwind CSS -->
@@ -80,11 +82,23 @@
         .hover-up { transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease; }
         .mobile-glass { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
         .tap-target { min-height: 44px; min-width: 44px; }
-        .ui-ellipsis { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .premium-tabbar button { max-width: min(46vw, 180px); overflow: hidden; text-overflow: ellipsis; }
-        @media (min-width: 768px) { .premium-tabbar button { max-width: 240px; } }
-        .pos-btn { min-width: 0; overflow: hidden; }
+        .no-truncate, .ui-ellipsis { min-width: 0; max-width: none; overflow: visible; text-overflow: clip; white-space: normal; word-break: keep-all; overflow-wrap: anywhere; }
+        .premium-tabbar button { max-width: none !important; overflow: visible !important; text-overflow: clip !important; white-space: nowrap !important; flex: 0 0 auto; }
+        .pos-btn { min-width: 0; overflow: visible; }
         .pos-btn * { min-width: 0; }
+        .pos-btn-title { display: block; width: 100%; white-space: normal; overflow: visible; text-overflow: clip; word-break: keep-all; overflow-wrap: anywhere; line-height: 1.35; }
+        .cart-row-card { overflow: visible !important; }
+        .cart-main-line { display: flex; align-items: flex-start; gap: 10px; min-width: 0; width: 100%; }
+        .cart-title-text { white-space: normal; overflow: visible; text-overflow: clip; word-break: keep-all; overflow-wrap: anywhere; line-height: 1.35; }
+        .cart-meta-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+        .cart-action-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap; width: 100%; padding-top: 10px; border-top: 1px solid rgba(226,232,240,.78); }
+        .cart-action-buttons { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .cart-action-buttons .tap-target { min-width: 38px; min-height: 38px; }
+        .cart-price-text { flex: 0 0 auto; font-size: 1.25rem; line-height: 1; font-weight: 900; color: #0f172a; }
+        @media (max-width: 430px) {
+            .cart-action-buttons .tap-target { min-width: 36px; min-height: 36px; padding-left: 8px; padding-right: 8px; }
+            .cart-price-text { font-size: 1.1rem; }
+        }
         .app-modal-backdrop { animation: fade-in-up 0.18s ease both; }
         @media (hover: hover) {
             .hover-up:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08); }
@@ -172,7 +186,7 @@
                 rgba(248,250,252,.78) !important;
         }
         .pos-btn {
-            min-height: 96px;
+            min-height: 112px;
             box-shadow: 0 10px 26px rgba(15, 23, 42, .055);
         }
         .pos-btn:not(.opacity-60):hover { box-shadow: 0 16px 36px rgba(14, 165, 233, .14); }
@@ -228,7 +242,7 @@
         @media (max-width: 1023px) {
             body { padding: 0 !important; }
             .premium-header { border-radius: 0 0 26px 26px; border-left: 0; border-right: 0; }
-            .pos-btn { min-height: 88px; }
+            .pos-btn { min-height: 104px; }
         }
 
         @media print { body * { visibility: hidden; } #receipt-modal, #receipt-modal * { visibility: visible; } #receipt-modal { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; padding: 0; margin: 0;} .no-print { display: none !important; } }
@@ -787,32 +801,34 @@
                                 const actualPrice = Math.max(0, basePrice - deduction);
                                 const isEditing = editingBookId === b.id;
                                 return (
-                                    <div key={b.id} className={`cart-item-premium border rounded-2xl overflow-hidden transition-all animate-fade-in-up ${isAccepted ? 'border-white bg-white/92' : 'border-red-200 bg-red-50/80 opacity-80'}`}>
-                                        <div className="p-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                                            <div className="flex items-start gap-3 w-full sm:w-auto">
-                                                <div className={`mt-0.5 ${isAccepted ? 'text-green-500' : 'text-red-500'}`}>{isAccepted ? <IconCheck /> : <IconX />}</div>
-                                                <div className="flex-1">
-                                                    <p className={`text-[13px] md:text-sm font-bold leading-snug ${!isAccepted && 'line-through text-slate-400'}`}>{b.title}</p>
-                                                    <div className="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px] md:text-xs">
-                                                        <span className="text-slate-500 font-medium bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">原價: ${basePrice}</span>
-                                                        {deduction > 0 && isAccepted && <span className="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold border border-amber-200">- ${deduction} ({b.deductionReason})</span>}
-                                                        {b.collectedBy && isAccepted && <span className="text-slate-500 font-bold bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">👤 {b.collectedBy}</span>}
+                                    <div key={b.id} className={`cart-row-card cart-item-premium border rounded-2xl transition-all animate-fade-in-up ${isAccepted ? 'border-white bg-white/92' : 'border-red-200 bg-red-50/80 opacity-80'}`}>
+                                        <div className="p-3.5">
+                                            <div className="cart-main-line">
+                                                <div className={`mt-0.5 shrink-0 ${isAccepted ? 'text-green-500' : 'text-red-500'}`}>{isAccepted ? <IconCheck /> : <IconX />}</div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className={`cart-title-text text-[13px] md:text-sm font-black ${!isAccepted && 'line-through text-slate-400'}`}>{b.title}</p>
+                                                    <div className="cart-meta-line text-[10px] md:text-xs">
+                                                        <span className="text-slate-500 font-bold bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">原價: ${basePrice}</span>
+                                                        {deduction > 0 && isAccepted && <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded-lg font-bold border border-amber-200">扣 ${deduction}：{b.deductionReason}</span>}
+                                                        {b.collectedBy && isAccepted && <span className="text-slate-500 font-bold bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">👤 {b.collectedBy}</span>}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center justify-end gap-1.5 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-0 border-slate-100 mt-2 sm:mt-0">
-                                                {isAccepted && <div className="text-lg font-black text-slate-900 mr-2">${actualPrice}</div>}
-                                                {isAccepted && <button type="button" onClick={() => { if(isEditing){ setEditingBookId(null); } else { setEditingBookId(b.id); setTempBasePrice(basePrice); setTempDeduction(b.deduction || ""); setTempDeductReason(b.deductionReason || ""); } }} className="tap-target p-2 text-slate-500 bg-slate-100 rounded-lg hover:bg-brand-50 hover:text-brand-600 transition-colors btn-spring" title="修改"><IconEdit /></button>}
-                                                <button type="button" onClick={() => handleToggleBookStatus(b.id)} className="tap-target px-2.5 py-2 text-[10px] font-bold text-slate-600 bg-slate-100 rounded-lg border border-slate-200 transition-colors hover:bg-slate-200 btn-spring">{isAccepted ? "退回" : "恢復"}</button>
-                                                <button type="button" onClick={() => handleDeleteBook(b.id)} className="tap-target p-2 text-red-500 bg-slate-100 rounded-lg hover:bg-red-50 transition-colors btn-spring"><IconTrash /></button>
+                                            <div className="cart-action-line mt-3">
+                                                {isAccepted ? <div className="cart-price-text">${actualPrice}</div> : <div className="text-sm font-black text-red-500">已退回</div>}
+                                                <div className="cart-action-buttons">
+                                                    {isAccepted && <button type="button" onClick={() => { if(isEditing){ setEditingBookId(null); } else { setEditingBookId(b.id); setTempBasePrice(basePrice); setTempDeduction(b.deduction || ""); setTempDeductReason(b.deductionReason || ""); } }} className="tap-target p-2 text-slate-500 bg-slate-100 rounded-xl hover:bg-brand-50 hover:text-brand-600 transition-colors btn-spring" title="修改"><IconEdit /></button>}
+                                                    <button type="button" onClick={() => handleToggleBookStatus(b.id)} className="tap-target px-3 py-2 text-[10px] font-black text-slate-600 bg-slate-100 rounded-xl border border-slate-200 transition-colors hover:bg-slate-200 btn-spring whitespace-nowrap">{isAccepted ? "退回" : "恢復"}</button>
+                                                    <button type="button" onClick={() => handleDeleteBook(b.id)} className="tap-target p-2 text-red-500 bg-slate-100 rounded-xl hover:bg-red-50 transition-colors btn-spring"><IconTrash /></button>
+                                                </div>
                                             </div>
                                         </div>
                                         {isEditing && isAccepted && (
                                             <div className="bg-slate-50 border-t border-slate-200 p-3 flex flex-wrap gap-2 items-end shadow-inner-soft animate-fade-in-up">
-                                                <div className="w-16"><label className="block text-[10px] text-slate-500 mb-1 font-bold">修改原價</label><input type="number" value={tempBasePrice} onChange={e => setTempBasePrice(e.target.value)} className="w-full px-2 py-1.5 text-xs font-bold border border-slate-300 rounded shadow-sm focus:ring-2 focus:ring-brand-400" /></div>
-                                                <div className="w-16"><label className="block text-[10px] text-slate-500 mb-1 font-bold">扣減金額</label><input type="number" value={tempDeduction} onChange={e => setTempDeduction(e.target.value)} className="w-full px-2 py-1.5 text-xs font-bold border border-slate-300 rounded shadow-sm focus:ring-2 focus:ring-brand-400" /></div>
-                                                <div className="flex-1 min-w-[120px]"><label className="block text-[10px] text-slate-500 mb-1 font-bold">扣減原因</label><input type="text" value={tempDeductReason} onChange={e => setTempDeductReason(e.target.value)} className="w-full px-2 py-1.5 text-xs font-bold border border-slate-300 rounded shadow-sm focus:ring-2 focus:ring-brand-400" /></div>
-                                                <button type="button" onClick={() => handleSaveBookEdits(b.id)} className="px-4 py-1.5 bg-brand-600 text-white text-xs font-bold rounded shadow-sm hover:bg-brand-700 h-[30px] btn-spring">儲存</button>
+                                                <div className="w-20"><label className="block text-[10px] text-slate-500 mb-1 font-bold">修改原價</label><input type="number" value={tempBasePrice} onChange={e => setTempBasePrice(e.target.value)} className="w-full px-2 py-1.5 text-xs font-bold border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-brand-400" /></div>
+                                                <div className="w-20"><label className="block text-[10px] text-slate-500 mb-1 font-bold">扣減金額</label><input type="number" value={tempDeduction} onChange={e => setTempDeduction(e.target.value)} className="w-full px-2 py-1.5 text-xs font-bold border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-brand-400" /></div>
+                                                <div className="flex-1 min-w-[140px]"><label className="block text-[10px] text-slate-500 mb-1 font-bold">扣減原因</label><input type="text" value={tempDeductReason} onChange={e => setTempDeductReason(e.target.value)} className="w-full px-2 py-1.5 text-xs font-bold border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-brand-400" /></div>
+                                                <button type="button" onClick={() => handleSaveBookEdits(b.id)} className="px-4 py-2 bg-brand-600 text-white text-xs font-black rounded-xl shadow-sm hover:bg-brand-700 btn-spring">儲存</button>
                                             </div>
                                         )}
                                     </div>
@@ -828,7 +844,7 @@
                     {missingBooks.length === 0 ? (
                         <div className="text-center py-10 bg-emerald-50 border border-emerald-200 rounded-2xl shadow-sm animate-fade-in-up"><span className="text-5xl">🎉</span><p className="text-emerald-700 font-black mt-3 text-lg tracking-wide">核心單本已收齊！</p><p className="text-[10px] text-emerald-600 mt-1 font-bold opacity-80">（或已被套餐項目覆蓋）</p></div>
                     ) : (
-                        <div className="space-y-2.5"><p className="text-xs font-bold text-slate-400 mb-3 uppercase tracking-wider">應收但未交書籍：</p>{missingBooks.map(c => (<div key={c.id} className="flex justify-between items-center bg-white p-3 border border-dashed border-slate-300 rounded-2xl shadow-sm hover:border-brand-300 transition-colors animate-fade-in-up"><div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span className="ui-ellipsis text-sm font-bold text-slate-600" title={formatBookTitle(c)}>{formatBookTitle(c)}</span></div><button type="button" onClick={() => handleQuickAddBook(c)} className="tap-target px-3 py-1.5 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 text-xs font-bold rounded-lg border border-slate-200 transition-colors shadow-sm btn-spring">+ 補交</button></div>))}</div>
+                        <div className="space-y-2.5"><p className="text-xs font-bold text-slate-400 mb-3 uppercase tracking-wider">應收但未交書籍：</p>{missingBooks.map(c => (<div key={c.id} className="flex justify-between items-center bg-white p-3 border border-dashed border-slate-300 rounded-2xl shadow-sm hover:border-brand-300 transition-colors animate-fade-in-up"><div className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span className="no-truncate text-sm font-bold text-slate-600" title={formatBookTitle(c)}>{formatBookTitle(c)}</span></div><button type="button" onClick={() => handleQuickAddBook(c)} className="tap-target px-3 py-1.5 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 text-xs font-bold rounded-lg border border-slate-200 transition-colors shadow-sm btn-spring">+ 補交</button></div>))}</div>
                     )}
                 </div>
             );
@@ -845,8 +861,8 @@
                                 const title = formatBookTitle(item);
                                 const isAdded = (renderStudent && renderStudent.books || []).some(b => b.title === title && b.status === 'accepted');
                                 return (
-                                    <button key={item.id} type="button" onClick={() => handleQuickAddBook(item)} className={`pos-btn hover-up relative px-3.5 py-4 rounded-2xl text-sm font-bold border-2 flex flex-col items-start gap-2 w-[calc(50%-5px)] sm:w-[calc(33.3%-7px)] md:max-lg:w-[calc(33.3%-7px)] xl:w-[calc(25%-8px)] text-left transition-all ${isAdded ? 'bg-slate-100 border-slate-200 opacity-60' : item.isPackage ? 'bg-gradient-to-br from-slate-950 to-slate-700 text-white border-slate-800 shadow-md' : 'bg-white/90 text-slate-800 border-white hover:border-brand-300 shadow-sm'}`}>
-                                        <span className="ui-ellipsis w-full leading-tight" title={item.name}>{item.name}</span>
+                                    <button key={item.id} type="button" onClick={() => handleQuickAddBook(item)} className={`pos-btn hover-up relative px-3.5 py-4 rounded-2xl text-sm font-bold border-2 flex flex-col items-start gap-2 w-[calc(50%-5px)] sm:w-[calc(33.3%-7px)] lg:w-[calc(33.3%-7px)] 2xl:w-[calc(25%-8px)] text-left transition-all ${isAdded ? 'bg-slate-100 border-slate-200 opacity-60' : item.isPackage ? 'bg-gradient-to-br from-slate-950 to-slate-700 text-white border-slate-800 shadow-md' : 'bg-white/90 text-slate-800 border-white hover:border-brand-300 shadow-sm'}`}>
+                                        <span className="pos-btn-title font-black" title={item.name}>{item.name}</span>
                                         <div className="flex justify-between items-center w-full mt-auto pt-1"><span className={`text-[11px] px-2 py-0.5 rounded-md font-black tracking-wide ${item.isPackage ? 'bg-slate-700 text-slate-100' : 'bg-slate-100 text-slate-600'}`}>${item.price}</span>{item.price === 0 && !isAdded && <span className="text-red-500" title="未定價警告"><IconWarning /></span>}{isAdded && <span className="text-green-500 bg-green-100 rounded-full p-0.5"><IconCheck /></span>}</div>
                                     </button>
                                 );
@@ -895,7 +911,7 @@
                         </div>
 
                         <div className="hidden lg:flex flex-1 gap-4 xl:gap-6 overflow-hidden">
-                            {renderStudent ? (<><div className="premium-panel flex-1 flex flex-col overflow-hidden rounded-[28px] border-0 ring-1 ring-white/60"><div className="premium-tabbar px-6 py-5 flex justify-between items-center shrink-0 z-10"><h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">{renderStudent.name} <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-xs rounded border border-slate-200 font-bold shadow-inner-soft">F.{renderStudent.form}</span><div className="flex items-center gap-1 ml-2"><button type="button" onClick={openEditStudent} className="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-md transition-colors" title="修改學生資料"><IconEdit /></button><button type="button" onClick={handleDeleteStudent} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="刪除此學生紀錄"><IconTrash /></button></div></h2></div>{renderPOSMenu()}</div><div className="w-[320px] xl:w-[380px] flex flex-col gap-4 xl:gap-6 overflow-hidden shrink-0"><div className="checkout-panel flex-1 flex flex-col overflow-hidden rounded-[28px] border-0 ring-1 ring-white/60 relative"><div className="checkout-total-card text-white p-5 shrink-0 flex justify-between items-end"><div><p className="text-slate-400 text-[10px] font-bold mb-1 uppercase tracking-widest">本單結算</p><p className="text-4xl font-black leading-none">${activeStats.total}</p></div><div className="text-right text-xs text-slate-300 font-bold">單本: {activeStats.acceptedBooks} <br/> 套餐: {activeStats.acceptedPackages}</div></div><div className="flex bg-white/70 p-1 m-3 rounded-2xl shrink-0 border border-slate-200 shadow-inner-soft"><button type="button" onClick={() => setActiveMobileTab('cart')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm ${activeMobileTab !== 'missing' ? 'tab-pill-active' : 'text-slate-500 hover:bg-slate-200/50'}`}>🛒 已登記明細</button><button type="button" onClick={() => setActiveMobileTab('missing')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm flex items-center justify-center gap-1 ${activeMobileTab === 'missing' ? 'tab-pill-active' : 'text-slate-500 hover:bg-slate-200/50'}`}>📋 欠交追蹤 {missingBooks.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>}</button></div><div className="flex-1 overflow-hidden flex flex-col relative">{activeMobileTab !== 'missing' ? renderCartList() : renderMissingList()}</div><div className="p-4 bg-white/80 border-t border-slate-200 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] z-20"><button type="button" onClick={() => setShowReceiptModal(true)} className="w-full py-3.5 premium-primary-btn text-white rounded-2xl text-sm font-black flex justify-center items-center gap-2 transition-all active:scale-95"><IconPrinter /> 印單對數</button></div></div></div></>) : (<div className="premium-panel flex-1 flex flex-col justify-center items-center text-slate-400 rounded-[28px] border-dashed border-2"><div className="p-6 bg-white rounded-full shadow-sm mb-4"><IconUser /></div><p className="text-lg font-black text-slate-500">請從左側名單選擇學生開始落單</p></div>)}
+                            {renderStudent ? (<><div className="premium-panel flex-1 flex flex-col overflow-hidden rounded-[28px] border-0 ring-1 ring-white/60"><div className="premium-tabbar px-6 py-5 flex justify-between items-center shrink-0 z-10"><h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">{renderStudent.name} <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-xs rounded border border-slate-200 font-bold shadow-inner-soft">F.{renderStudent.form}</span><div className="flex items-center gap-1 ml-2"><button type="button" onClick={openEditStudent} className="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-md transition-colors" title="修改學生資料"><IconEdit /></button><button type="button" onClick={handleDeleteStudent} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="刪除此學生紀錄"><IconTrash /></button></div></h2></div>{renderPOSMenu()}</div><div className="w-[380px] xl:w-[430px] flex flex-col gap-4 xl:gap-6 overflow-hidden shrink-0"><div className="checkout-panel flex-1 flex flex-col overflow-hidden rounded-[28px] border-0 ring-1 ring-white/60 relative"><div className="checkout-total-card text-white p-5 shrink-0 flex justify-between items-end"><div><p className="text-slate-400 text-[10px] font-bold mb-1 uppercase tracking-widest">本單結算</p><p className="text-4xl font-black leading-none">${activeStats.total}</p></div><div className="text-right text-xs text-slate-300 font-bold">單本: {activeStats.acceptedBooks} <br/> 套餐: {activeStats.acceptedPackages}</div></div><div className="flex bg-white/70 p-1 m-3 rounded-2xl shrink-0 border border-slate-200 shadow-inner-soft"><button type="button" onClick={() => setActiveMobileTab('cart')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm ${activeMobileTab !== 'missing' ? 'tab-pill-active' : 'text-slate-500 hover:bg-slate-200/50'}`}>🛒 已登記明細</button><button type="button" onClick={() => setActiveMobileTab('missing')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm flex items-center justify-center gap-1 ${activeMobileTab === 'missing' ? 'tab-pill-active' : 'text-slate-500 hover:bg-slate-200/50'}`}>📋 欠交追蹤 {missingBooks.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>}</button></div><div className="flex-1 overflow-hidden flex flex-col relative">{activeMobileTab !== 'missing' ? renderCartList() : renderMissingList()}</div><div className="p-4 bg-white/80 border-t border-slate-200 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] z-20"><button type="button" onClick={() => setShowReceiptModal(true)} className="w-full py-3.5 premium-primary-btn text-white rounded-2xl text-sm font-black flex justify-center items-center gap-2 transition-all active:scale-95"><IconPrinter /> 印單對數</button></div></div></div></>) : (<div className="premium-panel flex-1 flex flex-col justify-center items-center text-slate-400 rounded-[28px] border-dashed border-2"><div className="p-6 bg-white rounded-full shadow-sm mb-4"><IconUser /></div><p className="text-lg font-black text-slate-500">請從左側名單選擇學生開始落單</p></div>)}
                         </div>
 
                         <div className={`lg:hidden fixed inset-0 z-[60] mobile-workspace flex flex-col transition-transform duration-300 ease-in-out shadow-[-10px_0_30px_rgba(0,0,0,0.1)] ${activeId ? 'translate-x-0' : 'translate-x-full'}`}>
