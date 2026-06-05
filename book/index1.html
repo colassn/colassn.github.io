@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="book-pos-version" content="v1.2.2-full-text-horizontal-ui">
+    <meta name="book-pos-version" content="v1.2.5-balanced-position-fix">
     <title>收書管理系統 - 全文字橫向修正版</title>
     
     <!-- 
         更新說明 / Update Notes
-        Version: v1.2.2-full-text-horizontal-ui
+        Version: v1.2.5-balanced-position-fix
         Date: 2026-06-05
         1. 在 v1.1.0 基礎上升級全站視覺，不改 Firebase / React / 單檔架構。
         2. 重畫主介面成 Premium POS App 風格：淺色漸變背景、玻璃 Header、柔和光暈、立體卡片。
@@ -243,6 +243,24 @@
             body { padding: 0 !important; }
             .premium-header { border-radius: 0 0 26px 26px; border-left: 0; border-right: 0; }
             .pos-btn { min-height: 104px; }
+        }
+
+
+        /* v1.2.5 Balanced position fix: only safe spacing, no aggressive width override */
+        .balanced-position-fix { min-width: 0; }
+        .balanced-pos-main { min-width: 0; }
+        .balanced-checkout-column { align-self: stretch; }
+        .cart-row-card { width: 100%; }
+        .cart-title-text { max-width: 100%; }
+        @media (min-width: 1024px) {
+            .balanced-pos-main { min-width: 0; }
+            .balanced-checkout-column { width: 380px; }
+        }
+        @media (min-width: 1280px) {
+            .balanced-checkout-column { width: 430px; }
+        }
+        @media (max-width: 1023px) {
+            .cart-row-card { margin-bottom: 2px; }
         }
 
         @media print { body * { visibility: hidden; } #receipt-modal, #receipt-modal * { visibility: visible; } #receipt-modal { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; padding: 0; margin: 0;} .no-print { display: none !important; } }
@@ -911,7 +929,7 @@
                         </div>
 
                         <div className="hidden lg:flex flex-1 gap-4 xl:gap-6 overflow-hidden">
-                            {renderStudent ? (<><div className="premium-panel flex-1 flex flex-col overflow-hidden rounded-[28px] border-0 ring-1 ring-white/60"><div className="premium-tabbar px-6 py-5 flex justify-between items-center shrink-0 z-10"><h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">{renderStudent.name} <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-xs rounded border border-slate-200 font-bold shadow-inner-soft">F.{renderStudent.form}</span><div className="flex items-center gap-1 ml-2"><button type="button" onClick={openEditStudent} className="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-md transition-colors" title="修改學生資料"><IconEdit /></button><button type="button" onClick={handleDeleteStudent} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="刪除此學生紀錄"><IconTrash /></button></div></h2></div>{renderPOSMenu()}</div><div className="w-[380px] xl:w-[430px] flex flex-col gap-4 xl:gap-6 overflow-hidden shrink-0"><div className="checkout-panel flex-1 flex flex-col overflow-hidden rounded-[28px] border-0 ring-1 ring-white/60 relative"><div className="checkout-total-card text-white p-5 shrink-0 flex justify-between items-end"><div><p className="text-slate-400 text-[10px] font-bold mb-1 uppercase tracking-widest">本單結算</p><p className="text-4xl font-black leading-none">${activeStats.total}</p></div><div className="text-right text-xs text-slate-300 font-bold">單本: {activeStats.acceptedBooks} <br/> 套餐: {activeStats.acceptedPackages}</div></div><div className="flex bg-white/70 p-1 m-3 rounded-2xl shrink-0 border border-slate-200 shadow-inner-soft"><button type="button" onClick={() => setActiveMobileTab('cart')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm ${activeMobileTab !== 'missing' ? 'tab-pill-active' : 'text-slate-500 hover:bg-slate-200/50'}`}>🛒 已登記明細</button><button type="button" onClick={() => setActiveMobileTab('missing')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm flex items-center justify-center gap-1 ${activeMobileTab === 'missing' ? 'tab-pill-active' : 'text-slate-500 hover:bg-slate-200/50'}`}>📋 欠交追蹤 {missingBooks.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>}</button></div><div className="flex-1 overflow-hidden flex flex-col relative">{activeMobileTab !== 'missing' ? renderCartList() : renderMissingList()}</div><div className="p-4 bg-white/80 border-t border-slate-200 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] z-20"><button type="button" onClick={() => setShowReceiptModal(true)} className="w-full py-3.5 premium-primary-btn text-white rounded-2xl text-sm font-black flex justify-center items-center gap-2 transition-all active:scale-95"><IconPrinter /> 印單對數</button></div></div></div></>) : (<div className="premium-panel flex-1 flex flex-col justify-center items-center text-slate-400 rounded-[28px] border-dashed border-2"><div className="p-6 bg-white rounded-full shadow-sm mb-4"><IconUser /></div><p className="text-lg font-black text-slate-500">請從左側名單選擇學生開始落單</p></div>)}
+                            {renderStudent ? (<><div className="balanced-pos-main premium-panel flex-1 min-w-0 flex flex-col overflow-hidden rounded-[28px] border-0 ring-1 ring-white/60"><div className="premium-tabbar px-6 py-5 flex justify-between items-center shrink-0 z-10"><h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">{renderStudent.name} <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-xs rounded border border-slate-200 font-bold shadow-inner-soft">F.{renderStudent.form}</span><div className="flex items-center gap-1 ml-2"><button type="button" onClick={openEditStudent} className="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-md transition-colors" title="修改學生資料"><IconEdit /></button><button type="button" onClick={handleDeleteStudent} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="刪除此學生紀錄"><IconTrash /></button></div></h2></div>{renderPOSMenu()}</div><div className="balanced-checkout-column w-[380px] xl:w-[430px] flex flex-col gap-4 xl:gap-6 overflow-hidden shrink-0"><div className="checkout-panel flex-1 flex flex-col overflow-hidden rounded-[28px] border-0 ring-1 ring-white/60 relative"><div className="checkout-total-card text-white p-5 shrink-0 flex justify-between items-end"><div><p className="text-slate-400 text-[10px] font-bold mb-1 uppercase tracking-widest">本單結算</p><p className="text-4xl font-black leading-none">${activeStats.total}</p></div><div className="text-right text-xs text-slate-300 font-bold">單本: {activeStats.acceptedBooks} <br/> 套餐: {activeStats.acceptedPackages}</div></div><div className="flex bg-white/70 p-1 m-3 rounded-2xl shrink-0 border border-slate-200 shadow-inner-soft"><button type="button" onClick={() => setActiveMobileTab('cart')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm ${activeMobileTab !== 'missing' ? 'tab-pill-active' : 'text-slate-500 hover:bg-slate-200/50'}`}>🛒 已登記明細</button><button type="button" onClick={() => setActiveMobileTab('missing')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm flex items-center justify-center gap-1 ${activeMobileTab === 'missing' ? 'tab-pill-active' : 'text-slate-500 hover:bg-slate-200/50'}`}>📋 欠交追蹤 {missingBooks.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>}</button></div><div className="flex-1 overflow-hidden flex flex-col relative">{activeMobileTab !== 'missing' ? renderCartList() : renderMissingList()}</div><div className="p-4 bg-white/80 border-t border-slate-200 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] z-20"><button type="button" onClick={() => setShowReceiptModal(true)} className="w-full py-3.5 premium-primary-btn text-white rounded-2xl text-sm font-black flex justify-center items-center gap-2 transition-all active:scale-95"><IconPrinter /> 印單對數</button></div></div></div></>) : (<div className="premium-panel flex-1 flex flex-col justify-center items-center text-slate-400 rounded-[28px] border-dashed border-2"><div className="p-6 bg-white rounded-full shadow-sm mb-4"><IconUser /></div><p className="text-lg font-black text-slate-500">請從左側名單選擇學生開始落單</p></div>)}
                         </div>
 
                         <div className={`lg:hidden fixed inset-0 z-[60] mobile-workspace flex flex-col transition-transform duration-300 ease-in-out shadow-[-10px_0_30px_rgba(0,0,0,0.1)] ${activeId ? 'translate-x-0' : 'translate-x-full'}`}>
