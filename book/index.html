@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>收書管理系統 - 完美無錯版</title>
+    <title>收書管理系統 - 中三精準報價版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -80,15 +80,60 @@
         const getStudentsRef = () => db.collection('artifacts').doc(appId).collection('public').doc('data').collection('students');
         const getCatalogRef = () => db.collection('artifacts').doc(appId).collection('config').doc('catalog');
 
+        // 💡 全新：已套用中三專屬精準報價之範本
         const BOOK_TEMPLATES = [
-            { s: "中文", items: ["上冊書", "上冊書（連小冊子）", "下冊書", "下冊書（連小冊子）", "中文書全齊|pkg", "中文書全齊（連小冊子）|pkg"] },
-            { s: "英文", items: ["Grammar", "listening", "listening連data file", "Book A", "Book B"] },
-            { s: "數學", items: ["數學A", "數學A（連360）", "數學B", "數學B（連360）", "數學書全齊|pkg", "數學書全齊（連360）|pkg"] },
-            { s: "科學", items: ["綜合科學 A", "綜合科學 B", "綜合化學書全齊|pkg", "化學書", "生物書", "化學生物書全齊|pkg"] },
-            { s: "公民經濟與社會科", items: ["公經社A", "公經社B", "公經社C", "公經社全齊|pkg"] },
-            { s: "歷史 / 中史", items: ["中史書", "歷史書 上冊", "歷史書 下冊", "中西史書全齊|pkg"] },
-            { s: "地理", items: ["地理書上冊", "地理書下冊", "地理書全齊|pkg"] },
-            { s: "其他科目", items: ["普通話書", "音樂書"] }
+            { s: "中文", items: [
+                { name: "上冊書", pkg: false, f3Price: 35 },
+                { name: "上冊書（連小冊子）", pkg: false, f3Price: 50 },
+                { name: "下冊書", pkg: false, f3Price: 35 },
+                { name: "下冊書（連小冊子）", pkg: false, f3Price: 50 },
+                { name: "中文書全齊", pkg: true, f3Price: 70 },
+                { name: "中文書全齊（連小冊子）", pkg: true, f3Price: 100 }
+            ]},
+            { s: "英文", items: [
+                { name: "Grammar", pkg: false, f3Price: 20 },
+                { name: "listening", pkg: false, f3Price: 10 },
+                { name: "listening連data file", pkg: false, f3Price: 20 },
+                { name: "Book A", pkg: false, f3Price: 30 },
+                { name: "Book B", pkg: false, f3Price: 30 }
+            ]},
+            { s: "數學", items: [
+                { name: "數學A", pkg: false, f3Price: 50 },
+                { name: "數學A（連360）", pkg: false, f3Price: 60 },
+                { name: "數學B", pkg: false, f3Price: 50 },
+                { name: "數學B（連360）", pkg: false, f3Price: 60 },
+                { name: "數學書全齊", pkg: true, f3Price: 100 },
+                { name: "數學書全齊（連360）", pkg: true, f3Price: 120 }
+            ]},
+            { s: "科學", items: [
+                { name: "綜合科學 A", pkg: false, f3Price: 10 },
+                { name: "綜合科學 B", pkg: false, f3Price: 20 },
+                { name: "綜合化學書全齊", pkg: true, f3Price: 30 },
+                { name: "化學書", pkg: false, f3Price: 0 },
+                { name: "生物書", pkg: false, f3Price: 0 },
+                { name: "化學生物書全齊", pkg: true, f3Price: 0 }
+            ]},
+            { s: "公民經濟與社會科", items: [
+                { name: "公經社A", pkg: false, f3Price: 5 },
+                { name: "公經社B", pkg: false, f3Price: 5 },
+                { name: "公經社C", pkg: false, f3Price: 5 },
+                { name: "公經社全齊", pkg: true, f3Price: 20 }
+            ]},
+            { s: "歷史 / 中史", items: [
+                { name: "中史書", pkg: false, f3Price: 0 },
+                { name: "歷史書 上冊", pkg: false, f3Price: 0 },
+                { name: "歷史書 下冊", pkg: false, f3Price: 0 },
+                { name: "中西史書全齊", pkg: true, f3Price: 0 }
+            ]},
+            { s: "地理", items: [
+                { name: "地理書上冊", pkg: false, f3Price: 5 },
+                { name: "地理書下冊", pkg: false, f3Price: 5 },
+                { name: "地理書全齊", pkg: true, f3Price: 10 }
+            ]},
+            { s: "其他科目", items: [
+                { name: "普通話書", pkg: false, f3Price: 10 },
+                { name: "音樂書", pkg: false, f3Price: 10 }
+            ]}
         ];
 
         // ---- SVG Icons ----
@@ -102,7 +147,7 @@
         const IconCheck = () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>;
         const IconX = () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
         const IconPlus = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
-        const IconSettings = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>;
+        const IconSettings = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0 2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>;
         const IconChevronLeft = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>;
         const IconWarning = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
         const IconCart = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>;
@@ -126,9 +171,8 @@
             const [sortBy, setSortBy] = useState("form");
             const [activeId, setActiveId] = useState(null);
             
-            // 💡 UI View States
             const [activeMobileTab, setActiveMobileTab] = useState("menu");
-            const [activeCatalogForm, setActiveCatalogForm] = useState("1");
+            const [activeCatalogForm, setActiveCatalogForm] = useState("3"); // 預設顯示中三
             const [activeSubject, setActiveSubject] = useState("All");
             
             const [customBookName, setCustomBookName] = useState("");
@@ -151,8 +195,8 @@
 
             const [newStudent, setNewStudent] = useState({ form: "3", name: "", phone: "" });
             const [editStudentData, setEditStudentData] = useState({ form: "3", name: "", phone: "" });
-            const [settingsFilterForm, setSettingsFilterForm] = useState("1");
-            const [newCatalogItem, setNewCatalogItem] = useState({ form: "1", subject: "中文", name: "", price: "0", isPackage: false });
+            const [settingsFilterForm, setSettingsFilterForm] = useState("3");
+            const [newCatalogItem, setNewCatalogItem] = useState({ form: "3", subject: "中文", name: "", price: "0", isPackage: false });
             const [editingCatalogId, setEditingCatalogId] = useState(null); 
 
             const [toast, setToast] = useState({ show: false, message: "", type: "info" });
@@ -183,9 +227,8 @@
                         let defaultCat = [];
                         ['1', '2', '3'].forEach(f => {
                             BOOK_TEMPLATES.forEach(subj => {
-                                subj.items.forEach((itemStr, idx) => {
-                                    const [name, tag] = itemStr.split('|');
-                                    defaultCat.push({ id: `def_f${f}_${subj.s}_${idx}`, form: f, subject: subj.s, name: name, price: 0, isPackage: tag === 'pkg' });
+                                subj.items.forEach((item, idx) => {
+                                    defaultCat.push({ id: `def_f${f}_${subj.s}_${idx}`, form: f, subject: subj.s, name: item.name, price: f === '3' ? item.f3Price : 0, isPackage: item.pkg });
                                 });
                             });
                         });
@@ -196,15 +239,11 @@
                 return () => { unsubStudents(); unsubCatalog(); };
             }, [user, activeId]);
 
-            const activeStudent = useMemo(() => students.find(s => s.docId === activeId) || null, [students, activeId]);
-
-            // 💡 修復: 確保 Tab 切換函數存在
             const handleFormTabClick = (formId) => {
                 setActiveCatalogForm(formId);
                 setActiveSubject("All");
             };
 
-            // 💡 監聽 activeStudent 改變，重置狀態
             useEffect(() => {
                 if (activeStudent && ['1','2','3'].includes(activeStudent.form)) {
                     setActiveCatalogForm(activeStudent.form);
@@ -304,14 +343,14 @@
                 }
             };
 
+            // 💡 一鍵還原全套書目
             const handleResetDefaultCatalog = async () => {
                 if (!window.confirm("⚠️ 確定要載入預設的全科書單？這將清除目前所有自訂設定！")) return;
                 let defaultCat = [];
                 ['1', '2', '3'].forEach(f => {
                     BOOK_TEMPLATES.forEach(subj => {
-                        subj.items.forEach((itemStr, idx) => {
-                            const [name, tag] = itemStr.split('|');
-                            defaultCat.push({ id: `def_f${f}_${subj.s}_${idx}_${Date.now()}`, form: f, subject: subj.s, name: name, price: 0, isPackage: tag === 'pkg' });
+                        subj.items.forEach((item, idx) => {
+                            defaultCat.push({ id: `def_f${f}_${subj.s}_${idx}_${Date.now()}`, form: f, subject: subj.s, name: item.name, price: f === '3' ? item.f3Price : 0, isPackage: item.pkg });
                         });
                     });
                 });
@@ -334,7 +373,6 @@
             const handleCancelCatalogEdit = () => { setEditingCatalogId(null); setNewCatalogItem({ form: settingsFilterForm === 'all' ? '1' : settingsFilterForm, subject: "中文", name: "", price: "0", isPackage: false }); };
             const handleDeleteCatalogItem = (id) => { saveCatalogToDB(normalizedCatalog.filter(c => c.id !== id)); };
 
-            // 💡 智能加入書本 (包含防重疊與 $0 警告)
             const initiateAddBook = (title, priceStr) => {
                 if (!activeStudent || !title.trim()) return;
                 if (!collectorName.trim()) { showToast("請先輸入經手人名稱", "error"); document.getElementById('collector-input').focus(); return; }
@@ -352,7 +390,7 @@
                     setPendingAddBook({ ...pendingAddBook, step: 'zero' });
                     return;
                 }
-                executeAddBook(pendingAddBook.title, pendingAddBook.price); // 💡 Fix: 使用 pendingAddBook
+                executeAddBook(pendingAddBook.title, pendingAddBook.price);
             };
 
             const executeAddBook = async (title, numPrice) => {
@@ -374,6 +412,7 @@
             };
 
             const handleDeleteBook = async (bookId) => { if (!activeStudent) return; await getStudentsRef().doc(activeStudent.docId).update({ books: activeStudent.books.filter(b => b.id !== bookId) }); };
+            
             const handleSaveBookEdits = async (bookId) => {
                 if (!activeStudent) return;
                 const updatedBooks = activeStudent.books.map(b => { if (b.id === bookId) return { ...b, basePrice: Number(tempBasePrice) || 0, deduction: Number(tempDeduction) || 0, deductionReason: tempDeductReason.trim() }; return b; });
@@ -398,6 +437,7 @@
                         }).join(', ');
                         const total = acceptedBooks.reduce((sum, b) => sum + getActualPrice(b), 0);
                         textContent += `${allDetails}\t${total}\n`;
+
                         const acceptedStr = acceptedBooks.map(b => {
                             const deductText = b.deduction > 0 ? ` [扣$${b.deduction}: ${b.deductionReason}]` : '';
                             const collectorText = b.collectedBy ? ` [經手: ${b.collectedBy}]` : '';
@@ -423,7 +463,7 @@
             const displayCatalogItems = useMemo(() => activeSubject === 'All' ? currentFormCatalogItems : currentFormCatalogItems.filter(c => c.subject === activeSubject), [currentFormCatalogItems, activeSubject]);
             const filteredSettingsCatalog = useMemo(() => normalizedCatalog.filter(c => settingsFilterForm === 'all' || c.form === settingsFilterForm), [normalizedCatalog, settingsFilterForm]);
 
-            // ===== 💡 Render Helpers (避免組件卸載導致失焦) =====
+            // ===== Render Helpers =====
 
             const renderCartList = () => (
                 <div class="flex-1 overflow-y-auto p-3 bg-white">
@@ -503,7 +543,7 @@
             );
 
             const renderPOSMenu = () => (
-                <div class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50/50 pb-16 lg:pb-0">
+                <div class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50/50 pb-16 md:pb-0">
                     <div class="bg-white border-b border-slate-200 px-4 pt-3 flex gap-4 overflow-x-auto hide-scrollbar shrink-0">
                         {['1','2','3','all'].map(f => (
                             <button key={f} onClick={() => handleFormTabClick(f)} class={`text-sm font-bold whitespace-nowrap pb-2 border-b-2 transition-colors ${activeCatalogForm === f ? 'border-brand-600 text-brand-700' : 'border-transparent text-slate-400 hover:text-slate-700'}`}>
@@ -587,6 +627,7 @@
 
                     <div class="flex-1 flex flex-col md:flex-row gap-4 lg:gap-6 min-h-0 overflow-hidden relative">
                         
+                        {/* 左側 Sidebar */}
                         <div class={`w-full md:w-80 lg:w-[340px] flex flex-col gap-3 shrink-0 h-full ${activeId ? 'hidden md:flex' : 'flex'}`}>
                             <div class="bg-brand-600 text-white rounded-2xl p-4 shadow-floating">
                                 <div class="flex justify-between items-end">
@@ -655,7 +696,8 @@
                                 </>
                             ) : (
                                 <div class="flex-1 app-card flex flex-col justify-center items-center text-slate-400 bg-slate-50/50 shadow-soft">
-                                    <IconUser /><p class="text-base font-bold mt-4">歡迎使用！請從左側選擇或新增學生開始。</p>
+                                    <IconUser width="48" height="48" />
+                                    <p class="text-base font-bold mt-4">歡迎使用！請從左側選擇或新增學生開始。</p>
                                 </div>
                             )}
                         </div>
@@ -687,7 +729,9 @@
                                             </div>
                                             {renderCartList()}
                                         </div>
-                                        <div class={`absolute inset-0 flex flex-col ${activeMobileTab === 'missing' ? 'z-10' : 'invisible'}`}> {renderMissingList()} </div>
+                                        <div class={`absolute inset-0 flex flex-col ${activeMobileTab === 'missing' ? 'z-10' : 'invisible'}`}>
+                                            {renderMissingList()}
+                                        </div>
                                     </div>
 
                                     <div class="bg-white border-t border-slate-200 pb-[env(safe-area-inset-bottom)] shrink-0 z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.02)]">
@@ -773,14 +817,14 @@
                                     <div class="flex items-center gap-3">
                                         <h3 class="text-xl font-black text-slate-900">總分類書單</h3>
                                         <button onClick={handleResetDefaultCatalog} type="button" class="px-3 py-1.5 bg-brand-50 text-brand-600 border border-brand-200 hover:bg-brand-100 rounded-lg text-xs font-bold transition-colors">📥 載入預設</button>
-                                        {hasZeroPriceWarning && <span class="px-2 py-1 bg-red-100 text-red-600 rounded text-xs font-bold flex items-center gap-1"><IconWarning /> 尚有未定價項目</span>}
+                                        {hasZeroPriceWarning && <span class="px-2 py-1 bg-red-100 text-red-600 rounded text-xs font-bold flex items-center gap-1"><IconWarning width="12" height="12"/> 尚有未定價項目</span>}
                                     </div>
                                     <button onClick={() => setShowSettingsModal(false)} class="bg-slate-100 p-1.5 rounded-full"><IconX /></button>
                                 </div>
                                 <form onSubmit={handleCatalogSubmit} class="flex flex-col sm:flex-row flex-wrap items-start sm:items-end gap-2 md:gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-4 shrink-0 shadow-inner">
                                     <div class="flex gap-2 w-full sm:w-auto">
                                         <div class="w-1/2 sm:w-24"><label class="block text-xs font-bold text-slate-500 mb-1.5">年級</label><select value={newCatalogItem.form} onChange={e=>setNewCatalogItem({...newCatalogItem, form: e.target.value})} class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg font-medium"><option value="1">中一</option><option value="2">中二</option><option value="3">中三</option><option value="all">通用</option></select></div>
-                                        <div class="w-1/2 sm:w-32"><label class="block text-xs font-bold text-slate-500 mb-1.5">科目</label><select value={newCatalogItem.subject} onChange={e=>setNewCatalogItem({...newCatalogItem, subject: e.target.value})} class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg font-medium">{["中文", "英文", "數學", "科學", "公民經濟與社會", "歷史與中史", "地理", "其他", "自訂"].map(s => <option key={s} value={s}>{s}</option>)}</select></div>
+                                        <div class="w-1/2 sm:w-32"><label class="block text-xs font-bold text-slate-500 mb-1.5">科目</label><select value={newCatalogItem.subject} onChange={e=>setNewCatalogItem({...newCatalogItem, subject: e.target.value})} class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg font-medium">{["中文", "英文", "數學", "科學", "公民經濟與社會科", "歷史 / 中史", "地理", "其他科目", "自訂"].map(s => <option key={s} value={s}>{s}</option>)}</select></div>
                                     </div>
                                     <div class="w-full sm:flex-1"><label class="block text-xs font-bold text-slate-500 mb-1.5">項目名稱</label><input type="text" required value={newCatalogItem.name} onChange={e=>setNewCatalogItem({...newCatalogItem, name: e.target.value})} class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg font-medium"/></div>
                                     <div class="flex gap-2 w-full sm:w-auto items-end">
@@ -805,13 +849,16 @@
                                         </thead>
                                         <tbody class="divide-y divide-slate-200 bg-white">
                                             {filteredSettingsCatalog.map(item => (
-                                                <tr key={item.id} class="hover:bg-slate-50">
-                                                    <td class="px-4 py-3"><span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-bold text-[10px] border border-slate-200">{item.form === 'all' ? '通用' : `F.${item.form}`}</span></td>
+                                                <tr key={item.id} class="hover:bg-slate-50 transition-colors">
+                                                    <td class="px-4 py-3"><span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-bold text-[10px]">{item.form === 'all' ? '通用' : `F.${item.form}`}</span></td>
                                                     <td class="px-4 py-3 text-slate-500 font-bold text-xs">{item.subject}</td>
                                                     <td class="px-4 py-3 font-black text-slate-800">{item.name}</td>
                                                     <td class="px-4 py-3 font-black"><span class={item.price === 0 ? 'text-red-500 bg-red-50 px-2 py-0.5 rounded border border-red-100' : 'text-slate-900'}>${item.price}</span></td>
                                                     <td class="px-4 py-3">{item.isPackage ? <span class="bg-slate-800 text-white text-[10px] px-2 py-0.5 rounded font-bold">套餐</span> : <span class="bg-white border border-slate-200 text-slate-500 text-[10px] px-2 py-0.5 rounded font-bold">單本</span>}</td>
-                                                    <td class="px-4 py-3 text-right"><button onClick={()=>handleEditCatalogClick(item)} class="text-brand-600 p-1.5 mr-1 hover:bg-brand-50 rounded"><IconEdit/></button><button onClick={()=>handleDeleteCatalogItem(item.id)} class="text-red-500 p-1.5 hover:bg-red-50 rounded"><IconTrash/></button></td>
+                                                    <td class="px-4 py-3 text-right">
+                                                        <button onClick={()=>handleEditCatalogClick(item)} class="text-brand-600 p-1.5 mr-1 hover:bg-brand-50 rounded"><IconEdit width="16" height="16"/></button>
+                                                        <button onClick={()=>handleDeleteCatalogItem(item.id)} class="text-red-500 p-1.5 hover:bg-red-50 rounded"><IconTrash width="16" height="16"/></button>
+                                                    </td>
                                                 </tr>
                                             ))}
                                             {filteredSettingsCatalog.length === 0 && <tr><td colSpan="6" class="text-center py-12 text-slate-400 font-bold bg-slate-50/50">此範圍沒有任何設定</td></tr>}
