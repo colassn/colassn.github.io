@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>收書管理系統 - 終極穩定無錯版</title>
     
     <!-- Tailwind CSS -->
@@ -13,13 +13,13 @@
                 extend: {
                     fontFamily: { sans: ['"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif', '"Noto Sans HK"'] },
                     colors: { brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' } },
-                    boxShadow: { 'soft': '0 2px 10px rgba(0, 0, 0, 0.03)', 'floating': '0 10px 40px rgba(0, 0, 0, 0.08)' }
+                    boxShadow: { 'soft': '0 4px 20px rgba(0, 0, 0, 0.03)', 'floating': '0 12px 36px rgba(0, 0, 0, 0.08)', 'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.02)' }
                 }
             }
         }
     </script>
 
-    <!-- React, ReactDOM, Babel (加入 crossOrigin 確保錯誤追蹤清晰) -->
+    <!-- React, ReactDOM, Babel -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossOrigin="anonymous"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossOrigin="anonymous"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossOrigin="anonymous"></script>
@@ -31,21 +31,27 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;600;700;900&display=swap');
-        body { background-color: #f1f5f9; color: #0f172a; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; touch-action: manipulation; }
+        
+        /* 💡 終極防塌陷與防拉扯 CSS */
+        html, body { background-color: #f1f5f9; color: #0f172a; margin: 0; padding: 0; height: 100%; height: 100dvh; overflow: hidden; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        #root { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+        
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .app-card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        input:focus, select:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.1); }
-        .pos-btn { transition: all 0.1s ease; }
-        .pos-btn:active { transform: scale(0.96); }
+        
+        .app-card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        input:focus, select:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
+        .btn-spring { transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-spring:active { transform: scale(0.95); }
+        
         @media print { body * { visibility: hidden; } #receipt-modal, #receipt-modal * { visibility: visible; } #receipt-modal { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; padding: 0; margin: 0;} .no-print { display: none !important; } }
     </style>
 </head>
-<body className="h-[100dvh] flex flex-col md:p-4 lg:p-6 overflow-hidden">
+<body className="flex flex-col md:p-3 lg:p-5 overflow-hidden">
 
     <!-- 原生錯誤捕捉 (防止 React 完全無法載入時白屏) -->
     <div id="fallback-error" style="display: none; height: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;">
@@ -54,13 +60,16 @@
         <div id="error-log" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; color: #334155; max-width: 600px; text-align: left; font-size: 12px; font-family: monospace; word-break: break-all;"></div>
     </div>
 
-    <div id="root" className="h-full"></div>
+    <div id="root" className="h-full w-full"></div>
 
     <script>
         window.addEventListener('error', function(event) {
             document.getElementById('root').style.display = 'none';
             document.getElementById('fallback-error').style.display = 'flex';
-            document.getElementById('error-log').innerText = "錯誤詳情: " + (event.message || "Script error.") + "\n(請檢查 Firebase 設定或網絡)";
+            document.getElementById('error-log').innerText = "錯誤詳情: " + (event.message || "Script error.") + "\n(請檢查 Firebase 設定或網絡連線)";
+        });
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error("Unhandled Promise Rejection:", event.reason);
         });
     </script>
 
@@ -133,7 +142,7 @@
         const IconCheck = () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>;
         const IconX = () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
         const IconPlus = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
-        const IconSettings = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>;
+        const IconSettings = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>;
         const IconChevronLeft = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>;
         const IconWarning = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
         const IconCart = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>;
@@ -154,11 +163,12 @@
             render() {
                 if (this.state.hasError) {
                     return (
-                        <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-slate-50">
-                            <div className="text-red-500 mb-4"><IconWarning width="48" height="48" /></div>
-                            <h2 className="text-xl font-black text-slate-800 mb-2">系統介面發生錯誤</h2>
-                            <p className="text-sm text-slate-500 mb-6">請嘗試重新整理網頁。如果問題持續，請聯絡開發人員。</p>
-                            <button onClick={() => window.location.reload()} className="px-6 py-2.5 bg-slate-900 text-white rounded-lg font-bold">重新整理</button>
+                        <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-slate-50 overflow-y-auto">
+                            <div className="text-red-500 mb-4"><IconWarning /></div>
+                            <h2 className="text-2xl font-black text-slate-800 mb-2">系統介面發生錯誤</h2>
+                            <p className="text-sm font-bold text-slate-500 mb-6">請點擊下方按鈕重新整理網頁。如果問題持續，請截圖回報。</p>
+                            <button onClick={() => window.location.reload()} className="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold shadow-md hover:bg-slate-800 transition-all active:scale-95">重新整理</button>
+                            <pre className="mt-8 text-left text-xs bg-slate-200 p-4 rounded-xl w-full max-w-lg overflow-auto max-h-48 text-slate-600 font-mono shadow-inner-soft">{this.state.error && this.state.error.toString()}</pre>
                         </div>
                     );
                 }
@@ -181,7 +191,9 @@
             const [sortBy, setSortBy] = useState("form");
             const [activeId, setActiveId] = useState(null);
             
-            // 💡 確保 Tab 切換狀態獨立且不衝突
+            // 💡 滑動視窗資料保留技術 (防止 Slide-out 時白屏)
+            const [displayStudent, setDisplayStudent] = useState(null);
+            
             const [activeMobileTab, setActiveMobileTab] = useState("menu");
             const [activeCatalogForm, setActiveCatalogForm] = useState("3");
             const [activeSubject, setActiveSubject] = useState("All");
@@ -216,8 +228,15 @@
                 setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3500); 
             }, []);
 
-            // 💡 2. 衍生存取資料 (純粹計算，不包含 Side Effects)
+            // 💡 2. 衍生存取資料 (使用 displayStudent 確保動畫流暢)
             const activeStudent = useMemo(() => students.find(s => s.docId === activeId) || null, [students, activeId]);
+            
+            useEffect(() => {
+                if (activeStudent) setDisplayStudent(activeStudent);
+            }, [activeStudent]);
+            
+            const renderStudent = activeId ? activeStudent : displayStudent;
+
             const normalizedCatalog = useMemo(() => catalog.map(c => ({ id: c.id, form: c.form || 'all', subject: c.subject || '自訂', name: c.name || c.title || '未命名', price: Number(c.price) || 0, isPackage: c.isPackage || false })), [catalog]);
             const getActualPrice = useCallback((book) => Math.max(0, Number(book.basePrice !== undefined ? book.basePrice : book.price || 0) - Number(book.deduction || 0)), []);
 
@@ -228,8 +247,8 @@
             }, [students, getActualPrice]);
 
             const activeStats = useMemo(() => {
-                if (!activeStudent) return { total: 0, acceptedBooks: 0, acceptedPackages: 0 };
-                return (activeStudent.books || []).reduce((acc, b) => {
+                if (!renderStudent) return { total: 0, acceptedBooks: 0, acceptedPackages: 0 };
+                return (renderStudent.books || []).reduce((acc, b) => {
                     if (b.status === 'accepted') {
                         acc.total += getActualPrice(b);
                         const isPkg = normalizedCatalog.some(c => formatBookTitle(c) === b.title && c.isPackage);
@@ -237,12 +256,12 @@
                     }
                     return acc;
                 }, { total: 0, acceptedBooks: 0, acceptedPackages: 0 });
-            }, [activeStudent, normalizedCatalog, getActualPrice]);
+            }, [renderStudent, normalizedCatalog, getActualPrice]);
 
             const missingBooks = useMemo(() => {
-                if (!activeStudent || !['1','2','3'].includes(activeStudent.form)) return [];
-                const expectedSingleBooks = normalizedCatalog.filter(c => c.form === activeStudent.form && !c.isPackage);
-                const acceptedTitles = (activeStudent.books || []).filter(b => b.status === 'accepted').map(b => b.title);
+                if (!renderStudent || !['1','2','3'].includes(renderStudent.form)) return [];
+                const expectedSingleBooks = normalizedCatalog.filter(c => c.form === renderStudent.form && !c.isPackage);
+                const acceptedTitles = (renderStudent.books || []).filter(b => b.status === 'accepted').map(b => b.title);
                 const acceptedPackageSubjects = normalizedCatalog.filter(c => c.isPackage && acceptedTitles.includes(formatBookTitle(c))).map(c => c.subject);
                 return expectedSingleBooks.filter(c => {
                     const title = formatBookTitle(c);
@@ -250,7 +269,7 @@
                     const isSubjectCoveredByPackage = acceptedPackageSubjects.includes(c.subject);
                     return !isBoughtSingle && !isSubjectCoveredByPackage;
                 });
-            }, [activeStudent, normalizedCatalog]);
+            }, [renderStudent, normalizedCatalog]);
 
             const collectorStats = useMemo(() => {
                 const statsMap = {};
@@ -291,7 +310,7 @@
             const displayCatalogItems = useMemo(() => activeSubject === 'All' ? currentFormCatalogItems : currentFormCatalogItems.filter(c => c.subject === activeSubject), [currentFormCatalogItems, activeSubject]);
             const filteredSettingsCatalog = useMemo(() => normalizedCatalog.filter(c => settingsFilterForm === 'all' || c.form === settingsFilterForm), [normalizedCatalog, settingsFilterForm]);
 
-            // 💡 3. 生命週期 Effects
+            // 💡 3. Effects
             useEffect(() => { setSafeCollectorName(collectorName); }, [collectorName]);
 
             useEffect(() => {
@@ -339,7 +358,7 @@
                 setActiveMobileTab("menu"); 
             }, [activeStudent?.docId]);
 
-            // 💡 4. 事件操作 Handlers (全部改為 function 防止 TDZ 錯誤)
+            // 💡 4. Event Handlers
             function handleFormTabClick(formId) {
                 setActiveCatalogForm(formId);
                 setActiveSubject("All");
@@ -356,13 +375,13 @@
             }
 
             function openEditStudent() { 
-                setEditStudentData({ name: activeStudent.name, form: activeStudent.form, phone: activeStudent.phone === "--" ? "" : activeStudent.phone }); 
+                setEditStudentData({ name: renderStudent.name, form: renderStudent.form, phone: renderStudent.phone === "--" ? "" : renderStudent.phone }); 
                 setShowEditStudentModal(true); 
             }
             
             async function handleSaveStudentEdit(e) {
                 e.preventDefault();
-                if (!editStudentData.name.trim()) return;
+                if (!editStudentData.name.trim() || !activeStudent) return;
                 try { 
                     await getStudentsRef().doc(activeStudent.docId).update({ name: editStudentData.name.trim(), form: editStudentData.form, phone: editStudentData.phone.trim() || "--" }); 
                     setShowEditStudentModal(false); showToast("資料已更新"); 
@@ -370,6 +389,7 @@
             }
 
             async function handleDeleteStudent() {
+                if (!activeStudent) return;
                 if (window.confirm(`⚠️ 確定要刪除學生「${activeStudent.name}」？\n此操作無法復原！`)) {
                     try { await getStudentsRef().doc(activeStudent.docId).delete(); setActiveId(null); showToast("已刪除"); } catch(err) { showToast("刪除失敗", "error"); }
                 }
@@ -408,10 +428,9 @@
             function handleCancelCatalogEdit() { setEditingCatalogId(null); setNewCatalogItem({ form: settingsFilterForm === 'all' ? '1' : settingsFilterForm, subject: "中文", name: "", price: "0", isPackage: false }); }
             function handleDeleteCatalogItem(id) { saveCatalogToDB(normalizedCatalog.filter(c => c.id !== id)); }
 
-            // 防呆與加入邏輯
             function initiateAddBook(title, priceStr) {
                 if (!activeStudent || !title.trim()) return;
-                if (!collectorName.trim()) { showToast("⚠️ 請先輸入經手人代號", "error"); document.getElementById('collector-input')?.focus(); return; }
+                if (!collectorName.trim()) { showToast("⚠️ 請先輸入經手人代號", "error"); return; }
                 
                 const numPrice = Number(priceStr) || 0;
                 const isDuplicate = (activeStudent.books || []).some(b => b.title === title && b.status === 'accepted');
@@ -501,12 +520,12 @@
             // ===== 💡 5. UI Render Helpers =====
             
             const renderCartList = () => (
-                <div className="flex-1 overflow-y-auto p-3 bg-slate-50/50">
-                    {(!activeStudent.books || activeStudent.books.length === 0) ? (
-                        <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-white shadow-sm"><p className="text-sm font-bold text-slate-400">購物車目前為空</p></div>
+                <div className="flex-1 overflow-y-auto p-3 bg-slate-50">
+                    {(!renderStudent || !renderStudent.books || renderStudent.books.length === 0) ? (
+                        <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-white shadow-sm"><p className="text-sm font-bold text-slate-400">目前尚未登記</p></div>
                     ) : (
                         <div className="space-y-3">
-                            {(activeStudent.books || []).map(b => {
+                            {(renderStudent.books || []).map(b => {
                                 const isAccepted = b.status === 'accepted';
                                 const basePrice = Number(b.basePrice !== undefined ? b.basePrice : b.price || 0);
                                 const deduction = Number(b.deduction || 0);
@@ -551,11 +570,11 @@
             );
 
             const renderMissingList = () => (
-                <div className="flex-1 overflow-y-auto p-4 bg-slate-50/50">
+                <div className="flex-1 overflow-y-auto p-4 bg-slate-50">
                     {missingBooks.length === 0 ? (
                         <div className="text-center py-10 bg-emerald-50 border border-emerald-200 rounded-2xl shadow-sm">
                             <span className="text-5xl">🎉</span>
-                            <p className="text-emerald-700 font-black mt-3 text-lg tracking-wide">核心單本已全部收齊！</p>
+                            <p className="text-emerald-700 font-black mt-3 text-lg tracking-wide">核心單本已收齊！</p>
                             <p className="text-[10px] text-emerald-600 mt-1 font-bold opacity-80">（或已被套餐項目覆蓋）</p>
                         </div>
                     ) : (
@@ -578,7 +597,7 @@
             );
 
             const renderPOSMenu = () => (
-                <div className="flex-1 flex flex-col h-full overflow-hidden bg-slate-50/50 pb-4 md:pb-0">
+                <div className="flex-1 flex flex-col h-full overflow-hidden bg-slate-50">
                     <div className="bg-white border-b border-slate-200 px-3 md:px-5 pt-3 flex gap-4 overflow-x-auto hide-scrollbar shrink-0 shadow-sm z-10 relative">
                         {['1','2','3','all'].map(f => (
                             <button key={f} onClick={() => handleFormTabClick(f)} className={`text-sm md:text-base font-black whitespace-nowrap pb-2.5 border-b-4 transition-colors ${activeCatalogForm === f ? 'border-brand-600 text-brand-700' : 'border-transparent text-slate-400 hover:text-slate-700'}`}>
@@ -599,7 +618,7 @@
                         <div className="flex flex-wrap gap-2.5 content-start">
                             {displayCatalogItems.length === 0 ? <p className="text-xs text-slate-400 w-full text-center py-10 font-bold border-2 border-dashed border-slate-200 rounded-xl">無相關書單設定</p> : displayCatalogItems.map(item => {
                                 const title = formatBookTitle(item);
-                                const isAdded = (activeStudent.books || []).some(b => b.title === title && b.status === 'accepted');
+                                const isAdded = (renderStudent && renderStudent.books || []).some(b => b.title === title && b.status === 'accepted');
                                 return (
                                     <button 
                                         key={item.id} onClick={() => handleQuickAddBook(item)}
@@ -631,10 +650,10 @@
 
             // ===== Main Return =====
             return (
-                <div className="mx-auto w-full h-full flex flex-col font-sans relative bg-slate-100 lg:bg-transparent">
+                <div className="mx-auto w-full h-full flex flex-col font-sans relative bg-slate-100 lg:bg-transparent overflow-hidden">
                     
                     {toast.show && (
-                        <div className={`fixed top-4 right-4 z-[80] px-5 py-3 rounded-2xl shadow-floating flex items-center gap-3 text-sm font-black text-white transition-opacity duration-300 ${toast.type === 'error' ? 'bg-red-600' : 'bg-slate-900'}`}>
+                        <div className={`fixed top-4 right-4 z-[80] px-5 py-3 rounded-2xl shadow-floating flex items-center gap-3 text-sm font-black text-white transition-opacity duration-300 animate-fade-in-up ${toast.type === 'error' ? 'bg-red-600' : 'bg-slate-900'}`}>
                             {toast.message}
                         </div>
                     )}
@@ -650,7 +669,7 @@
                         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                             <div className="flex items-center bg-white border border-slate-200 rounded-xl px-3 py-2 shadow-sm focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100 flex-1 sm:flex-none transition-all">
                                 <span className="text-slate-400 mr-2"><IconUser /></span>
-                                <input id="collector-input" type="text" placeholder="經手人代號" value={collectorName} onChange={(e) => setCollectorName(e.target.value)} className="bg-transparent border-none text-sm focus:outline-none w-full sm:w-24 font-black text-brand-700"/>
+                                <input type="text" placeholder="經手人代號" value={collectorName} onChange={(e) => setCollectorName(e.target.value)} className="bg-transparent border-none text-sm focus:outline-none w-full sm:w-24 font-black text-brand-700"/>
                             </div>
                             <button onClick={() => setShowSettingsModal(true)} className="relative px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-all btn-spring">
                                 <IconSettings /> <span className="hidden sm:inline">設定</span>
@@ -665,21 +684,21 @@
                         
                         {/* 左側 Sidebar */}
                         <div className={`w-full lg:w-[320px] xl:w-[360px] flex flex-col gap-3 lg:gap-4 shrink-0 h-full ${activeId ? 'hidden lg:flex' : 'flex'}`}>
-                            <div className="bg-brand-600 text-white rounded-[20px] p-5 shadow-floating relative overflow-hidden">
+                            <div className="bg-brand-600 text-white rounded-[20px] p-5 shadow-floating relative overflow-hidden shrink-0">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-10 -mt-10 pointer-events-none"></div>
                                 <div className="flex justify-between items-end relative z-10">
                                     <div><p className="text-brand-100 text-xs font-bold mb-1.5 tracking-wider">今日總結算</p><p className="text-4xl font-black leading-none drop-shadow-md">${stats.totalAmount}</p></div>
                                     <div className="text-right bg-brand-700/50 px-3 py-1.5 rounded-lg border border-brand-500/30 backdrop-blur-sm"><p className="text-brand-100 text-[10px] font-bold mb-0.5">成功件數</p><p className="text-lg font-black">{stats.totalAccepted}</p></div>
                                 </div>
                             </div>
-                            <div className="flex gap-2.5">
+                            <div className="flex gap-2.5 shrink-0">
                                 <div className="relative flex-1">
                                     <span className="absolute left-3 top-3 text-slate-400"><IconSearch /></span>
                                     <input type="text" placeholder="搜尋學生..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm shadow-sm font-bold focus:ring-2 focus:ring-brand-100 transition-shadow" />
                                 </div>
                                 <button onClick={() => setShowAddStudentModal(true)} className="px-4 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-md flex items-center transition-transform btn-spring hover:bg-slate-800"><IconPlus /></button>
                             </div>
-                            <div className="relative">
+                            <div className="relative shrink-0">
                                 <select value={filterCollector} onChange={(e) => setFilterCollector(e.target.value)} className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600 shadow-sm appearance-none focus:ring-2 focus:ring-brand-100 transition-shadow">
                                     <option value="all">過濾: 顯示所有人</option>
                                     {uniqueCollectors.map(c => <option key={c} value={c}>過濾: 經手人 {c}</option>)}
@@ -704,12 +723,12 @@
 
                         {/* 🖥️ iPad / Desktop Layout (2.5 欄) */}
                         <div className="hidden lg:flex flex-1 gap-4 xl:gap-6 overflow-hidden">
-                            {activeStudent ? (
+                            {renderStudent ? (
                                 <>
                                     <div className="flex-1 app-card flex flex-col overflow-hidden shadow-floating border-0 ring-1 ring-slate-200">
                                         <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center bg-white shrink-0 shadow-[0_4px_20px_rgba(0,0,0,0.02)] z-10">
                                             <h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">
-                                                {activeStudent.name} <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-xs rounded border border-slate-200 font-bold shadow-inner-soft">F.{activeStudent.form}</span>
+                                                {renderStudent.name} <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-xs rounded border border-slate-200 font-bold shadow-inner-soft">F.{renderStudent.form}</span>
                                             </h2>
                                         </div>
                                         {renderPOSMenu()}
@@ -724,9 +743,8 @@
                                                 <button onClick={() => setActiveMobileTab('cart')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm ${activeMobileTab !== 'missing' ? 'bg-white text-slate-900' : 'text-slate-500 hover:bg-slate-200/50'}`}>🛒 已登記明細</button>
                                                 <button onClick={() => setActiveMobileTab('missing')} className={`flex-1 py-1.5 text-xs font-black rounded-md transition-all shadow-sm flex items-center justify-center gap-1 ${activeMobileTab === 'missing' ? 'bg-white text-slate-900' : 'text-slate-500 hover:bg-slate-200/50'}`}>📋 欠交追蹤 {missingBooks.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>}</button>
                                             </div>
-                                            <div className="flex-1 overflow-hidden relative">
-                                                <div className={`absolute inset-0 flex flex-col ${activeMobileTab !== 'missing' ? 'z-10' : 'invisible'}`}>{renderCartList()}</div>
-                                                <div className={`absolute inset-0 flex flex-col ${activeMobileTab === 'missing' ? 'z-10' : 'invisible'}`}>{renderMissingList()}</div>
+                                            <div className="flex-1 overflow-hidden flex flex-col relative">
+                                                {activeMobileTab !== 'missing' ? renderCartList() : renderMissingList()}
                                             </div>
                                             <div className="p-4 bg-slate-50 border-t border-slate-200 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] z-20">
                                                 <button onClick={() => setShowReceiptModal(true)} className="w-full py-3.5 bg-brand-600 text-white rounded-xl text-sm font-black shadow-md flex justify-center items-center gap-2 hover:bg-brand-700 transition-all btn-spring"><IconPrinter /> 印單對數</button>
@@ -742,15 +760,16 @@
                             )}
                         </div>
 
-                        {/* 📱 Mobile / Tablet Portrait Layout */}
-                        <div className={`lg:hidden absolute inset-0 z-40 bg-slate-50 flex flex-col transition-transform duration-300 ease-in-out shadow-[-10px_0_30px_rgba(0,0,0,0.1)] ${activeId ? 'translate-x-0' : 'translate-x-full'}`}>
-                            {activeStudent && (
-                                <>
-                                    <div className="bg-white/90 backdrop-blur-md px-4 py-3 border-b border-slate-200 flex justify-between items-center shrink-0 shadow-sm z-30 pt-[calc(0.75rem+env(safe-area-inset-top))]">
+                        {/* 📱 Mobile / Tablet Portrait Slide-in Layout */}
+                        <div className={`lg:hidden fixed inset-0 z-[60] bg-slate-50 flex flex-col transition-transform duration-300 ease-in-out shadow-[-10px_0_30px_rgba(0,0,0,0.1)] ${activeId ? 'translate-x-0' : 'translate-x-full'}`}>
+                            {renderStudent && (
+                                <div className="flex flex-col h-full w-full">
+                                    {/* Mobile Header */}
+                                    <div className="bg-white px-4 py-3.5 border-b border-slate-200 flex justify-between items-center shrink-0 shadow-sm z-20 relative pt-[max(env(safe-area-inset-top),0.75rem)]">
                                         <div className="flex items-center gap-3">
-                                            <button onClick={() => setActiveId(null)} className="p-1.5 -ml-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors btn-spring"><IconChevronLeft /></button>
+                                            <button onClick={() => { setActiveId(null); setActiveMobileTab("menu"); }} className="p-1.5 -ml-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors btn-spring"><IconChevronLeft /></button>
                                             <div>
-                                                <h2 className="text-lg font-black text-slate-900 leading-tight flex items-center gap-2">{activeStudent.name} <span className="text-[9px] font-bold text-slate-500 border border-slate-200 bg-slate-50 px-1.5 py-0.5 rounded shadow-inner-soft">F.{activeStudent.form}</span></h2>
+                                                <h2 className="text-lg font-black text-slate-900 leading-tight flex items-center gap-2">{renderStudent.name} <span className="text-[9px] font-bold text-slate-500 border border-slate-200 bg-slate-50 px-1.5 py-0.5 rounded shadow-inner-soft">F.{renderStudent.form}</span></h2>
                                                 <div className="text-[10px] text-slate-500 font-bold mt-1">已收: {activeStats.acceptedBooks}單本 / {activeStats.acceptedPackages}套餐</div>
                                             </div>
                                         </div>
@@ -760,25 +779,32 @@
                                         </div>
                                     </div>
 
-                                    <div className="flex-1 overflow-hidden relative bg-white">
-                                        <div className={`absolute inset-0 flex flex-col transition-opacity duration-300 ${activeMobileTab === 'menu' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}> {renderPOSMenu()} </div>
-                                        <div className={`absolute inset-0 flex flex-col bg-white transition-opacity duration-300 ${activeMobileTab === 'cart' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
-                                            <div className="p-3.5 bg-slate-50/90 backdrop-blur-sm border-b border-slate-200 flex justify-between items-center shadow-sm z-10 relative">
-                                                <span className="text-sm font-black text-slate-700 flex items-center gap-1.5"><IconCart/>已登記明細</span>
-                                                <button onClick={() => setShowReceiptModal(true)} className="px-4 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm btn-spring"><IconPrinter /> 印單</button>
+                                    {/* Mobile Dynamic Content Area */}
+                                    <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-white">
+                                        {activeMobileTab === 'menu' && renderPOSMenu()}
+                                        
+                                        {activeMobileTab === 'cart' && (
+                                            <div className="flex-1 flex flex-col h-full overflow-hidden">
+                                                <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center shadow-sm z-10 relative shrink-0">
+                                                    <span className="text-sm font-black text-slate-700 flex items-center gap-1.5"><IconCart/>已登記明細</span>
+                                                    <button onClick={() => setShowReceiptModal(true)} className="px-4 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm btn-spring"><IconPrinter /> 印單</button>
+                                                </div>
+                                                {renderCartList()}
                                             </div>
-                                            {renderCartList()}
-                                        </div>
-                                        <div className={`absolute inset-0 flex flex-col bg-white transition-opacity duration-300 ${activeMobileTab === 'missing' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
-                                            <div className="p-3.5 bg-slate-50/90 backdrop-blur-sm border-b border-slate-200 flex justify-between items-center shadow-sm z-10 relative">
-                                                <span className="text-sm font-black text-slate-700 flex items-center gap-1.5"><IconClipboardList/>欠交追蹤</span>
+                                        )}
+                                        
+                                        {activeMobileTab === 'missing' && (
+                                            <div className="flex-1 flex flex-col h-full overflow-hidden">
+                                                <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center shadow-sm z-10 relative shrink-0">
+                                                    <span className="text-sm font-black text-slate-700 flex items-center gap-1.5"><IconClipboardList/>欠交追蹤</span>
+                                                </div>
+                                                {renderMissingList()}
                                             </div>
-                                            {renderMissingList()}
-                                        </div>
+                                        )}
                                     </div>
 
-                                    {/* App 級底部毛玻璃導航列 */}
-                                    <div className="bg-white/80 backdrop-blur-xl border-t border-slate-200 pb-[env(safe-area-inset-bottom)] shrink-0 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+                                    {/* Mobile Bottom Tab Navigation */}
+                                    <div className="bg-white border-t border-slate-200 pb-[env(safe-area-inset-bottom)] shrink-0 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
                                         <div className="flex justify-around items-center p-1.5">
                                             <button onClick={() => setActiveMobileTab('menu')} className={`flex-1 py-2 flex flex-col items-center gap-1.5 transition-all ${activeMobileTab === 'menu' ? 'text-brand-600 scale-105' : 'text-slate-400 hover:text-slate-600'}`}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -796,7 +822,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                </>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -811,7 +837,7 @@
                                 </div>
                                 <div className="text-sm font-bold text-slate-600 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner-soft leading-relaxed">
                                     {pendingAddBook.step === 'duplicate' ? (
-                                        <>系統發現 <strong>{activeStudent.name}</strong> 已經登記過 <span className="font-black text-slate-900">《{pendingAddBook.title}》</span>。<br/><br/>經手人請確認：你是否真的一共收到兩本相同的書，確定要加多一本？</>
+                                        <>系統發現 <strong>{renderStudent.name}</strong> 已經登記過 <span className="font-black text-slate-900">《{pendingAddBook.title}》</span>。<br/><br/>經手人請確認：你是否真的一共收到兩本相同的書，確定要加多一本？</>
                                     ) : (
                                         <>你準備加入的 <span className="font-black text-slate-900">《{pendingAddBook.title}》</span> 預設金額為 $0。<br/><br/>確定要以 $0 結算此書？</>
                                     )}
@@ -827,9 +853,9 @@
                     )}
 
                     {showAddStudentModal && (
-                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-[70]">
                             <div className="bg-white rounded-3xl w-[95%] max-w-sm p-6 shadow-floating">
-                                <div className="flex justify-between items-center mb-5"><h3 className="text-xl font-black text-slate-900">新增學生名單</h3><button onClick={() => setShowAddStudentModal(false)} type="button" className="text-slate-400 bg-slate-100 p-1.5 rounded-full hover:bg-slate-200 transition-colors"><IconX /></button></div>
+                                <div className="flex justify-between items-center mb-5"><h3 className="text-xl font-black text-slate-900">新增學生名單</h3><button type="button" onClick={() => setShowAddStudentModal(false)} className="text-slate-400 bg-slate-100 p-1.5 rounded-full hover:bg-slate-200 transition-colors"><IconX /></button></div>
                                 <form onSubmit={handleCreateStudent} className="space-y-4">
                                     <div><label className="block text-sm font-bold text-slate-700 mb-1.5">班級 (Form)</label><select value={newStudent.form} onChange={e => setNewStudent({...newStudent, form: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-brand-100"><option value="1">Form 1</option><option value="2">Form 2</option><option value="3">Form 3</option><option value="4">Form 4</option><option value="5">Form 5</option><option value="6">Form 6</option></select></div>
                                     <div><label className="block text-sm font-bold text-slate-700 mb-1.5">學生姓名</label><input type="text" required value={newStudent.name} onChange={e => setNewStudent({...newStudent, name: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-brand-100" /></div>
@@ -841,9 +867,9 @@
                     )}
 
                     {showEditStudentModal && (
-                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-[70]">
                             <div className="bg-white rounded-3xl w-[95%] max-w-sm p-6 shadow-floating">
-                                <div className="flex justify-between items-center mb-5"><h3 className="text-xl font-black text-slate-900">修改學生資料</h3><button onClick={() => setShowEditStudentModal(false)} type="button" className="text-slate-400 bg-slate-100 p-1.5 rounded-full hover:bg-slate-200 transition-colors"><IconX /></button></div>
+                                <div className="flex justify-between items-center mb-5"><h3 className="text-xl font-black text-slate-900">修改學生資料</h3><button type="button" onClick={() => setShowEditStudentModal(false)} className="text-slate-400 bg-slate-100 p-1.5 rounded-full hover:bg-slate-200 transition-colors"><IconX /></button></div>
                                 <form onSubmit={handleSaveStudentEdit} className="space-y-4">
                                     <div><label className="block text-sm font-bold text-slate-700 mb-1.5">班級 (Form)</label><select value={editStudentData.form} onChange={e => setEditStudentData({...editStudentData, form: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-brand-100"><option value="1">Form 1</option><option value="2">Form 2</option><option value="3">Form 3</option><option value="4">Form 4</option><option value="5">Form 5</option><option value="6">Form 6</option></select></div>
                                     <div><label className="block text-sm font-bold text-slate-700 mb-1.5">學生姓名</label><input type="text" required value={editStudentData.name} onChange={e => setEditStudentData({...editStudentData, name: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-brand-100" /></div>
@@ -855,7 +881,7 @@
                     )}
 
                     {showSettingsModal && (
-                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 md:p-4 z-50">
+                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 md:p-4 z-[70]">
                             <div className="bg-white rounded-[24px] w-[95%] max-w-4xl p-4 md:p-6 shadow-floating flex flex-col max-h-[90vh]">
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-3">
                                     <div className="flex items-center gap-3">
@@ -878,8 +904,8 @@
                                     </div>
                                     <div className="w-full sm:w-auto mt-2 sm:mt-0 flex gap-2">
                                         {editingCatalogId ? (
-                                            <><button type="submit" className="flex-1 sm:flex-none px-6 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-black shadow-md btn-spring h-[42px]">更新</button><button type="button" onClick={handleCancelCatalogEdit} className="flex-1 sm:flex-none px-5 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl text-sm font-black h-[42px] hover:bg-slate-50">取消</button></>
-                                        ) : (<button type="submit" className="w-full sm:w-auto px-6 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-black h-[42px] shadow-md btn-spring">新增</button>)}
+                                            <><button type="submit" className="flex-1 sm:flex-none px-6 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-black shadow-md active:scale-95 h-[42px]">更新</button><button type="button" onClick={handleCancelCatalogEdit} className="flex-1 sm:flex-none px-5 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl text-sm font-black h-[42px] hover:bg-slate-50">取消</button></>
+                                        ) : (<button type="submit" className="w-full sm:w-auto px-6 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-black h-[42px] shadow-md active:scale-95">新增</button>)}
                                     </div>
                                 </form>
 
@@ -917,7 +943,7 @@
                     )}
 
                     {showCollectorStatsModal && (
-                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 md:p-4 z-50">
+                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 md:p-4 z-[70]">
                             <div className="bg-white rounded-3xl w-[95%] max-w-3xl p-5 md:p-8 shadow-floating flex flex-col max-h-[90vh]">
                                 <div className="flex justify-between items-center mb-6"><h3 className="text-2xl font-black text-slate-900">經手人業績對數</h3><button type="button" onClick={() => setShowCollectorStatsModal(false)} className="bg-slate-100 p-2 rounded-full hover:bg-slate-200 transition-colors"><IconX /></button></div>
                                 <div className="overflow-y-auto flex-1 space-y-5 pr-2">
@@ -943,18 +969,18 @@
                     )}
 
                     {showExportModal && (
-                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-[70]">
                             <div className="bg-white rounded-3xl w-[95%] max-w-xl p-6 md:p-8 shadow-floating">
                                 <div className="flex justify-between items-center mb-5"><h3 className="text-xl font-black text-slate-900">匯出 CSV 數據</h3><button type="button" onClick={() => setShowExportModal(false)} className="bg-slate-100 p-2 rounded-full hover:bg-slate-200 transition-colors"><IconX /></button></div>
                                 <p className="text-sm font-bold text-slate-500 mb-3">以下為 Excel 原始數據預覽：</p>
                                 <textarea readOnly value={generateExportData().textContent} onClick={e => e.target.select()} className="w-full h-32 md:h-40 text-xs p-4 bg-slate-50 border border-slate-200 rounded-xl mb-6 focus:outline-none font-mono shadow-inner-soft" />
-                                <div className="flex justify-end gap-3"><button type="button" onClick={() => setShowExportModal(false)} className="px-5 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50">取消</button><button type="button" onClick={handleDownloadCSV} className="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2 btn-spring"><IconDownload /> 下載 CSV 檔案</button></div>
+                                <div className="flex justify-end gap-3"><button type="button" onClick={() => setShowExportModal(false)} className="px-5 py-2.5 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50">取消</button><button type="button" onClick={handleDownloadCSV} className="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2 active:scale-95 transition-transform"><IconDownload /> 下載 CSV 檔案</button></div>
                             </div>
                         </div>
                     )}
 
-                    {showReceiptModal && activeStudent && (
-                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 md:p-4 z-50 no-print">
+                    {showReceiptModal && renderStudent && (
+                        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 md:p-4 z-[70] no-print">
                             <div className="bg-white rounded-[24px] w-[95%] max-w-md shadow-floating overflow-hidden flex flex-col max-h-[90vh]">
                                 <div id="receipt-modal" className="p-6 md:p-8 bg-white text-slate-900 overflow-y-auto">
                                     <div className="text-center mb-5 md:mb-6 pb-5 border-b-2 border-dashed border-slate-200">
@@ -962,13 +988,13 @@
                                         <p className="text-[10px] md:text-xs font-bold text-slate-400">Po Kok Secondary School</p>
                                     </div>
                                     <div className="mb-5 md:mb-6 text-sm bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        <div className="flex justify-between mb-2"><span className="text-slate-500 font-bold">學生姓名:</span><span className="font-black text-base">{activeStudent.name} <span className="text-xs text-slate-400">(F.{activeStudent.form})</span></span></div>
-                                        <div className="flex justify-between"><span className="text-slate-500 font-bold">聯絡電話:</span><span className="font-bold">{activeStudent.phone || '--'}</span></div>
+                                        <div className="flex justify-between mb-2"><span className="text-slate-500 font-bold">學生姓名:</span><span className="font-black text-base">{renderStudent.name} <span className="text-xs text-slate-400">(F.{renderStudent.form})</span></span></div>
+                                        <div className="flex justify-between"><span className="text-slate-500 font-bold">聯絡電話:</span><span className="font-bold">{renderStudent.phone || '--'}</span></div>
                                     </div>
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-left text-xs md:text-sm min-w-[250px] mb-5 md:mb-6">
                                             <thead><tr className="border-b-2 border-slate-800"><th className="py-2.5 font-black text-slate-600">項目明細</th><th className="py-2.5 text-right font-black text-slate-600">金額</th></tr></thead>
-                                            <tbody className="divide-y divide-slate-100">{(activeStudent.books || []).map((b, i) => (<tr key={i}><td className="py-3.5 font-bold leading-tight">{b.title}{b.status==='accepted'&&b.deduction>0&&<div className="text-[10px] text-slate-400 mt-1 font-medium bg-slate-50 inline-block px-1.5 py-0.5 rounded border border-slate-100">- {b.deductionReason} (扣${b.deduction})</div>}</td><td className="py-3.5 text-right font-black">{b.status==='accepted'?`$${getActualPrice(b)}`:'$0'}</td></tr>))}</tbody>
+                                            <tbody className="divide-y divide-slate-100">{(renderStudent.books || []).map((b, i) => (<tr key={i}><td className="py-3.5 font-bold leading-tight">{b.title}{b.status==='accepted'&&b.deduction>0&&<div className="text-[10px] text-slate-400 mt-1 font-medium bg-slate-50 inline-block px-1.5 py-0.5 rounded border border-slate-100">- {b.deductionReason} (扣${b.deduction})</div>}</td><td className="py-3.5 text-right font-black">{b.status==='accepted'?`$${getActualPrice(b)}`:'$0'}</td></tr>))}</tbody>
                                         </table>
                                     </div>
                                     <div className="flex justify-between items-center pt-4 border-t-2 border-slate-800">
@@ -977,7 +1003,7 @@
                                     </div>
                                     <div className="mt-8 text-center"><p className="text-[10px] font-bold text-slate-400">請妥善保存此單據以作核對之用。謝謝！</p></div>
                                 </div>
-                                <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 shrink-0"><button type="button" onClick={() => setShowReceiptModal(false)} className="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100">關閉預覽</button><button type="button" onClick={() => window.print()} className="px-6 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-md hover:bg-slate-800 btn-spring"><IconPrinter />正式列印</button></div>
+                                <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3 shrink-0"><button type="button" onClick={() => setShowReceiptModal(false)} className="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100">關閉預覽</button><button type="button" onClick={() => window.print()} className="px-6 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-md hover:bg-slate-800 active:scale-95 transition-all"><IconPrinter />正式列印</button></div>
                             </div>
                         </div>
                     )}
@@ -986,7 +1012,7 @@
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        root.render(<ErrorBoundary><App /></ErrorBoundary>);
     </script>
 </body>
 </html>
