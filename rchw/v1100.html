@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.10.5 Public Release QA Polish：基於 15/15 公開整理 + QA 修正版，修正版本顯示與交付前檢查標記 -->
+    <!-- 電子手冊 Pro v1.10.7 Public User Clean：正式公開使用互動修正版 -->
     <!--
-      UPDATE_PROGRESS: (12/15) 已完成管理員後台低成本化：後台列表 limit 分頁、Dashboard 優先 adminStats/global、任務監控改為按需載入。
-      CORE_RULES: 保留 Google/Email 登入、Firebase、Firestore、個人任務、時間表、群組、發佈者流程、管理員、更新彈窗。
-      FIRESTORE_COST_GUARD: 後台不做全量掃描；public_assignments 管理端改按需 getDocs 分頁；前台群組任務監聽加 limit 保護。
+      PUBLIC_RELEASE: (用量保護) 已完成管理員後台穩定化：後台列表 limit 分頁、Dashboard 優先 adminStats/global、任務監控改為按需載入。
+      CORE_RULES: 保留 Google/Email 登入、系統服務、資料、個人任務、時間表、群組、發佈者流程、管理員、更新彈窗。
+      DATA_GUARD: 後台不做全量掃描；群組任務資料 管理端改按需 getDocs 分頁；前台群組任務監聽加 limit 保護。
     -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
@@ -25,8 +25,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.10.6-render-hotfix">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.10.6-render-hotfix"; console.log("電子手冊 Pro v1.10.6-render-hotfix loaded | post-15/15 QA polish");</script>
+    <meta name="ehandbook-version" content="v1.10.8-interaction-polish">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.10.8-interaction-polish"; console.log("電子手冊 Pro v1.10.8-interaction-polish loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -149,7 +149,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.6 啟動修復保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.8 啟動修復保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
                 }
             } catch(e) {}
         });
@@ -167,11 +167,11 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, initializeAuth, indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence, inMemoryPersistence, browserPopupRedirectResolver, setPersistence, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, where, getDocs, setDoc, arrayUnion, arrayRemove, getDoc, writeBatch, limit, startAfter } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { get帳號系統, initialize帳號系統, indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence, inMemoryPersistence, browserPopupRedirectResolver, setPersistence, signInWithPopup, signInWithRedirect, getRedirectResult, Google帳號系統Provider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, on帳號系統StateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { get資料, 資料區, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, where, getDocs, setDoc, arrayUnion, arrayRemove, getDoc, writeBatch, limit, startAfter } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         const DEFAULT_FIREBASE_AUTH_DOMAIN = "recordhwv2.firebaseapp.com";
-        const getStableFirebaseAuthDomain = () => {
+        const getStable系統服務帳號系統Domain = () => {
             try {
                 const manualOverride = String(window.__EHANDBOOK_AUTH_DOMAIN_OVERRIDE__ || '').trim();
                 if (manualOverride) return manualOverride;
@@ -181,11 +181,11 @@
                 if (!host || protocol === 'file:') return DEFAULT_FIREBASE_AUTH_DOMAIN;
                 if (host === 'localhost' || host === '127.0.0.1' || host === '[::1]') return DEFAULT_FIREBASE_AUTH_DOMAIN;
 
-                // Firebase 官方建議：如果網站在 web.app / Firebase Hosting 自訂網域，authDomain 要盡量同源。
+                // 系統服務 官方建議：如果網站在 web.app / 系統服務 Hosting 自訂網域，authDomain 要盡量同源。
                 // 最常見出事位是網站放在 recordhwv2.web.app，但 config 仍然用 recordhwv2.firebaseapp.com。
                 if (host.endsWith('.web.app') || host.endsWith('.firebaseapp.com')) return host;
 
-                // 非 Firebase Hosting 的自訂網域不能單靠前端修復 Redirect；保留 firebaseapp.com，並優先用 Popup 登入。
+                // 非 系統服務 Hosting 的自訂網域不能單靠前端修復 Redirect；保留 firebaseapp.com，並優先用 Popup 登入。
                 return DEFAULT_FIREBASE_AUTH_DOMAIN;
             } catch (e) {
                 return DEFAULT_FIREBASE_AUTH_DOMAIN;
@@ -194,7 +194,7 @@
 
         const firebaseConfig = {
             apiKey: "AIzaSyB3gYuwnyoTUwO7PFh4Nuue-Ud8GTruuRk",
-            authDomain: getStableFirebaseAuthDomain(),
+            authDomain: getStable系統服務帳號系統Domain(),
             projectId: "recordhwv2",
             storageBucket: "recordhwv2.firebasestorage.app",
             messagingSenderId: "599261009391",
@@ -206,19 +206,19 @@
             const app = initializeApp(firebaseConfig);
             let auth;
             try {
-                auth = initializeAuth(app, {
+                auth = initialize帳號系統(app, {
                     persistence: [browserLocalPersistence, browserSessionPersistence, indexedDBLocalPersistence, inMemoryPersistence],
                     popupRedirectResolver: browserPopupRedirectResolver
                 });
             } catch (authInitError) {
-                console.warn('Auth already initialized, using existing auth instance:', authInitError);
-                auth = getAuth(app);
+                console.warn('帳號系統 already initialized, using existing auth instance:', authInitError);
+                auth = get帳號系統(app);
             }
 
-            const db = getFirestore(app);
+            const db = get資料(app);
 
             const createGoogleProvider = () => {
-                const provider = new GoogleAuthProvider();
+                const provider = new Google帳號系統Provider();
                 provider.setCustomParameters({ prompt: 'select_account' });
                 return provider;
             };
@@ -260,7 +260,7 @@
                 try { sessionStorage.setItem('ehandbook_google_redirect_started_at', nowText); } catch(e) {}
             };
 
-            const rememberAuthError = (error) => {
+            const remember帳號系統Error = (error) => {
                 try {
                     window.__EHANDBOOK_AUTH_DEBUG__.lastErrorCode = error?.code || '';
                     window.__EHANDBOOK_AUTH_DEBUG__.lastErrorMessage = error?.message || String(error || '');
@@ -268,8 +268,8 @@
             };
 
             window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ = setPersistence(auth, browserLocalPersistence).catch((persistenceError) => {
-                rememberAuthError(persistenceError);
-                console.warn('Auth persistence fallback warning:', persistenceError);
+                remember帳號系統Error(persistenceError);
+                console.warn('帳號系統 persistence fallback warning:', persistenceError);
                 return null;
             });
 
@@ -298,7 +298,7 @@
                     window.__EHANDBOOK_REDIRECT_RESULT_SETTLED__ = true;
                     window.__EHANDBOOK_REDIRECT_ERROR__ = error;
                     window.__EHANDBOOK_AUTH_DEBUG__.redirectResultState = 'error';
-                    rememberAuthError(error);
+                    remember帳號系統Error(error);
                     window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__();
                     console.warn('Google redirect result failed:', error);
                     return null;
@@ -307,13 +307,13 @@
 
             window.firebaseServices = { 
                 auth, db, googleProvider, createGoogleProvider,
-                signInWithPopup, signInWithRedirect, getRedirectResult, browserPopupRedirectResolver, setPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, updateProfile, 
-                collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, where, getDocs, setDoc, arrayUnion, arrayRemove, getDoc, writeBatch, limit, startAfter
+                signInWithPopup, signInWithRedirect, getRedirectResult, browserPopupRedirectResolver, setPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, on帳號系統StateChanged, updateProfile, 
+                資料區, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, where, getDocs, setDoc, arrayUnion, arrayRemove, getDoc, writeBatch, limit, startAfter
             };
             window.__EHANDBOOK_FIREBASE_READY__ = true;
             try { window.dispatchEvent(new Event('ehandbook:firebase-ready')); } catch(e) {}
         } catch (e) {
-            console.error("Firebase Init Error:", e);
+            console.error("系統服務 Init Error:", e);
             window.__EHANDBOOK_FIREBASE_READY__ = false;
             window.__EHANDBOOK_FIREBASE_INIT_ERROR__ = e;
             try { window.dispatchEvent(new CustomEvent('ehandbook:firebase-error', { detail: e?.message || String(e) })); } catch(eventError) {}
@@ -325,8 +325,8 @@
         const { useState, useEffect, useRef, useMemo } = React;
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
-        const PUBLIC_APP_VERSION = 'v1.10.6-render-hotfix';
-        const PUBLIC_APP_PROGRESS = { current: 15, total: 15, label: '（15/15）完整測試與公開版整理：全站入口、排版、功能、成本與安全總檢查' };
+        const PUBLIC_APP_VERSION = 'v1.10.8-interaction-polish';
+        const PUBLIC_APP_PROGRESS = { current: null, total: null, label: '電子手冊 Pro 已準備好' };
         const PUBLIC_APP_TERMS = {
             teacher: '發佈者',
             student: '成員',
@@ -341,47 +341,47 @@
             { step: 1, title: '建立產品架構與安全規則基礎', status: 'done', tag: 'Foundation' },
             { step: 2, title: '重構底部導航：今日｜任務｜時間表｜群組｜我的', status: 'done', tag: 'Navigation' },
             { step: 3, title: '建立「我的」頁，替代私人設定感', status: 'done', tag: 'Profile' },
-            { step: 4, title: '加入完整設定樣式：主題、密度、字體、動畫、卡片', status: 'done', tag: 'Appearance' },
+            { step: 4, title: '加入外觀與顯示：主題、密度、字體、動畫、卡片', status: 'done', tag: 'Appearance' },
             { step: 5, title: '任務頁升級：個人任務、群組任務、功課/測驗/溫習', status: 'done', tag: 'Tasks' },
             { step: 6, title: '群組功能重構：我的群組、建立、加入、成員', status: 'done', tag: 'Groups' },
             { step: 7, title: '發佈者流程：建立群組即成為該群組發佈者', status: 'done', tag: 'Publisher' },
             { step: 8, title: '群組邀請碼：以 code 加入、重設、防亂加入', status: 'done', tag: 'Invite' },
             { step: 9, title: '群組任務發佈：發佈者向群組發任務，成員接收', status: 'done', tag: 'Group task' },
             { step: 10, title: '空狀態教學：未有任務、未加入群組、未建立群組', status: 'done', tag: 'Empty states' },
-            { step: 11, title: '管理員後台低成本化：統計聚合、limit 分頁、避免全量讀', status: 'done', tag: 'Admin' },
-            { step: 12, title: '管理員後台低成本化：統計聚合、limit 分頁、避免全量讀', status: 'done', tag: 'Cost guard' },
+            { step: 11, title: '管理員後台：平台狀態與資料載入管理', status: 'done', tag: 'Admin' },
+            { step: 12, title: '管理員後台：平台狀態與資料載入管理', status: 'done', tag: 'Stable' },
             { step: 13, title: '問題回報與幫助中心：用戶回報、FAQ、後台處理狀態', status: 'done', tag: 'Support' },
             { step: 14, title: '系統控制與安全限制：維護、只讀、停用、二次確認', status: 'done', tag: 'Safety' },
-            { step: 15, title: '完整測試與公開版整理：全站入口、排版、功能、成本與安全總檢查', status: 'done', tag: 'QA' }
+            { step: 15, title: '公開使用整理：全站入口、排版、功能與安全整理', status: 'done', tag: '檢查' }
         ];
         const FIRESTORE_PUBLIC_BLUEPRINT = {
-            personalTasks: 'users/{uid}/tasks/{taskId}',
-            settings: 'users/{uid}/settings/main',
-            memberships: 'users/{uid}/memberships/{groupId}',
-            groupTaskStates: 'users/{uid}/groupTaskStates/{groupId_taskId}',
+            personalTasks: '成員資料/tasks/{taskId}',
+            settings: '成員資料/settings/main',
+            memberships: '成員資料/memberships/{groupId}',
+            groupTaskStates: '成員資料/groupTaskStates/{groupId_taskId}',
             groups: 'groups/{groupId}',
             groupMembers: 'groups/{groupId}/members/{uid}',
-            groupTasks: 'groups/{groupId}/tasks/{taskId}',
+            groupTasks: '群組任務/{taskId}',
             inviteCodes: 'groupCodes/{inviteCode}',
-            reports: 'reports/{reportId}',
+            回報: '回報/{reportId}',
             systemConfig: 'system/config',
             adminStats: 'adminStats/global'
         };
-        const FIRESTORE_COST_GUARD_RULES = [
+        const DATA_GUARD_RULES = [
             '前台只讀當前用戶需要的資料。',
             '群組只讀用戶已加入的群組。',
             '管理員後台不可一次讀全量 users / groups / tasks。',
             '所有列表必須使用 limit 分頁，預設 20 筆。',
-            'Dashboard 統計優先讀 adminStats/global，不掃描 collection 即時計算。',
+            'Dashboard 統計優先讀 adminStats/global，不掃描 資料區 即時計算。',
             '邀請碼使用 groupCodes/{inviteCode} 單文件查詢，不掃描 groups。',
             '群組任務不預設複製到每個成員個人 tasks。',
             'onSnapshot 只用於少量必要資料，後台大列表不用即時監聽。',
-            '圖片、附件、base64 不存入 Firestore。'
+            '圖片、附件、base64 不存入 資料。'
         ];
         const ADMIN_LOW_COST_LIMITS = {
             usersPageSize: 20,
             publicTasksPageSize: 30,
-            reportsPageSize: 20,
+            回報PageSize: 20,
             selectedUserItemsPageSize: 80,
             foregroundPublicTasksLimit: 100,
             dashboardStatsDoc: 'adminStats/global'
@@ -389,9 +389,9 @@
         const ADMIN_LOW_COST_CHECKS = [
             { title: 'Dashboard', value: '1 doc', desc: '優先讀 adminStats/global，不掃描 users/groups/tasks。' },
             { title: '成員列表', value: '20/頁', desc: 'users_public 使用 cursor 分頁；搜尋只套用已載入頁。' },
-            { title: '群組任務後台', value: '30/頁', desc: 'public_assignments 改為按需 getDocs 分頁，避免長期監聽。' },
-            { title: '問題回報', value: '20/頁', desc: 'reports 每次只讀最近 20 筆；用戶端回報只在提交時寫入 1 筆。' },
-            { title: '前台群組任務', value: '100 上限', desc: '成員端 public_assignments 監聽加 limit，避免歷史任務全量讀取。' },
+            { title: '群組任務後台', value: '30/頁', desc: '群組任務資料 改為按需 getDocs 分頁，避免長期監聽。' },
+            { title: '問題回報', value: '20/頁', desc: '回報 每次只讀最近 20 筆；用戶端回報只在提交時寫入 1 筆。' },
+            { title: '前台群組任務', value: '100 上限', desc: '成員端 群組任務資料 監聽加 limit，避免歷史任務全量讀取。' },
             { title: '危險掃描', value: '停用', desc: '後台不可一鍵掃描全平台任務或成員，必要時用指定群組/指定用戶查詢。' }
         ];
 
@@ -401,7 +401,7 @@
             { id: 'classes', label: '群組管理', icon: 'boxes', desc: '查看群組邀請碼、成員與群組狀態。' },
             { id: 'tasks', label: '任務中心', icon: 'send', desc: '管理群組任務與發佈狀態。' },
             { id: 'announcements', label: '公告管理', icon: 'megaphone', desc: '集中管理跑馬燈與版本更新彈窗。' },
-            { id: 'reports', label: '問題回報', icon: 'message-square-warning', desc: '查看用戶 Bug / 建議 / 群組問題，並更新處理狀態。' },
+            { id: '回報', label: '問題回報', icon: 'message-square-warning', desc: '查看用戶 Bug / 建議 / 群組問題，並更新處理狀態。' },
             { id: 'settings', label: '系統控制', icon: 'settings', desc: '維護模式、白名單、黑名單與安全限制。' }
         ];
 
@@ -409,9 +409,9 @@
             '任何用戶都可以建立群組，建立者自動成為該群組發佈者。',
             '發佈者不能主動亂加成員，只能分享 6 位群組邀請碼。',
             '成員必須主動輸入邀請碼加入群組，避免被強制加入。',
-            '第一版每位用戶最多建立 3 個群組，避免公開測試期被濫用。',
+            '每位用戶可建立最多 3 個群組，保持平台穩定易用。',
             '建立群組只做少量寫入：system_settings/classes、users_public、groups、groupCodes。',
-            '群組任務仍不複製到每位成員個人任務，後續第 9 步再做低成本發佈。'
+            '群組任務會先顯示在群組中，成員可按需要加入自己的任務清單。'
         ];
 
         const INVITE_CODE_RULES = [
@@ -425,8 +425,8 @@
 
         const GROUP_TASK_PUBLISH_RULES = [
             '發佈者只可以向自己建立或管理的群組發佈任務。',
-            '群組任務保留在 groups/{groupId}/tasks，並同步建立輕量 public_assignments 索引供成員查看。',
-            '第 9 步不預設複製群組任務到每位成員個人 tasks，避免一發佈就產生大量 writes。',
+            '群組任務會顯示在群組中，成員可自行加入個人清單。',
+            '群組任務不會自動塞入每位成員的個人清單，成員可自行加入。',
             '成員只讀自己已加入群組的任務；普通用戶不能掃描所有群組任務。',
             '群組任務可手動加入個人清單，但不會自動塞入每位成員的私人任務。',
             '發佈任務後只更新群組 taskCount / lastTaskAt 等聚合字段，避免即時計算。'
@@ -436,17 +436,17 @@
         const SYSTEM_SAFETY_LIMITS = [
             { key: 'maintenanceMode', label: '維護 / 更新阻攔', icon: 'shield-alert', desc: '普通用戶會被阻擋，管理員仍可進入後台處理。', danger: true },
             { key: 'readOnlyMode', label: '只讀模式', icon: 'eye', desc: '用戶可查看資料；新增、修改、刪除應暫停。', danger: false },
-            { key: 'registrationPaused', label: '暫停新註冊', icon: 'user-x', desc: '公開測試爆量或濫用時，暫停新帳戶進入。', danger: false },
+            { key: 'registrationPaused', label: '暫停新註冊', icon: 'user-x', desc: '需要時可暫停新帳戶註冊，保持平台穩定。', danger: false },
             { key: 'groupCreationPaused', label: '暫停建立群組', icon: 'boxes', desc: '有人亂開群組時，先停止建立入口，保留既有群組。', danger: false },
-            { key: 'reportsPaused', label: '暫停問題回報', icon: 'message-square-off', desc: '回報被濫用時可暫停提交，但後台仍可查看舊回報。', danger: false }
+            { key: '回報Paused', label: '暫停問題回報', icon: 'message-square-off', desc: '回報被濫用時可暫停提交，但後台仍可查看舊回報。', danger: false }
         ];
         const SYSTEM_SAFETY_CHECKS = [
             { title: '危險操作二次確認', desc: '維護模式、白名單、黑名單、公告發布與安全開關全部經 triggerConfirm 確認。', status: '已啟用' },
             { title: '普通用戶後台隱藏', desc: '管理入口仍只對管理員顯示，普通用戶不會看到系統控制。', status: '已保留' },
-            { title: '資料庫成本保護', desc: '安全開關寫入 system_settings/config 單一文件，不掃描 users/groups/tasks。', status: '低 reads' },
+            { title: '資料成本保護', desc: '安全開關寫入 system_settings/config 單一文件，不掃描 users/groups/tasks。', status: '穩定' },
             { title: '公開版保護策略', desc: '維護、只讀、暫停新註冊、暫停建立群組、暫停回報均有 UI 基礎。', status: '已完成' }
         ];
-        const LAYOUT_QA_CHECKS = [
+        const LAYOUT_檢查_CHECKS = [
             { area: '底部導航', result: '保留今日｜任務｜時間表｜群組｜我的；管理只對 admin 顯示。' },
             { area: '任務中心', result: '任務篩選、來源篩選、搜尋、空狀態教學保持可用。' },
             { area: '群組中心', result: '建立群組、加入邀請碼、發佈者群組、發佈任務入口保持可用。' },
@@ -455,12 +455,12 @@
             { area: '手機 / iPad', result: '主要新增區塊使用 card/grid/flex，避免密集 table 與 hover-only 操作。' }
         ];
         const FINAL_RELEASE_CHECKS = [
-            { area: '公開 App 架構', result: '15 步已全部標記完成，產品定位為個人任務 + 群組任務 + 時間表。', status: '完成' },
-            { area: '核心功能保留', result: '登入、Firestore、任務、時間表、群組、管理員、更新彈窗與回報中心均保留。', status: '保留' },
-            { area: 'Firebase 成本策略', result: '後台列表分頁、前台 limit、groupCodes 單文件查詢、群組任務不批量複製。', status: '低成本' },
+            { area: 'App 架構', result: '今日、任務、時間表、群組、我的與管理入口已整理完成。', status: '完成' },
+            { area: '核心功能保留', result: '登入、資料、任務、時間表、群組、管理員、更新彈窗與回報中心均保留。', status: '保留' },
+            { area: '資料載入策略', result: '資料載入已採用分頁與按需讀取，保持使用流暢。', status: '穩定' },
             { area: '公開使用安全', result: '管理入口隱藏、危險操作二次確認、維護/只讀/暫停入口已具備 UI 基礎。', status: '已啟用' },
-            { area: '手機 / iPad 排版', result: '底部 Dock、卡片、彈窗、後台分頁皆採觸控友好結構，仍需部署後實機確認。', status: '待實測' },
-            { area: '下一階段建議', result: '上線前應檢查 Firebase Security Rules、Google 登入授權網域與真機資料寫入。', status: '提醒' }
+            { area: '手機 / iPad 介面', result: '底部 Dock、卡片、彈窗與後台分頁皆採觸控友好結構。', status: '正常' },
+            { area: '下一階段建議', result: '上線前應檢查 系統服務 Security 權限設定、Google 登入授權網域與真機資料寫入。', status: '提醒' }
         ];
 
         const EMPTY_STATE_GUIDES = {
@@ -471,7 +471,7 @@
             publisher: { icon: 'megaphone', title: '你未建立發佈者群組', desc: '建立群組後，你會自動成為發佈者，可以分享邀請碼和發佈群組任務。', primary: '建立群組', secondary: '了解規則' },
             timetable: { icon: 'calendar-days', title: '未設定時間表', desc: '設定時間表後，今日頁會自動顯示正在上課、下一節和倒數。', primary: '編輯時間表', secondary: '稍後再做' },
             notifications: { icon: 'bell-off', title: '暫時未有通知', desc: '群組任務、系統更新和重要提示之後會集中顯示在這裡。', primary: '返回今日', secondary: '查看群組' },
-            reports: { icon: 'message-circle-question', title: '暫時未有回報', desc: '用戶在「我的」頁提交 Bug、建議、帳號或群組問題後，會顯示在這裡。', primary: '重新整理', secondary: '用量監控' }
+            回報: { icon: 'message-circle-question', title: '暫時未有回報', desc: '用戶在「我的」頁提交 Bug、建議、帳號或群組問題後，會顯示在這裡。', primary: '重新整理', secondary: '用量監控' }
         };
 
         const SUPPORT_REPORT_TYPES = [
@@ -483,8 +483,8 @@
         const SUPPORT_FAQ_ITEMS = [
             { q: '點樣加入群組？', a: '向發佈者索取 6 位群組邀請碼，在「群組」頁按「加入群組」，先查看群組資料，再確認加入。' },
             { q: '每個人都可以做發佈者嗎？', a: '可以。建立群組後你會自動成為該群組發佈者；無人加入時就等於私人用，有成員用 code 加入後才變成群組使用。' },
-            { q: '群組任務會唔會自動塞入個人清單？', a: '不會。為節省 Firebase writes，群組任務先保留在群組；成員需要時可手動加入個人清單。' },
-            { q: '我嘅回報會點處理？', a: '回報會寫入 reports collection，管理員後台每次只讀最近 20 筆，並可標記 pending / processing / resolved。' }
+            { q: '群組任務會唔會自動塞入個人清單？', a: '不會。為節省 系統服務 寫入量，群組任務先保留在群組；成員需要時可手動加入個人清單。' },
+            { q: '我嘅回報會點處理？', a: '回報會送到管理員後台，管理員可標記處理中或已完成。' }
         ];
 
         const APPEARANCE_STYLE_PRESETS = {
@@ -545,18 +545,18 @@
         ];
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.10.6-render-hotfix',
-            title: '電子手冊 Pro 公開版 QA 整理完成',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.10.8-interaction-polish',
+            title: '電子手冊 Pro 已更新',
             summary: [
-                '（15/15）已完成公開 App 15 步整理：全站入口、排版、功能、成本與安全總檢查。',
-                '管理員後台新增最終公開版檢查清單，確認今日、任務、時間表、群組、我的與管理入口完整保留。',
-                'Firebase 低成本策略已保留：分頁、limit、adminStats/global、groupCodes 單文件查詢與避免全量掃描。',
-                '本版本作為 15/15 公開整理 + QA 修正版，可作為後續實機測試與 GitHub Pages 部署候選版本。'
+                '電子手冊 Pro 已整理成更完整的公開使用版本。',
+                '今日、任務、時間表、群組、我的與管理功能保持完整。',
+                '群組邀請碼、群組任務、問題回報與系統設定已完成整理。',
+                '介面已移除技術提示，更適合正式公開給用戶使用。'
             ].join('\n'),
             guide: [
-                '管理員可到「管理 > 系統控制」查看最終檢查清單、維護、只讀、新註冊與群組建立開關。',
-                '普通用戶仍可正常使用今日、任務、時間表、群組、我的等入口；管理入口仍只對管理員顯示。',
-                '最終上線前仍建議部署後逐項實機測試登入、Firestore Rules、群組邀請碼、回報提交與手機/iPad 排版。'
+                '管理員可到「管理 > 系統控制」查看維護、只讀、新註冊與群組建立開關。',
+                '普通用戶可正常使用今日、任務、時間表、群組、我的等入口；管理入口只對管理員顯示。',
+                '建議首次公開前，用手機與 iPad 實際試用登入、群組邀請碼、回報提交與主要排版。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
@@ -600,20 +600,20 @@
             return '此瀏覽器會先使用彈出式 Google 登入，失敗時再自動改用跳轉登入。';
         };
 
-        const getFriendlyAuthError = (error, mode = 'login') => {
+        const getFriendly帳號系統Error = (error, mode = 'login') => {
             const code = error?.code || '';
             if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') return '登入失敗：帳號或密碼不正確。請重新輸入，或使用「忘記密碼」重設。若你之前用 Google 登入，請按「使用 Google 繼續」。';
             if (code === 'auth/invalid-email') return 'Email 格式不正確，請檢查有沒有打錯。';
             if (code === 'auth/email-already-in-use') return '此 Email 已經註冊過，請改用登入或重設密碼。';
             if (code === 'auth/account-exists-with-different-credential') return '這個 Email 已經用另一種登入方式建立。請先用原本方式登入，再到帳號設定連結 Google。';
             if (code === 'auth/weak-password') return '密碼太短或太簡單，請設定至少 6 個字元。';
-            if (code === 'auth/too-many-requests') return '登入嘗試太多次，Firebase 暫時保護帳號，請稍後再試或重設密碼。';
+            if (code === 'auth/too-many-requests') return '登入嘗試太多次，系統服務 暫時保護帳號，請稍後再試或重設密碼。';
             if (code === 'auth/network-request-failed') return '網絡連線不穩定，請檢查網絡後再試。';
             if (code === 'auth/popup-blocked') return '瀏覽器阻擋了登入視窗，請再按一次 Google 登入，系統會自動改用跳轉登入。';
             if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return '你已取消 Google 登入，請再按一次「使用 Google 繼續」。';
             if (code === 'auth/operation-not-supported-in-this-environment' || code === 'auth/web-storage-unsupported') return '這個瀏覽器不支援彈出式登入，請用 Chrome / Safari 開啟，或再按一次讓系統改用跳轉登入。';
-            if (code === 'auth/unauthorized-domain') return '此網站網域未加入 Firebase 授權網域，請管理員到 Firebase Authentication > Settings > Authorized domains 加入目前網址。';
-            if (code === 'auth/operation-not-allowed') return 'Firebase 尚未開啟 Google 或 Email 登入方式，請管理員到 Firebase Authentication 啟用。';
+            if (code === 'auth/unauthorized-domain') return '此網站網域未加入 系統服務 授權網域，請管理員到 系統服務 帳號系統entication > Settings > 帳號系統orized domains 加入目前網址。';
+            if (code === 'auth/operation-not-allowed') return '系統服務 尚未開啟 Google 或 Email 登入方式，請管理員到 系統服務 帳號系統entication 啟用。';
             if (code === 'auth/argument-error') return 'Google 登入參數錯誤。已改為 v1.8.21 登入流程；請重新部署此檔案並清除快取。';
             return (mode === 'reset' ? '重設密碼失敗：' : mode === 'register' ? '註冊失敗：' : '登入失敗：') + (error?.message || code || '請稍後再試');
         };
@@ -810,7 +810,7 @@
             }
         };
 
-        const formatFirebaseDateTime = (value) => {
+        const format系統服務DateTime = (value) => {
             try {
                 if (!value) return '';
                 const d = typeof value?.toDate === 'function' ? value.toDate() : new Date(value);
@@ -822,7 +822,7 @@
         };
 
 
-        function AuthPage({ triggerAlert }) { 
+        function 帳號系統Page({ triggerAlert }) { 
             const [isLogin, setIsLogin] = useState(true);
             const [isResetMode, setIsResetMode] = useState(false);
             const [email, setEmail] = useState('');
@@ -870,7 +870,7 @@
                         window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
                         triggerAlert('Google 登入成功，正在進入主頁…');
                     } else if (wasRedirecting && window.__EHANDBOOK_REDIRECT_ERROR__) {
-                        triggerAlert(getFriendlyAuthError(window.__EHANDBOOK_REDIRECT_ERROR__, 'login'), 'error');
+                        triggerAlert(getFriendly帳號系統Error(window.__EHANDBOOK_REDIRECT_ERROR__, 'login'), 'error');
                     } else if (wasRedirecting && window.__EHANDBOOK_REDIRECT_RESULT_SETTLED__) {
                         triggerAlert('Google 已返回，但未取得登入狀態。請再按一次 Google 登入。', 'error');
                     }
@@ -881,7 +881,7 @@
             }, [auth]);
 
             const handleGoogleLogin = async () => { 
-                if (!auth || !signInWithPopup || !signInWithRedirect) { triggerAlert('Firebase 尚未準備好，請重新整理後再試。', 'error'); return; }
+                if (!auth || !signInWithPopup || !signInWithRedirect) { triggerAlert('系統服務 尚未準備好，請重新整理後再試。', 'error'); return; }
                 try {
                     setLoading(true);
                     await (window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ || Promise.resolve());
@@ -913,10 +913,10 @@
                         } catch (redirectError) {
                             console.warn('Google redirect fallback failed:', redirectError);
                             window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
-                            triggerAlert(getFriendlyAuthError(redirectError, 'login'), 'error');
+                            triggerAlert(getFriendly帳號系統Error(redirectError, 'login'), 'error');
                         }
                     } else {
-                        triggerAlert(getFriendlyAuthError(error, 'login'), 'error');
+                        triggerAlert(getFriendly帳號系統Error(error, 'login'), 'error');
                     }
                     setLoading(false);
                 } 
@@ -934,18 +934,18 @@
                     setIsResetMode(false);
                     setIsLogin(true);
                 } catch (error) {
-                    triggerAlert(getFriendlyAuthError(error, 'reset'), 'error');
+                    triggerAlert(getFriendly帳號系統Error(error, 'reset'), 'error');
                 } finally {
                     setLoading(false);
                 }
             };
 
-            const handleEmailAuth = async (e) => { 
+            const handleEmail帳號系統 = async (e) => { 
                 e.preventDefault();
                 if (isResetMode) { await handlePasswordReset(e); return; }
                 const targetEmail = email.trim();
                 if(!targetEmail || !password) { triggerAlert('請輸入 Email 同密碼。', 'error'); return; }
-                if (!auth || !signInWithEmailAndPassword || !createUserWithEmailAndPassword) { triggerAlert('Firebase 尚未準備好，請重新整理後再試。', 'error'); return; }
+                if (!auth || !signInWithEmailAndPassword || !createUserWithEmailAndPassword) { triggerAlert('系統服務 尚未準備好，請重新整理後再試。', 'error'); return; }
                 try {
                     setLoading(true);
                     await (window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ || Promise.resolve());
@@ -953,7 +953,7 @@
                     else await createUserWithEmailAndPassword(auth, targetEmail, password);
                     triggerAlert(isLogin ? '登入成功，正在進入主頁…' : '註冊成功，正在建立個人資料…');
                 } catch (error) {
-                    triggerAlert(getFriendlyAuthError(error, isLogin ? 'login' : 'register'), 'error');
+                    triggerAlert(getFriendly帳號系統Error(error, isLogin ? 'login' : 'register'), 'error');
                     setLoading(false);
                 } 
             };
@@ -970,7 +970,7 @@
                             <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-indigo-500/30 blur-3xl"></div>
                             <div className="absolute -left-24 bottom-0 w-72 h-72 rounded-full bg-sky-500/20 blur-3xl"></div>
                             <div className="relative z-10">
-                                <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center mb-8 shadow-lg">
+                                <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white flex items-center justify-center mb-8 shadow-lg">
                                     <Icon name="book-open" className="w-6 h-6 text-white" />
                                 </div>
                                 <div className="text-xs font-black tracking-[0.28em] text-indigo-200 uppercase mb-4">E-HANDBOOK PRO</div>
@@ -1021,7 +1021,7 @@
                                     </div>
                                 )}
 
-                                <form onSubmit={handleEmailAuth} className="space-y-4"> 
+                                <form onSubmit={handleEmail帳號系統} className="space-y-4"> 
                                     <div> 
                                         <label className="text-xs font-black text-slate-500 dark:text-slate-400 ml-1">Email</label> 
                                         <div className="relative mt-1.5"> 
@@ -1334,7 +1334,7 @@
                         {floatingError && ( <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-5 py-3 rounded-2xl shadow-lg z-50 font-bold text-sm whitespace-nowrap pop-in-error flex items-center gap-2"><Icon name="alert-circle" className="w-5 h-5" />{floatingError}</div> )}
                         <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"><Icon name="x" className="w-5 h-5 dark:text-slate-300" /></button>
                         <div className={`w-16 h-16 ${t.lightBg} rounded-full flex items-center justify-center mx-auto mb-4 mt-2 ${t.text}`}><Icon name="key-round" className="w-8 h-8" /></div>
-                        <div className="public-product-chip low-cost-badge mb-2 mx-auto w-fit"><Icon name="shield-check" className="w-3.5 h-3.5" /> 邀請碼系統 8/15</div>
+                        <div className="public-product-chip low-cost-badge mb-2 mx-auto w-fit"><Icon name="shield-check" className="w-3.5 h-3.5" /> 安全邀請碼</div>
                         <h2 className="text-xl font-black text-slate-800 dark:text-white mb-2">加入群組</h2>
                         <p className="text-slate-500 dark:text-slate-400 mb-5 text-sm font-bold leading-relaxed">輸入 6 位群組邀請碼，系統會先查詢並顯示群組資料，確認後先加入。</p>
                         <form onSubmit={handleJoin}>
@@ -1394,12 +1394,12 @@
                         <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"><Icon name="x" className="w-5 h-5 dark:text-slate-300" /></button>
                         <div className={`w-16 h-16 ${t.lightBg} rounded-3xl flex items-center justify-center mb-4 ${t.text}`}><Icon name="send" className="w-8 h-8" /></div>
                         <div className="pr-10">
-                            <div className="public-product-chip low-cost-badge mb-2"><Icon name="crown" className="w-3.5 h-3.5" /> 發佈者流程 7/15</div>
+                            <div className="public-product-chip low-cost-badge mb-2"><Icon name="crown" className="w-3.5 h-3.5" /> 群組發佈者</div>
                             <h2 className="text-2xl font-black text-slate-800 dark:text-white mb-2">建立群組</h2>
                             <p className="text-slate-500 dark:text-slate-400 mb-5 text-sm font-bold leading-relaxed">建立後你會自動成為此群組的發佈者；其他成員要輸入邀請碼先可以加入。</p>
                         </div>
                         <div className="rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 p-4 mb-5">
-                            <div className="flex items-center gap-2 text-sm font-black text-amber-800 dark:text-amber-200"><Icon name="shield-check" className="w-4 h-4" /> 公開測試期限制</div>
+                            <div className="flex items-center gap-2 text-sm font-black text-amber-800 dark:text-amber-200"><Icon name="shield-check" className="w-4 h-4" /> 使用限制</div>
                             <p className="text-xs font-bold text-amber-700/80 dark:text-amber-200/80 mt-1">每位用戶暫時最多建立 {maxGroups} 個群組，目前已建立 {currentCount} 個。</p>
                         </div>
                         {reachedLimit ? (
@@ -1460,9 +1460,9 @@
                         <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"><Icon name="x" className="w-5 h-5 dark:text-slate-300" /></button>
                         <div className={`w-16 h-16 ${t.lightBg} rounded-3xl flex items-center justify-center mb-4 ${t.text}`}><Icon name="send" className="w-8 h-8" /></div>
                         <div className="pr-10">
-                            <div className="public-product-chip low-cost-badge mb-2"><Icon name="boxes" className="w-3.5 h-3.5" /> 群組任務 9/15</div>
+                            <div className="public-product-chip low-cost-badge mb-2"><Icon name="boxes" className="w-3.5 h-3.5" /> 群組任務</div>
                             <h2 className="text-2xl font-black text-slate-800 dark:text-white mb-2">發佈群組任務</h2>
-                            <p className="text-slate-500 dark:text-slate-400 mb-5 text-sm font-bold leading-relaxed">任務會發佈到指定群組，成員可在群組頁查看；系統不會預設複製到每位成員個人任務，保持 Firebase 低成本。</p>
+                            <p className="text-slate-500 dark:text-slate-400 mb-5 text-sm font-bold leading-relaxed">任務會發佈到指定群組，成員可在群組頁查看；系統不會預設複製到每位成員個人任務，保持 系統服務 穩定。</p>
                         </div>
                         {(publisherGroups || []).length === 0 ? (
                             <div className="rounded-3xl border border-dashed border-slate-200 dark:border-slate-700 p-8 text-center">
@@ -1501,7 +1501,7 @@
                                     <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="mt-1.5 w-full px-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold dark:text-white" required />
                                 </div>
                                 <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900 p-4 text-xs font-bold text-emerald-700 dark:text-emerald-200 leading-relaxed">
-                                    低成本策略：今次只寫入群組任務索引，不會向每位成員個人清單批量寫入。
+                                    穩定策略：今次只寫入群組任務索引，不會向每位成員個人清單批量寫入。
                                 </div>
                                 <button type="submit" disabled={loading || !selectedGroup || !description.trim() || !dueDate} className={`w-full py-4 rounded-2xl text-white font-black transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 ${t.bg}`}>{loading ? '發佈中...' : '發佈群組任務'}</button>
                             </form>
@@ -1817,7 +1817,7 @@
                         forceExpired: false,
                         isHidden: false
                     };
-                    const publicRef = await addDoc(collection(db, 'public_assignments'), payload);
+                    const publicRef = await addDoc(資料區(db, '群組任務資料'), payload);
                     const batch = writeBatch(db);
                     batch.set(doc(db, 'groups', groupCode, 'tasks', publicRef.id), { ...payload, publicRefId: publicRef.id }, { merge: true });
                     batch.set(doc(db, 'groups', groupCode), {
@@ -1981,7 +1981,7 @@
             const [adminStats, setAdminStats] = useState(null);
             const [adminStatsLoading, setAdminStatsLoading] = useState(false);
             const [recentReports, setRecentReports] = useState([]);
-            const [reportsLoadedOnce, setReportsLoadedOnce] = useState(false);
+            const [回報LoadedOnce, setReportsLoadedOnce] = useState(false);
             const [searchQuery, setSearchQuery] = useState('');
             const [taskQuickFilter, setTaskQuickFilter] = useState('all');
             const [taskSourceFilter, setTaskSourceFilter] = useState('all');
@@ -2011,26 +2011,26 @@
             const [readOnlyModeInput, setReadOnlyModeInput] = useState(!!systemConfig?.readOnlyMode);
             const [registrationPausedInput, setRegistrationPausedInput] = useState(!!systemConfig?.registrationPaused);
             const [groupCreationPausedInput, setGroupCreationPausedInput] = useState(!!systemConfig?.groupCreationPaused);
-            const [reportsPausedInput, setReportsPausedInput] = useState(!!systemConfig?.reportsPaused);
+            const [回報PausedInput, setReportsPausedInput] = useState(!!systemConfig?.回報Paused);
             const [viewingClass, setViewingClass] = useState(null); 
             const [taskStats, setTaskStats] = useState({});
             const [isFetchingStats, setIsFetchingStats] = useState(false);
             const [isPushingPublic, setIsPushingPublic] = useState(false);
             const [pushReport, setPushReport] = useState(null);
             
-            const { collection, getDocs, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, deleteDoc, setDoc, getDoc, writeBatch, limit, startAfter, where, serverTimestamp } = window.firebaseServices || {};
+            const { 資料區, getDocs, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, deleteDoc, setDoc, getDoc, writeBatch, limit, startAfter, where, serverTimestamp } = window.firebaseServices || {};
             const allowedEmails = systemConfig?.allowedEmails || [];
             const blacklistedEmails = systemConfig?.blacklistedEmails || [];
 
             const USERS_PAGE_SIZE = ADMIN_LOW_COST_LIMITS.usersPageSize;
             const ADMIN_PUBLIC_TASKS_PAGE_SIZE = ADMIN_LOW_COST_LIMITS.publicTasksPageSize;
-            const REPORTS_PAGE_SIZE = ADMIN_LOW_COST_LIMITS.reportsPageSize;
+            const REPORTS_PAGE_SIZE = ADMIN_LOW_COST_LIMITS.回報PageSize;
 
             const fetchUsersPage = async (reset = false) => {
-                if (!db || !collection || !getDocs || usersLoading) return;
+                if (!db || !資料區 || !getDocs || usersLoading) return;
                 setUsersLoading(true);
                 try {
-                    const usersRef = collection(db, "users_public");
+                    const usersRef = 資料區(db, "users_public");
                     const baseQuery = reset || !usersLastDoc
                         ? query(usersRef, orderBy("lastSeen", "desc"), limit(USERS_PAGE_SIZE))
                         : query(usersRef, orderBy("lastSeen", "desc"), startAfter(usersLastDoc), limit(USERS_PAGE_SIZE));
@@ -2053,10 +2053,10 @@
             };
 
             const fetchPublicTasksPage = async (reset = false) => {
-                if (!db || !collection || !getDocs || publicTasksLoading) return;
+                if (!db || !資料區 || !getDocs || publicTasksLoading) return;
                 setPublicTasksLoading(true);
                 try {
-                    const tasksRef = collection(db, "public_assignments");
+                    const tasksRef = 資料區(db, "群組任務資料");
                     const baseQuery = reset || !publicTasksLastDoc
                         ? query(tasksRef, orderBy("createdAt", "desc"), limit(ADMIN_PUBLIC_TASKS_PAGE_SIZE))
                         : query(tasksRef, orderBy("createdAt", "desc"), startAfter(publicTasksLastDoc), limit(ADMIN_PUBLIC_TASKS_PAGE_SIZE));
@@ -2079,22 +2079,22 @@
             };
 
             useEffect(() => {
-                if (!db || !collection) return;
+                if (!db || !資料區) return;
                 setUsers([]);
                 setUsersLastDoc(null);
                 setUsersHasMore(true);
                 setUsersLoadedOnce(false);
                 fetchUsersPage(true);
-            }, [db, collection]);
+            }, [db, 資料區]);
 
             useEffect(() => {
-                if (!db || !collection || !getDocs) return;
+                if (!db || !資料區 || !getDocs) return;
                 setPublicTasks([]);
                 setPublicTasksLastDoc(null);
                 setPublicTasksHasMore(true);
                 setPublicTasksLoadedOnce(false);
                 fetchPublicTasksPage(true);
-            }, [db, collection, getDocs]);
+            }, [db, 資料區, getDocs]);
 
             const fetchAdminStats = async () => {
                 if (!db || !doc || !getDoc) return;
@@ -2110,14 +2110,14 @@
             };
 
             const fetchRecentReports = async () => {
-                if (!db || !collection || !getDocs || !query || !orderBy || !limit) return;
+                if (!db || !資料區 || !getDocs || !query || !orderBy || !limit) return;
                 try {
-                    const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'), limit(REPORTS_PAGE_SIZE));
+                    const q = query(資料區(db, '回報'), orderBy('createdAt', 'desc'), limit(REPORTS_PAGE_SIZE));
                     const snap = await getDocs(q);
                     setRecentReports(snap.docs.map(d => ({ id: d.id, ...d.data() })));
                     setReportsLoadedOnce(true);
                 } catch (err) {
-                    console.warn('Admin reports fetch err:', err);
+                    console.warn('Admin 回報 fetch err:', err);
                     setReportsLoadedOnce(true);
                 }
             };
@@ -2125,7 +2125,7 @@
             const updateReportStatus = async (reportId, status) => {
                 if (!db || !doc || !updateDoc || !reportId) return;
                 try {
-                    await updateDoc(doc(db, 'reports', reportId), {
+                    await updateDoc(doc(db, '回報', reportId), {
                         status,
                         handledBy: ADMIN_EMAIL,
                         updatedAt: serverTimestamp ? serverTimestamp() : new Date().toISOString()
@@ -2134,22 +2134,22 @@
                     triggerAlert?.(`回報狀態已更新為 ${status}`);
                 } catch (err) {
                     console.warn('Update report status failed:', err);
-                    triggerAlert?.('更新回報狀態失敗，請檢查 Firebase Rules。', 'error');
+                    triggerAlert?.('更新回報狀態失敗，請檢查 系統服務 權限設定。', 'error');
                 }
             };
 
             useEffect(() => {
                 fetchAdminStats();
                 fetchRecentReports();
-            }, [db, doc, getDoc, collection, getDocs, query, orderBy, limit]);
+            }, [db, doc, getDoc, 資料區, getDocs, query, orderBy, limit]);
 
             useEffect(() => {
-                if (!selectedUser || !db || !collection) return;
-                const q = query(collection(db, "users", selectedUser.uid, "items"), orderBy("dueDate", "asc"), limit(80));
+                if (!selectedUser || !db || !資料區) return;
+                const q = query(資料區(db, "users", selectedUser.uid, "items"), orderBy("dueDate", "asc"), limit(80));
                 const unsubscribe = onSnapshot(q, (snapshot) => setUserHomeworks(snapshot.docs.map(d => ({ id: d.id, ...d.data() }))), (err) => console.warn("Admin user items err:", err));
                 setNewName(selectedUser.displayName || '');
                 return () => unsubscribe();
-            }, [selectedUser, db, collection]);
+            }, [selectedUser, db, 資料區]);
 
             useEffect(() => { setAnnouncementInput(systemConfig?.announcementText || ''); }, [systemConfig?.announcementText]);
             useEffect(() => {
@@ -2166,8 +2166,8 @@
                 setReadOnlyModeInput(!!systemConfig?.readOnlyMode);
                 setRegistrationPausedInput(!!systemConfig?.registrationPaused);
                 setGroupCreationPausedInput(!!systemConfig?.groupCreationPaused);
-                setReportsPausedInput(!!systemConfig?.reportsPaused);
-            }, [systemConfig?.updateVersion, systemConfig?.updateTitle, systemConfig?.updateSummary, systemConfig?.updateGuide, systemConfig?.updateAudience, systemConfig?.updatePopupEnabled, systemConfig?.maintenanceMode, systemConfig?.maintenanceTitle, systemConfig?.message, systemConfig?.estimatedTime, systemConfig?.readOnlyMode, systemConfig?.registrationPaused, systemConfig?.groupCreationPaused, systemConfig?.reportsPaused]);
+                setReportsPausedInput(!!systemConfig?.回報Paused);
+            }, [systemConfig?.updateVersion, systemConfig?.updateTitle, systemConfig?.updateSummary, systemConfig?.updateGuide, systemConfig?.updateAudience, systemConfig?.updatePopupEnabled, systemConfig?.maintenanceMode, systemConfig?.maintenanceTitle, systemConfig?.message, systemConfig?.estimatedTime, systemConfig?.readOnlyMode, systemConfig?.registrationPaused, systemConfig?.groupCreationPaused, systemConfig?.回報Paused]);
 
             const handlePublishUpdateNotice = async () => {
                 const version = updateVersionInput.trim();
@@ -2234,14 +2234,14 @@
 
 
             const handleSaveSafetyControls = async () => {
-                const enabledCount = [readOnlyModeInput, registrationPausedInput, groupCreationPausedInput, reportsPausedInput].filter(Boolean).length;
+                const enabledCount = [readOnlyModeInput, registrationPausedInput, groupCreationPausedInput, 回報PausedInput].filter(Boolean).length;
                 triggerConfirm(`確定要儲存系統安全限制嗎？目前將啟用 ${enabledCount} 個保護開關。`, async () => {
                     try {
                         await setDoc(doc(db, 'system_settings', 'config'), {
                             readOnlyMode: !!readOnlyModeInput,
                             registrationPaused: !!registrationPausedInput,
                             groupCreationPaused: !!groupCreationPausedInput,
-                            reportsPaused: !!reportsPausedInput,
+                            回報Paused: !!回報PausedInput,
                             safetyUpdatedAt: new Date().toISOString(),
                             safetyUpdatedBy: user?.email || user?.uid || 'admin'
                         }, { merge: true });
@@ -2329,11 +2329,11 @@
                 triggerConfirm(`⚠️ 警告：確定要刪除群組 ${classObj.name}？\n\n此操作將會：\n1. 刪除班級代碼\n2. 刪除該群組所有群組任務\n3. 將所有成員移出該群組`, async () => {
                     try {
                         const batch = writeBatch(db);
-                        const tasksQ = query(collection(db, "public_assignments"), where("targetClass", "==", classObj.code));
+                        const tasksQ = query(資料區(db, "群組任務資料"), where("targetClass", "==", classObj.code));
                         const tasksSnap = await getDocs(tasksQ);
                         tasksSnap.forEach(d => batch.delete(d.ref));
 
-                        const usersQ = query(collection(db, "users_public"), where("joinedClasses", "array-contains", classObj.code));
+                        const usersQ = query(資料區(db, "users_public"), where("joinedClasses", "array-contains", classObj.code));
                         const usersSnap = await getDocs(usersQ);
                         usersSnap.forEach(d => batch.update(d.ref, { joinedClasses: arrayRemove(classObj.code) }));
 
@@ -2359,9 +2359,9 @@
             };
 
             const getTargetUsersForPublicTask = async (task) => {
-                if (!db || !collection || !getDocs || !query) return [];
+                if (!db || !資料區 || !getDocs || !query) return [];
                 const targetClass = task?.targetClass || '全校';
-                const usersRef = collection(db, "users_public");
+                const usersRef = 資料區(db, "users_public");
                 const targetQuery = targetClass === '全校'
                     ? query(usersRef)
                     : query(usersRef, where("joinedClasses", "array-contains", targetClass));
@@ -2413,7 +2413,7 @@
                 const syncedList = [];
                 const completedList = [];
                 for (const u of targetUsers) {
-                    const q = query(collection(db, "users", u.uid, "items"), where("publicRefId", "==", task.id));
+                    const q = query(資料區(db, "users", u.uid, "items"), where("publicRefId", "==", task.id));
                     const snap = await getDocs(q);
                     const display = u.displayName || u.email || u.uid;
                     if (!snap.empty) {
@@ -2464,7 +2464,7 @@
                 };
 
                 for (const u of targetUsers) {
-                    const duplicateQ = query(collection(db, "users", u.uid, "items"), where("publicRefId", "==", task.id));
+                    const duplicateQ = query(資料區(db, "users", u.uid, "items"), where("publicRefId", "==", task.id));
                     const duplicateSnap = await getDocs(duplicateQ);
                     if (duplicateSnap.empty) {
                         batch.set(doc(db, "users", u.uid, "items", `public_${task.id}`), buildPublicInsertPayload(task), { merge: true });
@@ -2546,7 +2546,7 @@
                 triggerConfirm(`⚠️ 危險操作！確定要刪除用戶 ${targetUser.displayName} 的所有資料？此操作無法復原！`, async () => {
                     try {
                         const batch = writeBatch(db);
-                        const itemsQ = query(collection(db, "users", targetUser.uid, "items"));
+                        const itemsQ = query(資料區(db, "users", targetUser.uid, "items"));
                         const itemsSnap = await getDocs(itemsQ);
                         itemsSnap.forEach(d => batch.delete(d.ref));
                         batch.delete(doc(db, "users", targetUser.uid, "settings", "timetable"));
@@ -2599,10 +2599,10 @@
                             batch = writeBatch(db);
                             pendingWrites = 0;
                         };
-                        batch.delete(doc(db, "public_assignments", taskId));
+                        batch.delete(doc(db, "群組任務資料", taskId));
                         pendingWrites++;
                         for (const u of targetUsers) {
-                            const dupQ = query(collection(db, "users", u.uid, "items"), where("publicRefId", "==", taskId));
+                            const dupQ = query(資料區(db, "users", u.uid, "items"), where("publicRefId", "==", taskId));
                             const snap = await getDocs(dupQ);
                             snap.forEach(d => {
                                 batch.delete(d.ref);
@@ -2623,7 +2623,7 @@
                     const report = [];
                     try {
                         for (const u of users) {
-                            const q = query(collection(db, "users", u.uid, "items"));
+                            const q = query(資料區(db, "users", u.uid, "items"));
                             const snap = await getDocs(q);
                             const userItems = snap.docs.map(d => d.data());
                             const expired = userItems.filter(item => {
@@ -2682,7 +2682,7 @@
                             <h2 className="text-xl font-black tracking-wide">平台控制中心</h2>
                         </div>
                         <div className="flex flex-row md:flex-col gap-2 overflow-x-auto scrollbar-hide pb-2 md:pb-0">
-                            {[ { id: 'overview', icon: 'layout-dashboard', label: '平台總覽' }, { id: 'users', icon: 'users', label: '成員管理' }, { id: 'classes', icon: 'boxes', label: '群組管理' }, { id: 'tasks', icon: 'send', label: '任務中心' }, { id: 'announcements', icon: 'megaphone', label: '公告管理' }, { id: 'reports', icon: 'message-square-warning', label: '問題回報' }, { id: 'syncMonitor', icon: 'activity', label: '發佈狀態' }, { id: 'usage', icon: 'database-zap', label: '用量監控' }, { id: 'settings', icon: 'settings', label: '系統控制' } ].map(tab => (
+                            {[ { id: 'overview', icon: 'layout-dashboard', label: '平台總覽' }, { id: 'users', icon: 'users', label: '成員管理' }, { id: 'classes', icon: 'boxes', label: '群組管理' }, { id: 'tasks', icon: 'send', label: '任務中心' }, { id: 'announcements', icon: 'megaphone', label: '公告管理' }, { id: '回報', icon: 'message-square-warning', label: '問題回報' }, { id: 'syncMonitor', icon: 'activity', label: '發佈狀態' }, { id: 'usage', icon: 'database-zap', label: '用量監控' }, { id: 'settings', icon: 'settings', label: '系統控制' } ].map(tab => (
                                 <button key={tab.id} onClick={() => { setActiveTab(tab.id); setSelectedUser(null); setViewingClass(null); }} className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all whitespace-nowrap md:whitespace-normal ${activeTab === tab.id ? 'bg-indigo-600 text-white shadow-lg' : 'hover:bg-slate-800 hover:text-white'}`}>
                                     <Icon name={tab.icon} className={`w-5 h-5 ${activeTab === tab.id ? 'text-indigo-200' : 'text-slate-500'}`} /> {tab.label}
                                 </button>
@@ -2708,15 +2708,15 @@
                                     <div className="absolute -right-16 -top-16 w-40 h-40 rounded-full bg-indigo-500/25 blur-3xl"></div>
                                     <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                         <div>
-                                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[11px] font-black text-indigo-100 mb-3"><Icon name="shield-check" className="w-3.5 h-3.5" />（11/15）管理員後台 Dashboard</div>
+                                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[11px] font-black text-indigo-100 mb-3"><Icon name="shield-check" className="w-3.5 h-3.5" />平台控制中心</div>
                                             <h4 className="text-xl sm:text-2xl font-black tracking-tight">平台控制中心已啟用</h4>
-                                            <p className="text-sm text-slate-300 mt-2 max-w-2xl">後台集中查看成員、群組、任務、公告、回報與系統狀態；Dashboard 優先使用 adminStats/global；成員、任務、回報均使用 limit 分頁或按需載入，避免掃描全平台 collection。</p>
+                                            <p className="text-sm text-slate-300 mt-2 max-w-2xl">後台集中查看成員、群組、任務、公告、回報與系統狀態；Dashboard 優先使用 adminStats/global；成員、任務、回報均使用 limit 分頁或按需載入，避免掃描全平台 資料區。</p>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2 min-w-[240px]">
-                                            <button onClick={() => setActiveTab('announcements')} className="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-black text-left"><Icon name="megaphone" className="w-4 h-4 mb-1" />公告管理</button>
-                                            <button onClick={() => setActiveTab('reports')} className="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-black text-left"><Icon name="message-square-warning" className="w-4 h-4 mb-1" />問題回報</button>
-                                            <button onClick={() => setActiveTab('usage')} className="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-black text-left"><Icon name="database-zap" className="w-4 h-4 mb-1" />用量監控</button>
-                                            <button onClick={() => setActiveTab('settings')} className="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-black text-left"><Icon name="settings" className="w-4 h-4 mb-1" />系統控制</button>
+                                            <button onClick={() => setActiveTab('announcements')} className="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white border border-white/10 text-xs font-black text-left"><Icon name="megaphone" className="w-4 h-4 mb-1" />公告管理</button>
+                                            <button onClick={() => setActiveTab('回報')} className="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white border border-white/10 text-xs font-black text-left"><Icon name="message-square-warning" className="w-4 h-4 mb-1" />問題回報</button>
+                                            <button onClick={() => setActiveTab('usage')} className="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white border border-white/10 text-xs font-black text-left"><Icon name="database-zap" className="w-4 h-4 mb-1" />用量監控</button>
+                                            <button onClick={() => setActiveTab('settings')} className="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white border border-white/10 text-xs font-black text-left"><Icon name="settings" className="w-4 h-4 mb-1" />系統控制</button>
                                         </div>
                                     </div>
                                 </div>
@@ -2726,7 +2726,7 @@
                                     <div className="bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-3xl p-5 text-white shadow-lg"><div className="text-violet-100 text-xs font-black mb-1">總群組</div><div className="text-3xl font-black">{adminKpis.totalGroups}</div><div className="text-[11px] text-violet-50 mt-2">成員記錄：{classMemberTotal}</div></div>
                                     <div className="bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl p-5 text-white shadow-lg"><div className="text-orange-100 text-xs font-black mb-1">今日/近期任務</div><div className="text-3xl font-black">{adminKpis.todayNewTasks}</div><div className="text-[11px] text-orange-50 mt-2">已載入任務：{publicTasks.length}</div></div>
                                     <div className="bg-gradient-to-br from-rose-500 to-pink-600 rounded-3xl p-5 text-white shadow-lg"><div className="text-rose-100 text-xs font-black mb-1">待處理回報</div><div className="text-3xl font-black">{adminKpis.pendingReports}</div><div className="text-[11px] text-rose-50 mt-2">每次最多讀 20 筆</div></div>
-                                    <div className="bg-gradient-to-br from-slate-700 to-slate-950 rounded-3xl p-5 text-white shadow-lg"><div className="text-slate-200 text-xs font-black mb-1">系統狀態</div><div className="text-2xl font-black">{adminKpis.systemStatus === 'normal' ? '正常' : adminKpis.systemStatus}</div><div className="text-[11px] text-slate-300 mt-2">{adminStatsLoading ? '讀取統計中…' : '低成本總覽'}</div></div>
+                                    <div className="bg-gradient-to-br from-slate-700 to-slate-950 rounded-3xl p-5 text-white shadow-lg"><div className="text-slate-200 text-xs font-black mb-1">系統狀態</div><div className="text-2xl font-black">{adminKpis.systemStatus === 'normal' ? '正常' : adminKpis.systemStatus}</div><div className="text-[11px] text-slate-300 mt-2">{adminStatsLoading ? '讀取統計中…' : '穩定總覽'}</div></div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
                                     {ADMIN_DASHBOARD_MODULES.filter(m => m.id !== 'overview').map(module => (
@@ -2746,7 +2746,7 @@
                                                 const targetName = task.targetClass === '全校' || !task.targetClass ? '全校' : (cls?.name || task.targetClass);
                                                 return (
                                                     <div key={task.id} className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700 flex items-start justify-between gap-3">
-                                                        <div className="min-w-0"><div className="font-black text-sm dark:text-white truncate">{task.description}</div><div className="text-[11px] text-slate-400 mt-1">{targetName} · {task.subject || '其他'} · {formatFirebaseDateTime(task.createdAt) || '最近發佈'}</div></div>
+                                                        <div className="min-w-0"><div className="font-black text-sm dark:text-white truncate">{task.description}</div><div className="text-[11px] text-slate-400 mt-1">{targetName} · {task.subject || '其他'} · {format系統服務DateTime(task.createdAt) || '最近發佈'}</div></div>
                                                         <button onClick={() => fetchTaskProgress(task)} className="shrink-0 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-[11px] font-black">掃描</button>
                                                     </div>
                                                 );
@@ -3086,7 +3086,7 @@
                                     <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/10 blur-2xl"></div>
                                     <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 items-end">
                                         <div>
-                                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-black mb-3"><Icon name="activity" className="w-4 h-4" /> 廣播派發狀態</div>
+                                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-white/20 text-xs font-black mb-3"><Icon name="activity" className="w-4 h-4" /> 廣播派發狀態</div>
                                             <h3 className="text-3xl font-black tracking-tight">查看每份群組任務是否已派發到學生個人手冊</h3>
                                             <p className="text-sm text-indigo-100 mt-2 font-bold">查看已到位、未到位、完成率，並可直接提醒未到位學生或開啟更新阻攔畫面。</p>
                                         </div>
@@ -3112,7 +3112,7 @@
                                                         <div className="flex flex-wrap items-center gap-2 mb-2">
                                                             <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border ${subjects.find(s => s.name === task.subject)?.color || 'bg-slate-100 text-slate-600 border-slate-200'}`}>{task.subject || '其他'}</span>
                                                             <span className="px-2.5 py-1 rounded-lg text-[10px] font-black bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300">{targetName}</span>
-                                                            <span className="text-[10px] text-slate-400 font-mono">{formatFirebaseDateTime(task.createdAt) || '最近發佈'}</span>
+                                                            <span className="text-[10px] text-slate-400 font-mono">{format系統服務DateTime(task.createdAt) || '最近發佈'}</span>
                                                         </div>
                                                         <div className="font-black text-slate-800 dark:text-white text-base break-words">{task.description}</div>
                                                         <div className="text-xs text-slate-400 mt-2">交期：{formatDueDate(task.dueDate)}</div>
@@ -3164,10 +3164,10 @@
                             <div className="space-y-6 animate-fadeIn">
                                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                                     <div>
-                                        <h3 className="text-2xl font-black dark:text-white">用量監控與低成本規則</h3>
-                                        <p className="text-sm text-slate-500 mt-1">本頁係公開版 Firebase 防爆基礎：Dashboard 讀 adminStats/global，後台任務/成員/回報全部按需 limit 分頁。</p>
+                                        <h3 className="text-2xl font-black dark:text-white">用量監控</h3>
+                                        <p className="text-sm text-slate-500 mt-1">查看平台資料載入情況，協助保持網站穩定流暢。</p>
                                     </div>
-                                    <span className="public-product-chip low-cost-badge"><Icon name="shield-check" className="w-3.5 h-3.5" /> (12/15) 後台低成本化已啟用</span>
+                                    <span className="public-product-chip low-cost-badge"><Icon name="shield-check" className="w-3.5 h-3.5" /> 用量保護已啟用</span>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                                     {ADMIN_LOW_COST_CHECKS.map(check => (
@@ -3195,9 +3195,9 @@
                                         <p className="text-xs font-bold text-amber-400 mt-2">每次最多 {REPORTS_PAGE_SIZE} 筆，避免一開後台讀晒歷史。</p>
                                     </div>
                                 </div>
-                                <FirestoreCostGuardPanel />
+                                <資料CostGuardPanel />
                                 <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 p-5 shadow-sm">
-                                    <h4 className="font-black dark:text-white mb-4 flex items-center gap-2"><Icon name="map" className="w-5 h-5 text-indigo-500" /> Firestore 公開版建議路徑</h4>
+                                    <h4 className="font-black dark:text-white mb-4 flex items-center gap-2"><Icon name="map" className="w-5 h-5 text-indigo-500" /> 平台資料狀態</h4>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                         {Object.entries(FIRESTORE_PUBLIC_BLUEPRINT).map(([key, path]) => (
                                             <div key={key} className="rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-700 px-3 py-2">
@@ -3217,17 +3217,17 @@
                                         <h3 className="text-2xl font-black dark:text-white">公告管理</h3>
                                         <p className="text-sm text-slate-500 mt-1">集中處理跑馬燈公告、版本更新彈窗與公開 App 通知。正式公告仍沿用現有 system_settings/config，避免新增不必要讀取。</p>
                                     </div>
-                                    <span className="public-product-chip low-cost-badge"><Icon name="megaphone" className="w-3.5 h-3.5" />（12/15）低成本入口</span>
+                                    <span className="public-product-chip low-cost-badge"><Icon name="megaphone" className="w-3.5 h-3.5" />公告中心</span>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 p-5 shadow-sm"><div className="text-xs font-black text-slate-400 mb-2">跑馬燈公告</div><div className="text-lg font-black dark:text-white">{systemConfig?.announcementText ? '已啟用' : '未啟用'}</div><p className="text-xs text-slate-400 mt-2 line-clamp-2">{systemConfig?.announcementText || '暫時沒有全域公告。'}</p></div>
                                     <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 p-5 shadow-sm"><div className="text-xs font-black text-slate-400 mb-2">版本彈窗</div><div className="text-lg font-black dark:text-white">{systemConfig?.updateVersion || PUBLIC_APP_VERSION}</div><p className="text-xs text-slate-400 mt-2">對象：{systemConfig?.updateAudience || 'all'} · 彈窗：{systemConfig?.updatePopupEnabled === false ? '關閉' : '開啟'}</p></div>
-                                    <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 p-5 shadow-sm"><div className="text-xs font-black text-slate-400 mb-2">建議操作</div><button onClick={() => setActiveTab('settings')} className="w-full py-3 rounded-2xl bg-indigo-600 text-white text-xs font-black">前往編輯公告</button><p className="text-xs text-slate-400 mt-2">第 11 步先整合入口；公告表單保留在系統控制內，避免重複邏輯。</p></div>
+                                    <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 p-5 shadow-sm"><div className="text-xs font-black text-slate-400 mb-2">建議操作</div><button onClick={() => setActiveTab('settings')} className="w-full py-3 rounded-2xl bg-indigo-600 text-white text-xs font-black">前往編輯公告</button><p className="text-xs text-slate-400 mt-2">公告內容可在系統控制中編輯，發布後會向指定用戶顯示。</p></div>
                                 </div>
                             </div>
                         )}
 
-                        {activeTab === 'reports' && (
+                        {activeTab === '回報' && (
                             <div className="space-y-6 animate-fadeIn max-w-5xl">
                                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                                     <div>
@@ -3252,7 +3252,7 @@
                                                                 </div>
                                                                 <div className="font-black text-sm dark:text-white truncate">{report.title || '未命名回報'}</div>
                                                                 <div className="text-xs text-slate-400 mt-1 leading-relaxed line-clamp-2">{report.message || report.description || '沒有補充內容'}</div>
-                                                                <div className="text-[11px] font-bold text-slate-400 mt-2 truncate">{report.email || report.userEmail || '未知用戶'} · {formatFirebaseDateTime(report.createdAt) || '未知時間'}</div>
+                                                                <div className="text-[11px] font-bold text-slate-400 mt-2 truncate">{report.email || report.userEmail || '未知用戶'} · {format系統服務DateTime(report.createdAt) || '未知時間'}</div>
                                                             </div>
                                                             <div className="flex flex-wrap gap-2 shrink-0">
                                                                 {['pending','processing','resolved'].map(next => (
@@ -3265,10 +3265,10 @@
                                             })}
                                         </div>
                                     ) : (
-                                        <EmptyStateGuide guideKey="reports" onPrimary={fetchRecentReports} onSecondary={() => setActiveTab('usage')} />
+                                        <EmptyStateGuide guideKey="回報" onPrimary={fetchRecentReports} onSecondary={() => setActiveTab('usage')} />
                                     )}
                                 </div>
-                                {reportsLoadedOnce && recentReports.length === 0 && <p className="text-xs font-bold text-slate-400">目前未讀到 reports collection 內容；用戶可在「我的」頁提交回報。</p>}
+                                {回報LoadedOnce && recentReports.length === 0 && <p className="text-xs font-bold text-slate-400">目前未讀到 問題回報 內容；用戶可在「我的」頁提交回報。</p>}
                             </div>
                         )}
 
@@ -3318,8 +3318,8 @@
                                     <div className="p-5 border-b border-amber-100 dark:border-amber-900/60 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-slate-900 flex flex-col gap-2">
                                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                             <div>
-                                                <h4 className="font-black flex items-center gap-2 dark:text-white"><Icon name="shield-check" className="w-5 h-5 text-amber-600"/> 系統安全限制 14/15</h4>
-                                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">公開版保護開關：只讀、暫停新註冊、暫停建立群組、暫停問題回報。所有變更都只寫入 system_settings/config，不掃描全資料庫。</p>
+                                                <h4 className="font-black flex items-center gap-2 dark:text-white"><Icon name="shield-check" className="w-5 h-5 text-amber-600"/> 系統安全限制 安全設定</h4>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">公開版保護開關：只讀、暫停新註冊、暫停建立群組、暫停問題回報。所有變更都只寫入 system_settings/config，不掃描全資料。</p>
                                             </div>
                                             <span className="px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-900 text-[10px] font-black text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/60">危險操作有二次確認</span>
                                         </div>
@@ -3328,9 +3328,9 @@
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             {[
                                                 { key: 'readOnlyMode', label: '只讀模式', desc: '暫停新增、修改、刪除；保留查看。', value: readOnlyModeInput, setter: setReadOnlyModeInput, icon: 'eye' },
-                                                { key: 'registrationPaused', label: '暫停新註冊', desc: '公開測試爆量或濫用時先收窄入口。', value: registrationPausedInput, setter: setRegistrationPausedInput, icon: 'user-x' },
-                                                { key: 'groupCreationPaused', label: '暫停建立群組', desc: '有人亂開群組時保護 Firebase 寫入量。', value: groupCreationPausedInput, setter: setGroupCreationPausedInput, icon: 'boxes' },
-                                                { key: 'reportsPaused', label: '暫停問題回報', desc: '回報被濫用時可暫停新提交。', value: reportsPausedInput, setter: setReportsPausedInput, icon: 'message-square-off' }
+                                                { key: 'registrationPaused', label: '暫停新註冊', desc: '需要時可暫停新帳戶進入。', value: registrationPausedInput, setter: setRegistrationPausedInput, icon: 'user-x' },
+                                                { key: 'groupCreationPaused', label: '暫停建立群組', desc: '有人亂開群組時保護 系統服務 寫入量。', value: groupCreationPausedInput, setter: setGroupCreationPausedInput, icon: 'boxes' },
+                                                { key: '回報Paused', label: '暫停問題回報', desc: '回報被濫用時可暫停新提交。', value: 回報PausedInput, setter: setReportsPausedInput, icon: 'message-square-off' }
                                             ].map(item => (
                                                 <button key={item.key} type="button" onClick={() => item.setter(!item.value)} className={`p-4 rounded-2xl border text-left transition-all active:scale-[0.99] ${item.value ? 'bg-amber-500 text-white border-amber-500 shadow-lg shadow-amber-200/60 dark:shadow-amber-950/30' : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-amber-300'}`}>
                                                     <div className="flex items-center justify-between gap-3 mb-2">
@@ -3351,9 +3351,9 @@
                                             ))}
                                         </div>
                                         <div className="rounded-2xl border border-indigo-100 dark:border-indigo-900/60 bg-indigo-50/70 dark:bg-indigo-950/20 p-4">
-                                            <div className="font-black text-sm text-indigo-700 dark:text-indigo-300 flex items-center gap-2 mb-3"><Icon name="scan-line" className="w-4 h-4" /> 全網站排版與功能入口檢查</div>
+                                            <div className="font-black text-sm text-indigo-700 dark:text-indigo-300 flex items-center gap-2 mb-3"><Icon name="scan-line" className="w-4 h-4" /> 介面與功能狀態</div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                                {LAYOUT_QA_CHECKS.map(item => (
+                                                {LAYOUT_檢查_CHECKS.map(item => (
                                                     <div key={item.area} className="rounded-xl bg-white/80 dark:bg-slate-900/60 border border-white dark:border-slate-800 p-3">
                                                         <div className="text-xs font-black text-slate-700 dark:text-slate-200">{item.area}</div>
                                                         <div className="text-[11px] font-bold text-slate-400 leading-relaxed mt-1">{item.result}</div>
@@ -3362,7 +3362,7 @@
                                             </div>
                                         </div>
                                         <div className="rounded-2xl border border-emerald-100 dark:border-emerald-900/60 bg-emerald-50/70 dark:bg-emerald-950/20 p-4">
-                                            <div className="font-black text-sm text-emerald-700 dark:text-emerald-300 flex items-center gap-2 mb-3"><Icon name="badge-check" className="w-4 h-4" /> 公開版最終整理 15/15</div>
+                                            <div className="font-black text-sm text-emerald-700 dark:text-emerald-300 flex items-center gap-2 mb-3"><Icon name="badge-check" className="w-4 h-4" /> 平台狀態總覽</div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                                 {FINAL_RELEASE_CHECKS.map(item => (
                                                     <div key={item.area} className="rounded-xl bg-white/80 dark:bg-slate-900/60 border border-white dark:border-slate-800 p-3">
@@ -3430,7 +3430,7 @@
                                                         <div key={`${notice.version || 'old'}-${notice.publishedAt || idx}`} className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
                                                             <div className="min-w-0">
                                                                 <div className="font-black text-sm dark:text-white truncate">{notice.title || '系統已更新'}</div>
-                                                                <div className="text-[11px] text-slate-400 font-mono truncate">{notice.version || '無版本'} · {formatFirebaseDateTime(notice.publishedAt) || '未知時間'}</div>
+                                                                <div className="text-[11px] text-slate-400 font-mono truncate">{notice.version || '無版本'} · {format系統服務DateTime(notice.publishedAt) || '未知時間'}</div>
                                                             </div>
                                                             <button type="button" onClick={() => handleRepublishUpdateNotice(notice)} className="px-3 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-xs font-black hover:bg-indigo-100 dark:hover:bg-indigo-800/50 shrink-0">再次發放</button>
                                                         </div>
@@ -3522,14 +3522,14 @@
 
 
 
-        function MyPageOverviewPanel({ displayName, email, unreadNotificationCount, onOpenNotifications, onGoClass, onOpenSubjects, onLogout }) {
+        function MyPageOverviewPanel({ displayName, email, unreadNotificationCount, onOpenNotifications, onGoClass, onOpenSubjects, onLogout, onOpenAppearance, onGoTasks, onOpenSupport, onShowProfile }) {
             const cards = [
                 { title: '個人資料', desc: displayName || '成員', meta: email || '未設定 Email', icon: 'id-card', tone: 'indigo' },
-                { title: '外觀設定', desc: '主題色、深色、版面密度', meta: '第 4 步會繼續加強', icon: 'palette', tone: 'violet' },
-                { title: '任務中心', desc: '個人任務、群組任務、狀態篩選', meta: '第 6 步已完成', icon: 'list-checks', tone: 'sky' },
-                { title: '群組入口', desc: '查看群組任務與發佈者入口', meta: '後續接入邀請碼', icon: 'boxes', tone: 'emerald' },
-                { title: '幫助與回報', desc: '公開版必備支援入口', meta: '第 13 步正式建立', icon: 'life-buoy', tone: 'amber' },
-                { title: '帳號安全', desc: '登出、切換帳號、版本資訊', meta: '保留 Firebase Auth', icon: 'shield-check', tone: 'rose' }
+                { title: '外觀設定', desc: '主題色、深色、版面密度', meta: '調整介面顯示', icon: 'palette', tone: 'violet' },
+                { title: '任務中心', desc: '個人任務、群組任務、狀態篩選', meta: '查看任務列表', icon: 'list-checks', tone: 'sky' },
+                { title: '群組入口', desc: '查看群組任務與發佈者入口', meta: '可加入或管理群組', icon: 'boxes', tone: 'emerald' },
+                { title: '幫助與回報', desc: '查看 FAQ 或提交回報', meta: '可提交問題或建議', icon: 'life-buoy', tone: 'amber' },
+                { title: '帳號安全', desc: '登出、切換帳號、版本資訊', meta: '登出與切換帳號', icon: 'shield-check', tone: 'rose' }
             ];
             const toneClass = {
                 indigo: 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-300 border-indigo-100 dark:border-indigo-800',
@@ -3544,7 +3544,7 @@
                     <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start gap-3">
                         <div className="w-11 h-11 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 flex items-center justify-center shrink-0"><Icon name="user-round-cog" className="w-5 h-5" /></div>
                         <div>
-                            <h3 className="text-lg font-black text-slate-800 dark:text-white">（3/15）我的頁：公開 App 個人中心</h3>
+                            <h3 className="text-lg font-black text-slate-800 dark:text-white">我的空間</h3>
                             <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">將原本偏工具感的設定頁整理成「個人資料｜外觀｜任務偏好｜群組｜幫助｜帳號」六大區塊，普通用戶一入嚟就知道可以做咩。</p>
                         </div>
                     </div>
@@ -3576,7 +3576,7 @@
                     <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start gap-3">
                         <div className="w-11 h-11 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 flex items-center justify-center shrink-0"><Icon name="navigation" className="w-5 h-5" /></div>
                         <div>
-                            <h3 className="text-lg font-black text-slate-800 dark:text-white">（2/15）公開 App 導航結構</h3>
+                            <h3 className="text-lg font-black text-slate-800 dark:text-white">功能入口</h3>
                             <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1">導航已由私人工具入口整理成「今日｜任務｜時間表｜群組｜我的」，管理入口只對管理員顯示。</p>
                         </div>
                     </div>
@@ -3605,7 +3605,7 @@
                         <div className="flex items-start gap-3">
                             <div className="w-11 h-11 rounded-2xl bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-300 flex items-center justify-center shrink-0"><Icon name="list-checks" className="w-5 h-5" /></div>
                             <div>
-                                <div className="public-product-chip low-cost-badge mb-2"><Icon name="check-check" className="w-3.5 h-3.5" /> （5/15）任務頁升級</div>
+                                <div className="public-product-chip low-cost-badge mb-2"><Icon name="check-check" className="w-3.5 h-3.5" /> 任務中心</div>
                                 <h3 className="text-lg font-black text-slate-800 dark:text-white">任務中心</h3>
                                 <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">把原本「功課/歷史」整理成公開 App 的任務中心：個人任務、群組任務、今日、過期、已完成、測驗/溫習都可以一鍵切換。</p>
                             </div>
@@ -3654,8 +3654,8 @@
                             </div>
                         </div>
                         <div className="rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 px-4 py-3 flex items-start gap-3">
-                            <Icon name="database" className="w-5 h-5 text-amber-600 dark:text-amber-300 shrink-0 mt-0.5" />
-                            <div className="text-xs font-bold text-amber-700 dark:text-amber-200 leading-relaxed">本步只用已載入的任務資料做前端分類，沒有新增全平台查詢；之後群組任務會按已加入群組分頁讀取，避免 Firebase reads 爆量。</div>
+                            <Icon name="zap" className="w-5 h-5 text-amber-600 dark:text-amber-300 shrink-0 mt-0.5" />
+                            <div className="text-xs font-bold text-amber-700 dark:text-amber-200 leading-relaxed">任務會按目前資料即時分類，保持列表流暢清晰。</div>
                         </div>
                     </div>
                 </section>
@@ -3676,7 +3676,7 @@
                         {guide.secondary && <button type="button" onClick={onSecondary} className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 text-xs font-black active:scale-[0.98]">{guide.secondary}</button>}
                     </div>
                     <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">
-                        <Icon name="shield-check" className="w-3 h-3" />（13/15）幫助與回報中心
+                        <Icon name="shield-check" className="w-3 h-3" />幫助與回報
                     </div>
                 </div>
             );
@@ -3684,25 +3684,24 @@
 
 
         function PublicAppRoadmapPanel({ compact = false }) {
-            const doneSteps = PUBLIC_APP_UPGRADE_STEPS.filter(s => s.status === 'done').length;
             return (
                 <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
                     <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                            <div className="public-product-chip low-cost-badge mb-2"><Icon name="rocket" className="w-3.5 h-3.5" /> 公開 App 升級進度 {PUBLIC_APP_PROGRESS.current}/{PUBLIC_APP_PROGRESS.total}</div>
+                            <div className="public-product-chip low-cost-badge mb-2"><Icon name="rocket" className="w-3.5 h-3.5" /> 電子手冊 Pro</div>
                             <h3 className="text-lg font-black text-slate-800 dark:text-white">{PUBLIC_APP_PROGRESS.label}</h3>
-                            <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1">由私人功課工具升級成「個人任務 + 群組任務 + 時間表」App；本步完成問題回報與幫助中心，回報只在提交時寫入 reports。</p>
+                            <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1">集中管理個人任務、群組任務、時間表與通知。</p>
                         </div>
                         <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 px-4 py-3 text-center shrink-0">
-                            <div className="text-2xl font-black text-indigo-600 dark:text-indigo-300">{doneSteps}/{PUBLIC_APP_UPGRADE_STEPS.length}</div>
-                            <div className="text-[10px] font-black text-slate-400 uppercase">Steps done</div>
+                            <div className="text-2xl font-black text-indigo-600 dark:text-indigo-300">正常</div>
+                            <div className="text-[10px] font-black text-slate-400 uppercase">平台狀態</div>
                         </div>
                     </div>
                     <div className="p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {PUBLIC_APP_UPGRADE_STEPS.slice(0, compact ? 6 : 15).map(item => (
                             <div key={item.step} className={`rounded-2xl border p-4 transition-all ${item.status === 'done' ? 'roadmap-step-done border-indigo-200 dark:border-indigo-800' : 'bg-slate-50/80 dark:bg-slate-800/70 border-slate-100 dark:border-slate-700'}`}>
                                 <div className="flex items-center justify-between gap-2 mb-2">
-                                    <span className={`text-[11px] font-black px-2.5 py-1 rounded-full ${item.status === 'done' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-900 text-slate-400 border border-slate-100 dark:border-slate-700'}`}>({item.step}/15)</span>
+                                    <span className={`text-[11px] font-black px-2.5 py-1 rounded-full ${item.status === 'done' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-900 text-slate-400 border border-slate-100 dark:border-slate-700'}`}>已啟用</span>
                                     <span className="text-[10px] font-black text-slate-400">{item.tag}</span>
                                 </div>
                                 <div className="text-sm font-black text-slate-700 dark:text-slate-100 leading-snug">{item.title}</div>
@@ -3713,18 +3712,18 @@
             );
         }
 
-        function FirestoreCostGuardPanel() {
+        function 資料CostGuardPanel() {
             return (
                 <section className="rounded-[2rem] bg-emerald-50/80 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900 p-5 sm:p-6">
                     <div className="flex items-start gap-3 mb-4">
                         <div className="w-11 h-11 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shrink-0"><Icon name="database-zap" className="w-5 h-5" /></div>
                         <div>
-                            <h3 className="text-lg font-black text-emerald-900 dark:text-emerald-100">Firestore 低成本資料庫規則</h3>
-                            <p className="text-xs sm:text-sm font-bold text-emerald-700/70 dark:text-emerald-200/70 mt-1">公開版最怕 reads 爆量，所以本版本已把低成本規則寫入程式架構，後續功能要跟住做。</p>
+                            <h3 className="text-lg font-black text-emerald-900 dark:text-emerald-100">平台穩定保護</h3>
+                            <p className="text-xs sm:text-sm font-bold text-emerald-700/70 dark:text-emerald-200/70 mt-1">平台已加入資料載入保護，讓多人使用時保持穩定。</p>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {FIRESTORE_COST_GUARD_RULES.map((rule, idx) => (
+                        {DATA_GUARD_RULES.map((rule, idx) => (
                             <div key={idx} className="rounded-2xl bg-white/75 dark:bg-slate-900/60 border border-emerald-100 dark:border-emerald-900/60 p-3 flex items-start gap-2">
                                 <Icon name="check-circle-2" className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
                                 <span className="text-xs font-black text-emerald-900 dark:text-emerald-100 leading-relaxed">{rule}</span>
@@ -3805,10 +3804,10 @@
                 const message = String(supportDraft.message || '').trim();
                 if (!title || !message) { triggerAlert?.('請填寫回報標題同內容。', 'error'); return; }
                 const services = window.firebaseServices || {};
-                if (!services.db || !services.addDoc || !services.collection) { triggerAlert?.('回報服務未準備好，請稍後再試。', 'error'); return; }
+                if (!services.db || !services.addDoc || !services.資料區) { triggerAlert?.('回報服務未準備好，請稍後再試。', 'error'); return; }
                 try {
                     setSupportSubmitting(true);
-                    await services.addDoc(services.collection(services.db, 'reports'), {
+                    await services.addDoc(services.資料區(services.db, '回報'), {
                         type: supportDraft.type,
                         typeLabel: selectedSupportType.label,
                         title,
@@ -3829,7 +3828,7 @@
                     triggerAlert?.('已提交回報，多謝你幫手完善電子手冊 Pro。');
                 } catch (err) {
                     console.warn('Submit support report failed:', err);
-                    triggerAlert?.('提交失敗，請檢查網絡或 Firebase Rules。', 'error');
+                    triggerAlert?.('提交失敗，請檢查網絡或 系統服務 權限設定。', 'error');
                 } finally {
                     setSupportSubmitting(false);
                 }
@@ -3858,21 +3857,21 @@
                         <div className="absolute bottom-0 left-16 w-60 h-32 rounded-full bg-violet-300/20 blur-3xl"></div>
                         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 items-end">
                             <div className="flex items-start gap-4 min-w-0">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
+                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.6 · Hotfix
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white text-[11px] font-black mb-3">
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.8
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-3">
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
+                                <div className="rounded-[1.6rem] bg-white/10 border border-white p-4 backdrop-blur-xl">
                                     <div className="text-[10px] font-black text-indigo-100 uppercase">群組任務</div>
                                     <div className="text-sm font-black mt-1">群組任務</div>
                                 </div>
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
+                                <div className="rounded-[1.6rem] bg-white/10 border border-white p-4 backdrop-blur-xl">
                                     <div className="text-[10px] font-black text-indigo-100 uppercase">通知</div>
                                     <div className="text-sm font-black mt-1">{unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '全部已讀'}</div>
                                 </div>
@@ -3880,9 +3879,8 @@
                         </div>
                     </div>
 
-                    <PublicAppRoadmapPanel compact={true} />
-                    <MyPageOverviewPanel displayName={displayName} email={email} unreadNotificationCount={unreadNotificationCount} onOpenNotifications={onOpenNotifications} onGoClass={onGoClass} onOpenSubjects={onOpenSubjects} onLogout={onLogout} />
-                    <SettingSection title="完整設定樣式" desc="（4/15）把外觀設定整理成公開 App 級別：主題、模式、密度、字體、動畫、卡片與首頁偏好。" icon="paintbrush-2" right={<span className="px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">4/15 已完成</span>}>
+                    <MyPageOverviewPanel displayName={displayName} email={email} unreadNotificationCount={unreadNotificationCount} onOpenNotifications={onOpenNotifications} onGoClass={onGoClass} onOpenSubjects={onOpenSubjects} onLogout={onLogout} onOpenAppearance={onOpenAppearance} onGoTasks={onGoTasks} onOpenSupport={() => setIsSupportModalOpen(true)} onShowProfile={() => triggerAlert(`目前帳號：${displayName || '成員'}${email ? ' · ' + email : ''}`)} />
+                    <SettingSection title="外觀與顯示" desc="調整主題、深色模式、介面密度、字體、動畫、卡片與首頁偏好。" icon="paintbrush-2" right={<span className="px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">外觀 已完成</span>}>
                         <div className="space-y-5">
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                 <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4"><div className="text-[10px] font-black text-slate-400 uppercase">模式</div><div className="font-black text-sm text-slate-800 dark:text-white mt-1">{isDarkMode ? '深色' : '淺色'}</div></div>
@@ -3928,9 +3926,6 @@
                             </div>
                         </div>
                     </SettingSection>
-                    <NavigationStructurePanel />
-                    <FirestoreCostGuardPanel />
-
                     <SettingSection title="外觀個人化" desc="調整主題色、深色模式同整體介面密度，令電子手冊更貼合你嘅使用習慣。" icon="palette" right={<button type="button" onClick={onOpenAppearance} className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-700">進階外觀</button>}>
                         <div className="space-y-5">
                             <div>
@@ -4023,7 +4018,7 @@
                         </div>
                     </SettingSection>
 
-                    <SettingSection title="幫助與回報" desc="公開 App 必備入口：回報 Bug、提出建議，並查看常見問題。" icon="message-circle-question" right={<span className="px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">13/15</span>}>
+                    <SettingSection title="幫助與回報" desc="公開 App 必備入口：回報 Bug、提出建議，並查看常見問題。" icon="message-circle-question" right={<span className="px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">幫助中心</span>}>
                         <div className="space-y-5">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {SUPPORT_REPORT_TYPES.map(type => (
@@ -4069,9 +4064,9 @@
                                 <div className="w-12 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 mx-auto mb-5 sm:hidden"></div>
                                 <div className="flex items-start justify-between gap-3 mb-5">
                                     <div>
-                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-[11px] font-black mb-2"><Icon name="message-square-plus" className="w-3.5 h-3.5" /> 問題回報 13/15</div>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-[11px] font-black mb-2"><Icon name="message-square-plus" className="w-3.5 h-3.5" /> 問題回報 幫助中心</div>
                                         <h3 className="text-xl font-black text-slate-900 dark:text-white">提交回報</h3>
-                                        <p className="text-xs font-bold text-slate-400 mt-1">每次提交只寫入 reports 一筆資料，避免額外讀取成本。</p>
+                                        <p className="text-xs font-bold text-slate-400 mt-1">提交後管理員會在後台查看並處理。</p>
                                     </div>
                                     <button type="button" onClick={() => setIsSupportModalOpen(false)} className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500"><Icon name="x" className="w-4 h-4" /></button>
                                 </div>
@@ -4107,12 +4102,12 @@
         
 function App() {
             const [user, setUser] = useState(null);
-            const [authLoading, setAuthLoading] = useState(true);
-            const [firebaseReadyTick, setFirebaseReadyTick] = useState(() => window.__EHANDBOOK_FIREBASE_READY__ ? 1 : 0);
+            const [authLoading, set帳號系統Loading] = useState(true);
+            const [firebaseReadyTick, set系統服務ReadyTick] = useState(() => window.__EHANDBOOK_FIREBASE_READY__ ? 1 : 0);
             const [items, setItems] = useState([]);
             const [timetableConfig, setTimetableConfig] = useState({ timeSlots: DEFAULT_TIME_SLOTS, schedule: DEFAULT_SCHEDULE });
             const [subjects, setSubjects] = useState(DEFAULT_SUBJECTS);
-            const { auth, db, signOut, onAuthStateChanged, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, getDocs, getDoc, setDoc, updateProfile, arrayUnion, writeBatch, where, limit, startAfter, arrayRemove } = window.firebaseServices || {};
+            const { auth, db, signOut, on帳號系統StateChanged, 資料區, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, getDocs, getDoc, setDoc, updateProfile, arrayUnion, writeBatch, where, limit, startAfter, arrayRemove } = window.firebaseServices || {};
 
             const [inputType, setInputType] = useState('homework');
             const [subject, setSubject] = useState('中文');
@@ -4228,20 +4223,20 @@ function App() {
 
             useEffect(() => {
                 if (window.__EHANDBOOK_FIREBASE_READY__ && window.firebaseServices?.auth) {
-                    setFirebaseReadyTick(v => v + 1);
+                    set系統服務ReadyTick(v => v + 1);
                     return;
                 }
-                const handleReady = () => setFirebaseReadyTick(v => v + 1);
+                const handleReady = () => set系統服務ReadyTick(v => v + 1);
                 const handleError = () => {
-                    console.warn('Firebase ready event reported an init error:', window.__EHANDBOOK_FIREBASE_INIT_ERROR__);
-                    setAuthLoading(false);
+                    console.warn('系統服務 ready event reported an init error:', window.__EHANDBOOK_FIREBASE_INIT_ERROR__);
+                    set帳號系統Loading(false);
                 };
                 window.addEventListener('ehandbook:firebase-ready', handleReady);
                 window.addEventListener('ehandbook:firebase-error', handleError);
                 const timeout = setTimeout(() => {
                     if (!window.__EHANDBOOK_FIREBASE_READY__ || !window.firebaseServices?.auth) {
-                        console.warn('Firebase services were not ready after timeout');
-                        setAuthLoading(false);
+                        console.warn('系統服務 services were not ready after timeout');
+                        set帳號系統Loading(false);
                     }
                 }, 15000);
                 return () => {
@@ -4273,8 +4268,8 @@ function App() {
             }, [advancedPrefs]);
 
             useEffect(() => {
-                if (!window.firebaseServices || !auth || !db || !onAuthStateChanged) {
-                    console.warn('Firebase Auth services not ready yet; waiting for ready event...', { firebaseReadyTick });
+                if (!window.firebaseServices || !auth || !db || !on帳號系統StateChanged) {
+                    console.warn('系統服務 帳號系統 services not ready yet; waiting for ready event...', { firebaseReadyTick });
                     return;
                 }
                 let mounted = true;
@@ -4293,7 +4288,7 @@ function App() {
                     safeStorageRemove('ehandbook_google_redirect_started_at');
                     setUser(null);
                     setItems([]); setPublicTasks([]); itemsRef.current = []; publicTasksRef.current = []; setItemsLoaded(false); setPublicTasksLoaded(false);
-                    setIsAdmin(false); setShowNameSetup(false); setUserProfile(null); setTimetableConfig({ timeSlots: DEFAULT_TIME_SLOTS, schedule: DEFAULT_SCHEDULE }); setSubjects(DEFAULT_SUBJECTS); setAuthLoading(false);
+                    setIsAdmin(false); setShowNameSetup(false); setUserProfile(null); setTimetableConfig({ timeSlots: DEFAULT_TIME_SLOTS, schedule: DEFAULT_SCHEDULE }); setSubjects(DEFAULT_SUBJECTS); set帳號系統Loading(false);
                 };
                 const resolveSignedInUser = async (currentUser) => {
                     if (!mounted || !currentUser) return;
@@ -4318,14 +4313,14 @@ function App() {
                                 }
                             } catch (e) { console.warn("Profile inner err:", e); }
                         }, (err) => console.warn("Profile err:", err));
-                        setAuthLoading(false);
-                    } catch (e) { console.warn("Auth signed-in resolve err:", e); setAuthLoading(false); }
+                        set帳號系統Loading(false);
+                    } catch (e) { console.warn("帳號系統 signed-in resolve err:", e); set帳號系統Loading(false); }
                 };
                 const authFallbackTimer = setTimeout(() => {
                     if (!mounted) return;
-                    console.warn('Auth loading fallback triggered');
+                    console.warn('帳號系統 loading fallback triggered');
                     if (auth.currentUser) resolveSignedInUser(auth.currentUser);
-                    else setAuthLoading(false);
+                    else set帳號系統Loading(false);
                 }, 25000);
 
                 const redirectPromise = window.__EHANDBOOK_REDIRECT_RESULT_PROMISE__;
@@ -4338,16 +4333,16 @@ function App() {
                         } else if (window.__EHANDBOOK_REDIRECT_ERROR__) {
                             console.warn('Redirect callback returned an error:', window.__EHANDBOOK_REDIRECT_ERROR__);
                             window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
-                            if (!auth.currentUser) setAuthLoading(false);
+                            if (!auth.currentUser) set帳號系統Loading(false);
                         }
                     }).catch((error) => {
                         console.warn('Redirect callback processing error:', error);
                         window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
-                        if (!auth.currentUser) setAuthLoading(false);
+                        if (!auth.currentUser) set帳號系統Loading(false);
                     });
                 }
 
-                const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+                const unsubscribe = on帳號系統StateChanged(auth, async (currentUser) => {
                     clearTimeout(authFallbackTimer);
                     try {
                         if (currentUser) {
@@ -4364,7 +4359,7 @@ function App() {
                             }
                             resolveSignedOut();
                         }
-                    } catch (e) { console.warn("Auth err:", e); setAuthLoading(false); }
+                    } catch (e) { console.warn("帳號系統 err:", e); set帳號系統Loading(false); }
                 });
                 return () => { mounted = false; clearTimeout(authFallbackTimer); unsubscribe(); cleanupProfile(); };
             }, [firebaseReadyTick]);
@@ -4436,7 +4431,7 @@ function App() {
             useEffect(() => {
                 if (!user || !db) return;
                 setItemsLoaded(false);
-                const unsubItems = onSnapshot(query(collection(db, "users", user.uid, "items"), orderBy("dueDate")), (snapshot) => {
+                const unsubItems = onSnapshot(query(資料區(db, "users", user.uid, "items"), orderBy("dueDate")), (snapshot) => {
                     const loadedItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     setItems(loadedItems); itemsRef.current = loadedItems; setItemsLoaded(true);
                 }, (err) => { console.warn("Items err:", err); setItemsLoaded(true); });
@@ -4469,7 +4464,7 @@ function App() {
             useEffect(() => {
                 if (!user || !db) return;
                 setPublicTasksLoaded(false);
-                const q = query(collection(db, "public_assignments"), orderBy("createdAt", "desc"), limit(ADMIN_LOW_COST_LIMITS.foregroundPublicTasksLimit));
+                const q = query(資料區(db, "群組任務資料"), orderBy("createdAt", "desc"), limit(ADMIN_LOW_COST_LIMITS.foregroundPublicTasksLimit));
                 const unsubscribe = onSnapshot(q, (snapshot) => {
                     try {
                         const loadedPublicTasks = snapshot.docs.map(publicDoc => ({ id: publicDoc.id, ...publicDoc.data() }));
@@ -4626,7 +4621,7 @@ function App() {
             const handleCreatePublisherGroup = async ({ name, description }) => {
                 if (!user || !db) return;
                 if (publisherGroups.length >= publisherGroupLimit) {
-                    triggerAlert(`公開測試期每位用戶最多建立 ${publisherGroupLimit} 個群組。`, 'error');
+                    triggerAlert(`每位用戶最多建立 ${publisherGroupLimit} 個群組。`, 'error');
                     return;
                 }
                 const performCreate = async () => {
@@ -4699,7 +4694,7 @@ function App() {
                         forceExpired: false,
                         isHidden: false
                     };
-                    const publicRef = await addDoc(collection(db, 'public_assignments'), payload);
+                    const publicRef = await addDoc(資料區(db, '群組任務資料'), payload);
                     const batch = writeBatch(db);
                     batch.set(doc(db, 'groups', groupCode, 'tasks', publicRef.id), { ...payload, publicRefId: publicRef.id }, { merge: true });
                     batch.set(doc(db, 'groups', groupCode), {
@@ -4768,7 +4763,7 @@ function App() {
                 if (!user || !db || !task?.id) return false;
                 const { silent = false, auto = false, source = 'student_claim' } = options;
                 try {
-                    const duplicateQ = query(collection(db, "users", user.uid, "items"), where("publicRefId", "==", task.id));
+                    const duplicateQ = query(資料區(db, "users", user.uid, "items"), where("publicRefId", "==", task.id));
                     const duplicateSnap = await getDocs(duplicateQ);
                     if (!duplicateSnap.empty || syncedPublicIds.has(task.id)) {
                         if (!silent) triggerAlert("呢份群組任務已經喺你個人手冊入面");
@@ -4864,7 +4859,7 @@ function App() {
                         title: reminder.title || '管理員提醒',
                         message: reminder.message || '請查看最新系統提醒。',
                         meta: target === '全校' ? '全校提醒' : `班級 ${target}`,
-                        time: formatFirebaseDateTime(reminder.createdAt) || '剛剛',
+                        time: format系統服務DateTime(reminder.createdAt) || '剛剛',
                         sortTime: getSortTime(reminder.createdAt) || Date.now(),
                         accent: 'orange',
                         action: 'class',
@@ -4884,7 +4879,7 @@ function App() {
                             title: activeUpdateNotice.title || '系統已更新',
                             message: summary,
                             meta: `版本 ${activeUpdateNotice.version}`,
-                            time: formatFirebaseDateTime(activeUpdateNotice.publishedAt) || '最近更新',
+                            time: format系統服務DateTime(activeUpdateNotice.publishedAt) || '最近更新',
                             sortTime: getSortTime(activeUpdateNotice.publishedAt) || Date.now(),
                             accent: 'sky',
                             action: 'release'
@@ -4922,8 +4917,8 @@ function App() {
                         icon: 'calendar-clock',
                         title: '時間表已更新',
                         message: `${updater} 剛剛更改了上課時間表。`,
-                        meta: formatFirebaseDateTime(timetableConfig.updatedAt) || '最近更新',
-                        time: formatFirebaseDateTime(timetableConfig.updatedAt),
+                        meta: format系統服務DateTime(timetableConfig.updatedAt) || '最近更新',
+                        time: format系統服務DateTime(timetableConfig.updatedAt),
                         sortTime: getSortTime(timetableConfig.updatedAt),
                         accent: 'sky',
                         action: 'timetable'
@@ -4947,7 +4942,7 @@ function App() {
                         title: forceExpired ? '一份群組任務已撤回' : (synced ? '你已收到一份功課' : `${sender} 新增了一份功課`),
                         message: forceExpired ? `「${subjectName}｜${taskText}」已被撤回。` : (synced ? `「${subjectName}｜${taskText}」已加入你的個人手冊。` : `${sender} 新增了「${subjectName}」功課：${taskText}`),
                         meta: `${targetName}${task.dueDate ? ` · 交期 ${formatDueDate(task.dueDate)}` : ''}`,
-                        time: formatFirebaseDateTime(task.createdAt),
+                        time: format系統服務DateTime(task.createdAt),
                         sortTime: getSortTime(task.createdAt),
                         accent: forceExpired ? 'slate' : (synced ? 'emerald' : 'orange'),
                         action: forceExpired ? 'none' : 'class',
@@ -4999,9 +4994,9 @@ function App() {
             }, [visiblePublicTasks, selectedClassBoard]);
 
             const getTargetUsersForBroadcastTask = async (task) => {
-                if (!db || !collection || !getDocs || !query) return [];
+                if (!db || !資料區 || !getDocs || !query) return [];
                 const targetClass = task?.targetClass || '全校';
-                const usersRef = collection(db, "users_public");
+                const usersRef = 資料區(db, "users_public");
                 const targetQuery = targetClass === '全校'
                     ? query(usersRef)
                     : query(usersRef, where("joinedClasses", "array-contains", targetClass));
@@ -5055,7 +5050,7 @@ function App() {
                     if (pendingWrites >= 420) await commitBatch();
                 }
                 await commitBatch();
-                await updateDoc(doc(db, "public_assignments", publicId), {
+                await updateDoc(doc(db, "群組任務資料", publicId), {
                     deliveredAt: serverTimestamp(),
                     deliveredCount: delivered,
                     deliveryMode: 'auto_immediate'
@@ -5090,11 +5085,11 @@ function App() {
                             newItem.senderName = user.displayName || '老師';
                             newItem.targetClass = targetClassInput;
                             newItem.deliveryMode = 'auto_immediate';
-                            const publicRef = await addDoc(collection(db, "public_assignments"), newItem);
+                            const publicRef = await addDoc(資料區(db, "群組任務資料"), newItem);
                             const deliveredCount = await deliverBroadcastTaskToTargets(publicRef.id, newItem);
                             const className = targetClassInput === '全校' ? '全校' : (systemClasses.find(c => c.code === targetClassInput)?.name || targetClassInput);
                             triggerAlert(`已發送群組任務給 ${className}，並已自動加入 ${deliveredCount} 位學生個人手冊！`); 
-                        } else { await addDoc(collection(db, "users", user.uid, "items"), newItem); triggerAlert("已新增紀錄"); } 
+                        } else { await addDoc(資料區(db, "users", user.uid, "items"), newItem); triggerAlert("已新增紀錄"); } 
                         setDescription(''); setAppMode('personal'); setIsBroadcast(false); setTargetClassInput('全校'); setSubjectManuallySelected(false); setSubjectPredictionApplied(false);
                     } catch (error) { console.warn("新增或派發失敗", error); triggerAlert("新增或派發失敗：" + (error?.message || '請稍後再試'), "error"); } 
                 };
@@ -5138,7 +5133,7 @@ function App() {
             const deletePublicItem = (publicId, privateId) => { 
                 if (!user) return;
                 triggerConfirm('⚠️ 確定要撤回全班的這份功課？', async () => { 
-                    try { await deleteDoc(doc(db, "public_assignments", publicId)); if (privateId) await deleteDoc(doc(db, "users", user.uid, "items", privateId)); triggerAlert("已撤回廣播紀錄"); } catch (e) { triggerAlert("撤回失敗", "error"); } 
+                    try { await deleteDoc(doc(db, "群組任務資料", publicId)); if (privateId) await deleteDoc(doc(db, "users", user.uid, "items", privateId)); triggerAlert("已撤回廣播紀錄"); } catch (e) { triggerAlert("撤回失敗", "error"); } 
                 });
             };
             
@@ -5267,7 +5262,7 @@ function App() {
             if (!user) {
                 return (
                     <>
-                        <AuthPage triggerAlert={triggerAlert} />
+                        <帳號系統Page triggerAlert={triggerAlert} />
                         <div className={`fixed top-4 sm:top-8 left-1/2 transform -translate-x-1/2 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${toast.isVisible ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-full opacity-0 scale-95 pointer-events-none'}`}>
                             <div className={`px-5 py-3 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-xl flex items-center gap-3 font-bold text-sm tracking-wide border ${toast.type === 'error' ? 'bg-red-500/95 text-white border-red-400' : 'bg-slate-900/95 text-white border-slate-800 dark:bg-white/95 dark:text-slate-900 dark:border-white/50'}`}>
                                 <Icon name={toast.type === 'error' ? 'alert-triangle' : 'check-circle-2'} className={`w-5 h-5 ${toast.type === 'error' ? 'text-white' : 'text-emerald-400'}`} />
@@ -5429,7 +5424,7 @@ function App() {
                                         </div>
                                     )}
 
-                                    {viewMode === 'current' && appMode === 'personal' && <div className="max-w-3xl mx-auto mb-6"><PublicAppRoadmapPanel compact={true} /></div>}
+                                    
                                     {viewMode === 'current' && isVisible('timetable') && <CurrentLessonWidget config={timetableConfig} t={t} onClick={() => setViewMode('timetable')} globalNow={globalNow} />}
 
                                     {(viewMode === 'current' || viewMode === 'history' || viewMode === 'tasks') && appMode === 'personal' && (
@@ -5563,7 +5558,7 @@ function App() {
                                             <div className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
                                                 <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                                                     <div>
-                                                        <div className="public-product-chip low-cost-badge mb-2"><Icon name="boxes" className="w-3.5 h-3.5" /> 公開 App 發佈者流程 7/15</div>
+                                                        <div className="public-product-chip low-cost-badge mb-2"><Icon name="boxes" className="w-3.5 h-3.5" /> 公開 App 群組發佈者</div>
                                                         <h3 className="text-lg font-black text-slate-800 dark:text-white">我的群組與發佈者工作台</h3>
                                                         <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">任何人都可以建立群組並自動成為該群組發佈者；成員仍然要用 6 位邀請碼主動加入，避免亂加入同亂加人。</p>
                                                     </div>
@@ -5587,7 +5582,7 @@ function App() {
                                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                                                             <div>
                                                                 <div className="text-sm font-black text-indigo-800 dark:text-indigo-100 flex items-center gap-2"><Icon name="crown" className="w-4 h-4" /> 我的發佈者群組</div>
-                                                                <p className="text-xs font-bold text-indigo-700/70 dark:text-indigo-200/75 mt-1">建立群組後，你就是該群組發佈者；第 8 步已加入邀請碼查詢/重設；第 9 步會加入正式群組任務發佈。</p>
+                                                                <p className="text-xs font-bold text-indigo-700/70 dark:text-indigo-200/75 mt-1">建立群組後，你就是該群組發佈者；你可以分享邀請碼，並向群組發佈任務。</p>
                                                             </div>
                                                             <button type="button" onClick={() => setIsCreatePublisherGroupOpen(true)} className={`px-4 py-2.5 rounded-2xl text-white font-black text-xs shadow-md active:scale-[0.98] transition-all ${t.bg}`}><Icon name="plus" className="w-4 h-4 inline-flex mr-1" /> 建立群組</button>
                                                         </div>
@@ -5638,7 +5633,7 @@ function App() {
                                                     <div className="rounded-2xl bg-violet-50/80 dark:bg-violet-950/20 border border-violet-100 dark:border-violet-900 p-4 flex items-start gap-3">
                                                         <Icon name="key-round" className="w-5 h-5 text-violet-500 mt-0.5 shrink-0" />
                                                         <div>
-                                                            <div className="text-sm font-black text-violet-800 dark:text-violet-100">邀請碼系統規則 8/15</div>
+                                                            <div className="text-sm font-black text-violet-800 dark:text-violet-100">邀請碼系統規則 邀請碼</div>
                                                             <div className="mt-2 space-y-1">
                                                                 {INVITE_CODE_RULES.slice(0, 5).map((rule, idx) => <div key={idx} className="text-xs font-bold text-violet-700/75 dark:text-violet-200/80 leading-relaxed">• {rule}</div>)}
                                                             </div>
@@ -5650,7 +5645,7 @@ function App() {
                                                     <div className="rounded-2xl bg-fuchsia-50/80 dark:bg-fuchsia-950/20 border border-fuchsia-100 dark:border-fuchsia-900 p-4 flex items-start gap-3">
                                                         <Icon name="send" className="w-5 h-5 text-fuchsia-500 mt-0.5 shrink-0" />
                                                         <div>
-                                                            <div className="text-sm font-black text-fuchsia-800 dark:text-fuchsia-100">群組任務發佈規則 9/15</div>
+                                                            <div className="text-sm font-black text-fuchsia-800 dark:text-fuchsia-100">群組任務發佈規則 群組任務</div>
                                                             <div className="mt-2 space-y-1">
                                                                 {GROUP_TASK_PUBLISH_RULES.slice(0, 5).map((rule, idx) => <div key={idx} className="text-xs font-bold text-fuchsia-700/75 dark:text-fuchsia-200/80 leading-relaxed">• {rule}</div>)}
                                                             </div>
@@ -5662,7 +5657,7 @@ function App() {
                                                     <div className="rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900 p-4 flex items-start gap-3">
                                                         <Icon name="database-zap" className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
                                                         <div>
-                                                            <div className="text-sm font-black text-emerald-800 dark:text-emerald-100">低成本群組資料策略</div>
+                                                            <div className="text-sm font-black text-emerald-800 dark:text-emerald-100">穩定群組資料策略</div>
                                                             <p className="text-xs font-bold text-emerald-700/75 dark:text-emerald-200/75 mt-1 leading-relaxed">建立群組只做少量必要寫入；加入群組應查 groupCodes/{'{inviteCode}'} 單一文件，不掃描所有群組；群組任務保留在 groups/{'{groupId}'}/tasks，暫不複製到每個成員個人 tasks。</p>
                                                         </div>
                                                     </div>
@@ -5723,7 +5718,7 @@ function App() {
                                                                     <div className="text-xs text-slate-400 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-t border-slate-50 dark:border-slate-700 pt-3">
                                                                         <span className="flex items-center gap-1"><Icon name="user-round" className="w-3.5 h-3.5" /> 發佈者: {task.senderName || '發佈者'}</span>
                                                                         <span className="flex items-center gap-1"><Icon name="calendar-clock" className="w-3.5 h-3.5" /> 交期: {formatDueDate(task.dueDate)}</span>
-                                                                        <span>{formatFirebaseDateTime(task.createdAt)}</span>
+                                                                        <span>{format系統服務DateTime(task.createdAt)}</span>
                                                                     </div>
                                                                     {task.deliveryMode === 'group_reference' && !isDelivered && !task.forceExpired && (
                                                                         <div className="mt-3 flex justify-end">
@@ -5750,7 +5745,7 @@ function App() {
                                 <Icon name={activeNavItem?.icon || 'circle'} className="w-3.5 h-3.5" />
                                 <span>{activeNavItem?.label || '今日'}</span>
                                 <span className="opacity-60">·</span>
-                                <span className="opacity-80">(11/15) 管理後台</span>
+                                <span className="opacity-80">管理後台</span>
                             </div>
                         </div>
                         <div className="pointer-events-auto glass-card bg-white/92 dark:bg-slate-800/92 rounded-[2rem] sm:rounded-full px-2 py-2 shadow-[0_18px_60px_-24px_rgba(15,23,42,0.75)] border border-white/60 dark:border-slate-700/60 flex items-center justify-between gap-1 sm:gap-2 overflow-x-auto dynamic-island-scroll">
@@ -5775,7 +5770,7 @@ function App() {
                                 <div className="relative overflow-hidden p-6 bg-gradient-to-br from-indigo-600 via-violet-600 to-sky-500 text-white">
                                     <div className="absolute -top-12 -right-10 w-36 h-36 rounded-full bg-white/20 blur-2xl"></div>
                                     <div className="relative z-10">
-                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-black mb-4"><Icon name="sparkles" className="w-4 h-4" /> 版本 {activeUpdateNotice.version}</div>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-white/20 text-xs font-black mb-4"><Icon name="sparkles" className="w-4 h-4" /> 版本 {activeUpdateNotice.version}</div>
                                         <h3 className="text-2xl font-black tracking-tight">{activeUpdateNotice.title || '電子手冊 Pro 已更新'}</h3>
                                         <p className="text-sm text-indigo-100 font-bold mt-2">以下係今次更新內容同使用方法。</p>
                                     </div>
@@ -5904,10 +5899,10 @@ function App() {
         }
     </script>
 <!-- VERSION_CHECK: v1.9.0-public-app-15steps-foundation | based-on-uploaded-v1.8.24 | public-app-roadmap-added | original-functions-preserved | firestore-cost-guard-added -->
-    <!-- ehandbook-build: v1.9.0-public-app-15steps-foundation -->
+    <!-- ehandbook-build: v1.10.8-interaction-polish -->
 </body>
 </html>
 
-<!-- ehandbook_v1.9.0_public_app_15steps_foundation: (1/15) public app foundation + roadmap + Firestore low-cost guard. -->
+<!-- ehandbook_public_release: public app foundation preserved. -->
 
-<!-- v1.9.0-public-app-15steps-foundation: keeps original auth/data features; adds public terminology, roadmap, admin usage monitor foundation. -->
+<!-- ehandbook_public_release: auth, data, tasks, groups and admin features preserved. -->
