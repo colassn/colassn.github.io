@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.10.7 Public User Clean：正式公開使用互動修正版 -->
+    <!-- 電子手冊 Pro v1.10.9 Service Init Hotfix：服務初始化修復版 -->
     <!--
       PUBLIC_RELEASE: (用量保護) 已完成管理員後台穩定化：後台列表 limit 分頁、Dashboard 優先 adminStats/global、任務監控改為按需載入。
       CORE_RULES: 保留 Google/Email 登入、系統服務、資料、個人任務、時間表、群組、發佈者流程、管理員、更新彈窗。
@@ -25,8 +25,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.10.8-interaction-polish">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.10.8-interaction-polish"; console.log("電子手冊 Pro v1.10.8-interaction-polish loaded");</script>
+    <meta name="ehandbook-version" content="v1.10.9-service-init-hotfix">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.10.9-service-init-hotfix"; console.log("電子手冊 Pro v1.10.9-service-init-hotfix loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -149,7 +149,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.8 啟動修復保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.9 服務初始化修復保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
                 }
             } catch(e) {}
         });
@@ -167,8 +167,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { get帳號系統, initialize帳號系統, indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence, inMemoryPersistence, browserPopupRedirectResolver, setPersistence, signInWithPopup, signInWithRedirect, getRedirectResult, Google帳號系統Provider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, on帳號系統StateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { get資料, 資料區, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, where, getDocs, setDoc, arrayUnion, arrayRemove, getDoc, writeBatch, limit, startAfter } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth as get帳號系統, initializeAuth as initialize帳號系統, indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence, inMemoryPersistence, browserPopupRedirectResolver, setPersistence, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider as Google帳號系統Provider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged as on帳號系統StateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore as get資料, collection as 資料區, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, where, getDocs, setDoc, arrayUnion, arrayRemove, getDoc, writeBatch, limit, startAfter } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         const DEFAULT_FIREBASE_AUTH_DOMAIN = "recordhwv2.firebaseapp.com";
         const getStable系統服務帳號系統Domain = () => {
@@ -227,7 +227,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.9.0-public-app-15steps-foundation',
+                version: 'v1.10.9-service-init-hotfix',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -325,7 +325,7 @@
         const { useState, useEffect, useRef, useMemo } = React;
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
-        const PUBLIC_APP_VERSION = 'v1.10.8-interaction-polish';
+        const PUBLIC_APP_VERSION = 'v1.10.9-service-init-hotfix';
         const PUBLIC_APP_PROGRESS = { current: null, total: null, label: '電子手冊 Pro 已準備好' };
         const PUBLIC_APP_TERMS = {
             teacher: '發佈者',
@@ -545,7 +545,7 @@
         ];
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.10.8-interaction-polish',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.10.9-service-init-hotfix',
             title: '電子手冊 Pro 已更新',
             summary: [
                 '電子手冊 Pro 已整理成更完整的公開使用版本。',
@@ -614,7 +614,7 @@
             if (code === 'auth/operation-not-supported-in-this-environment' || code === 'auth/web-storage-unsupported') return '這個瀏覽器不支援彈出式登入，請用 Chrome / Safari 開啟，或再按一次讓系統改用跳轉登入。';
             if (code === 'auth/unauthorized-domain') return '此網站網域未加入 系統服務 授權網域，請管理員到 系統服務 帳號系統entication > Settings > 帳號系統orized domains 加入目前網址。';
             if (code === 'auth/operation-not-allowed') return '系統服務 尚未開啟 Google 或 Email 登入方式，請管理員到 系統服務 帳號系統entication 啟用。';
-            if (code === 'auth/argument-error') return 'Google 登入參數錯誤。已改為 v1.8.21 登入流程；請重新部署此檔案並清除快取。';
+            if (code === 'auth/argument-error') return 'Google 登入參數錯誤，請重新整理後再試；如仍失敗，請用正常瀏覽器開啟。';
             return (mode === 'reset' ? '重設密碼失敗：' : mode === 'register' ? '註冊失敗：' : '登入失敗：') + (error?.message || code || '請稍後再試');
         };
 
@@ -830,6 +830,7 @@
             const [loading, setLoading] = useState(false);
             const services = window.firebaseServices || {};
             const { auth, googleProvider, createGoogleProvider, signInWithPopup, signInWithRedirect, browserPopupRedirectResolver, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } = services;
+            const serviceReady = !!(auth && signInWithPopup && signInWithRedirect && signInWithEmailAndPassword && createUserWithEmailAndPassword);
             const inAppBrowser = isInAppBrowser();
 
             const mustUseRedirectLogin = () => isStandaloneMode() || isInAppBrowser();
@@ -881,7 +882,7 @@
             }, [auth]);
 
             const handleGoogleLogin = async () => { 
-                if (!auth || !signInWithPopup || !signInWithRedirect) { triggerAlert('系統服務 尚未準備好，請重新整理後再試。', 'error'); return; }
+                if (!auth || !signInWithPopup || !signInWithRedirect) { triggerAlert('系統正在準備中，請稍候幾秒再試。', 'error'); return; }
                 try {
                     setLoading(true);
                     await (window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ || Promise.resolve());
@@ -891,7 +892,7 @@
                         return;
                     }
 
-                    // v1.8.23：保留成功登入邏輯，群組任務改為發放即廣播派發。
+                    // 保留成功登入邏輯；登入成功後進入任務與群組空間。
                     window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
                     const provider = getFreshGoogleProvider();
                     const credential = await signInWithPopup(auth, provider, browserPopupRedirectResolver);
@@ -945,7 +946,7 @@
                 if (isResetMode) { await handlePasswordReset(e); return; }
                 const targetEmail = email.trim();
                 if(!targetEmail || !password) { triggerAlert('請輸入 Email 同密碼。', 'error'); return; }
-                if (!auth || !signInWithEmailAndPassword || !createUserWithEmailAndPassword) { triggerAlert('系統服務 尚未準備好，請重新整理後再試。', 'error'); return; }
+                if (!auth || !signInWithEmailAndPassword || !createUserWithEmailAndPassword) { triggerAlert('系統正在準備中，請稍候幾秒再試。', 'error'); return; }
                 try {
                     setLoading(true);
                     await (window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ || Promise.resolve());
@@ -1001,9 +1002,9 @@
                                 </div>
 
                                 {!isResetMode && (
-                                    <button type="button" onClick={handleGoogleLogin} disabled={loading} className="w-full h-13 py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-black transition-all active:scale-[0.98] flex items-center justify-center gap-3 shadow-xl shadow-slate-300/50 dark:shadow-black/30 disabled:opacity-70">
+                                    <button type="button" onClick={handleGoogleLogin} disabled={loading || !serviceReady} className="w-full h-13 py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-black transition-all active:scale-[0.98] flex items-center justify-center gap-3 shadow-xl shadow-slate-300/50 dark:shadow-black/30 disabled:opacity-70">
                                         {loading ? <Icon name="loader" className="w-5 h-5 animate-spin" /> : <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5 bg-white rounded-full" />}
-                                        使用 Google 登入
+                                        {serviceReady ? '使用 Google 登入' : '系統準備中...'}
                                     </button>
                                 )}
 
@@ -1041,8 +1042,8 @@
                                             </div> 
                                         </div>
                                     )}
-                                    <button type="submit" disabled={loading} className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow-lg shadow-indigo-200/60 dark:shadow-indigo-950/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-5 disabled:opacity-70">
-                                        {loading ? <Icon name="loader" className="w-5 h-5 animate-spin" /> : submitText}
+                                    <button type="submit" disabled={loading || !serviceReady} className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black shadow-lg shadow-indigo-200/60 dark:shadow-indigo-950/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-5 disabled:opacity-70">
+                                        {loading ? <Icon name="loader" className="w-5 h-5 animate-spin" /> : (serviceReady ? submitText : '系統準備中...')}
                                     </button> 
                                 </form> 
 
@@ -1061,7 +1062,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.8.21</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.10.9</div>
                             </div> 
                         </div> 
                     </div> 
@@ -3860,7 +3861,7 @@
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.8
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.9
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
@@ -4218,7 +4219,7 @@ function App() {
                 const loadingScreen = document.getElementById('loading-screen');
                 window.__EHANDBOOK_RENDERED__ = true;
                 if (loadingScreen) { loadingScreen.classList.add('hidden-loader'); setTimeout(() => loadingScreen.remove(), 500); }
-                // v1.8.23: 已保留登入功能；群組任務改為管理員發放後即時廣播派發。
+                // 登入功能已保留；主程式成功渲染後移除 loading 畫面。
             }, []);
 
             useEffect(() => {
@@ -4238,7 +4239,7 @@ function App() {
                         console.warn('系統服務 services were not ready after timeout');
                         set帳號系統Loading(false);
                     }
-                }, 15000);
+                }, 45000);
                 return () => {
                     clearTimeout(timeout);
                     window.removeEventListener('ehandbook:firebase-ready', handleReady);
@@ -5899,7 +5900,7 @@ function App() {
         }
     </script>
 <!-- VERSION_CHECK: v1.9.0-public-app-15steps-foundation | based-on-uploaded-v1.8.24 | public-app-roadmap-added | original-functions-preserved | firestore-cost-guard-added -->
-    <!-- ehandbook-build: v1.10.8-interaction-polish -->
+    <!-- ehandbook-build: v1.10.9-service-init-hotfix -->
 </body>
 </html>
 
