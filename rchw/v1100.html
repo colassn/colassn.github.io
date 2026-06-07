@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.10.11 Full Interaction Stability：全站互動穩定修復版 -->
+    <!-- 電子手冊 Pro v1.10.12 Full Interaction Stability：全站互動穩定修復版 -->
     <!--
       PUBLIC_RELEASE: (用量保護) 已完成管理員後台穩定化：後台列表 limit 分頁、Dashboard 優先 adminStats/global、任務監控改為按需載入。
       CORE_RULES: 保留 Google/Email 登入、系統服務、資料、個人任務、時間表、群組、發佈者流程、管理員、更新彈窗。
@@ -25,8 +25,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.10.11-permission-safe-stability">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.10.11-permission-safe-stability"; console.log("電子手冊 Pro v1.10.11-permission-safe-stability loaded");</script>
+    <meta name="ehandbook-version" content="v1.10.12-stable-ui-permission-fix">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.10.12-stable-ui-permission-fix"; console.log("電子手冊 Pro v1.10.12-stable-ui-permission-fix loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -149,7 +149,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.11 全站互動穩定保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.12 全站互動穩定保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
                 }
             } catch(e) {}
         });
@@ -227,7 +227,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.10.11-permission-safe-stability',
+                version: 'v1.10.12-stable-ui-permission-fix',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -325,7 +325,7 @@
         const { useState, useEffect, useRef, useMemo } = React;
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
-        const PUBLIC_APP_VERSION = 'v1.10.11-permission-safe-stability';
+        const PUBLIC_APP_VERSION = 'v1.10.12-stable-ui-permission-fix';
         const PUBLIC_APP_PROGRESS = { current: null, total: null, label: '電子手冊 Pro 已準備好' };
         const PUBLIC_APP_TERMS = {
             teacher: '發佈者',
@@ -545,7 +545,7 @@
         ];
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.10.11-permission-safe-stability',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.10.12-stable-ui-permission-fix',
             title: '電子手冊 Pro 已更新',
             summary: [
                 '電子手冊 Pro 已整理成更完整的公開使用版本。',
@@ -1062,7 +1062,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.10.11</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.10.12</div>
                             </div> 
                         </div> 
                     </div> 
@@ -2124,7 +2124,7 @@
             const fetchRecentReports = async () => {
                 if (!db || !資料區 || !getDocs || !query || !orderBy || !limit) return;
                 try {
-                    const q = query(資料區(db, '回報'), orderBy('createdAt', 'desc'), limit(REPORTS_PAGE_SIZE));
+                    const q = query(資料區(db, 'reports'), orderBy('createdAt', 'desc'), limit(REPORTS_PAGE_SIZE));
                     const snap = await getDocs(q);
                     setRecentReports(snap.docs.map(d => ({ id: d.id, ...d.data() })));
                     setReportsLoadedOnce(true);
@@ -3747,70 +3747,27 @@
         }
 
         function UserSettingsPage({
-            user,
-            userProfile,
-            t,
-            unreadNotificationCount,
-            isDarkMode,
-            setIsDarkMode,
-            themeColor,
-            setThemeColor,
-            layoutMode,
-            setLayoutMode,
-            customLayout,
-            setCustomLayout,
-            advancedPrefs,
-            setAdvancedPrefs,
-            onOpenNotifications,
-            onOpenAppearance,
-            onOpenSubjects,
-            onGoClass,
-            onLogout,
-            triggerAlert
+            user, userProfile, t, unreadNotificationCount,
+            isDarkMode, setIsDarkMode, themeColor, setThemeColor,
+            advancedPrefs, setAdvancedPrefs,
+            onOpenNotifications, onOpenAppearance, onOpenSubjects, onGoClass, onLogout,
+            triggerAlert, onGoTasks
         }) {
             const displayName = userProfile?.displayName || user?.displayName || '成員';
             const email = user?.email || userProfile?.email || '';
             const initial = String(displayName || email || 'E').trim().charAt(0).toUpperCase();
-            const layoutOptions = [
-                { value: 'normal', label: '完整模式', desc: '顯示主頁卡片、時間表、輸入欄同任務列表', icon: 'layout-dashboard' },
-                { value: 'minimal', label: '極簡模式', desc: '只保留重要卡片同任務列表，主頁更乾淨', icon: 'minimize-2' },
-                { value: 'custom', label: '自定義', desc: '自己決定主頁每個區塊是否顯示', icon: 'sliders-horizontal' }
-            ];
-            const customBlocks = [
-                { key: 'cards', label: '狀態卡片', desc: '今日急件、明日預告、測驗考試統計', icon: 'columns-3' },
-                { key: 'timetable', label: '即時課堂', desc: '顯示目前課節、倒數及下一節', icon: 'calendar-clock' },
-                { key: 'input', label: '新增功課欄', desc: '主頁直接新增功課或測驗', icon: 'square-pen' },
-                { key: 'list', label: '任務列表', desc: '顯示個人手冊功課列表', icon: 'list-checks' }
-            ];
-            const advancedOptions = [
-                { key: 'largeText', label: '大字體模式', desc: 'iPad 同手機閱讀更舒服，適合長時間使用', icon: 'text' },
-                { key: 'reduceMotion', label: '減少動畫', desc: '降低過場動畫，頁面操作更穩定', icon: 'wind' },
-                { key: 'cleanGlass', label: '清晰玻璃模式', desc: '降低磨砂透明度，文字更清楚', icon: 'glass-water' },
-                { key: 'comfortSpacing', label: '舒適間距', desc: '設定卡片與文字呼吸感更強', icon: 'move-horizontal' },
-                { key: 'smartHints', label: '智能提示', desc: '保留過期、時間表等使用提示', icon: 'sparkles' },
-                { key: 'focusFirst', label: '專注優先', desc: '主頁更重視今日任務與待辦事項', icon: 'target' }
-            ];
-            const quickActionOptions = [
-                { key: 'showClassShortcut', label: '群組任務快捷', desc: '在設定頁快速查看群組任務', icon: 'school-2' },
-                { key: 'showNotificationShortcut', label: '通知快捷', desc: '在設定頁快速打開通知中心', icon: 'bell' },
-                { key: 'showSubjectShortcut', label: '科目快捷', desc: '方便快速進入科目管理', icon: 'book-marked' },
-                { key: 'showAccountShortcut', label: '帳號操作', desc: '顯示登出與帳號相關操作', icon: 'user-cog' }
-            ];
-            const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout[key] });
-            const handleAdvancedToggle = (key) => setAdvancedPrefs({ ...(advancedPrefs || {}), [key]: !advancedPrefs?.[key] });
-            const setAdvancedPrefValue = (key, value) => setAdvancedPrefs({ ...(advancedPrefs || {}), [key]: value });
-            const themeEntries = Object.entries(THEME_CONFIG);
-            const densityOptions = APPEARANCE_STYLE_PRESETS.density;
-            const cardStyleOptions = APPEARANCE_STYLE_PRESETS.cardStyle;
-            const homeDisplayOptions = APPEARANCE_STYLE_PRESETS.homeDisplay;
-            const selectedDensity = advancedPrefs?.interfaceDensity || 'standard';
-            const selectedCardStyle = advancedPrefs?.cardStyle || 'glass';
-            const selectedHomeDisplay = advancedPrefs?.homeDisplayMode || 'balanced';
-            const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
+            const [supportOpen, setSupportOpen] = useState(false);
             const [supportDraft, setSupportDraft] = useState({ type: 'bug', title: '', message: '' });
             const [supportSubmitting, setSupportSubmitting] = useState(false);
-            const selectedSupportType = SUPPORT_REPORT_TYPES.find(type => type.id === supportDraft.type) || SUPPORT_REPORT_TYPES[0];
-            const submitSupportReport = async (e) => {
+            const prefs = advancedPrefs || {};
+            const updatePref = (key, value) => setAdvancedPrefs({ ...(advancedPrefs || {}), [key]: value });
+            const togglePref = (key) => updatePref(key, !prefs[key]);
+            const goTasks = typeof onGoTasks === 'function' ? onGoTasks : () => triggerAlert?.('請使用底部「任務」入口查看任務中心。');
+            const goGroup = typeof onGoClass === 'function' ? onGoClass : () => triggerAlert?.('請使用底部「群組」入口查看群組中心。');
+            const openSubjects = typeof onOpenSubjects === 'function' ? onOpenSubjects : () => triggerAlert?.('科目管理入口暫時未準備好。', 'error');
+            const openNotifications = typeof onOpenNotifications === 'function' ? onOpenNotifications : () => triggerAlert?.('通知中心暫時未準備好。');
+            const openAppearance = typeof onOpenAppearance === 'function' ? onOpenAppearance : () => triggerAlert?.('外觀設定已在本頁顯示。');
+            const submitSupport = async (e) => {
                 e.preventDefault();
                 const title = String(supportDraft.title || '').trim();
                 const message = String(supportDraft.message || '').trim();
@@ -3819,299 +3776,50 @@
                 if (!services.db || !services.addDoc || !services.資料區) { triggerAlert?.('回報服務未準備好，請稍後再試。', 'error'); return; }
                 try {
                     setSupportSubmitting(true);
-                    await services.addDoc(services.資料區(services.db, '回報'), {
-                        type: supportDraft.type,
-                        typeLabel: selectedSupportType.label,
-                        title,
-                        message,
-                        status: 'pending',
-                        priority: 'normal',
-                        userUid: user?.uid || '',
-                        userEmail: email || '',
-                        userName: displayName || '',
-                        source: 'my-page-support-center',
-                        appVersion: PUBLIC_APP_VERSION,
+                    await services.addDoc(services.資料區(services.db, 'reports'), {
+                        type: supportDraft.type || 'bug', title, message, status: 'pending', priority: 'normal',
+                        userUid: user?.uid || '', userEmail: email || '', userName: displayName || '',
+                        source: 'my-page-support-center', appVersion: PUBLIC_APP_VERSION,
                         userAgent: navigator.userAgent || '',
                         createdAt: services.serverTimestamp ? services.serverTimestamp() : new Date().toISOString(),
                         updatedAt: services.serverTimestamp ? services.serverTimestamp() : new Date().toISOString()
                     });
                     setSupportDraft({ type: 'bug', title: '', message: '' });
-                    setIsSupportModalOpen(false);
+                    setSupportOpen(false);
                     triggerAlert?.('已提交回報，多謝你幫手完善電子手冊 Pro。');
                 } catch (err) {
                     console.warn('Submit support report failed:', err);
-                    triggerAlert?.('提交失敗，請檢查網絡或 系統服務 權限設定。', 'error');
-                } finally {
-                    setSupportSubmitting(false);
-                }
+                    triggerAlert?.('提交失敗，可能係權限未開。你可以先截圖俾管理員處理。', 'error');
+                } finally { setSupportSubmitting(false); }
             };
-
-            const SettingSection = ({ title, desc, icon, children, right }) => (
-                <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
-                    <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
-                        <div className="flex items-start gap-3 min-w-0">
-                            <div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name={icon} className="w-5 h-5" /></div>
-                            <div className="min-w-0">
-                                <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white">{title}</h3>
-                                <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{desc}</p>
-                            </div>
-                        </div>
-                        {right}
-                    </div>
-                    <div className="p-5 sm:p-6">{children}</div>
-                </section>
-            );
-
+            const actionCards = [
+                { title: '個人資料', desc: email || '未設定 Email', icon: 'id-card', action: () => triggerAlert?.(`目前帳號：${displayName}${email ? ' · ' + email : ''}`) },
+                { title: '任務中心', desc: '查看個人任務與群組任務', icon: 'list-checks', action: goTasks },
+                { title: '群組入口', desc: '加入群組、建立群組、查看群組任務', icon: 'boxes', action: goGroup },
+                { title: '科目管理', desc: '自訂科目顏色與排序', icon: 'book-marked', action: openSubjects },
+                { title: '通知中心', desc: unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '查看提醒與更新', icon: 'bell', action: openNotifications },
+                { title: '幫助與回報', desc: '提交問題或功能建議', icon: 'life-buoy', action: () => setSupportOpen(true) }
+            ];
             return (
-                <div className="settings-page-stable max-w-3xl mx-auto pb-10 space-y-5 sm:space-y-6">
-                    <div className="relative overflow-hidden rounded-[2.25rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
-                        <div className="absolute -top-20 -right-16 w-56 h-56 rounded-full bg-cyan-300/20 blur-3xl"></div>
-                        <div className="absolute bottom-0 left-16 w-60 h-32 rounded-full bg-violet-300/20 blur-3xl"></div>
-                        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 items-end">
-                            <div className="flex items-start gap-4 min-w-0">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
-                                <div className="min-w-0 pt-1">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.11
-                                    </div>
-                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
-                                    <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
-                                </div>
+                <div className="max-w-3xl mx-auto pb-10 space-y-5 sm:space-y-6">
+                    <section className="relative overflow-hidden rounded-[2.25rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
+                        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                            <div className="flex items-center gap-4 min-w-0">
+                                <div className="w-16 h-16 rounded-[1.5rem] bg-white text-slate-950 flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
+                                <div className="min-w-0"><div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[11px] font-black mb-2"><Icon name="user-round-cog" className="w-3.5 h-3.5" /> 我的空間 · v1.10.12</div><h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2><p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p></div>
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">群組任務</div>
-                                    <div className="text-sm font-black mt-1">群組任務</div>
-                                </div>
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">通知</div>
-                                    <div className="text-sm font-black mt-1">{unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '全部已讀'}</div>
-                                </div>
-                            </div>
+                            <button type="button" onClick={onLogout} className="px-4 py-3 rounded-2xl bg-white/10 border border-white/20 font-black active:scale-[0.98] transition-all flex items-center justify-center gap-2"><Icon name="log-out" className="w-4 h-4" /> 登出</button>
                         </div>
-                    </div>
-
-                    <MyPageOverviewPanel displayName={displayName} email={email} unreadNotificationCount={unreadNotificationCount} onOpenNotifications={onOpenNotifications} onGoClass={onGoClass} onOpenSubjects={onOpenSubjects} onLogout={onLogout} onOpenAppearance={onOpenAppearance} onGoTasks={onGoTasks} onOpenSupport={() => setIsSupportModalOpen(true)} onShowProfile={() => triggerAlert(`目前帳號：${displayName || '成員'}${email ? ' · ' + email : ''}`)} />
-                    <SettingSection title="外觀與顯示" desc="調整主題、深色模式、介面密度、字體、動畫、卡片與首頁偏好。" icon="paintbrush-2" right={<span className="px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">外觀 已完成</span>}>
-                        <div className="space-y-5">
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4"><div className="text-[10px] font-black text-slate-400 uppercase">模式</div><div className="font-black text-sm text-slate-800 dark:text-white mt-1">{isDarkMode ? '深色' : '淺色'}</div></div>
-                                <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4"><div className="text-[10px] font-black text-slate-400 uppercase">密度</div><div className="font-black text-sm text-slate-800 dark:text-white mt-1">{densityOptions.find(x => x.value === selectedDensity)?.label || '標準'}</div></div>
-                                <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4"><div className="text-[10px] font-black text-slate-400 uppercase">卡片</div><div className="font-black text-sm text-slate-800 dark:text-white mt-1">{cardStyleOptions.find(x => x.value === selectedCardStyle)?.label || '玻璃感'}</div></div>
-                                <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4"><div className="text-[10px] font-black text-slate-400 uppercase">首頁</div><div className="font-black text-sm text-slate-800 dark:text-white mt-1">{homeDisplayOptions.find(x => x.value === selectedHomeDisplay)?.label || '平衡首頁'}</div></div>
-                            </div>
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">介面密度</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    {densityOptions.map(opt => (
-                                        <button key={opt.value} type="button" onClick={() => setAdvancedPrefValue('interfaceDensity', opt.value)} className={`p-4 rounded-[1.5rem] border text-left transition-all active:scale-95 ${selectedDensity === opt.value ? `${t.lightBg} ${t.border} ${t.text} shadow-md` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}>
-                                            <Icon name={opt.icon} className="w-5 h-5 mb-3" />
-                                            <div className="font-black text-sm">{opt.label}</div>
-                                            <div className="text-[11px] font-bold opacity-70 mt-1 leading-relaxed">{opt.desc}</div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">卡片樣式</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                                    {cardStyleOptions.map(opt => (
-                                        <button key={opt.value} type="button" onClick={() => setAdvancedPrefValue('cardStyle', opt.value)} className={`p-4 rounded-[1.5rem] border text-left transition-all active:scale-95 ${selectedCardStyle === opt.value ? `${t.lightBg} ${t.border} ${t.text} shadow-md` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}>
-                                            <Icon name={opt.icon} className="w-5 h-5 mb-3" />
-                                            <div className="font-black text-sm">{opt.label}</div>
-                                            <div className="text-[11px] font-bold opacity-70 mt-1 leading-relaxed">{opt.desc}</div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">首頁顯示偏好</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    {homeDisplayOptions.map(opt => (
-                                        <button key={opt.value} type="button" onClick={() => setAdvancedPrefValue('homeDisplayMode', opt.value)} className={`p-4 rounded-[1.5rem] border text-left transition-all active:scale-95 ${selectedHomeDisplay === opt.value ? `${t.lightBg} ${t.border} ${t.text} shadow-md` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}>
-                                            <Icon name={opt.icon} className="w-5 h-5 mb-3" />
-                                            <div className="font-black text-sm">{opt.label}</div>
-                                            <div className="text-[11px] font-bold opacity-70 mt-1 leading-relaxed">{opt.desc}</div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </SettingSection>
-                    <SettingSection title="外觀個人化" desc="調整主題色、深色模式同整體介面密度，令電子手冊更貼合你嘅使用習慣。" icon="palette" right={<button type="button" onClick={onOpenAppearance} className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-700">進階外觀</button>}>
-                        <div className="space-y-5">
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">主題顏色</div>
-                                <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
-                                    {themeEntries.map(([key, config]) => (
-                                        <button key={key} type="button" onClick={() => setThemeColor(key)} className={`rounded-[1.25rem] p-2 border transition-all active:scale-95 ${themeColor === key ? `${config.lightBg} ${config.border} shadow-md scale-[1.02]` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:scale-[1.02]'}`}>
-                                            <div className={`w-full h-10 rounded-xl bg-gradient-to-br ${config.gradient} mb-2`}></div>
-                                            <div className={`text-[11px] font-black ${themeColor === key ? config.text : 'text-slate-400'}`}>{config.name}</div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <button type="button" onClick={() => setIsDarkMode(false)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${!isDarkMode ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="sun" className="w-5 h-5" /><div><div className="font-black text-sm">淺色模式</div><div className="text-[11px] font-bold opacity-75">乾淨清爽</div></div></button>
-                                <button type="button" onClick={() => setIsDarkMode(true)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${isDarkMode ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="moon" className="w-5 h-5" /><div><div className="font-black text-sm">深色模式</div><div className="text-[11px] font-bold opacity-75">夜晚護眼</div></div></button>
-                            </div>
-                        </div>
-                    </SettingSection>
-
-                    <SettingSection title="主頁排版設計" desc="像真正 App 設定一樣，自行決定主頁要完整、極簡，還是逐項開關。" icon="layout-template">
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                {layoutOptions.map(opt => (
-                                    <button key={opt.value} type="button" onClick={() => setLayoutMode(opt.value)} className={`p-4 rounded-[1.5rem] border text-left transition-all active:scale-95 ${layoutMode === opt.value ? `${t.lightBg} ${t.border} ${t.text} shadow-md` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300 hover:border-slate-300'}`}>
-                                        <Icon name={opt.icon} className="w-5 h-5 mb-3" />
-                                        <div className="font-black text-sm">{opt.label}</div>
-                                        <div className="text-[11px] font-bold opacity-70 mt-1 leading-relaxed">{opt.desc}</div>
-                                    </button>
-                                ))}
-                            </div>
-                            <div className={`rounded-[1.75rem] border p-4 transition-all ${layoutMode === 'custom' ? 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50/60 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700 opacity-75'}`}>
-                                <div className="flex items-center justify-between gap-3 mb-3">
-                                    <div>
-                                        <div className="font-black text-sm text-slate-800 dark:text-white">自定義主頁區塊</div>
-                                        <div className="text-[11px] font-bold text-slate-400">選擇「自定義」後，以下開關會套用到主頁。</div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {customBlocks.map(block => (
-                                        <button key={block.key} type="button" onClick={() => { setLayoutMode('custom'); handleCustomToggle(block.key); }} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${customLayout[block.key] ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                                            <div className="flex items-start gap-3 min-w-0">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${customLayout[block.key] ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={block.icon} className="w-4 h-4" /></div>
-                                                <div><div className="font-black text-sm text-slate-800 dark:text-white">{block.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{block.desc}</div></div>
-                                            </div>
-                                            <div className={`w-12 h-7 rounded-full relative shrink-0 transition-all ${customLayout[block.key] ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow transition-all ${customLayout[block.key] ? 'left-[24px]' : 'left-[4px]'}`}></span></div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </SettingSection>
-
-                    <SettingSection title="高級體驗自定義" desc="微調動畫、文字、玻璃效果同快捷入口，令 iPad / 手機使用更貼近你習慣。" icon="sliders-horizontal">
-                        <div className="space-y-5">
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">體驗開關</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {advancedOptions.map(opt => {
-                                        const actualEnabled = opt.key === 'smartHints' ? advancedPrefs?.smartHints !== false : advancedPrefs?.[opt.key] === true;
-                                        return (
-                                            <button key={opt.key} type="button" onClick={() => handleAdvancedToggle(opt.key)} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${actualEnabled ? `${t.lightBg} ${t.border}` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}>
-                                                <div className="flex items-start gap-3 min-w-0">
-                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${actualEnabled ? `bg-gradient-to-br ${t.gradient} text-white` : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={opt.icon} className="w-4 h-4" /></div>
-                                                    <div><div className="font-black text-sm text-slate-800 dark:text-white">{opt.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{opt.desc}</div></div>
-                                                </div>
-                                                <div className={`w-11 h-6 rounded-full relative shrink-0 transition-all ${actualEnabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white shadow transition-all ${actualEnabled ? 'left-[21px]' : 'left-[3px]'}`}></span></div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-xs font-black text-slate-400 uppercase mb-3">快捷入口顯示</div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {quickActionOptions.map(opt => {
-                                        const enabled = advancedPrefs?.[opt.key] !== false;
-                                        return (
-                                            <button key={opt.key} type="button" onClick={() => handleAdvancedToggle(opt.key)} className={`rounded-2xl border p-4 text-left flex items-start justify-between gap-3 transition-all active:scale-[0.98] ${enabled ? 'bg-white dark:bg-slate-900 border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 opacity-75'}`}>
-                                                <div className="flex items-start gap-3 min-w-0">
-                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${enabled ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}><Icon name={opt.icon} className="w-4 h-4" /></div>
-                                                    <div><div className="font-black text-sm text-slate-800 dark:text-white">{opt.label}</div><div className="text-[11px] font-bold text-slate-400 mt-0.5 leading-relaxed">{opt.desc}</div></div>
-                                                </div>
-                                                <div className={`w-11 h-6 rounded-full relative shrink-0 transition-all ${enabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'}`}><span className={`absolute top-[3px] w-[18px] h-[18px] rounded-full bg-white shadow transition-all ${enabled ? 'left-[21px]' : 'left-[3px]'}`}></span></div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        </div>
-                    </SettingSection>
-
-                    <SettingSection title="幫助與回報" desc="公開 App 必備入口：回報 Bug、提出建議，並查看常見問題。" icon="message-circle-question" right={<span className="px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">幫助中心</span>}>
-                        <div className="space-y-5">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {SUPPORT_REPORT_TYPES.map(type => (
-                                    <button key={type.id} type="button" onClick={() => { setSupportDraft({ ...supportDraft, type: type.id }); setIsSupportModalOpen(true); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-left hover:-translate-y-0.5 active:scale-[0.98] transition-all">
-                                        <Icon name={type.icon} className="w-5 h-5 text-indigo-500 mb-2" />
-                                        <div className="font-black text-sm text-slate-800 dark:text-white">{type.label}</div>
-                                        <div className="text-[11px] font-bold text-slate-400 mt-1 leading-relaxed">{type.desc}</div>
-                                    </button>
-                                ))}
-                            </div>
-                            <div className="rounded-[1.75rem] bg-indigo-50/70 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 p-4">
-                                <div className="flex items-center gap-2 mb-3"><Icon name="help-circle" className="w-4 h-4 text-indigo-500" /><div className="text-xs font-black text-indigo-600 dark:text-indigo-300 uppercase">常見問題</div></div>
-                                <div className="space-y-2">
-                                    {SUPPORT_FAQ_ITEMS.map((faq, idx) => (
-                                        <details key={idx} className="group rounded-2xl bg-white/80 dark:bg-slate-900/60 border border-white/80 dark:border-slate-700 p-3">
-                                            <summary className="cursor-pointer list-none flex items-center justify-between gap-3 font-black text-sm text-slate-800 dark:text-white"><span>{faq.q}</span><Icon name="chevron-down" className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" /></summary>
-                                            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed mt-2">{faq.a}</p>
-                                        </details>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </SettingSection>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <SettingSection title="通知與提醒" desc="管理通知中心、未讀提醒同版本更新資訊。" icon="bell-ring" right={unreadNotificationCount > 0 ? <span className="px-2.5 py-1 rounded-full bg-red-500 text-white text-[10px] font-black">{unreadNotificationCount}</span> : null}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showNotificationShortcut !== false && <button type="button" onClick={onOpenNotifications} className="p-4 rounded-2xl bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="bell" className="w-5 h-5 text-orange-500 mb-2" /><div className="font-black text-sm text-orange-700 dark:text-orange-300">打開通知中心</div><div className="text-[11px] font-bold text-orange-600/70 dark:text-orange-200/70 mt-1">查看群組任務、更新、過期任務</div></button>}
-                                {advancedPrefs?.showClassShortcut !== false && <button type="button" onClick={onGoClass} className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school-2" className="w-5 h-5 text-emerald-500 mb-2" /><div className="font-black text-sm text-emerald-700 dark:text-emerald-300">查看群組任務</div><div className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-200/70 mt-1">查看發佈者發佈的任務</div></button>}
-                            </div>
-                        </SettingSection>
-                        <SettingSection title="科目與帳號" desc="管理科目顏色、帳戶操作及登出。" icon="user-cog">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showSubjectShortcut !== false && <button type="button" onClick={onOpenSubjects} className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school" className="w-5 h-5 text-indigo-500 mb-2" /><div className="font-black text-sm text-indigo-700 dark:text-indigo-300">科目管理</div><div className="text-[11px] font-bold text-indigo-600/70 dark:text-indigo-200/70 mt-1">自訂科目、排序、顏色</div></button>}
-                                {advancedPrefs?.showAccountShortcut !== false && <button type="button" onClick={onLogout} className="p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="log-out" className="w-5 h-5 text-red-500 mb-2" /><div className="font-black text-sm text-red-700 dark:text-red-300">登出帳號</div><div className="text-[11px] font-bold text-red-600/70 dark:text-red-200/70 mt-1">切換或重新登入</div></button>}
-                            </div>
-                        </SettingSection>
-                    </div>
-                    {isSupportModalOpen && (
-                        <div className="fixed inset-0 z-[260] flex items-end sm:items-center justify-center sm:p-4">
-                            <div className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm" onClick={() => setIsSupportModalOpen(false)}></div>
-                            <form onSubmit={submitSupportReport} className="relative z-10 w-full sm:max-w-lg rounded-t-[2rem] sm:rounded-[2rem] bg-white dark:bg-slate-900 border border-white/70 dark:border-slate-700 shadow-2xl p-5 sm:p-6 animate-pop-in">
-                                <div className="w-12 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 mx-auto mb-5 sm:hidden"></div>
-                                <div className="flex items-start justify-between gap-3 mb-5">
-                                    <div>
-                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-[11px] font-black mb-2"><Icon name="message-square-plus" className="w-3.5 h-3.5" /> 問題回報 幫助中心</div>
-                                        <h3 className="text-xl font-black text-slate-900 dark:text-white">提交回報</h3>
-                                        <p className="text-xs font-bold text-slate-400 mt-1">提交後管理員會在後台查看並處理。</p>
-                                    </div>
-                                    <button type="button" onClick={() => setIsSupportModalOpen(false)} className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500"><Icon name="x" className="w-4 h-4" /></button>
-                                </div>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="text-xs font-black text-slate-500 dark:text-slate-400">回報類型</label>
-                                        <div className="grid grid-cols-2 gap-2 mt-2">
-                                            {SUPPORT_REPORT_TYPES.map(type => (
-                                                <button key={type.id} type="button" onClick={() => setSupportDraft({ ...supportDraft, type: type.id })} className={`p-3 rounded-2xl border text-left transition-all active:scale-[0.98] ${supportDraft.type === type.id ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}>
-                                                    <Icon name={type.icon} className="w-4 h-4 mb-1" />
-                                                    <div className="text-[11px] font-black">{type.label}</div>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-xs font-black text-slate-500 dark:text-slate-400">標題</label>
-                                        <input value={supportDraft.title} onChange={e => setSupportDraft({ ...supportDraft, title: e.target.value })} className="mt-1.5 w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none focus:ring-4 focus:ring-indigo-500/10 font-bold dark:text-white" placeholder="例如：群組邀請碼加入失敗" maxLength={80} />
-                                    </div>
-                                    <div>
-                                        <label className="text-xs font-black text-slate-500 dark:text-slate-400">詳細內容</label>
-                                        <textarea value={supportDraft.message} onChange={e => setSupportDraft({ ...supportDraft, message: e.target.value })} className="mt-1.5 w-full min-h-[120px] px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none focus:ring-4 focus:ring-indigo-500/10 font-bold dark:text-white resize-none" placeholder="請講清楚你做咗咩、見到咩錯誤、用手機定 iPad。" maxLength={800}></textarea>
-                                    </div>
-                                    <button type="submit" disabled={supportSubmitting} className={`w-full py-3.5 rounded-2xl ${t.bg} text-white font-black shadow-lg active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2`}>{supportSubmitting ? <Icon name="loader" className="w-4 h-4 animate-spin" /> : <Icon name="send" className="w-4 h-4" />}{supportSubmitting ? '提交中...' : '提交回報'}</button>
-                                </div>
-                            </form>
-                        </div>
-                    )}
+                    </section>
+                    <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden"><div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start gap-3"><div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name="layout-grid" className="w-5 h-5" /></div><div><h3 className="text-lg font-black text-slate-800 dark:text-white">常用功能</h3><p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1">所有卡片都可以點擊；如果權限未開，系統會顯示提示，不會白屏。</p></div></div><div className="p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">{actionCards.map(card => (<button key={card.title} type="button" onClick={card.action} className="rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 text-left transition-all active:scale-[0.98] hover:-translate-y-0.5 hover:shadow-md"><div className="flex items-center gap-3 mb-2"><div className={`w-10 h-10 rounded-xl ${t.lightBg} ${t.text} flex items-center justify-center`}><Icon name={card.icon} className="w-4 h-4" /></div><div className="font-black text-slate-800 dark:text-white text-sm">{card.title}</div></div><p className="text-xs font-bold text-slate-400 leading-relaxed">{card.desc}</p></button>))}</div></section>
+                    <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden"><div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-3"><div className="flex items-start gap-3"><div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name="paintbrush-2" className="w-5 h-5" /></div><div><h3 className="text-lg font-black text-slate-800 dark:text-white">外觀與顯示</h3><p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1">調整主題、深色模式、字體與動畫。</p></div></div><button type="button" onClick={openAppearance} className={`px-3 py-2 rounded-2xl ${t.lightBg} ${t.text} font-black text-xs active:scale-[0.98]`}>詳細設定</button></div><div className="p-5 sm:p-6 space-y-5"><div className="grid grid-cols-2 sm:grid-cols-4 gap-3">{Object.entries(THEME_CONFIG).map(([key, config]) => (<button key={key} type="button" onClick={() => setThemeColor(key)} className={`rounded-2xl border p-3 text-left active:scale-[0.98] transition-all ${themeColor === key ? `${config.lightBg} ${config.border} ${config.text}` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><div className="font-black text-xs">{config.name}</div><div className="text-[10px] font-bold opacity-70 mt-1">主題色</div></button>))}</div><div className="grid grid-cols-1 sm:grid-cols-2 gap-3"><button type="button" onClick={() => setIsDarkMode(!isDarkMode)} className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 text-left active:scale-[0.98] transition-all"><Icon name={isDarkMode ? 'moon' : 'sun'} className="w-5 h-5 text-indigo-500 mb-2" /><div className="font-black text-sm text-slate-800 dark:text-white">{isDarkMode ? '深色模式' : '淺色模式'}</div><div className="text-xs font-bold text-slate-400 mt-1">點擊切換顯示模式</div></button><button type="button" onClick={() => togglePref('reduceMotion')} className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 text-left active:scale-[0.98] transition-all"><Icon name="wind" className="w-5 h-5 text-sky-500 mb-2" /><div className="font-black text-sm text-slate-800 dark:text-white">減少動畫：{prefs.reduceMotion ? '開' : '關'}</div><div className="text-xs font-bold text-slate-400 mt-1">降低動畫，提升穩定性</div></button><button type="button" onClick={() => togglePref('largeText')} className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 text-left active:scale-[0.98] transition-all"><Icon name="text" className="w-5 h-5 text-violet-500 mb-2" /><div className="font-black text-sm text-slate-800 dark:text-white">大字體：{prefs.largeText ? '開' : '關'}</div><div className="text-xs font-bold text-slate-400 mt-1">手機和 iPad 更易閱讀</div></button><button type="button" onClick={() => togglePref('cleanGlass')} className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 text-left active:scale-[0.98] transition-all"><Icon name="glass-water" className="w-5 h-5 text-emerald-500 mb-2" /><div className="font-black text-sm text-slate-800 dark:text-white">清晰卡片：{prefs.cleanGlass ? '開' : '關'}</div><div className="text-xs font-bold text-slate-400 mt-1">文字更清楚，減少模糊</div></button></div></div></section>
+                    <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden"><div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start gap-3"><div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name="help-circle" className="w-5 h-5" /></div><div><h3 className="text-lg font-black text-slate-800 dark:text-white">幫助中心</h3><p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1">常見問題與回報入口。</p></div></div><div className="p-5 sm:p-6 space-y-3">{SUPPORT_FAQ_ITEMS.map((faq, idx) => (<details key={idx} className="group rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4"><summary className="cursor-pointer list-none flex items-center justify-between gap-3 font-black text-sm text-slate-800 dark:text-white"><span>{faq.q}</span><Icon name="chevron-down" className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" /></summary><p className="text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed mt-2">{faq.a}</p></details>))}<button type="button" onClick={() => setSupportOpen(true)} className={`w-full py-3.5 rounded-2xl ${t.bg} text-white font-black shadow-lg active:scale-[0.98] flex items-center justify-center gap-2`}><Icon name="message-square-plus" className="w-4 h-4" /> 提交問題或建議</button></div></section>
+                    {supportOpen && (<div className="fixed inset-0 z-[260] flex items-end sm:items-center justify-center sm:p-4"><div className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm" onClick={() => setSupportOpen(false)}></div><form onSubmit={submitSupport} className="relative z-10 w-full sm:max-w-lg rounded-t-[2rem] sm:rounded-[2rem] bg-white dark:bg-slate-900 border border-white/70 dark:border-slate-700 shadow-2xl p-5 sm:p-6 animate-pop-in"><div className="flex items-start justify-between gap-3 mb-5"><div><div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${t.lightBg} ${t.text} text-[11px] font-black mb-2`}><Icon name="message-square-plus" className="w-3.5 h-3.5" /> 問題回報</div><h3 className="text-xl font-black text-slate-900 dark:text-white">提交回報</h3><p className="text-xs font-bold text-slate-400 mt-1">提交後管理員會在後台查看。</p></div><button type="button" onClick={() => setSupportOpen(false)} className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500"><Icon name="x" className="w-4 h-4" /></button></div><div className="space-y-4"><div><label className="text-xs font-black text-slate-500 dark:text-slate-400">回報類型</label><div className="grid grid-cols-2 gap-2 mt-2">{SUPPORT_REPORT_TYPES.map(type => (<button key={type.id} type="button" onClick={() => setSupportDraft({ ...supportDraft, type: type.id })} className={`p-3 rounded-2xl border text-left transition-all active:scale-[0.98] ${supportDraft.type === type.id ? `${t.lightBg} ${t.border} ${t.text}` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name={type.icon} className="w-4 h-4 mb-1" /><div className="text-[11px] font-black">{type.label}</div></button>))}</div></div><input value={supportDraft.title} onChange={e => setSupportDraft({ ...supportDraft, title: e.target.value })} className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none focus:ring-4 focus:ring-indigo-500/10 font-bold dark:text-white" placeholder="標題，例如：加入群組失敗" maxLength={80} /><textarea value={supportDraft.message} onChange={e => setSupportDraft({ ...supportDraft, message: e.target.value })} className="w-full min-h-[120px] px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none focus:ring-4 focus:ring-indigo-500/10 font-bold dark:text-white resize-none" placeholder="請講清楚你做咗咩、見到咩錯誤、用手機定 iPad。" maxLength={800}></textarea><button type="submit" disabled={supportSubmitting} className={`w-full py-3.5 rounded-2xl ${t.bg} text-white font-black shadow-lg active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2`}>{supportSubmitting ? <Icon name="loader" className="w-4 h-4 animate-spin" /> : <Icon name="send" className="w-4 h-4" />}{supportSubmitting ? '提交中...' : '提交回報'}</button></div></form></div>)}
                 </div>
             );
         }
 
-        
+
 function App() {
             const [user, setUser] = useState(null);
             const [authLoading, set帳號系統Loading] = useState(true);
@@ -4574,29 +4282,24 @@ function App() {
 
             const handleJoinClassSubmit = async (code, name, inviteMeta = {}) => {
                 const groupId = inviteMeta.groupId || code;
+                const inviteCode = inviteMeta.inviteCode || code;
+                const safeDisplayName = user?.displayName || userProfile?.displayName || user?.email || '成員';
                 try {
-                    const batch = writeBatch(db);
-                    batch.set(doc(db, "users_public", user.uid), { joinedClasses: arrayUnion(groupId), lastJoinedGroupAt: serverTimestamp() }, { merge: true });
-                    batch.set(doc(db, "users", user.uid, "memberships", groupId), {
-                        groupId,
-                        groupName: name,
-                        inviteCode: inviteMeta.inviteCode || code,
-                        role: 'member',
-                        status: 'active',
-                        joinedAt: serverTimestamp()
-                    }, { merge: true });
-                    batch.set(doc(db, "groups", groupId, "members", user.uid), {
-                        uid: user.uid,
-                        displayName: user.displayName || userProfile?.displayName || user.email || '成員',
-                        email: user.email || '',
-                        role: 'member',
-                        status: 'active',
-                        joinedAt: serverTimestamp()
-                    }, { merge: true });
-                    await batch.commit();
-                    triggerAlert(`成功加入群組：${name}`);
-                    setIsJoinClassOpen(false);
-                } catch(e) { console.warn('Join group write failed:', e); triggerAlert("加入失敗，請重試", "error"); }
+                    await setDoc(doc(db, "users_public", user.uid), { joinedClasses: arrayUnion(groupId), lastJoinedGroupAt: serverTimestamp() }, { merge: true });
+                } catch(coreError) {
+                    console.warn('Join group core write failed:', coreError);
+                    triggerAlert("加入失敗：資料庫權限未允許加入群組。請聯絡管理員檢查 users_public 權限。", "error");
+                    return;
+                }
+                const optionalWrites = [
+                    setDoc(doc(db, "users", user.uid, "memberships", groupId), { groupId, groupName: name, inviteCode, role: 'member', status: 'active', joinedAt: serverTimestamp() }, { merge: true }),
+                    setDoc(doc(db, "groups", groupId, "members", user.uid), { uid: user.uid, displayName: safeDisplayName, email: user.email || '', role: 'member', status: 'active', joinedAt: serverTimestamp() }, { merge: true })
+                ];
+                const results = await Promise.allSettled(optionalWrites);
+                const failedOptional = results.filter(r => r.status === 'rejected').length;
+                if (failedOptional) console.warn('Optional group membership writes failed:', results);
+                triggerAlert(failedOptional ? `已加入群組：${name}。部分群組資料因權限限制未完整同步。` : `成功加入群組：${name}`);
+                setIsJoinClassOpen(false);
             };
 
             const handleResetGroupInviteCode = async (group) => {
@@ -5965,7 +5668,7 @@ function App() {
         }
     </script>
 <!-- VERSION_CHECK: v1.9.0-public-app-15steps-foundation | based-on-uploaded-v1.8.24 | public-app-roadmap-added | original-functions-preserved | firestore-cost-guard-added -->
-    <!-- ehandbook-build: v1.10.11-permission-safe-stability -->
+    <!-- ehandbook-build: v1.10.12-stable-ui-permission-fix -->
 </body>
 </html>
 
