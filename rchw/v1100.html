@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.10.10 Full Interaction Stability：全站互動穩定修復版 -->
+    <!-- 電子手冊 Pro v1.10.11 Full Interaction Stability：全站互動穩定修復版 -->
     <!--
       PUBLIC_RELEASE: (用量保護) 已完成管理員後台穩定化：後台列表 limit 分頁、Dashboard 優先 adminStats/global、任務監控改為按需載入。
       CORE_RULES: 保留 Google/Email 登入、系統服務、資料、個人任務、時間表、群組、發佈者流程、管理員、更新彈窗。
@@ -25,8 +25,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.10.10-full-interaction-stability">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.10.10-full-interaction-stability"; console.log("電子手冊 Pro v1.10.10-full-interaction-stability loaded");</script>
+    <meta name="ehandbook-version" content="v1.10.11-permission-safe-stability">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.10.11-permission-safe-stability"; console.log("電子手冊 Pro v1.10.11-permission-safe-stability loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -149,7 +149,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.10 全站互動穩定保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.11 全站互動穩定保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
                 }
             } catch(e) {}
         });
@@ -227,7 +227,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.10.10-full-interaction-stability',
+                version: 'v1.10.11-permission-safe-stability',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -325,7 +325,7 @@
         const { useState, useEffect, useRef, useMemo } = React;
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
-        const PUBLIC_APP_VERSION = 'v1.10.10-full-interaction-stability';
+        const PUBLIC_APP_VERSION = 'v1.10.11-permission-safe-stability';
         const PUBLIC_APP_PROGRESS = { current: null, total: null, label: '電子手冊 Pro 已準備好' };
         const PUBLIC_APP_TERMS = {
             teacher: '發佈者',
@@ -545,7 +545,7 @@
         ];
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.10.10-full-interaction-stability',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.10.11-permission-safe-stability',
             title: '電子手冊 Pro 已更新',
             summary: [
                 '電子手冊 Pro 已整理成更完整的公開使用版本。',
@@ -1062,7 +1062,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.10.10</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.10.11</div>
                             </div> 
                         </div> 
                     </div> 
@@ -1818,7 +1818,7 @@
                         forceExpired: false,
                         isHidden: false
                     };
-                    const publicRef = await addDoc(資料區(db, '群組任務資料'), payload);
+                    const publicRef = await addDoc(資料區(db, 'public_assignments'), payload);
                     const batch = writeBatch(db);
                     batch.set(doc(db, 'groups', groupCode, 'tasks', publicRef.id), { ...payload, publicRefId: publicRef.id }, { merge: true });
                     batch.set(doc(db, 'groups', groupCode), {
@@ -1979,6 +1979,7 @@
             const [publicTasksHasMore, setPublicTasksHasMore] = useState(true);
             const [publicTasksLoading, setPublicTasksLoading] = useState(false);
             const [publicTasksLoadedOnce, setPublicTasksLoadedOnce] = useState(false);
+            const [publicTasksAccessDenied, setPublicTasksAccessDenied] = useState(false);
             const [adminStats, setAdminStats] = useState(null);
             const [adminStatsLoading, setAdminStatsLoading] = useState(false);
             const [recentReports, setRecentReports] = useState([]);
@@ -2057,12 +2058,13 @@
                 if (!db || !資料區 || !getDocs || publicTasksLoading) return;
                 setPublicTasksLoading(true);
                 try {
-                    const tasksRef = 資料區(db, "群組任務資料");
+                    const tasksRef = 資料區(db, "public_assignments");
                     const baseQuery = reset || !publicTasksLastDoc
                         ? query(tasksRef, orderBy("createdAt", "desc"), limit(ADMIN_PUBLIC_TASKS_PAGE_SIZE))
                         : query(tasksRef, orderBy("createdAt", "desc"), startAfter(publicTasksLastDoc), limit(ADMIN_PUBLIC_TASKS_PAGE_SIZE));
                     const snapshot = await getDocs(baseQuery);
                     const pageTasks = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                    setPublicTasksAccessDenied(false);
                     setPublicTasks(prev => {
                         if (reset) return pageTasks;
                         const existing = new Set(prev.map(t => t.id));
@@ -2073,7 +2075,15 @@
                     setPublicTasksLoadedOnce(true);
                 } catch (err) {
                     console.warn("Admin public tasks pagination err:", err);
-                    triggerAlert("載入群組任務失敗：" + err.message, "error");
+                    const isPermissionError = (err?.code || '').includes('permission') || String(err?.message || '').toLowerCase().includes('permission') || String(err?.message || '').includes('權限');
+                    setPublicTasksLoadedOnce(true);
+                    setPublicTasksHasMore(false);
+                    setPublicTasksAccessDenied(isPermissionError);
+                    if (isPermissionError) {
+                        triggerAlert("群組任務管理資料暫時未開放讀取，其他功能可以繼續使用。", "error");
+                    } else {
+                        triggerAlert("載入群組任務失敗：" + (err?.message || '請稍後再試'), "error");
+                    }
                 } finally {
                     setPublicTasksLoading(false);
                 }
@@ -2094,6 +2104,7 @@
                 setPublicTasksLastDoc(null);
                 setPublicTasksHasMore(true);
                 setPublicTasksLoadedOnce(false);
+                setPublicTasksAccessDenied(false);
                 fetchPublicTasksPage(true);
             }, [db, 資料區, getDocs]);
 
@@ -2330,7 +2341,7 @@
                 triggerConfirm(`⚠️ 警告：確定要刪除群組 ${classObj.name}？\n\n此操作將會：\n1. 刪除班級代碼\n2. 刪除該群組所有群組任務\n3. 將所有成員移出該群組`, async () => {
                     try {
                         const batch = writeBatch(db);
-                        const tasksQ = query(資料區(db, "群組任務資料"), where("targetClass", "==", classObj.code));
+                        const tasksQ = query(資料區(db, "public_assignments"), where("targetClass", "==", classObj.code));
                         const tasksSnap = await getDocs(tasksQ);
                         tasksSnap.forEach(d => batch.delete(d.ref));
 
@@ -2600,7 +2611,7 @@
                             batch = writeBatch(db);
                             pendingWrites = 0;
                         };
-                        batch.delete(doc(db, "群組任務資料", taskId));
+                        batch.delete(doc(db, "public_assignments", taskId));
                         pendingWrites++;
                         for (const u of targetUsers) {
                             const dupQ = query(資料區(db, "users", u.uid, "items"), where("publicRefId", "==", taskId));
@@ -3063,7 +3074,7 @@
                                                         </tr>
                                                     )
                                                 })}
-                                                {publicTasks.length === 0 && <tr><td colSpan="4" className="px-6 py-12 text-center text-slate-400">{publicTasksLoading && !publicTasksLoadedOnce ? '正在載入群組任務…' : '暫無群組任務'}</td></tr>}
+                                                {publicTasks.length === 0 && <tr><td colSpan="4" className="px-6 py-12 text-center text-slate-400">{publicTasksLoading && !publicTasksLoadedOnce ? '正在載入群組任務…' : (publicTasksAccessDenied ? '目前沒有權限讀取群組任務管理資料' : '暫無群組任務')}</td></tr>}
                                             </tbody>
                                         </table>
                                     </div>
@@ -3861,7 +3872,7 @@
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.10
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.11
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
@@ -4200,6 +4211,7 @@ function App() {
             const [syncingPublicIds, setSyncingPublicIds] = useState({});
             const [itemsLoaded, setItemsLoaded] = useState(false);
             const [publicTasksLoaded, setPublicTasksLoaded] = useState(false);
+            const [publicTasksError, setPublicTasksError] = useState('');
             const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
             const [showUpdateIntro, setShowUpdateIntro] = useState(false);
             const [readNotificationIds, setReadNotificationIds] = useState([]);
@@ -4465,10 +4477,11 @@ function App() {
             useEffect(() => {
                 if (!user || !db) return;
                 setPublicTasksLoaded(false);
-                const q = query(資料區(db, "群組任務資料"), orderBy("createdAt", "desc"), limit(ADMIN_LOW_COST_LIMITS.foregroundPublicTasksLimit));
+                const q = query(資料區(db, "public_assignments"), orderBy("createdAt", "desc"), limit(ADMIN_LOW_COST_LIMITS.foregroundPublicTasksLimit));
                 const unsubscribe = onSnapshot(q, (snapshot) => {
                     try {
                         const loadedPublicTasks = snapshot.docs.map(publicDoc => ({ id: publicDoc.id, ...publicDoc.data() }));
+                        setPublicTasksError('');
                         setPublicTasks(loadedPublicTasks); publicTasksRef.current = loadedPublicTasks; setPublicTasksLoaded(true);
 
                         const currentClasses = joinedClassesStr ? joinedClassesStr.split(',') : [];
@@ -4490,7 +4503,14 @@ function App() {
                     } catch (e) {
                         console.warn("Public tasks wrapper err:", e);
                     }
-                }, (err) => { console.warn("Public tasks err:", err); setPublicTasksLoaded(true); });
+                }, (err) => {
+                    console.warn("Public tasks err:", err);
+                    const isPermissionError = (err?.code || '').includes('permission') || String(err?.message || '').toLowerCase().includes('permission') || String(err?.message || '').includes('權限');
+                    setPublicTasks([]);
+                    publicTasksRef.current = [];
+                    setPublicTasksError(isPermissionError ? '群組任務暫時未能載入，請先確認已登入或稍後再試。' : '群組任務載入失敗，請稍後再試。');
+                    setPublicTasksLoaded(true);
+                });
                 return () => unsubscribe();
             }, [user, db, joinedClassesStr, pageLoadTime, limit]);
 
@@ -4501,32 +4521,6 @@ function App() {
             };
 
             const triggerConfirm = (message, onConfirmAction) => setNotification({ isOpen: true, type: 'confirm', message, onConfirm: onConfirmAction });
-
-            useEffect(() => {
-                const handleSoftAlert = (event) => {
-                    const detail = event?.detail || {};
-                    triggerAlert(detail.message || '操作已收到。', detail.type || 'info');
-                };
-                const handleRuntimeError = (event) => {
-                    if (!window.__EHANDBOOK_RENDERED__) return;
-                    console.error('Runtime interaction error:', event?.error || event?.message || event);
-                    triggerAlert('操作未完成，系統已保護畫面，請再試一次。', 'error');
-                };
-                const handlePromiseError = (event) => {
-                    if (!window.__EHANDBOOK_RENDERED__) return;
-                    console.error('Runtime async error:', event?.reason || event);
-                    triggerAlert('操作未完成，請檢查網絡或稍後再試。', 'error');
-                };
-                window.addEventListener('ehandbook:soft-alert', handleSoftAlert);
-                window.addEventListener('error', handleRuntimeError);
-                window.addEventListener('unhandledrejection', handlePromiseError);
-                return () => {
-                    window.removeEventListener('ehandbook:soft-alert', handleSoftAlert);
-                    window.removeEventListener('error', handleRuntimeError);
-                    window.removeEventListener('unhandledrejection', handlePromiseError);
-                };
-            }, [triggerAlert]);
-
             const closeNotification = () => setNotification(prev => ({ ...prev, isOpen: false }));
             const handleNotificationConfirm = () => { if (notification.onConfirm) notification.onConfirm(); closeNotification(); };
             
@@ -4721,7 +4715,7 @@ function App() {
                         forceExpired: false,
                         isHidden: false
                     };
-                    const publicRef = await addDoc(資料區(db, '群組任務資料'), payload);
+                    const publicRef = await addDoc(資料區(db, 'public_assignments'), payload);
                     const batch = writeBatch(db);
                     batch.set(doc(db, 'groups', groupCode, 'tasks', publicRef.id), { ...payload, publicRefId: publicRef.id }, { merge: true });
                     batch.set(doc(db, 'groups', groupCode), {
@@ -5077,7 +5071,7 @@ function App() {
                     if (pendingWrites >= 420) await commitBatch();
                 }
                 await commitBatch();
-                await updateDoc(doc(db, "群組任務資料", publicId), {
+                await updateDoc(doc(db, "public_assignments", publicId), {
                     deliveredAt: serverTimestamp(),
                     deliveredCount: delivered,
                     deliveryMode: 'auto_immediate'
@@ -5112,7 +5106,7 @@ function App() {
                             newItem.senderName = user.displayName || '老師';
                             newItem.targetClass = targetClassInput;
                             newItem.deliveryMode = 'auto_immediate';
-                            const publicRef = await addDoc(資料區(db, "群組任務資料"), newItem);
+                            const publicRef = await addDoc(資料區(db, "public_assignments"), newItem);
                             const deliveredCount = await deliverBroadcastTaskToTargets(publicRef.id, newItem);
                             const className = targetClassInput === '全校' ? '全校' : (systemClasses.find(c => c.code === targetClassInput)?.name || targetClassInput);
                             triggerAlert(`已發送群組任務給 ${className}，並已自動加入 ${deliveredCount} 位學生個人手冊！`); 
@@ -5160,7 +5154,7 @@ function App() {
             const deletePublicItem = (publicId, privateId) => { 
                 if (!user) return;
                 triggerConfirm('⚠️ 確定要撤回全班的這份功課？', async () => { 
-                    try { await deleteDoc(doc(db, "群組任務資料", publicId)); if (privateId) await deleteDoc(doc(db, "users", user.uid, "items", privateId)); triggerAlert("已撤回廣播紀錄"); } catch (e) { triggerAlert("撤回失敗", "error"); } 
+                    try { await deleteDoc(doc(db, "public_assignments", publicId)); if (privateId) await deleteDoc(doc(db, "users", user.uid, "items", privateId)); triggerAlert("已撤回廣播紀錄"); } catch (e) { triggerAlert("撤回失敗", "error"); } 
                 });
             };
             
@@ -5582,6 +5576,16 @@ function App() {
                                                 </div>
                                             </div>
 
+                                            {publicTasksError && (
+                                                <div className="rounded-3xl border border-amber-200 dark:border-amber-800 bg-amber-50/90 dark:bg-amber-900/20 p-4 flex items-start gap-3">
+                                                    <Icon name="alert-triangle" className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
+                                                    <div>
+                                                        <div className="font-black text-sm text-amber-800 dark:text-amber-100">群組任務暫時未能載入</div>
+                                                        <p className="text-xs font-bold text-amber-700/80 dark:text-amber-200/80 mt-1">{publicTasksError} 你仍然可以使用個人任務、時間表、加入群組和我的頁。</p>
+                                                    </div>
+                                                </div>
+                                            )}
+
                                             <div className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
                                                 <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                                                     <div>
@@ -5920,29 +5924,32 @@ function App() {
             );
         }
 
+
         class RuntimeErrorBoundary extends React.Component {
             constructor(props) {
                 super(props);
-                this.state = { hasError: false, errorMessage: '' };
+                this.state = { hasError: false, message: '' };
             }
             static getDerivedStateFromError(error) {
-                return { hasError: true, errorMessage: error?.message || '畫面暫時無法顯示' };
+                return { hasError: true, message: error?.message || '畫面載入失敗' };
             }
             componentDidCatch(error, info) {
-                console.error('React render error boundary:', error, info);
+                console.error('Runtime render error:', error, info);
             }
             render() {
-                if (!this.state.hasError) return this.props.children;
-                return (
-                    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white">
-                        <div className="max-w-sm w-full rounded-[2rem] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-xl p-6 text-center">
-                            <div className="w-16 h-16 rounded-3xl bg-red-50 dark:bg-red-900/20 text-red-500 flex items-center justify-center mx-auto mb-4"><Icon name="shield-alert" className="w-8 h-8" /></div>
-                            <h1 className="text-xl font-black mb-2">畫面暫時無法顯示</h1>
-                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400 leading-relaxed mb-5">系統已阻止白屏。請重新整理一次；如仍出現，請截圖 Console 錯誤。</p>
-                            <button type="button" onClick={() => window.location.reload()} className="w-full py-3 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-black active:scale-[0.98]">重新整理</button>
+                if (this.state.hasError) {
+                    return (
+                        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-6">
+                            <div className="max-w-sm w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-6 text-center">
+                                <div className="w-16 h-16 mx-auto rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">⚠️</div>
+                                <h1 className="text-xl font-black text-slate-900 dark:text-white mb-2">畫面暫時無法顯示</h1>
+                                <p className="text-sm font-bold text-slate-500 dark:text-slate-400 leading-relaxed mb-5">系統已保護主畫面，請重新整理一次；如果仍然出現，請回報問題。</p>
+                                <button type="button" onClick={() => window.location.reload()} className="w-full py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black">重新整理</button>
+                            </div>
                         </div>
-                    </div>
-                );
+                    );
+                }
+                return this.props.children;
             }
         }
 
@@ -5958,7 +5965,7 @@ function App() {
         }
     </script>
 <!-- VERSION_CHECK: v1.9.0-public-app-15steps-foundation | based-on-uploaded-v1.8.24 | public-app-roadmap-added | original-functions-preserved | firestore-cost-guard-added -->
-    <!-- ehandbook-build: v1.10.10-full-interaction-stability -->
+    <!-- ehandbook-build: v1.10.11-permission-safe-stability -->
 </body>
 </html>
 
