@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v1.10.9 Service Init Hotfix：服務初始化修復版 -->
+    <!-- 電子手冊 Pro v1.10.10 Full Interaction Stability：全站互動穩定修復版 -->
     <!--
       PUBLIC_RELEASE: (用量保護) 已完成管理員後台穩定化：後台列表 limit 分頁、Dashboard 優先 adminStats/global、任務監控改為按需載入。
       CORE_RULES: 保留 Google/Email 登入、系統服務、資料、個人任務、時間表、群組、發佈者流程、管理員、更新彈窗。
@@ -25,8 +25,8 @@
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v1.10.9-service-init-hotfix">
-    <script>window.__EHANDBOOK_VERSION__ = "v1.10.9-service-init-hotfix"; console.log("電子手冊 Pro v1.10.9-service-init-hotfix loaded");</script>
+    <meta name="ehandbook-version" content="v1.10.10-full-interaction-stability">
+    <script>window.__EHANDBOOK_VERSION__ = "v1.10.10-full-interaction-stability"; console.log("電子手冊 Pro v1.10.10-full-interaction-stability loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -149,7 +149,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.9 服務初始化修復保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.10.10 全站互動穩定保護；如果仍出現，請截圖 Console 錯誤。</p></div>";
                 }
             } catch(e) {}
         });
@@ -227,7 +227,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v1.10.9-service-init-hotfix',
+                version: 'v1.10.10-full-interaction-stability',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -325,7 +325,7 @@
         const { useState, useEffect, useRef, useMemo } = React;
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
-        const PUBLIC_APP_VERSION = 'v1.10.9-service-init-hotfix';
+        const PUBLIC_APP_VERSION = 'v1.10.10-full-interaction-stability';
         const PUBLIC_APP_PROGRESS = { current: null, total: null, label: '電子手冊 Pro 已準備好' };
         const PUBLIC_APP_TERMS = {
             teacher: '發佈者',
@@ -545,7 +545,7 @@
         ];
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v1.10.9-service-init-hotfix',
+            version: window.__EHANDBOOK_VERSION__ || 'v1.10.10-full-interaction-stability',
             title: '電子手冊 Pro 已更新',
             summary: [
                 '電子手冊 Pro 已整理成更完整的公開使用版本。',
@@ -1062,7 +1062,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.10.9</div>
+                                <div className="mt-8 text-center text-[10px] font-bold text-slate-300 dark:text-slate-700 select-none">v1.10.10</div>
                             </div> 
                         </div> 
                     </div> 
@@ -3525,12 +3525,12 @@
 
         function MyPageOverviewPanel({ displayName, email, unreadNotificationCount, onOpenNotifications, onGoClass, onOpenSubjects, onLogout, onOpenAppearance, onGoTasks, onOpenSupport, onShowProfile }) {
             const cards = [
-                { title: '個人資料', desc: displayName || '成員', meta: email || '未設定 Email', icon: 'id-card', tone: 'indigo' },
-                { title: '外觀設定', desc: '主題色、深色、版面密度', meta: '調整介面顯示', icon: 'palette', tone: 'violet' },
-                { title: '任務中心', desc: '個人任務、群組任務、狀態篩選', meta: '查看任務列表', icon: 'list-checks', tone: 'sky' },
-                { title: '群組入口', desc: '查看群組任務與發佈者入口', meta: '可加入或管理群組', icon: 'boxes', tone: 'emerald' },
-                { title: '幫助與回報', desc: '查看 FAQ 或提交回報', meta: '可提交問題或建議', icon: 'life-buoy', tone: 'amber' },
-                { title: '帳號安全', desc: '登出、切換帳號、版本資訊', meta: '登出與切換帳號', icon: 'shield-check', tone: 'rose' }
+                { title: '個人資料', desc: displayName || '成員', meta: email || '未設定 Email', icon: 'id-card', tone: 'indigo', action: onShowProfile },
+                { title: '外觀設定', desc: '主題色、深色、版面密度', meta: '調整介面顯示', icon: 'palette', tone: 'violet', action: onOpenAppearance },
+                { title: '任務中心', desc: '個人任務、群組任務、狀態篩選', meta: '查看任務列表', icon: 'list-checks', tone: 'sky', action: onGoTasks },
+                { title: '群組入口', desc: '查看群組任務與發佈者入口', meta: '可加入或管理群組', icon: 'boxes', tone: 'emerald', action: onGoClass },
+                { title: '幫助與回報', desc: '查看 FAQ 或提交回報', meta: '可提交問題或建議', icon: 'life-buoy', tone: 'amber', action: onOpenSupport },
+                { title: '帳號安全', desc: '登出、切換帳號、版本資訊', meta: '登出與切換帳號', icon: 'shield-check', tone: 'rose', action: onLogout }
             ];
             const toneClass = {
                 indigo: 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-300 border-indigo-100 dark:border-indigo-800',
@@ -3551,14 +3551,14 @@
                     </div>
                     <div className="p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {cards.map(card => (
-                            <div key={card.title} className={`rounded-2xl border p-4 ${toneClass[card.tone] || toneClass.indigo}`}>
+                            <button key={card.title} type="button" onClick={typeof card.action === 'function' ? card.action : undefined} className={`rounded-2xl border p-4 text-left transition-all active:scale-[0.98] hover:-translate-y-0.5 hover:shadow-md ${toneClass[card.tone] || toneClass.indigo}`}>
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="w-10 h-10 rounded-xl bg-white/80 dark:bg-slate-950/50 flex items-center justify-center shrink-0"><Icon name={card.icon} className="w-4 h-4" /></div>
                                     <div className="font-black text-sm">{card.title}</div>
                                 </div>
                                 <div className="text-xs font-black leading-relaxed opacity-90">{card.desc}</div>
-                                <div className="text-[10px] font-black mt-2 opacity-65">{card.meta}</div>
-                            </div>
+                                <div className="text-[10px] font-black mt-2 opacity-65 flex items-center justify-between gap-2"><span>{card.meta}</span><Icon name="chevron-right" className="w-3 h-3 opacity-70" /></div>
+                            </button>
                         ))}
                     </div>
                     <div className="px-5 sm:px-6 pb-5 sm:pb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -3673,8 +3673,8 @@
                     <h3 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white">{guide.title}</h3>
                     <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-2 max-w-sm mx-auto leading-relaxed">{guide.desc}</p>
                     <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-2">
-                        {guide.primary && <button type="button" onClick={onPrimary} className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-xs font-black shadow-sm active:scale-[0.98]">{guide.primary}</button>}
-                        {guide.secondary && <button type="button" onClick={onSecondary} className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 text-xs font-black active:scale-[0.98]">{guide.secondary}</button>}
+                        {guide.primary && <button type="button" onClick={typeof onPrimary === 'function' ? onPrimary : () => window.dispatchEvent(new CustomEvent('ehandbook:soft-alert', { detail: { message: '此功能入口仍在準備中，請先使用下方導航。', type: 'info' } }))} className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-xs font-black shadow-sm active:scale-[0.98]">{guide.primary}</button>}
+                        {guide.secondary && <button type="button" onClick={typeof onSecondary === 'function' ? onSecondary : () => window.dispatchEvent(new CustomEvent('ehandbook:soft-alert', { detail: { message: '此功能入口仍在準備中，請先使用下方導航。', type: 'info' } }))} className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 text-xs font-black active:scale-[0.98]">{guide.secondary}</button>}
                     </div>
                     <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">
                         <Icon name="shield-check" className="w-3 h-3" />幫助與回報
@@ -3861,7 +3861,7 @@
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.9
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 我的空間 · v1.10.10
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
@@ -4501,6 +4501,32 @@ function App() {
             };
 
             const triggerConfirm = (message, onConfirmAction) => setNotification({ isOpen: true, type: 'confirm', message, onConfirm: onConfirmAction });
+
+            useEffect(() => {
+                const handleSoftAlert = (event) => {
+                    const detail = event?.detail || {};
+                    triggerAlert(detail.message || '操作已收到。', detail.type || 'info');
+                };
+                const handleRuntimeError = (event) => {
+                    if (!window.__EHANDBOOK_RENDERED__) return;
+                    console.error('Runtime interaction error:', event?.error || event?.message || event);
+                    triggerAlert('操作未完成，系統已保護畫面，請再試一次。', 'error');
+                };
+                const handlePromiseError = (event) => {
+                    if (!window.__EHANDBOOK_RENDERED__) return;
+                    console.error('Runtime async error:', event?.reason || event);
+                    triggerAlert('操作未完成，請檢查網絡或稍後再試。', 'error');
+                };
+                window.addEventListener('ehandbook:soft-alert', handleSoftAlert);
+                window.addEventListener('error', handleRuntimeError);
+                window.addEventListener('unhandledrejection', handlePromiseError);
+                return () => {
+                    window.removeEventListener('ehandbook:soft-alert', handleSoftAlert);
+                    window.removeEventListener('error', handleRuntimeError);
+                    window.removeEventListener('unhandledrejection', handlePromiseError);
+                };
+            }, [triggerAlert]);
+
             const closeNotification = () => setNotification(prev => ({ ...prev, isOpen: false }));
             const handleNotificationConfirm = () => { if (notification.onConfirm) notification.onConfirm(); closeNotification(); };
             
@@ -5571,7 +5597,13 @@ function App() {
                                                 </div>
                                                 <div className="p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                                                     {GROUP_HUB_ACTIONS.map(action => (
-                                                        <button key={action.id} type="button" onClick={() => action.id === 'join' ? setIsJoinClassOpen(true) : action.id === 'publisher' ? setIsCreatePublisherGroupOpen(true) : null} className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 text-left active:scale-[0.98] transition-all hover:-translate-y-0.5">
+                                                        <button key={action.id} type="button" onClick={() => {
+                                                            if (action.id === 'join') return setIsJoinClassOpen(true);
+                                                            if (action.id === 'publisher') return setIsCreatePublisherGroupOpen(true);
+                                                            if (action.id === 'joined') return triggerAlert(joinedClasses.length ? `你目前已加入 ${joinedClasses.length} 個群組。` : '你目前未加入任何群組，可以先輸入邀請碼加入。');
+                                                            if (action.id === 'members') return triggerAlert('成員管理會在你建立的發佈者群組卡片內顯示。');
+                                                            return triggerAlert('此入口已準備好，請使用下方導航查看相關功能。');
+                                                        }} className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 text-left active:scale-[0.98] transition-all hover:-translate-y-0.5">
                                                             <Icon name={action.icon} className={`w-5 h-5 mb-2 ${t.text}`} />
                                                             <div className="text-sm font-black text-slate-800 dark:text-white">{action.label}</div>
                                                             <div className="text-[11px] font-bold text-slate-400 mt-1 leading-relaxed">{action.desc}</div>
@@ -5691,7 +5723,7 @@ function App() {
 
                                             <div className="space-y-4">
                                                 {selectedClassTasks.length === 0 ? (
-                                                    <EmptyStateGuide guideKey="groups" compact={true} onPrimary={() => setIsJoinClassModalOpen(true)} onSecondary={() => setIsCreateGroupModalOpen(true)} />
+                                                    <EmptyStateGuide guideKey="groups" compact={true} onPrimary={() => setIsJoinClassOpen(true)} onSecondary={() => setIsCreatePublisherGroupOpen(true)} />
                                                 ) : selectedClassTasks.map((task, idx) => {
                                                     const subjectStyle = subjects.find(s => s.name === task.subject)?.color || 'bg-slate-100 text-slate-600 border-slate-200';
                                                     const isDelivered = syncedPublicIds.has(task.id);
@@ -5888,9 +5920,35 @@ function App() {
             );
         }
 
+        class RuntimeErrorBoundary extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { hasError: false, errorMessage: '' };
+            }
+            static getDerivedStateFromError(error) {
+                return { hasError: true, errorMessage: error?.message || '畫面暫時無法顯示' };
+            }
+            componentDidCatch(error, info) {
+                console.error('React render error boundary:', error, info);
+            }
+            render() {
+                if (!this.state.hasError) return this.props.children;
+                return (
+                    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white">
+                        <div className="max-w-sm w-full rounded-[2rem] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-xl p-6 text-center">
+                            <div className="w-16 h-16 rounded-3xl bg-red-50 dark:bg-red-900/20 text-red-500 flex items-center justify-center mx-auto mb-4"><Icon name="shield-alert" className="w-8 h-8" /></div>
+                            <h1 className="text-xl font-black mb-2">畫面暫時無法顯示</h1>
+                            <p className="text-sm font-bold text-slate-500 dark:text-slate-400 leading-relaxed mb-5">系統已阻止白屏。請重新整理一次；如仍出現，請截圖 Console 錯誤。</p>
+                            <button type="button" onClick={() => window.location.reload()} className="w-full py-3 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-black active:scale-[0.98]">重新整理</button>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
         try {
             const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(<App />);
+            root.render(<RuntimeErrorBoundary><App /></RuntimeErrorBoundary>);
         } catch (e) {
             console.error('Root render failed:', e);
             const loadingScreen = document.getElementById('loading-screen');
@@ -5900,7 +5958,7 @@ function App() {
         }
     </script>
 <!-- VERSION_CHECK: v1.9.0-public-app-15steps-foundation | based-on-uploaded-v1.8.24 | public-app-roadmap-added | original-functions-preserved | firestore-cost-guard-added -->
-    <!-- ehandbook-build: v1.10.9-service-init-hotfix -->
+    <!-- ehandbook-build: v1.10.10-full-interaction-stability -->
 </body>
 </html>
 
