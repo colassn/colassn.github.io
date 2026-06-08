@@ -3,187 +3,89 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#07111f" />
-  <meta name="application-name" content="家庭通知控制中心" />
+  <meta name="theme-color" content="#06111f" />
+  <meta name="application-name" content="家庭通知控制中心｜接收端" />
   <meta name="apple-mobile-web-app-title" content="家庭通知控制中心" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta property="og:title" content="家庭通知控制中心" />
-  <meta property="og:description" content="手機發送，iPad 全螢幕接收的家庭通知控制中心。" />
-  <title>家庭通知控制中心</title>
+  <meta property="og:title" content="家庭通知控制中心｜接收端" />
+  <meta property="og:description" content="iPad 全螢幕家庭通知接收端。" />
+  <title>家庭通知控制中心｜接收端</title>
   <style>
     :root {
-      --bg-0: #020712;
-      --bg-1: #07111f;
-      --bg-2: #0a1730;
-      --glass: rgba(255, 255, 255, 0.105);
-      --glass-strong: rgba(255, 255, 255, 0.16);
-      --glass-soft: rgba(255, 255, 255, 0.075);
-      --border: rgba(255, 255, 255, 0.18);
-      --border-strong: rgba(255, 255, 255, 0.28);
-      --text-main: rgba(246, 250, 255, 0.96);
-      --text-sub: rgba(218, 231, 255, 0.73);
-      --text-muted: rgba(218, 231, 255, 0.52);
+      --bg-0: #020713;
+      --bg-1: #071324;
+      --bg-2: #0d1a36;
+      --glass: rgba(255,255,255,.105);
+      --glass-strong: rgba(255,255,255,.16);
+      --glass-soft: rgba(255,255,255,.07);
+      --border: rgba(255,255,255,.18);
+      --border-strong: rgba(255,255,255,.30);
+      --text: rgba(247,251,255,.96);
+      --sub: rgba(219,232,255,.74);
+      --muted: rgba(219,232,255,.50);
       --cyan: #68e8ff;
-      --blue: #6f9dff;
-      --purple: #a68cff;
+      --blue: #78a6ff;
+      --purple: #a98cff;
       --green: #72f0ad;
       --amber: #ffd166;
       --red: #ff6b8b;
-      --shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
-      --shadow-soft: 0 16px 45px rgba(0, 0, 0, 0.26);
-      --radius-xl: 34px;
+      --shadow: 0 32px 90px rgba(0,0,0,.46);
+      --radius-xl: 36px;
       --radius-lg: 26px;
       --radius-md: 20px;
-      --fast: 180ms cubic-bezier(.2,.8,.2,1);
       --smooth: 520ms cubic-bezier(.2,.8,.2,1);
       --slow: 1200ms cubic-bezier(.2,.8,.2,1);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang HK", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
     }
-
     * { box-sizing: border-box; }
-    html, body { min-height: 100%; margin: 0; background: var(--bg-0); color: var(--text-main); }
+    html, body { margin: 0; min-height: 100%; background: var(--bg-0); color: var(--text); }
     body {
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow: hidden;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
       touch-action: manipulation;
     }
-
-    body::before,
-    body::after {
+    body::before, body::after {
       content: "";
       position: fixed;
-      inset: -22%;
-      z-index: -3;
       pointer-events: none;
+      z-index: -3;
+    }
+    body::before {
+      inset: -24%;
       background:
-        radial-gradient(circle at 22% 18%, rgba(104, 232, 255, 0.20), transparent 30%),
-        radial-gradient(circle at 80% 8%, rgba(166, 140, 255, 0.18), transparent 32%),
-        radial-gradient(circle at 58% 80%, rgba(74, 105, 255, 0.17), transparent 38%),
-        linear-gradient(145deg, #020712 0%, #07111f 46%, #0d1731 100%);
-      animation: luminaDrift 38s ease-in-out infinite alternate;
+        radial-gradient(circle at 18% 20%, rgba(104,232,255,.22), transparent 30%),
+        radial-gradient(circle at 82% 8%, rgba(169,140,255,.20), transparent 32%),
+        radial-gradient(circle at 62% 84%, rgba(80,110,255,.18), transparent 38%),
+        linear-gradient(145deg, #020713 0%, #071324 48%, #101a34 100%);
+      animation: drift 42s ease-in-out infinite alternate;
     }
     body::after {
-      z-index: -2;
       inset: 0;
-      opacity: 0.32;
+      z-index: -2;
+      opacity: .31;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,.4) 0 1px, transparent 1.5px),
-        radial-gradient(circle, rgba(104,232,255,.30) 0 1px, transparent 1.5px);
-      background-size: 88px 88px, 142px 142px;
-      background-position: 0 0, 36px 48px;
-      animation: starSlide 110s linear infinite;
+        radial-gradient(circle, rgba(255,255,255,.42) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(104,232,255,.32) 0 1px, transparent 1.6px);
+      background-size: 90px 90px, 146px 146px;
+      background-position: 0 0, 38px 46px;
+      animation: stars 120s linear infinite;
     }
-
-    @keyframes luminaDrift {
-      from { transform: translate3d(-1%, -1%, 0) scale(1); filter: hue-rotate(0deg); }
-      to { transform: translate3d(1.6%, 1.2%, 0) scale(1.04); filter: hue-rotate(7deg); }
-    }
-    @keyframes starSlide { from { transform: translateY(0); } to { transform: translateY(-90px); } }
-    @keyframes breathe { 0%,100% { opacity: .78; transform: scale(1); } 50% { opacity: 1; transform: scale(1.018); } }
-    @keyframes capsuleIn { from { opacity: 0; transform: translate3d(-50%, -18px, 0) scale(.84); } to { opacity: 1; transform: translate3d(-50%, 0, 0) scale(1); } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pulseRing { from { box-shadow: 0 0 0 0 rgba(104,232,255,.30); } to { box-shadow: 0 0 0 16px rgba(104,232,255,0); } }
-    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(120%); } }
-
-    a { color: inherit; }
-    button, input, textarea, select { font: inherit; }
-    button { -webkit-tap-highlight-color: transparent; }
-
-    .app-shell {
-      width: min(1220px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: max(18px, env(safe-area-inset-top)) 0 max(20px, env(safe-area-inset-bottom));
-    }
-
-    .topbar {
-      position: sticky;
-      top: 10px;
-      z-index: 40;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 16px;
-      margin-bottom: 18px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(4, 13, 30, 0.58);
-      backdrop-filter: blur(26px) saturate(150%);
-      -webkit-backdrop-filter: blur(26px) saturate(150%);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-    .orb {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 35% 28%, #fff, rgba(104,232,255,.85) 17%, rgba(111,157,255,.35) 45%, rgba(166,140,255,.12) 70%, transparent 100%);
-      box-shadow: 0 0 22px rgba(104, 232, 255, .4), inset 0 0 12px rgba(255,255,255,.35);
-      animation: breathe 5.5s ease-in-out infinite;
-      flex: none;
-    }
-    .brand h1 {
-      margin: 0;
-      font-size: clamp(18px, 2vw, 25px);
-      letter-spacing: -0.04em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .brand p { margin: 2px 0 0; color: var(--text-muted); font-size: 12px; }
-
-    .segmented {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.08);
-      flex: none;
-    }
-    .segmented button {
-      border: 0;
-      border-radius: 999px;
-      color: var(--text-sub);
-      background: transparent;
-      padding: 9px 13px;
-      cursor: pointer;
-      transition: all var(--fast);
-      white-space: nowrap;
-    }
-    .segmented button.active {
-      color: var(--text-main);
-      background: rgba(255,255,255,.13);
-      box-shadow: inset 0 1px rgba(255,255,255,.16), 0 8px 20px rgba(0,0,0,.18);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.22fr .78fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-    .stack { display: grid; gap: 18px; }
+    body.legacy::before, body.legacy::after { animation: none !important; opacity: .25; }
+    @keyframes drift { from { transform: translate3d(-1.5%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.04); } }
+    @keyframes stars { from { background-position: 0 0, 38px 46px; } to { background-position: 900px 700px, 1100px 900px; } }
+    .shell { width: min(1320px, calc(100vw - 38px)); height: calc(100vh - 38px); margin: 19px auto; display: grid; grid-template-columns: 1.38fr .82fr; gap: 18px; }
     .panel {
       position: relative;
       overflow: hidden;
       border-radius: var(--radius-xl);
       border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.125), rgba(255,255,255,.058));
-      backdrop-filter: blur(34px) saturate(160%);
-      -webkit-backdrop-filter: blur(34px) saturate(160%);
+      background: linear-gradient(145deg, rgba(255,255,255,.15), rgba(255,255,255,.055));
       box-shadow: var(--shadow);
+      backdrop-filter: blur(34px) saturate(150%);
+      -webkit-backdrop-filter: blur(34px) saturate(150%);
     }
     .panel::before {
       content: "";
@@ -191,486 +93,163 @@
       inset: 0;
       pointer-events: none;
       border-radius: inherit;
-      background: linear-gradient(135deg, rgba(255,255,255,.18), transparent 34%, rgba(104,232,255,.055) 72%, rgba(255,255,255,.06));
-      opacity: .85;
+      background: linear-gradient(135deg, rgba(255,255,255,.26), transparent 28%, transparent 76%, rgba(104,232,255,.10));
+      opacity: .8;
     }
-    .panel-inner { position: relative; z-index: 1; padding: clamp(18px, 2.4vw, 30px); }
-
-    .mission-card { min-height: 500px; display: flex; flex-direction: column; justify-content: space-between; }
-    .eyebrow { color: var(--cyan); font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-    .mission-title {
-      margin: 16px 0 8px;
-      font-size: clamp(42px, 7vw, 84px);
-      line-height: .95;
-      letter-spacing: -0.075em;
-      text-shadow: 0 0 28px rgba(104,232,255,.13);
-    }
-    .mission-subtitle { margin: 0; color: var(--text-sub); font-size: clamp(17px, 2.2vw, 25px); line-height: 1.42; max-width: 720px; }
-
-    .status-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 13px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.15);
-      background: rgba(255,255,255,.08);
-      color: var(--text-sub);
-      font-size: 13px;
-    }
-    .dot {
-      width: 9px; height: 9px; border-radius: 50%; background: var(--text-muted);
-      box-shadow: 0 0 0 4px rgba(255,255,255,.04);
-      flex: none;
-    }
-    .dot.online { background: var(--green); box-shadow: 0 0 14px rgba(114,240,173,.65), 0 0 0 4px rgba(114,240,173,.1); }
-    .dot.warn { background: var(--amber); box-shadow: 0 0 14px rgba(255,209,102,.6), 0 0 0 4px rgba(255,209,102,.1); }
-    .dot.danger { background: var(--red); box-shadow: 0 0 14px rgba(255,107,139,.6), 0 0 0 4px rgba(255,107,139,.1); }
-
-    .progress-area { margin-top: 34px; }
-    .progress-meta { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-    .eta { font-size: clamp(28px, 4vw, 52px); letter-spacing: -0.06em; font-weight: 800; }
-    .eta span { font-size: .42em; color: var(--text-muted); letter-spacing: 0; margin-left: 5px; }
-    .progress-track {
-      position: relative;
-      height: 16px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(255,255,255,.085);
-      border: 1px solid rgba(255,255,255,.10);
-    }
-    .progress-fill {
-      position: absolute; inset: 0 auto 0 0; width: 0%; border-radius: inherit;
-      background: linear-gradient(90deg, rgba(104,232,255,.92), rgba(111,157,255,.96), rgba(166,140,255,.9));
-      box-shadow: 0 0 24px rgba(104,232,255,.34);
-      transition: width var(--slow);
-      overflow: hidden;
-    }
-    .progress-fill::after {
-      content: ""; position: absolute; inset: 0; width: 42%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
-      transform: translateX(-100%); animation: shimmer 3.6s ease-in-out infinite;
-    }
-    .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 14px; }
-    .step { color: var(--text-muted); font-size: 12px; text-align: center; transition: color var(--smooth), transform var(--smooth); }
-    .step.active { color: var(--text-main); transform: translateY(-2px); }
-
-    .card-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
-    .card-title h2 { margin: 0; font-size: 18px; letter-spacing: -0.04em; }
-    .card-title small { color: var(--text-muted); }
-
-    .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .metric {
-      padding: 16px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.065);
-      min-height: 96px;
-    }
-    .metric .label { color: var(--text-muted); font-size: 12px; }
-    .metric .value { margin-top: 7px; font-size: 25px; font-weight: 780; letter-spacing: -0.04em; }
-    .metric .desc { margin-top: 4px; color: var(--text-muted); font-size: 12px; line-height: 1.35; }
-
-    .event-list { display: grid; gap: 10px; max-height: 304px; overflow: auto; padding-right: 3px; }
-    .event-item {
-      display: grid;
-      grid-template-columns: 58px 1fr;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
-      animation: slideUp var(--smooth);
-    }
-    .event-time { color: var(--cyan); font-size: 12px; font-weight: 700; }
-    .event-text { color: var(--text-sub); line-height: 1.35; font-size: 14px; }
-
-    .control-panel { display: none; }
-    .control-panel.active { display: block; animation: slideUp var(--smooth); }
-    .section-heading { margin: 0 0 14px; font-size: 25px; letter-spacing: -0.055em; }
-    .section-note { margin: 0 0 18px; color: var(--text-sub); line-height: 1.55; }
-    .button-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .btn {
-      position: relative;
-      border: 1px solid rgba(255,255,255,.16);
-      color: var(--text-main);
-      border-radius: 22px;
-      background: rgba(255,255,255,.075);
-      padding: 15px 16px;
-      min-height: 72px;
-      cursor: pointer;
-      text-align: left;
-      transition: transform var(--fast), background var(--fast), border-color var(--fast), box-shadow var(--fast);
-      overflow: hidden;
-    }
-    .btn:hover, .btn:focus-visible { transform: translateY(-2px); background: rgba(255,255,255,.12); border-color: rgba(104,232,255,.32); box-shadow: 0 14px 28px rgba(0,0,0,.20); outline: none; }
-    .btn:active { transform: translateY(0) scale(.985); }
-    .btn strong { display: block; font-size: 16px; letter-spacing: -0.025em; }
-    .btn span { display: block; margin-top: 6px; color: var(--text-muted); font-size: 12px; line-height: 1.38; }
-    .btn.primary { background: linear-gradient(135deg, rgba(104,232,255,.18), rgba(166,140,255,.13)); border-color: rgba(104,232,255,.28); }
-    .btn.danger { background: linear-gradient(135deg, rgba(255,107,139,.17), rgba(255,209,102,.08)); border-color: rgba(255,107,139,.24); }
-    .btn.compact { min-height: auto; text-align: center; padding: 11px 13px; border-radius: 16px; }
-
-    .form-grid { display: grid; gap: 12px; }
-    .field { display: grid; gap: 7px; }
-    .field label { color: var(--text-muted); font-size: 12px; padding-left: 3px; }
-    .input, .textarea, .select {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,.15);
-      color: var(--text-main);
-      background: rgba(255,255,255,.075);
-      border-radius: 18px;
-      padding: 13px 14px;
-      outline: none;
-      transition: border-color var(--fast), box-shadow var(--fast), background var(--fast);
-    }
-    .textarea { min-height: 92px; resize: vertical; }
-    .input:focus, .textarea:focus, .select:focus { border-color: rgba(104,232,255,.42); box-shadow: 0 0 0 4px rgba(104,232,255,.08); background: rgba(255,255,255,.10); }
-    .select option { color: #0b1020; }
-
+    .inner { position: relative; z-index: 1; height: 100%; padding: 30px; }
+    .mission .inner { display: flex; flex-direction: column; justify-content: space-between; }
+    .eyebrow { letter-spacing: .22em; text-transform: uppercase; font-size: 12px; color: var(--cyan); font-weight: 800; margin-bottom: 18px; }
+    h1, h2, p { margin: 0; }
+    .title { font-size: clamp(54px, 7vw, 96px); line-height: .98; letter-spacing: -.06em; font-weight: 850; text-shadow: 0 0 38px rgba(104,232,255,.14); transition: transform var(--smooth), opacity var(--smooth); }
+    .subtitle { max-width: 820px; margin-top: 24px; color: var(--sub); font-size: clamp(20px, 2.35vw, 32px); line-height: 1.45; }
+    .status-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+    .pill { display:inline-flex; align-items:center; gap:8px; min-height:34px; border:1px solid var(--border); background: rgba(255,255,255,.075); border-radius:999px; padding: 8px 13px; color: var(--sub); font-size:13px; backdrop-filter: blur(16px); }
+    .dot { width:9px; height:9px; border-radius:999px; background: var(--amber); box-shadow:0 0 18px rgba(255,209,102,.5); }
+    .dot.online { background: var(--green); box-shadow:0 0 18px rgba(114,240,173,.55); }
+    .dot.danger { background: var(--red); box-shadow:0 0 18px rgba(255,107,139,.55); }
+    .progress-area { margin-top: 42px; }
+    .progress-meta { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom: 18px; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .eta { margin-top: 8px; font-size: clamp(36px, 5vw, 70px); font-weight: 820; letter-spacing: -.06em; }
+    .eta span { margin-left: 12px; font-size: 14px; letter-spacing:.18em; color: var(--muted); vertical-align: middle; }
+    .progress-track { height: 17px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.11); }
+    .progress-fill { width:0%; height:100%; border-radius:inherit; background: linear-gradient(90deg, var(--cyan), var(--blue), var(--purple)); box-shadow: 0 0 38px rgba(104,232,255,.42); transition: width 800ms cubic-bezier(.2,.8,.2,1); }
+    .steps { display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; margin-top:12px; }
+    .step { color: var(--muted); font-size:13px; border-top:1px solid rgba(255,255,255,.12); padding-top:9px; }
+    .step.active { color: var(--text); border-color: var(--cyan); }
+    .side { display:grid; grid-template-rows: auto auto 1fr; gap:18px; min-height:0; }
+    .card-title { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:18px; }
+    .card-title h2 { font-size: 20px; letter-spacing:-.03em; }
+    .card-title small { color: var(--muted); }
+    .metric-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .metric { min-height: 116px; padding: 16px; border-radius: var(--radius-md); border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); }
+    .label { color: var(--muted); font-size: 12px; letter-spacing:.08em; text-transform: uppercase; margin-bottom: 10px; }
+    .value { font-size: 30px; font-weight: 800; letter-spacing: -.05em; }
+    .desc { margin-top:8px; color: var(--sub); font-size: 14px; line-height: 1.42; }
+    .event-list { display:grid; gap:10px; max-height: 100%; overflow:auto; padding-right: 4px; }
+    .event-item { display:grid; grid-template-columns: 58px 1fr; gap:10px; align-items:start; border-radius:18px; border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.055); padding:12px; }
+    .event-time { color: var(--cyan); font-weight:750; font-size: 12px; }
+    .event-text { color: var(--sub); line-height:1.35; font-size:14px; }
     .capsule {
-      position: fixed;
-      top: max(14px, env(safe-area-inset-top));
-      left: 50%;
-      z-index: 80;
-      width: min(560px, calc(100% - 26px));
-      min-height: 62px;
-      display: none;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(5, 14, 31, .72);
-      backdrop-filter: blur(32px) saturate(170%);
-      -webkit-backdrop-filter: blur(32px) saturate(170%);
-      box-shadow: 0 20px 60px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.12);
-      transform: translateX(-50%);
+      position: fixed; top: calc(20px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%) translateY(-130%);
+      z-index: 40; width: min(720px, calc(100vw - 34px)); display:flex; align-items:center; gap:14px;
+      border-radius:999px; border:1px solid var(--border-strong); padding: 14px 18px;
+      background: rgba(5,12,25,.64); box-shadow: 0 24px 70px rgba(0,0,0,.44), 0 0 44px rgba(104,232,255,.18);
+      backdrop-filter: blur(30px) saturate(160%); -webkit-backdrop-filter: blur(30px) saturate(160%);
+      transition: transform var(--smooth), opacity var(--smooth); opacity:0;
     }
-    .capsule.show { display: flex; animation: capsuleIn var(--smooth); }
-    .wave {
-      width: 38px; height: 38px; border-radius: 50%;
-      display: grid; place-items: center;
-      background: rgba(104,232,255,.13);
-      color: var(--cyan);
-      box-shadow: 0 0 18px rgba(104,232,255,.26);
-      flex: none;
-      animation: pulseRing 1.4s ease-out infinite;
-    }
-    .capsule-content { min-width: 0; }
-    .capsule-title { font-weight: 780; letter-spacing: -0.025em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-    .capsule-message { color: var(--text-sub); font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-top: 2px; }
-
-    .audio-gate {
-      position: fixed;
-      inset: 0;
-      z-index: 70;
-      display: none;
-      place-items: center;
-      padding: 22px;
-      background: rgba(1, 5, 14, .58);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-    }
-    .audio-gate.show { display: grid; }
-    .audio-card { width: min(520px, 100%); text-align: center; }
-    .audio-card h2 { margin: 12px 0 8px; font-size: clamp(28px, 5vw, 48px); letter-spacing: -0.07em; }
-    .audio-card p { color: var(--text-sub); line-height: 1.55; }
-
-    .toast {
-      position: fixed;
-      right: 18px;
-      bottom: max(18px, env(safe-area-inset-bottom));
-      z-index: 90;
-      display: grid;
-      gap: 10px;
-      width: min(420px, calc(100% - 36px));
-      pointer-events: none;
-    }
-    .toast-item {
-      padding: 13px 15px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(5,14,31,.72);
-      color: var(--text-sub);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      box-shadow: var(--shadow-soft);
-      animation: slideUp var(--smooth);
-    }
-
-    .receiver-only, .sender-only, .admin-only { display: none; }
-    body.mode-receiver .receiver-only { display: block; }
-    body.mode-sender .sender-only { display: block; }
-    body.mode-admin .admin-only { display: block; }
-    body.mode-receiver .topbar .segmented { display: none; }
-    body.mode-receiver .app-shell { width: min(1320px, calc(100% - 36px)); }
-    body.mode-receiver .mission-card { min-height: calc(100vh - 170px); }
-
-    .inline-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-    .divider { height: 1px; background: rgba(255,255,255,.10); margin: 18px 0; }
-    .muted { color: var(--text-muted); }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-    .hidden { display: none !important; }
-
-    .legacy-mode body::before,
-    body.legacy::before { animation: none; }
-    body.legacy::after { display: none; }
-    body.legacy .panel, body.legacy .topbar, body.legacy .capsule { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-    body.legacy * { animation-duration: 1ms !important; transition-duration: 80ms !important; }
-
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-      .topbar { align-items: stretch; border-radius: 28px; flex-direction: column; }
-      .segmented { width: 100%; justify-content: space-between; overflow-x: auto; }
-      .segmented button { flex: 1; }
-      .button-grid, .metric-grid { grid-template-columns: 1fr; }
-      .steps { grid-template-columns: repeat(3, 1fr); }
-      body.mode-receiver .topbar { display: none; }
-      body.mode-receiver .mission-card { min-height: 100vh; border-radius: 0; }
-      body.mode-receiver .app-shell { width: 100%; padding: 0; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 80ms !important; }
-    }
+    .capsule.show { transform: translateX(-50%) translateY(0); opacity:1; }
+    .wave { width:38px; height:38px; border-radius:50%; display:grid; place-items:center; color:var(--cyan); background:rgba(104,232,255,.11); box-shadow:0 0 28px rgba(104,232,255,.22); animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{ transform:scale(1); opacity:.75;} 50%{ transform:scale(1.08); opacity:1;} }
+    .capsule-title { font-weight: 850; letter-spacing:-.02em; }
+    .capsule-message { color: var(--sub); font-size: 13px; margin-top:2px; }
+    .audio-gate { position: fixed; inset:0; z-index:50; display:none; place-items:center; padding:20px; background:rgba(0,0,0,.38); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+    .audio-gate.show { display:grid; }
+    .audio-card { width:min(560px, calc(100vw - 30px)); }
+    .audio-card .inner { text-align:center; padding:34px; }
+    .audio-card h2 { font-size:32px; letter-spacing:-.05em; margin-top: 14px; }
+    .audio-card p { margin-top:12px; color:var(--sub); line-height:1.5; }
+    .orb { width:64px; height:64px; margin:auto; border-radius:22px; background: radial-gradient(circle at 34% 28%, #fff, var(--cyan) 28%, var(--blue) 64%, var(--purple)); box-shadow: 0 0 38px rgba(104,232,255,.36); }
+    .actions { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-top:20px; }
+    .btn { appearance:none; border:1px solid rgba(255,255,255,.18); border-radius:18px; background:rgba(255,255,255,.09); color:var(--text); padding:13px 16px; font-weight:800; cursor:pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,.12); }
+    .btn.primary { background: linear-gradient(135deg, rgba(104,232,255,.26), rgba(120,166,255,.18)); border-color: rgba(104,232,255,.34); }
+    .toast { position: fixed; right: 18px; bottom: 18px; z-index: 60; display:grid; gap:10px; width:min(360px, calc(100vw - 36px)); }
+    .toast-item { border-radius:20px; border:1px solid rgba(255,255,255,.16); background:rgba(8,16,31,.74); padding:14px 16px; color:var(--sub); backdrop-filter: blur(20px); box-shadow: 0 16px 40px rgba(0,0,0,.30); }
+    .corner-settings { position:fixed; right:14px; top:14px; z-index:30; display:flex; gap:8px; opacity:.28; transition: opacity var(--smooth); }
+    .corner-settings:hover { opacity:1; }
+    .mini { font-size:12px; padding:8px 10px; border-radius:999px; }
+    .hidden { display:none !important; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    @media (max-width: 920px) { body { overflow:auto; } .shell { height:auto; min-height:calc(100vh - 30px); grid-template-columns:1fr; margin:15px auto; } .side { grid-template-rows:auto; } }
+    @media (max-width: 640px) { .shell { width:100%; margin:0; height:auto; } .panel { border-radius:0; } .metric-grid { grid-template-columns:1fr; } .title { font-size:46px; } }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: 1ms !important; transition-duration: 80ms !important; } }
   </style>
 </head>
 <body>
   <div id="capsule" class="capsule" role="status" aria-live="polite">
     <div class="wave">◌</div>
-    <div class="capsule-content">
+    <div>
       <div id="capsuleTitle" class="capsule-title">家庭通知控制中心</div>
-      <div id="capsuleMessage" class="capsule-message">等待新通知</div>
+      <div id="capsuleMessage" class="capsule-message">接收端待命中</div>
     </div>
   </div>
 
   <div id="audioGate" class="audio-gate">
     <div class="panel audio-card">
-      <div class="panel-inner">
-        <div class="orb" style="margin: 0 auto; width: 68px; height: 68px;"></div>
+      <div class="inner">
+        <div class="orb"></div>
         <h2>啟動家庭音響</h2>
-        <p>舊版 iPad / Safari 通常需要先點擊一次，之後先可以由手機端觸發提示音同語音廣播。</p>
-        <div class="inline-actions" style="justify-content:center; margin-top: 18px;">
-          <button id="enableAudioBtn" class="btn primary compact"><strong>啟動 Lumina 音響系統</strong></button>
-          <button id="skipAudioBtn" class="btn compact"><strong>先靜音顯示</strong></button>
+        <p>舊版 iPad / Safari 通常要先點擊一次，之後手機端先可以觸發提示音同語音廣播。</p>
+        <div class="actions">
+          <button id="enableAudioBtn" class="btn primary">啟動音響系統</button>
+          <button id="skipAudioBtn" class="btn">先靜音顯示</button>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="corner-settings">
+    <button id="fullscreenBtn" class="btn mini">全螢幕</button>
+    <button id="legacyBtn" class="btn mini">穩定模式</button>
+  </div>
+
   <div class="toast" id="toast"></div>
 
-  <main class="app-shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="orb"></div>
+  <main class="shell">
+    <section class="panel mission">
+      <div class="inner">
         <div>
-          <h1>家庭通知控制中心</h1>
-          <p id="subtitle">手機發送 · iPad 接收 · Firebase 即時同步</p>
+          <div class="eyebrow" id="missionEyebrow">HOME STANDBY</div>
+          <h1 class="title" id="missionTitle">家庭待命中</h1>
+          <p class="subtitle" id="missionSubtitle">接收端已準備好，等待手機端發送通知、狀態、語音或日程提醒。</p>
+          <div class="status-row">
+            <span class="pill"><span id="connectionDot" class="dot"></span><span id="connectionText">連線檢查中</span></span>
+            <span class="pill"><span id="audioDot" class="dot"></span><span id="audioText">音響未啟動</span></span>
+            <span class="pill">最後更新：<span id="lastUpdate">--:--</span></span>
+          </div>
+        </div>
+        <div class="progress-area">
+          <div class="progress-meta">
+            <div>
+              <div class="muted">回家任務進度</div>
+              <div class="eta" id="etaText">待命<span>ETA</span></div>
+            </div>
+            <div class="pill" id="priorityPill">NORMAL</div>
+          </div>
+          <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+          <div class="steps" id="steps"></div>
         </div>
       </div>
-      <nav class="segmented" aria-label="模式切換">
-        <button data-mode="receiver">接收端</button>
-        <button data-mode="sender">發送端</button>
-        <button data-mode="admin">設定</button>
-      </nav>
-    </header>
-
-    <section id="receiverView" class="control-panel">
-      <div class="grid">
-        <article class="panel mission-card">
-          <div class="panel-inner" style="display:flex; flex-direction:column; min-height:inherit; justify-content:space-between;">
-            <div>
-              <div class="eyebrow" id="missionEyebrow">MISSION STATUS</div>
-              <h2 class="mission-title" id="missionTitle">家庭待命中</h2>
-              <p class="mission-subtitle" id="missionSubtitle">接收端已準備好，等待手機端發送通知、狀態、語音或日程提醒。</p>
-              <div class="status-row">
-                <span class="pill"><span id="connectionDot" class="dot warn"></span><span id="connectionText">連線檢查中</span></span>
-                <span class="pill"><span id="audioDot" class="dot warn"></span><span id="audioText">音響未啟動</span></span>
-                <span class="pill">最後更新：<span id="lastUpdate">--:--</span></span>
-              </div>
-            </div>
-            <div class="progress-area">
-              <div class="progress-meta">
-                <div>
-                  <div class="muted">回家任務進度</div>
-                  <div class="eta" id="etaText">待命<span>ETA</span></div>
-                </div>
-                <div class="pill" id="priorityPill">NORMAL</div>
-              </div>
-              <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
-              <div class="steps" id="steps"></div>
-            </div>
-          </div>
-        </article>
-
-        <aside class="stack">
-          <article class="panel">
-            <div class="panel-inner">
-              <div class="card-title"><h2>環境與日程</h2><small id="weatherUpdated">未同步</small></div>
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="label">香港天氣</div>
-                  <div class="value" id="weatherTemp">--°C</div>
-                  <div class="desc" id="weatherDesc">等待天氣資料</div>
-                </div>
-                <div class="metric">
-                  <div class="label">下一件事</div>
-                  <div class="value" id="scheduleTime">--:--</div>
-                  <div class="desc" id="scheduleTitle">未有日程</div>
-                </div>
-                <div class="metric">
-                  <div class="label">接收端</div>
-                  <div class="value" id="deviceName">iPad</div>
-                  <div class="desc" id="deviceStatus">正在建立心跳</div>
-                </div>
-                <div class="metric">
-                  <div class="label">模式</div>
-                  <div class="value" id="displayMode">Awaiting</div>
-                  <div class="desc">可由手機端即時切換</div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="panel">
-            <div class="panel-inner">
-              <div class="card-title"><h2>今日事件流</h2><small>最近 8 條</small></div>
-              <div id="eventList" class="event-list">
-                <div class="event-item"><div class="event-time">--:--</div><div class="event-text">等待家庭通知控制中心啟動。</div></div>
-              </div>
-            </div>
-          </article>
-        </aside>
-      </div>
     </section>
 
-    <section id="senderView" class="control-panel">
-      <div class="grid">
-        <article class="panel">
-          <div class="panel-inner">
-            <h2 class="section-heading">發送者控制台</h2>
-            <p class="section-note">手機端撳一下，就會透過 Firebase 將狀態、通知、提示音同語音推送到屋企 iPad。呢度已經包含回家進度、廣播、日程、天氣同步同測試音響。</p>
-            <div class="card-title"><h2>快速狀態</h2><small>Mission Control</small></div>
-            <div class="button-grid" id="statusButtons"></div>
-            <div class="divider"></div>
-            <div class="card-title"><h2>快速音響 / 場景</h2><small>One-tap broadcast</small></div>
-            <div class="button-grid">
-              <button class="btn primary" data-sound="arrival"><strong>到樓下提示音</strong><span>播放到達 chime + 動態膠囊</span></button>
-              <button class="btn" data-sound="soft"><strong>溫柔提示</strong><span>適合普通提醒或屋企人通知</span></button>
-              <button class="btn" data-sound="ping"><strong>短提示音</strong><span>輕量 ping，不打擾</span></button>
-              <button class="btn danger" data-sound="alert"><strong>重要警報</strong><span>高優先級提示，慎用</span></button>
-            </div>
+    <aside class="side">
+      <section class="panel">
+        <div class="inner">
+          <div class="card-title"><h2>環境與日程</h2><small id="weatherUpdated">未同步</small></div>
+          <div class="metric-grid">
+            <div class="metric"><div class="label">香港天氣</div><div class="value" id="weatherTemp">--°C</div><div class="desc" id="weatherDesc">等待天氣資料</div></div>
+            <div class="metric"><div class="label">下一件事</div><div class="value" id="scheduleTime">--:--</div><div class="desc" id="scheduleTitle">未有日程</div></div>
+            <div class="metric"><div class="label">接收端</div><div class="value" id="deviceName">iPad</div><div class="desc" id="deviceStatus">正在建立心跳</div></div>
+            <div class="metric"><div class="label">模式</div><div class="value" id="displayMode">Awaiting</div><div class="desc">可由手機端即時切換</div></div>
           </div>
-        </article>
-
-        <aside class="stack">
-          <article class="panel">
-            <div class="panel-inner">
-              <div class="card-title"><h2>自訂廣播</h2><small>TTS / Capsule</small></div>
-              <div class="form-grid">
-                <div class="field"><label>通知標題</label><input id="customTitle" class="input" value="家庭通知" /></div>
-                <div class="field"><label>廣播內容</label><textarea id="customMessage" class="textarea" placeholder="例如：我差唔多返到屋企啦，可以準備開飯。"></textarea></div>
-                <div class="field"><label>提示音</label><select id="customSound" class="select"><option value="soft">溫柔提示</option><option value="arrival">到達提示</option><option value="ping">短提示</option><option value="alert">重要警報</option><option value="none">不播放聲音</option></select></div>
-                <button id="sendCustomBtn" class="btn primary"><strong>發送自訂通知</strong><span>接收端顯示玻璃膠囊，並播放 TTS 或提示音</span></button>
-              </div>
-            </div>
-          </article>
-
-          <article class="panel">
-            <div class="panel-inner">
-              <div class="card-title"><h2>日程推送</h2><small>Manual / Google Calendar Beta</small></div>
-              <div class="form-grid">
-                <div class="field"><label>時間</label><input id="manualScheduleTime" class="input" type="time" /></div>
-                <div class="field"><label>日程標題</label><input id="manualScheduleTitle" class="input" placeholder="例如：20:30 健身 / 22:00 溫習" /></div>
-                <button id="sendScheduleBtn" class="btn"><strong>手動推送下一件事</strong><span>第一版最穩，唔需要 Google API</span></button>
-                <div class="divider"></div>
-                <button id="googleSignInBtn" class="btn primary"><strong>Google 登入並授權日曆</strong><span>需要 Firebase Auth 啟用 Google Provider + Calendar scope</span></button>
-                <button id="syncCalendarBtn" class="btn"><strong>同步下一個 Google 日曆事件</strong><span>讀手機端 OAuth token，整理後推送到 iPad</span></button>
-                <button id="googleSignOutBtn" class="btn compact"><strong>登出 Google</strong></button>
-                <p class="muted" id="authState">未登入 Google</p>
-              </div>
-            </div>
-          </article>
-        </aside>
-      </div>
-    </section>
-
-    <section id="adminView" class="control-panel">
-      <div class="grid">
-        <article class="panel">
-          <div class="panel-inner">
-            <h2 class="section-heading">系統設定與測試</h2>
-            <p class="section-note">呢度係為舊 iPad 長時間展示準備的設定。Firebase App / Analytics 已使用你提供的 v12.14.0 CDN module config；Realtime Database URL 如不正確，可在下方改。</p>
-            <div class="form-grid">
-              <div class="field"><label>Realtime Database URL</label><input id="databaseUrlInput" class="input mono" placeholder="https://homecontrol-ee898-default-rtdb.firebaseio.com" /></div>
-              <div class="field"><label>接收端名稱</label><input id="receiverNameInput" class="input" placeholder="客廳 iPad" /></div>
-              <div class="field"><label>本地操作者名稱</label><input id="operatorNameInput" class="input" placeholder="James" /></div>
-              <div class="inline-actions">
-                <button id="saveSettingsBtn" class="btn primary compact"><strong>儲存設定並重載</strong></button>
-                <button id="clearEventsBtn" class="btn compact"><strong>清空事件流</strong></button>
-                <button id="refreshWeatherBtn" class="btn compact"><strong>同步香港天氣</strong></button>
-              </div>
-              <div class="divider"></div>
-              <div class="inline-actions">
-                <button id="toggleLegacyBtn" class="btn compact"><strong>切換穩定效能模式</strong></button>
-                <button id="testReceiverBtn" class="btn compact"><strong>測試接收端通知</strong></button>
-                <button id="goFullscreenBtn" class="btn compact"><strong>嘗試全螢幕</strong></button>
-              </div>
-            </div>
+        </div>
+      </section>
+      <section class="panel" style="min-height:0;">
+        <div class="inner" style="min-height:0; display:flex; flex-direction:column;">
+          <div class="card-title"><h2>今日事件流</h2><small>最近 8 條</small></div>
+          <div id="eventList" class="event-list">
+            <div class="event-item"><div class="event-time">--:--</div><div class="event-text">等待家庭通知控制中心啟動。</div></div>
           </div>
-        </article>
-        <aside class="stack">
-          <article class="panel">
-            <div class="panel-inner">
-              <div class="card-title"><h2>部署提示</h2><small>重要</small></div>
-              <p class="section-note">若接收端無法讀寫資料，通常係 Firebase Realtime Database 未建立、URL 地區唔同，或者 Rules 未允許已登入用戶讀寫。</p>
-              <div class="metric">
-                <div class="label">建議資料路徑</div>
-                <div class="desc mono" style="margin-top:8px; word-break:break-word;">/homeNotificationCenter/global/status/current<br>/homeNotificationCenter/global/broadcast/current<br>/homeNotificationCenter/global/events</div>
-              </div>
-            </div>
-          </article>
-          <article class="panel">
-            <div class="panel-inner">
-              <div class="card-title"><h2>Debug 狀態</h2><small>Local</small></div>
-              <div id="debugBox" class="event-list"></div>
-            </div>
-          </article>
-        </aside>
-      </div>
-    </section>
+        </div>
+      </section>
+    </aside>
   </main>
 
   <script type="module">
-    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
     import { getAnalytics, isSupported as analyticsIsSupported, logEvent } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
-    import {
-      getDatabase,
-      ref,
-      set,
-      update,
-      push,
-      onValue,
-      onDisconnect,
-      serverTimestamp,
-      remove
-    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
-    import {
-      getAuth,
-      GoogleAuthProvider,
-      signInWithPopup,
-      signInWithRedirect,
-      getRedirectResult,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getDatabase, ref, update, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
 
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
       apiKey: "AIzaSyDl6x9gIn0TTyKWHVf_tPbhm3OjpOxJgzQ",
       authDomain: "homecontrol-ee898.firebaseapp.com",
@@ -681,117 +260,36 @@
       measurementId: "G-PMKY0NSJ6P"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     let analytics = null;
-    analyticsIsSupported().then((supported) => {
-      if (supported) analytics = getAnalytics(app);
-    }).catch(() => {});
+    analyticsIsSupported().then(ok => { if (ok) analytics = getAnalytics(app); }).catch(() => {});
 
     const DEFAULT_DB_URL = "https://homecontrol-ee898-default-rtdb.firebaseio.com";
+    const urlDb = new URLSearchParams(location.search).get("db");
+    if (urlDb) localStorage.setItem("hcc_database_url", urlDb);
     const databaseURL = localStorage.getItem("hcc_database_url") || DEFAULT_DB_URL;
     const db = getDatabase(app, databaseURL);
-    const auth = getAuth(app);
-    const calendarProvider = new GoogleAuthProvider();
-    calendarProvider.addScope("https://www.googleapis.com/auth/calendar.readonly");
-    calendarProvider.addScope("email");
-    calendarProvider.addScope("profile");
-
     const BASE = "homeNotificationCenter/global";
-    const DEVICE_ID = localStorage.getItem("hcc_device_id") || `device_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-    localStorage.setItem("hcc_device_id", DEVICE_ID);
+    const DEVICE_ID = localStorage.getItem("hcc_receiver_id") || `receiver_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    localStorage.setItem("hcc_receiver_id", DEVICE_ID);
 
-    const state = {
-      mode: new URLSearchParams(location.search).get("mode") || localStorage.getItem("hcc_mode") || "receiver",
-      audioReady: false,
-      audioCtx: null,
-      lastBroadcastId: localStorage.getItem("hcc_last_broadcast_id") || "",
-      lastGoogleAccessToken: "",
-      user: null,
-      connected: false
-    };
-
-    const statusPresets = {
-      idle: { title: "家庭待命中", subtitle: "接收端已準備好，等待手機端發送通知。", eyebrow: "HOME STANDBY", progress: 0, eta: "待命", priority: "NORMAL", sound: "soft", speak: "家庭通知控制中心已待命。" },
-      preparing: { title: "準備收工", subtitle: "James 準備離開，回家任務即將開始。", eyebrow: "MISSION START", progress: 18, eta: "準備中", priority: "NORMAL", sound: "ping", speak: "James 準備收工，回家任務即將開始。" },
-      leaving: { title: "已經出發", subtitle: "正在離開目前位置，請留意下一步交通狀態。", eyebrow: "DEPARTURE", progress: 34, eta: "約 45 分鐘", priority: "NORMAL", sound: "soft", speak: "James 已經出發。" },
-      transit: { title: "搭緊車", subtitle: "正在回家途中，抵達時間會持續更新。", eyebrow: "IN TRANSIT", progress: 58, eta: "約 25 分鐘", priority: "NORMAL", sound: "soft", speak: "James 正在回家途中。" },
-      nearby: { title: "到樓下啦", subtitle: "James 已經到樓下，可以準備開門或留意門口。", eyebrow: "ARRIVAL NEARBY", progress: 88, eta: "2 分鐘", priority: "HIGH", sound: "arrival", speak: "James 到樓下啦。" },
-      arrived: { title: "已到屋企", subtitle: "Welcome home. 今日辛苦晒。", eyebrow: "MISSION COMPLETE", progress: 100, eta: "完成", priority: "DONE", sound: "arrival", speak: "James 已經到屋企。" },
-      delayed: { title: "會遲少少", subtitle: "行程有延誤，請唔使擔心，會稍後再更新。", eyebrow: "DELAY NOTICE", progress: 44, eta: "延誤", priority: "NOTICE", sound: "soft", speak: "James 會遲少少返到。" },
-      quiet: { title: "靜音模式", subtitle: "接收端保持低亮度與低干擾，只顯示重要通知。", eyebrow: "QUIET MODE", progress: 0, eta: "靜音", priority: "QUIET", sound: "none", speak: "" },
-      emergency: { title: "重要通知", subtitle: "請即時留意家庭通知控制中心。", eyebrow: "URGENT ALERT", progress: 100, eta: "即時", priority: "URGENT", sound: "alert", speak: "重要通知，請即時留意。" }
-    };
-
-    const stepLabels = ["準備", "出發", "途中", "附近", "到家"];
-
-    const $ = (id) => document.getElementById(id);
+    const $ = id => document.getElementById(id);
     const fmtTime = (date = new Date()) => date.toLocaleTimeString("zh-HK", { hour: "2-digit", minute: "2-digit" });
-    const shortDate = (date = new Date()) => date.toLocaleDateString("zh-HK", { month: "short", day: "numeric", weekday: "short" });
-    const safeText = (value, fallback = "") => (value === undefined || value === null || value === "") ? fallback : String(value);
+    const safeText = (v, f = "") => (v === undefined || v === null || v === "") ? f : String(v);
+    const state = { audioReady: false, audioCtx: null, lastBroadcastId: localStorage.getItem("hcc_last_broadcast_id") || "", connected: false };
+    const stepLabels = ["準備", "出發", "途中", "附近", "到家"];
+    const idle = { title:"家庭待命中", subtitle:"接收端已準備好，等待手機端發送通知。", eyebrow:"HOME STANDBY", progress:0, eta:"待命", priority:"NORMAL", key:"idle" };
 
-    function safeLog(name, params = {}) {
-      try { if (analytics) logEvent(analytics, name, params); } catch (_) {}
-    }
-
-    function toast(message, type = "info") {
-      const wrap = $("toast");
-      const item = document.createElement("div");
-      item.className = "toast-item";
-      item.textContent = message;
-      if (type === "error") item.style.borderColor = "rgba(255,107,139,.35)";
-      if (type === "success") item.style.borderColor = "rgba(114,240,173,.35)";
-      wrap.appendChild(item);
-      setTimeout(() => item.remove(), 4200);
-    }
-
-    function setDebug(label, value) {
-      const box = $("debugBox");
-      if (!box) return;
-      const line = document.createElement("div");
-      line.className = "event-item";
-      line.innerHTML = `<div class="event-time">${fmtTime()}</div><div class="event-text"><strong>${label}</strong><br><span class="mono">${safeText(value).slice(0, 280)}</span></div>`;
-      box.prepend(line);
-      while (box.children.length > 8) box.lastChild.remove();
-    }
-
-    function applyMode(mode, updateURL = true) {
-      state.mode = mode;
-      localStorage.setItem("hcc_mode", mode);
-      document.body.classList.remove("mode-receiver", "mode-sender", "mode-admin");
-      document.body.classList.add(`mode-${mode}`);
-      document.querySelectorAll(".control-panel").forEach((el) => el.classList.remove("active"));
-      const target = $(`${mode}View`);
-      if (target) target.classList.add("active");
-      document.querySelectorAll(".segmented button").forEach((btn) => btn.classList.toggle("active", btn.dataset.mode === mode));
-      if (updateURL) {
-        const url = new URL(location.href);
-        url.searchParams.set("mode", mode);
-        history.replaceState(null, "", url);
-      }
-      if (mode === "receiver" && !state.audioReady && !localStorage.getItem("hcc_audio_skip")) {
-        $("audioGate").classList.add("show");
-      } else {
-        $("audioGate").classList.remove("show");
-      }
-      safeLog("switch_mode", { mode });
-    }
+    function logEventSafe(name, params = {}) { try { if (analytics) logEvent(analytics, name, params); } catch (_) {} }
+    function toast(message, type = "info") { const wrap = $("toast"); const item = document.createElement("div"); item.className = "toast-item"; item.textContent = message; if (type === "error") item.style.borderColor = "rgba(255,107,139,.36)"; if (type === "success") item.style.borderColor = "rgba(114,240,173,.36)"; wrap.appendChild(item); setTimeout(() => item.remove(), 4200); }
 
     function setupSteps(progress = 0) {
-      const steps = $("steps");
-      steps.innerHTML = "";
+      const steps = $("steps"); steps.innerHTML = "";
       const activeIndex = progress >= 100 ? 4 : Math.max(0, Math.floor(progress / 25));
-      stepLabels.forEach((label, idx) => {
-        const div = document.createElement("div");
-        div.className = `step ${idx <= activeIndex && progress > 0 ? "active" : ""}`;
-        div.textContent = label;
-        steps.appendChild(div);
-      });
+      stepLabels.forEach((label, idx) => { const div = document.createElement("div"); div.className = `step ${idx <= activeIndex && progress > 0 ? "active" : ""}`; div.textContent = label; steps.appendChild(div); });
     }
-
     function updateReceiverStatus(data = {}) {
-      const fallback = statusPresets.idle;
-      const merged = { ...fallback, ...data };
+      const merged = { ...idle, ...data };
       $("missionEyebrow").textContent = safeText(merged.eyebrow, "HOME STATUS");
       $("missionTitle").textContent = safeText(merged.title, "家庭待命中");
       $("missionSubtitle").textContent = safeText(merged.subtitle, "等待手機端發送通知。");
@@ -801,486 +299,21 @@
       $("lastUpdate").textContent = fmtTime();
       $("displayMode").textContent = safeText(merged.modeLabel || merged.key || "Awaiting");
       setupSteps(Number(merged.progress || 0));
-      document.title = `${safeText(merged.title, "家庭通知控制中心")}｜家庭通知控制中心`;
+      document.title = `${safeText(merged.title, "家庭通知控制中心")}｜接收端`;
     }
-
-    function showCapsule(title, message) {
-      $("capsuleTitle").textContent = safeText(title, "家庭通知");
-      $("capsuleMessage").textContent = safeText(message, "");
-      const cap = $("capsule");
-      cap.classList.add("show");
-      clearTimeout(showCapsule.timer);
-      showCapsule.timer = setTimeout(() => cap.classList.remove("show"), 8200);
-    }
-
-    async function unlockAudio() {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) throw new Error("此瀏覽器不支援 AudioContext");
-        state.audioCtx = state.audioCtx || new AudioContext();
-        if (state.audioCtx.state === "suspended") await state.audioCtx.resume();
-        const osc = state.audioCtx.createOscillator();
-        const gain = state.audioCtx.createGain();
-        gain.gain.value = 0.0001;
-        osc.frequency.value = 440;
-        osc.connect(gain).connect(state.audioCtx.destination);
-        osc.start();
-        osc.stop(state.audioCtx.currentTime + 0.04);
-        state.audioReady = true;
-        localStorage.setItem("hcc_audio_ready", "1");
-        localStorage.removeItem("hcc_audio_skip");
-        $("audioGate").classList.remove("show");
-        updateAudioUI();
-        toast("音響系統已啟動，可以接收手機端提示音。", "success");
-        await playTone("soft");
-      } catch (err) {
-        updateAudioUI(false);
-        toast(`音響啟動失敗：${err.message}`, "error");
-      }
-    }
-
-    function updateAudioUI() {
-      const dot = $("audioDot");
-      const text = $("audioText");
-      dot.classList.remove("online", "warn", "danger");
-      if (state.audioReady) {
-        dot.classList.add("online");
-        text.textContent = "音響已啟動";
-      } else if (localStorage.getItem("hcc_audio_skip")) {
-        dot.classList.add("warn");
-        text.textContent = "靜音顯示中";
-      } else {
-        dot.classList.add("warn");
-        text.textContent = "音響未啟動";
-      }
-    }
-
-    async function playTone(soundId = "soft") {
-      if (soundId === "none") return;
-      if (!state.audioReady || !state.audioCtx) throw new Error("Audio not unlocked");
-      const ctx = state.audioCtx;
-      if (ctx.state === "suspended") await ctx.resume();
-      const now = ctx.currentTime;
-      const patterns = {
-        soft: [{ f: 523, t: 0, d: .13 }, { f: 659, t: .13, d: .16 }],
-        ping: [{ f: 880, t: 0, d: .08 }],
-        arrival: [{ f: 523, t: 0, d: .11 }, { f: 784, t: .12, d: .14 }, { f: 1046, t: .29, d: .22 }],
-        alert: [{ f: 740, t: 0, d: .12 }, { f: 580, t: .16, d: .12 }, { f: 740, t: .32, d: .16 }]
-      };
-      const seq = patterns[soundId] || patterns.soft;
-      seq.forEach(({ f, t, d }) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = soundId === "alert" ? "square" : "sine";
-        osc.frequency.setValueAtTime(f, now + t);
-        gain.gain.setValueAtTime(0.0001, now + t);
-        gain.gain.exponentialRampToValueAtTime(soundId === "alert" ? 0.09 : 0.055, now + t + .015);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + t + d);
-        osc.connect(gain).connect(ctx.destination);
-        osc.start(now + t);
-        osc.stop(now + t + d + .03);
-      });
-    }
-
-    function speakText(text) {
-      if (!text || !("speechSynthesis" in window)) return;
-      try {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "zh-HK";
-        utter.rate = 0.92;
-        utter.pitch = 1.03;
-        utter.volume = 1;
-        window.speechSynthesis.speak(utter);
-      } catch (err) {
-        setDebug("TTS failed", err.message);
-      }
-    }
-
-    async function handleBroadcast(data = {}) {
-      if (!data.id || data.id === state.lastBroadcastId) return;
-      state.lastBroadcastId = data.id;
-      localStorage.setItem("hcc_last_broadcast_id", data.id);
-      showCapsule(data.title || "家庭通知", data.message || data.ttsText || "");
-      try {
-        if (data.soundId && data.soundId !== "none") await playTone(data.soundId);
-        if (data.ttsText) speakText(data.ttsText);
-      } catch (err) {
-        toast("接收端未啟動音響，已改用視覺提示。", "error");
-        setDebug("Audio blocked", err.message);
-      }
-    }
-
-    async function writeEvent(text, type = "info") {
-      try {
-        await push(ref(db, `${BASE}/events`), {
-          text,
-          type,
-          at: serverTimestamp(),
-          localTime: new Date().toISOString(),
-          operator: localStorage.getItem("hcc_operator_name") || "James"
-        });
-      } catch (err) {
-        toast(`事件寫入失敗：${err.message}`, "error");
-      }
-    }
-
-    async function sendStatus(key) {
-      const preset = statusPresets[key] || statusPresets.idle;
-      const payload = {
-        ...preset,
-        key,
-        modeLabel: key,
-        updatedAt: serverTimestamp(),
-        localTime: new Date().toISOString(),
-        operator: localStorage.getItem("hcc_operator_name") || "James"
-      };
-      try {
-        await set(ref(db, `${BASE}/status/current`), payload);
-        await sendBroadcast({
-          title: preset.title,
-          message: preset.subtitle,
-          soundId: preset.sound,
-          ttsText: preset.speak,
-          priority: preset.priority,
-          writeLog: false
-        });
-        await writeEvent(`狀態更新：${preset.title}`, key === "emergency" ? "urgent" : "status");
-        toast(`已發送：${preset.title}`, "success");
-        safeLog("send_status", { key });
-      } catch (err) {
-        toast(`發送失敗：${err.message}`, "error");
-      }
-    }
-
-    async function sendBroadcast({ title, message, soundId = "soft", ttsText = "", priority = "normal", writeLog = true } = {}) {
-      const id = `broadcast_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-      const payload = {
-        id,
-        title: safeText(title, "家庭通知"),
-        message: safeText(message, ""),
-        soundId,
-        ttsText: safeText(ttsText || message, ""),
-        priority,
-        at: serverTimestamp(),
-        localTime: new Date().toISOString(),
-        operator: localStorage.getItem("hcc_operator_name") || "James"
-      };
-      await set(ref(db, `${BASE}/broadcast/current`), payload);
-      if (writeLog) await writeEvent(`廣播：${payload.title} — ${payload.message}`, "broadcast");
-      safeLog("send_broadcast", { soundId, priority });
-    }
-
-    async function sendManualSchedule() {
-      const time = $("manualScheduleTime").value || "--:--";
-      const title = $("manualScheduleTitle").value.trim();
-      if (!title) return toast("請先輸入日程標題。", "error");
-      const payload = {
-        source: "manual",
-        title,
-        time,
-        subtitle: `${time}｜${title}`,
-        updatedAt: serverTimestamp(),
-        localTime: new Date().toISOString()
-      };
-      try {
-        await set(ref(db, `${BASE}/schedule/current`), payload);
-        await sendBroadcast({ title: "下一件事", message: `${time} ${title}`, soundId: "soft", ttsText: `${time}，${title}` });
-        toast("已推送日程到接收端。", "success");
-      } catch (err) {
-        toast(`日程推送失敗：${err.message}`, "error");
-      }
-    }
-
-    async function sendSound(soundId) {
-      const names = { arrival: "到樓下提示音", soft: "溫柔提示", ping: "短提示音", alert: "重要警報" };
-      try {
-        await sendBroadcast({ title: names[soundId] || "提示音", message: "手機端已發送音響通知。", soundId, ttsText: soundId === "alert" ? "重要通知，請即時留意。" : "你有一個家庭通知。", priority: soundId === "alert" ? "urgent" : "normal" });
-        toast(`已發送：${names[soundId] || soundId}`, "success");
-      } catch (err) {
-        toast(`提示音發送失敗：${err.message}`, "error");
-      }
-    }
-
-    async function fetchHongKongWeather(pushToFirebase = true) {
-      const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc";
-      try {
-        const res = await fetch(url, { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        const tempData = Array.isArray(data.temperature?.data) ? data.temperature.data : [];
-        const humidityData = Array.isArray(data.humidity?.data) ? data.humidity.data : [];
-        const temp = tempData[0]?.value ?? "--";
-        const humidity = humidityData[0]?.value ?? "--";
-        const rain = data.rainfall?.data?.find?.(item => item.place === "香港天文台")?.max ?? "";
-        const desc = `濕度 ${humidity}%${rain !== "" ? `｜雨量 ${rain}mm` : ""}`;
-        const payload = {
-          source: "Hong Kong Observatory",
-          temp,
-          humidity,
-          desc,
-          icon: data.icon?.[0] || "",
-          updatedAt: serverTimestamp(),
-          localTime: new Date().toISOString()
-        };
-        updateWeatherUI(payload);
-        if (pushToFirebase) await set(ref(db, `${BASE}/weather/current`), payload);
-        toast("香港天氣已同步。", "success");
-        return payload;
-      } catch (err) {
-        toast(`天氣同步失敗：${err.message}`, "error");
-        setDebug("Weather failed", err.message);
-        return null;
-      }
-    }
-
-    function updateWeatherUI(data = {}) {
-      $("weatherTemp").textContent = `${safeText(data.temp, "--")}°C`;
-      $("weatherDesc").textContent = safeText(data.desc, "等待天氣資料");
-      $("weatherUpdated").textContent = data.localTime ? `更新 ${fmtTime(new Date(data.localTime))}` : "已同步";
-    }
-
-    function updateScheduleUI(data = {}) {
-      $("scheduleTime").textContent = safeText(data.time, "--:--");
-      $("scheduleTitle").textContent = safeText(data.title, "未有日程");
-    }
-
-    async function signInGoogleCalendar() {
-      try {
-        const result = await signInWithPopup(auth, calendarProvider);
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        state.lastGoogleAccessToken = credential?.accessToken || "";
-        state.user = result.user;
-        toast("Google 已登入，已嘗試取得日曆讀取權限。", "success");
-      } catch (err) {
-        if (String(err.code || "").includes("popup")) {
-          toast("Popup 被阻擋，改用 redirect 登入。", "info");
-          await signInWithRedirect(auth, calendarProvider);
-        } else {
-          toast(`Google 登入失敗：${err.message}`, "error");
-        }
-      }
-    }
-
-    async function syncGoogleCalendarNextEvent() {
-      if (!state.lastGoogleAccessToken) {
-        toast("未有 Google Calendar access token。請先用上方按鈕登入授權。", "error");
-        return;
-      }
-      const now = new Date();
-      const timeMin = encodeURIComponent(now.toISOString());
-      const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?singleEvents=true&orderBy=startTime&maxResults=1&timeMin=${timeMin}`;
-      try {
-        const res = await fetch(url, { headers: { Authorization: `Bearer ${state.lastGoogleAccessToken}` } });
-        if (!res.ok) throw new Error(`Google Calendar HTTP ${res.status}`);
-        const data = await res.json();
-        const event = data.items?.[0];
-        if (!event) return toast("Google 日曆暫時沒有下一個事件。", "info");
-        const startRaw = event.start?.dateTime || event.start?.date;
-        const start = startRaw ? new Date(startRaw) : null;
-        const time = start ? start.toLocaleTimeString("zh-HK", { hour: "2-digit", minute: "2-digit" }) : "全天";
-        const title = event.summary || "未命名日程";
-        const payload = {
-          source: "google_calendar",
-          title,
-          time,
-          subtitle: event.location ? `${time}｜${event.location}` : `${time}｜Google Calendar`,
-          updatedAt: serverTimestamp(),
-          localTime: new Date().toISOString()
-        };
-        await set(ref(db, `${BASE}/schedule/current`), payload);
-        await sendBroadcast({ title: "Google 日曆提醒", message: `${time} ${title}`, soundId: "soft", ttsText: `下一個日程，${time}，${title}` });
-        toast("已同步下一個 Google 日曆事件到接收端。", "success");
-      } catch (err) {
-        toast(`Google 日曆同步失敗：${err.message}`, "error");
-      }
-    }
-
-    async function setupDeviceHeartbeat() {
-      try {
-        const receiverName = localStorage.getItem("hcc_receiver_name") || "客廳 iPad";
-        const deviceRef = ref(db, `${BASE}/devices/${DEVICE_ID}`);
-        await update(deviceRef, {
-          online: true,
-          mode: state.mode,
-          name: receiverName,
-          userAgent: navigator.userAgent,
-          localTime: new Date().toISOString(),
-          lastSeen: serverTimestamp()
-        });
-        await onDisconnect(deviceRef).update({ online: false, lastSeen: serverTimestamp(), localTime: new Date().toISOString() });
-        setInterval(() => {
-          update(deviceRef, { online: true, mode: state.mode, name: receiverName, localTime: new Date().toISOString(), lastSeen: serverTimestamp() }).catch(() => {});
-        }, 30000);
-      } catch (err) {
-        setDebug("Heartbeat failed", err.message);
-      }
-    }
-
-    function setupFirebaseListeners() {
-      onValue(ref(db, ".info/connected"), (snap) => {
-        state.connected = !!snap.val();
-        const dot = $("connectionDot");
-        const text = $("connectionText");
-        dot.classList.remove("online", "warn", "danger");
-        if (state.connected) { dot.classList.add("online"); text.textContent = "Firebase 已連線"; }
-        else { dot.classList.add("danger"); text.textContent = "Firebase 離線"; }
-      }, (err) => setDebug("Connection listener error", err.message));
-
-      onValue(ref(db, `${BASE}/status/current`), (snap) => {
-        updateReceiverStatus(snap.val() || statusPresets.idle);
-      }, (err) => toast(`讀取狀態失敗：${err.message}`, "error"));
-
-      onValue(ref(db, `${BASE}/broadcast/current`), (snap) => {
-        handleBroadcast(snap.val() || {});
-      }, (err) => toast(`讀取廣播失敗：${err.message}`, "error"));
-
-      onValue(ref(db, `${BASE}/events`), (snap) => {
-        const val = snap.val() || {};
-        const items = Object.values(val).sort((a, b) => new Date(b.localTime || 0) - new Date(a.localTime || 0)).slice(0, 8);
-        renderEvents(items);
-      }, (err) => setDebug("Events listener error", err.message));
-
-      onValue(ref(db, `${BASE}/schedule/current`), (snap) => updateScheduleUI(snap.val() || {}), (err) => setDebug("Schedule listener error", err.message));
-      onValue(ref(db, `${BASE}/weather/current`), (snap) => updateWeatherUI(snap.val() || {}), (err) => setDebug("Weather listener error", err.message));
-    }
-
-    function renderEvents(items) {
-      const list = $("eventList");
-      list.innerHTML = "";
-      if (!items.length) {
-        list.innerHTML = `<div class="event-item"><div class="event-time">--:--</div><div class="event-text">暫時未有事件。</div></div>`;
-        return;
-      }
-      items.forEach((item) => {
-        const date = item.localTime ? new Date(item.localTime) : new Date();
-        const div = document.createElement("div");
-        div.className = "event-item";
-        div.innerHTML = `<div class="event-time">${fmtTime(date)}</div><div class="event-text">${safeText(item.text, "家庭事件")}</div>`;
-        list.appendChild(div);
-      });
-    }
-
-    function buildStatusButtons() {
-      const labels = {
-        preparing: ["準備收工", "啟動回家任務"],
-        leaving: ["已經出發", "通知家中我已離開"],
-        transit: ["搭緊車", "更新為回家途中"],
-        nearby: ["到樓下", "高亮提示，適合開門"],
-        arrived: ["已到屋企", "完成回家任務"],
-        delayed: ["會遲少少", "延誤通知"],
-        quiet: ["靜音模式", "降低干擾，只顯示提醒"],
-        emergency: ["重要通知", "高優先級，慎用"]
-      };
-      const wrap = $("statusButtons");
-      wrap.innerHTML = "";
-      Object.entries(labels).forEach(([key, [title, desc]]) => {
-        const btn = document.createElement("button");
-        btn.className = `btn ${key === "nearby" ? "primary" : ""} ${key === "emergency" ? "danger" : ""}`;
-        btn.innerHTML = `<strong>${title}</strong><span>${desc}</span>`;
-        btn.addEventListener("click", () => sendStatus(key));
-        wrap.appendChild(btn);
-      });
-    }
-
-    function setupUIEvents() {
-      document.querySelectorAll(".segmented button").forEach((btn) => btn.addEventListener("click", () => applyMode(btn.dataset.mode)));
-      $("enableAudioBtn").addEventListener("click", unlockAudio);
-      $("skipAudioBtn").addEventListener("click", () => { localStorage.setItem("hcc_audio_skip", "1"); $("audioGate").classList.remove("show"); updateAudioUI(); toast("已切換成靜音顯示。", "info"); });
-      document.querySelectorAll("[data-sound]").forEach((btn) => btn.addEventListener("click", () => sendSound(btn.dataset.sound)));
-      $("sendCustomBtn").addEventListener("click", async () => {
-        const title = $("customTitle").value.trim() || "家庭通知";
-        const message = $("customMessage").value.trim();
-        if (!message) return toast("請先輸入廣播內容。", "error");
-        await sendBroadcast({ title, message, soundId: $("customSound").value, ttsText: message });
-        toast("自訂通知已發送。", "success");
-      });
-      $("sendScheduleBtn").addEventListener("click", sendManualSchedule);
-      $("googleSignInBtn").addEventListener("click", signInGoogleCalendar);
-      $("syncCalendarBtn").addEventListener("click", syncGoogleCalendarNextEvent);
-      $("googleSignOutBtn").addEventListener("click", async () => { await signOut(auth); state.lastGoogleAccessToken = ""; toast("已登出 Google。", "success"); });
-      $("refreshWeatherBtn").addEventListener("click", () => fetchHongKongWeather(true));
-      $("saveSettingsBtn").addEventListener("click", () => {
-        const dbUrl = $("databaseUrlInput").value.trim();
-        const receiverName = $("receiverNameInput").value.trim();
-        const operatorName = $("operatorNameInput").value.trim();
-        if (dbUrl) localStorage.setItem("hcc_database_url", dbUrl);
-        if (receiverName) localStorage.setItem("hcc_receiver_name", receiverName);
-        if (operatorName) localStorage.setItem("hcc_operator_name", operatorName);
-        location.reload();
-      });
-      $("clearEventsBtn").addEventListener("click", async () => { await remove(ref(db, `${BASE}/events`)); toast("事件流已清空。", "success"); });
-      $("toggleLegacyBtn").addEventListener("click", () => {
-        const enabled = !document.body.classList.contains("legacy");
-        document.body.classList.toggle("legacy", enabled);
-        localStorage.setItem("hcc_legacy", enabled ? "1" : "0");
-        toast(enabled ? "已開啟穩定效能模式。" : "已關閉穩定效能模式。", "success");
-      });
-      $("testReceiverBtn").addEventListener("click", () => sendBroadcast({ title: "測試通知", message: "家庭通知控制中心測試成功。", soundId: "soft", ttsText: "家庭通知控制中心測試成功。" }));
-      $("goFullscreenBtn").addEventListener("click", async () => {
-        try { await document.documentElement.requestFullscreen?.(); } catch (_) {}
-      });
-
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) {
-          updateReceiverStatus(statusPresets.idle);
-          setDebug("Visibility", "頁面重新可見，已保持 Firebase 監聽。");
-        }
-      });
-    }
-
-    function setupClock() {
-      const update = () => {
-        $("subtitle").textContent = `${shortDate()}｜${fmtTime()}｜手機發送 · iPad 接收`;
-      };
-      update();
-      setInterval(update, 15000);
-    }
-
-    function setupAuth() {
-      getRedirectResult(auth).then((result) => {
-        if (result) {
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          state.lastGoogleAccessToken = credential?.accessToken || "";
-          toast("Google redirect 登入完成。", "success");
-        }
-      }).catch((err) => setDebug("Redirect sign-in", err.message));
-
-      onAuthStateChanged(auth, (user) => {
-        state.user = user;
-        $("authState").textContent = user ? `已登入：${user.displayName || user.email || user.uid}` : "未登入 Google";
-      });
-    }
-
-    function initSettingsFields() {
-      $("databaseUrlInput").value = databaseURL;
-      $("receiverNameInput").value = localStorage.getItem("hcc_receiver_name") || "客廳 iPad";
-      $("operatorNameInput").value = localStorage.getItem("hcc_operator_name") || "James";
-      $("deviceName").textContent = localStorage.getItem("hcc_receiver_name") || "客廳 iPad";
-      if (localStorage.getItem("hcc_legacy") === "1") document.body.classList.add("legacy");
-      setupSteps(0);
-      updateAudioUI();
-    }
-
-    async function boot() {
-      try {
-        initSettingsFields();
-        buildStatusButtons();
-        setupUIEvents();
-        setupClock();
-        setupAuth();
-        setupFirebaseListeners();
-        setupDeviceHeartbeat();
-        applyMode(state.mode, false);
-        updateReceiverStatus(statusPresets.idle);
-        setDebug("Firebase DB", databaseURL);
-        setTimeout(() => fetchHongKongWeather(true), 1200);
-      } catch (err) {
-        toast(`啟動失敗：${err.message}`, "error");
-        setDebug("Boot failed", err.stack || err.message);
-      }
-    }
-
+    function showCapsule(title, message) { $("capsuleTitle").textContent = safeText(title, "家庭通知"); $("capsuleMessage").textContent = safeText(message, ""); const cap = $("capsule"); cap.classList.add("show"); clearTimeout(showCapsule.timer); showCapsule.timer = setTimeout(() => cap.classList.remove("show"), 8200); }
+    function updateAudioUI() { const dot = $("audioDot"), text = $("audioText"); dot.className = "dot"; if (state.audioReady) { dot.classList.add("online"); text.textContent = "音響已啟動"; } else if (localStorage.getItem("hcc_audio_skip")) { text.textContent = "靜音顯示中"; } else { text.textContent = "音響未啟動"; } }
+    async function unlockAudio() { try { const AudioContext = window.AudioContext || window.webkitAudioContext; if (!AudioContext) throw new Error("此瀏覽器不支援 AudioContext"); state.audioCtx = state.audioCtx || new AudioContext(); if (state.audioCtx.state === "suspended") await state.audioCtx.resume(); const osc = state.audioCtx.createOscillator(); const gain = state.audioCtx.createGain(); gain.gain.value = .0001; osc.frequency.value = 440; osc.connect(gain).connect(state.audioCtx.destination); osc.start(); osc.stop(state.audioCtx.currentTime + .04); state.audioReady = true; localStorage.setItem("hcc_audio_ready", "1"); localStorage.removeItem("hcc_audio_skip"); $("audioGate").classList.remove("show"); updateAudioUI(); toast("音響系統已啟動，可以接收手機端提示音。", "success"); await playTone("soft"); } catch (err) { toast(`音響啟動失敗：${err.message}`, "error"); updateAudioUI(); } }
+    async function playTone(soundId = "soft") { if (soundId === "none") return; if (!state.audioReady || !state.audioCtx) throw new Error("Audio not unlocked"); const ctx = state.audioCtx; if (ctx.state === "suspended") await ctx.resume(); const now = ctx.currentTime; const patterns = { soft:[{f:523,t:0,d:.13},{f:659,t:.13,d:.16}], ping:[{f:880,t:0,d:.08}], arrival:[{f:523,t:0,d:.11},{f:784,t:.12,d:.14},{f:1046,t:.29,d:.22}], alert:[{f:740,t:0,d:.12},{f:580,t:.16,d:.12},{f:740,t:.32,d:.16}] }; (patterns[soundId] || patterns.soft).forEach(({f,t,d}) => { const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = soundId === "alert" ? "square" : "sine"; osc.frequency.setValueAtTime(f, now + t); gain.gain.setValueAtTime(.0001, now + t); gain.gain.exponentialRampToValueAtTime(soundId === "alert" ? .09 : .055, now + t + .015); gain.gain.exponentialRampToValueAtTime(.0001, now + t + d); osc.connect(gain).connect(ctx.destination); osc.start(now + t); osc.stop(now + t + d + .03); }); }
+    function speakText(text) { if (!text || !("speechSynthesis" in window)) return; try { speechSynthesis.cancel(); const utter = new SpeechSynthesisUtterance(text); utter.lang = "zh-HK"; utter.rate = .92; utter.pitch = 1.03; utter.volume = 1; speechSynthesis.speak(utter); } catch (_) {} }
+    async function handleBroadcast(data = {}) { if (!data.id || data.id === state.lastBroadcastId) return; state.lastBroadcastId = data.id; localStorage.setItem("hcc_last_broadcast_id", data.id); showCapsule(data.title || "家庭通知", data.message || data.ttsText || ""); try { if (data.soundId && data.soundId !== "none") await playTone(data.soundId); if (data.ttsText) speakText(data.ttsText); } catch (err) { toast("接收端未啟動音響，已改用視覺提示。", "error"); } }
+    function updateScheduleUI(data = {}) { $("scheduleTime").textContent = safeText(data.time, "--:--"); $("scheduleTitle").textContent = safeText(data.title || data.subtitle, "未有日程"); }
+    function updateWeatherUI(data = {}) { $("weatherTemp").textContent = data.temp ? `${data.temp}°C` : "--°C"; $("weatherDesc").textContent = safeText(data.desc || data.warning, "等待天氣資料"); $("weatherUpdated").textContent = data.localTime ? `更新 ${fmtTime(new Date(data.localTime))}` : "未同步"; }
+    function renderEvents(items) { const list = $("eventList"); list.innerHTML = ""; if (!items.length) { list.innerHTML = `<div class="event-item"><div class="event-time">--:--</div><div class="event-text">暫時未有事件。</div></div>`; return; } items.forEach(item => { const date = item.localTime ? new Date(item.localTime) : new Date(); const div = document.createElement("div"); div.className = "event-item"; div.innerHTML = `<div class="event-time">${fmtTime(date)}</div><div class="event-text">${safeText(item.text, "家庭事件")}</div>`; list.appendChild(div); }); }
+    async function setupHeartbeat() { try { const name = localStorage.getItem("hcc_receiver_name") || "客廳 iPad"; $("deviceName").textContent = name; const deviceRef = ref(db, `${BASE}/devices/${DEVICE_ID}`); await update(deviceRef, { online:true, mode:"receiver", name, userAgent:navigator.userAgent, localTime:new Date().toISOString(), lastSeen:serverTimestamp() }); await onDisconnect(deviceRef).update({ online:false, localTime:new Date().toISOString(), lastSeen:serverTimestamp() }); setInterval(() => update(deviceRef, { online:true, mode:"receiver", name, localTime:new Date().toISOString(), lastSeen:serverTimestamp() }).catch(() => {}), 30000); $("deviceStatus").textContent = "心跳在線"; } catch (err) { $("deviceStatus").textContent = "心跳建立失敗"; } }
+    function setupFirebaseListeners() { onValue(ref(db, ".info/connected"), snap => { state.connected = !!snap.val(); const dot = $("connectionDot"), text = $("connectionText"); dot.className = "dot"; if (state.connected) { dot.classList.add("online"); text.textContent = "Firebase 已連線"; } else { dot.classList.add("danger"); text.textContent = "Firebase 離線"; } }); onValue(ref(db, `${BASE}/status/current`), snap => updateReceiverStatus(snap.val() || idle), err => toast(`讀取狀態失敗：${err.message}`, "error")); onValue(ref(db, `${BASE}/broadcast/current`), snap => handleBroadcast(snap.val() || {}), err => toast(`讀取廣播失敗：${err.message}`, "error")); onValue(ref(db, `${BASE}/events`), snap => { const val = snap.val() || {}; const items = Object.values(val).sort((a,b) => new Date(b.localTime || 0) - new Date(a.localTime || 0)).slice(0,8); renderEvents(items); }); onValue(ref(db, `${BASE}/schedule/current`), snap => updateScheduleUI(snap.val() || {})); onValue(ref(db, `${BASE}/weather/current`), snap => updateWeatherUI(snap.val() || {})); }
+    function bindUI() { $("enableAudioBtn").addEventListener("click", unlockAudio); $("skipAudioBtn").addEventListener("click", () => { localStorage.setItem("hcc_audio_skip", "1"); $("audioGate").classList.remove("show"); updateAudioUI(); toast("已切換成靜音顯示。", "info"); }); $("fullscreenBtn").addEventListener("click", async () => { try { await document.documentElement.requestFullscreen?.(); } catch (_) {} }); $("legacyBtn").addEventListener("click", () => { const enabled = !document.body.classList.contains("legacy"); document.body.classList.toggle("legacy", enabled); localStorage.setItem("hcc_legacy", enabled ? "1" : "0"); toast(enabled ? "已開啟穩定模式。" : "已關閉穩定模式。", "success"); }); document.addEventListener("visibilitychange", () => { if (!document.hidden) updateReceiverStatus(idle); }); }
+    function boot() { if (localStorage.getItem("hcc_legacy") === "1") document.body.classList.add("legacy"); setupSteps(0); updateAudioUI(); bindUI(); setupFirebaseListeners(); setupHeartbeat(); updateReceiverStatus(idle); if (!localStorage.getItem("hcc_audio_skip")) setTimeout(() => $("audioGate").classList.add("show"), 800); logEventSafe("receiver_boot"); }
     boot();
   </script>
 </body>
