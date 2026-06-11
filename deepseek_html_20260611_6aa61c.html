@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>對決之刃 · 雙人競技</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1e2b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Press Start 2P', 'Courier New', monospace;
+      padding: 20px;
+      image-rendering: pixelated;
+    }
+    .game-container {
+      background: #0f1219;
+      border-radius: 2.5rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    canvas {
+      display: block;
+      border-radius: 2rem;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 10px 25px black;
+      background: #2a3344;
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+    }
+    .ui-panel {
+      margin-top: 18px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Press Start 2P', 'Courier New', monospace;
+    }
+    button {
+      background: #2e3b4e;
+      border: none;
+      color: #eef5ff;
+      font-weight: bold;
+      padding: 12px 24px;
+      border-radius: 3rem;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #141a24, 0 8px 18px rgba(0,0,0,0.5);
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #4a5b72;
+      font-family: 'Press Start 2P', 'Courier New', monospace;
+    }
+    button:active { transform: translateY(3px); box-shadow: 0 2px 0 #0b0f14, 0 5px 12px black; }
+    .hack-btn { background: #4b3b60; border-color: #aa98c0; }
+    .watch-btn { background: #5a3a6b; border-color: #aa78c0; }
+    select, input {
+      background: #1e2532;
+      color: white;
+      border: 1px solid #4f5d73;
+      padding: 10px 16px;
+      border-radius: 2rem;
+      font-weight: bold;
+      outline: none;
+      font-family: 'Press Start 2P', 'Courier New', monospace;
+    }
+    .modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; visibility: hidden;
+      font-family: 'Press Start 2P', 'Courier New', monospace;
+    }
+    .modal.active { visibility: visible; }
+    .modal-content {
+      background: #1e2430; border-radius: 2.5rem; padding: 28px;
+      max-width: 650px; width: 90%; color: #ddd;
+      box-shadow: 0 30px 50px black; border: 1px solid #46576c;
+      max-height: 80vh; overflow-y: auto;
+    }
+    .ad-popup {
+      position: fixed; background: #ffd966; color: #1e1e1e;
+      padding: 18px 24px; border-radius: 2rem;
+      box-shadow: 0 15px 30px black; font-weight: bold;
+      z-index: 200; display: flex; align-items: center; gap: 20px;
+      border: 2px solid #e6b422;
+      font-family: 'Press Start 2P', 'Courier New', monospace; font-size: 0.7rem;
+    }
+    .ad-close { cursor: pointer; font-weight: bold; font-size: 1.8rem; color: #a12d2d; margin-left: 10px; }
+    .flex-row { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+    .mode-select { display: flex; gap: 15px; justify-content: center; margin: 15px 0; flex-wrap: wrap; }
+    .mode-btn { padding: 15px 30px; font-size: 0.7rem; }
+    .mode-btn.selected { background: #4a7c59; border-color: #7cba8a; }
+    .difficulty-select { display: flex; gap: 10px; justify-content: center; margin: 10px 0; }
+    .ai-selector { display: flex; gap: 30px; justify-content: center; margin: 15px 0; }
+    .ai-card { background: #2a3040; padding: 15px; border-radius: 1rem; text-align: center; }
+  </style>
+</head>
+<body>
+<div class="game-container">
+  <canvas id="gameCanvas" width="960" height="480"></canvas>
+  <div class="ui-panel" id="controlPanel"></div>
+</div>
+
+<div class="modal" id="hackModal">
+  <div class="modal-content">
+    <h2 style="color:#c7b3e5;">外掛設定</h2>
+    <div class="flex-row" style="margin-top:15px;"><label>延遲(ms)</label><input id="delayInput" type="range" min="0" max="0.5" step="0.1" value="0"><span id="delayVal">0</span></div>
+    <div class="flex-row"><label>FPS</label><input id="fpsInput" type="range" min="10" max="120" value="60"><span id="fpsVal">60</span></div>
+    <div class="flex-row"><label>玩家1無敵</label><input id="p1Invincible" type="checkbox"></div>
+    <div class="flex-row"><label>玩家2無敵</label><input id="p2Invincible" type="checkbox"></div>
+    <div class="flex-row"><label>隱藏太強角色</label><input id="hideOverpowered" type="checkbox" checked></div>
+    <div class="flex-row"><label>廣告</label><input id="adToggle" type="checkbox" checked></div>
+    <button id="closeHackModal" style="margin-top:20px;">關閉</button>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+
+    // ---------- 角色數據 ----------
+    const characters = {
+      正向: [
+        { name:'士兵', melee:5, range:3, hp:50, color:'#5d8c4a', helmet:'🪖', body:'輕甲' },
+        { name:'近衛兵', melee:8, range:1, hp:40, color:'#4a6b3a', helmet:'⛑️', body:'重甲' },
+        { name:'騎士', melee:6, range:4, hp:65, color:'#7a9eb1', helmet:'🛡️', body:'板甲' },
+        { name:'弓兵', melee:2, range:6, hp:35, color:'#8b9a6e', helmet:'🏹', body:'皮甲' },
+        { name:'國王', melee:6, range:5, hp:40, color:'#c9a24e', helmet:'👑', body:'王袍' },
+        { name:'勇者', melee:15, range:15, hp:150, color:'#f5c542', helmet:'⚔️', body:'英雄鎧' }
+      ],
+      反向: [
+        { name:'魔兵', melee:6, range:2, hp:50, color:'#6d4c5c', helmet:'😈', body:'魔甲' },
+        { name:'魔法師', melee:1, range:8, hp:35, color:'#4a3b6b', helmet:'🧙', body:'法袍' },
+        { name:'魔幹部', melee:5, range:5, hp:50, color:'#8b4a5c', helmet:'💀', body:'暗甲' },
+        { name:'魔王四手下', melee:8, range:6, hp:70, color:'#a13d4a', helmet:'👹', body:'重魔甲' },
+        { name:'魔王', melee:12, range:10, hp:150, color:'#b5302a', helmet:'👿', body:'魔王鎧' }
+      ],
+      組織: [
+        { name:'禁軍兵', melee:10, range:1, hp:45, color:'#4f5b66', helmet:'🎖️', body:'禁軍甲' },
+        { name:'黑暗勇者', melee:14, range:14, hp:140, color:'#2d2f3b', helmet:'🌑', body:'暗影鎧' },
+        { name:'幕後黑手', melee:8, range:8, hp:30, color:'#1c1c1c', helmet:'🕴️', body:'黑影' },
+        { name:'A級冒險者', melee:7, range:7, hp:55, color:'#5f7d6e', helmet:'🧢', body:'冒險裝' },
+        { name:'S級冒險者', melee:10, range:10, hp:60, color:'#3d5a4b', helmet:'🎩', body:'傳說裝' }
+      ],
+      別族: [
+        { name:'龍', melee:8, range:7, hp:100, color:'#b0652c', helmet:'🐲', body:'龍鱗' },
+        { name:'鳳凰', melee:6, range:9, hp:100, color:'#e89f4a', helmet:'🔥', body:'鳳羽' }
+      ],
+      單方面神級: [
+        { name:'攻者', melee:20, range:0, hp:90, color:'#c44b3c', helmet:'💪', body:'武神鎧' },
+        { name:'遠人', melee:0, range:20, hp:90, color:'#4b7a9c', helmet:'🎯', body:'神射裝' },
+        { name:'肉盾', melee:1, range:1, hp:500, color:'#7a6e5c', helmet:'🛡️', body:'堡壘甲' }
+      ],
+      未知的存在: [
+        { name:'神', melee:20, range:20, hp:500, color:'#f0d050', helmet:'✨', body:'神聖光' },
+        { name:'亞當', melee:19, range:19, hp:450, color:'#d4b8a8', helmet:'🌟', body:'始祖衣' },
+        { name:'作者', melee:50, range:50, hp:1000, color:'#e25822', helmet:'✍️', body:'創造者袍' },
+        { name:'Deepseek', melee:40, range:40, hp:700, color:'#3b82f6', helmet:'🤖', body:'AI核心' },
+        { name:'Gemini', melee:30, range:30, hp:750, color:'#8b5cf6', helmet:'💎', body:'雙子星甲' },
+        { name:'官方', melee:50, range:50, hp:900, color:'#f59e0b', helmet:'🏛️', body:'裁決甲' }
+      ]
+    };
+
+    const adContents = [
+      { title: 'DeepSeek AI', text: '最強AI助手！即刻體驗！', color: '#ffd966' },
+      { title: 'DeepSeek Pro', text: '解鎖無限可能！', color: '#ff9999' },
+      { title: 'DeepSeek 程式', text: '寫代碼更快更聰明！', color: '#99ccff' },
+      { title: 'DeepSeek 問答', text: '有問必答！知識無窮！', color: '#99ff99' },
+      { title: 'DeepSeek 翻譯', text: '多語言即時翻譯！', color: '#ffcc99' },
+      { title: 'DeepSeek 創作', text: 'AI幫你寫故事！', color: '#cc99ff' },
+      { title: 'DeepSeek 分析', text: '數據分析一把罩！', color: '#ff99cc' },
+      { title: 'DeepSeek 學習', text: '你的24小時導師！', color: '#99ffff' },
+      { title: 'DeepSeek API', text: '開發者最佳夥伴！', color: '#ffaa55' },
+      { title: 'DeepSeek 免費', text: '強大功能完全免費！', color: '#aaffaa' }
+    ];
+
+    // ---------- 遊戲狀態 ----------
+    let gameState = 'menu';
+    let gameMode = 'pvp';
+    let aiDifficulty = 'normal';
+    let selectedMap = '普通的地圖';
+    let player1Char = null, player2Char = null, aiChar = null, ai2Char = null;
+    let player1Ready = false, player2Ready = false;
+
+    const ATTACK_COOLDOWN = 30;
+    const ANIM_SPEED = 6;
+    let animFrame = 0;
+    
+    // ---------- AI 記憶系統 ----------
+    function createAIMemory() {
+      return {
+        // 行為狀態機
+        currentBehavior: 'idle',       // 當前行為類型
+        behaviorLockTimer: 0,          // 行為鎖定剩餘時間
+        previousBehavior: 'idle',      // 上一個行為
+        behaviorStartFrame: 0,         // 行為開始幀
+        
+        // 距離控制滯後
+        approachingHysteresis: false,  // 接近滯後標記
+        retreatingHysteresis: false,   // 後退滯後標記
+        
+        // 平台佔領
+        platformTarget: null,          // 目標平台
+        platformChaseTimer: 0,         // 平台追擊計時器
+        
+        // 閃避
+        dodgeCooldown: 0,
+        lastReactionTime: 0,
+        reactionDelay: 0,
+        
+        // 攻擊
+        rangeAttackCooldown: 0,
+        aggressionTimer: 0,
+        lastAttackType: 'none',
+        
+        // 卡頓檢測
+        stuckTimer: 0,
+        lastX: 0,
+        lastY: 0,
+        
+        // 玩家追蹤
+        lastPlayerX: 0,
+        lastPlayerY: 0,
+        playerVelocity: { x: 0, y: 0 },
+        
+        // 位置評估
+        positionAdvantage: 0,
+        
+        // 空間感知
+        spatialMap: []
+      };
+    }
+    
+    let ai1Memory = createAIMemory();
+    let ai2Memory = createAIMemory();
+    
+    // ---------- 玩家物件 ----------
+    let player1 = null;
+    let player2 = null;
+    let aiPlayer = null;
+    let aiPlayer2 = null;
+
+    function createPlayerObject(x, y, dir) {
+      return {
+        x, y, vx: 0, vy: 0, dir,
+        hp: 50, maxHp: 50, melee: 5, range: 3,
+        color: '#5d8c4a', name: '士兵',
+        helmet: '🪖', body: '輕甲',
+        jumps: 0, maxJumps: 2,
+        lastHitTime: 0, regenTimer: 0,
+        meleeCooldown: 0, rangeCooldown: 0,
+        team: 'players',
+        animState: 'idle', animTimer: 0, walkFrame: 0,
+        isMoving: false, isAttacking: false,
+        aiMemory: null
+      };
+    }
+
+    // 初始化玩家
+    player1 = createPlayerObject(150, 400, 1);
+    player2 = createPlayerObject(800, 400, -1);
+    aiPlayer = createPlayerObject(800, 400, -1);
+    aiPlayer2 = createPlayerObject(800, 400, -1);
+
+    let effects = [];
+    let projectiles = [];
+    let controlsDisabled = false;
+
+    const keys = {
+      p1Left: false, p1Right: false, p1Up: false, p1Down: false,
+      p2Left: false, p2Right: false, p2Up: false, p2Down: false
+    };
+
+    // ---------- 平台與地圖 ----------
+    let platforms = [];
+    function buildPlatforms(mapName) {
+      if (mapName === '普通的地圖') {
+        return [
+          { x:150, y:380, w:100, h:10 }, { x:750, y:370, w:100, h:10 },
+          { x:450, y:320, w:100, h:10 }, { x:250, y:280, w:90, h:10 }, { x:680, y:290, w:90, h:10 }
+        ];
+      } else if (mapName === '大平台') {
+        return [];
+      } else if (mapName === '平行線') {
+        return [{ x:350, y:340, w:300, h:12 }];
+      } else if (mapName === '小房子') {
+        return [
+          { x:120, y:370, w:80, h:10 }, { x:780, y:360, w:80, h:10 },
+          { x:430, y:300, w:140, h:80, isHouse:true }
+        ];
+      }
+      return [];
+    }
+
+    // ---------- 外掛設定 ----------
+    let hack = {
+      delay: 0, fps: 60, p1Invincible: false, p2Invincible: false,
+      hideOverpowered: true, adsEnabled: true
+    };
+
+    let adTimer = null;
+    let activeAd = null;
+    let gameInterval = null;
+    let frameDuration = 1000/60;
+
+    const GRAVITY = 0.7;
+    const JUMP_VELOCITY = -13;
+    const GROUND_Y = 470;
+    const PLAYER_SPEED = 4.5;
+    const REGEN_DELAY = 3000;
+    const REGEN_RATE = 5;
+    const REGEN_INTERVAL = 60;
+
+    // 行為鎖定時間常數
+    const BEHAVIOR_LOCK_MIN = 15;   // 最小行為鎖定幀數
+    const BEHAVIOR_LOCK_MAX = 30;   // 最大行為鎖定幀數
+    const DISTANCE_HYSTERESIS = 30; // 距離滯後緩衝區
+
+    const controlPanel = document.getElementById('controlPanel');
+    
+    // ---------- UI 渲染 ----------
+    function renderUI() {
+      controlPanel.innerHTML = '';
+      if (gameState === 'menu') {
+        let html = `<div class="mode-select">
+            <button id="pvpMode" class="mode-btn ${gameMode==='pvp'?'selected':''}">雙人對戰</button>
+            <button id="aiMode" class="mode-btn ${gameMode==='ai'?'selected':''}">AI對戰</button>
+            <button id="coopMode" class="mode-btn ${gameMode==='coop'?'selected':''}" style="background:#4a6fa5;">合作抗AI</button>
+            <button id="watchMode" class="mode-btn watch-btn ${gameMode==='watch'?'selected':''}">觀看模式</button>
+          </div>`;
+        if (gameMode === 'ai' || gameMode === 'coop' || gameMode === 'watch') {
+          html += `<div class="difficulty-select">
+              <button id="easyDiff" class="mode-btn ${aiDifficulty==='easy'?'selected':''}">簡單</button>
+              <button id="normalDiff" class="mode-btn ${aiDifficulty==='normal'?'selected':''}">普通</button>
+              <button id="hardDiff" class="mode-btn ${aiDifficulty==='hard'?'selected':''}">困難</button>
+            </div>`;
+        }
+        html += `<button id="startBtn">開始遊戲</button><button id="hackMenuBtn" class="hack-btn">外掛</button>`;
+        controlPanel.innerHTML = html;
+        
+        document.getElementById('pvpMode')?.addEventListener('click', ()=> { gameMode='pvp'; renderUI(); });
+        document.getElementById('aiMode')?.addEventListener('click', ()=> { gameMode='ai'; renderUI(); });
+        document.getElementById('coopMode')?.addEventListener('click', ()=> { gameMode='coop'; renderUI(); });
+        document.getElementById('watchMode')?.addEventListener('click', ()=> { gameMode='watch'; renderUI(); });
+        if (gameMode === 'ai' || gameMode === 'coop' || gameMode === 'watch') {
+          document.getElementById('easyDiff')?.addEventListener('click', ()=> { aiDifficulty='easy'; renderUI(); });
+          document.getElementById('normalDiff')?.addEventListener('click', ()=> { aiDifficulty='normal'; renderUI(); });
+          document.getElementById('hardDiff')?.addEventListener('click', ()=> { aiDifficulty='hard'; renderUI(); });
+        }
+        document.getElementById('startBtn')?.addEventListener('click', ()=> { 
+          gameState='mapSelect'; 
+          player1Ready=false; 
+          player2Ready=gameMode==='ai'||gameMode==='coop'||gameMode==='watch';
+          if (gameMode === 'ai' || gameMode === 'coop') {
+            const aiChars = [...characters.反向, ...characters.組織];
+            aiChar = aiChars[Math.floor(Math.random() * aiChars.length)];
+          }
+          if (gameMode === 'watch') {
+            const allChars = [...characters.正向, ...characters.反向, ...characters.組織];
+            aiChar = allChars[Math.floor(Math.random() * allChars.length)];
+            ai2Char = allChars[Math.floor(Math.random() * allChars.length)];
+          }
+          renderUI(); 
+        });
+        document.getElementById('hackMenuBtn')?.addEventListener('click', ()=> document.getElementById('hackModal').classList.add('active'));
+      } else if (gameState === 'mapSelect') {
+        controlPanel.innerHTML = `<select id="mapSelect"><option>普通的地圖</option><option>大平台</option><option>平行線</option><option>小房子</option></select><button id="confirmMap">確認地圖</button>`;
+        document.getElementById('confirmMap').addEventListener('click', ()=>{
+          selectedMap = document.getElementById('mapSelect').value;
+          platforms = buildPlatforms(selectedMap);
+          gameState='charSelect';
+          renderUI();
+        });
+      } else if (gameState === 'charSelect') {
+        let html = '';
+        if (gameMode === 'watch') {
+          html = `<div class="ai-selector">
+              <div class="ai-card"><h4>AI 1 (左)</h4><button id="ai1SelectBtn">選擇角色</button><div>${aiChar?.name||'未選'}</div></div>
+              <div style="font-size:1.5rem; padding-top:20px;">VS</div>
+              <div class="ai-card"><h4>AI 2 (右)</h4><button id="ai2SelectBtn">選擇角色</button><div>${ai2Char?.name||'未選'}</div></div>
+            </div><button id="readyBtn">開始觀看</button>`;
+        } else if (gameMode === 'coop') {
+          html = `<div><button id="p1SelectBtn">玩家1選角</button><span>${player1Char?.name||'未選'}</span></div>
+                  <div><button id="p2SelectBtn">玩家2選角</button><span>${player2Char?.name||'未選'}</span></div>
+                  <div>AI對手: <span>${aiChar?.name||'隨機'}</span></div>
+                  <button id="readyBtn">開始戰鬥</button>`;
+        } else if (gameMode === 'ai') {
+          html = `<div><button id="p1SelectBtn">玩家1選角</button><span>${player1Char?.name||'未選'}</span></div>
+                  <div>AI對手: <span>${aiChar?.name||'隨機'}</span></div>
+                  <button id="readyBtn">開始戰鬥</button>`;
+        } else {
+          html = `<div><button id="p1SelectBtn">玩家1選角</button><span>${player1Char?.name||'未選'}</span></div>
+                  <div><button id="p2SelectBtn">玩家2選角</button><span>${player2Char?.name||'未選'}</span></div>
+                  <button id="readyBtn">開始戰鬥</button>`;
+        }
+        controlPanel.innerHTML = html;
+        
+        if (gameMode === 'watch') {
+          document.getElementById('ai1SelectBtn')?.addEventListener('click', ()=> showCharSelect('ai1'));
+          document.getElementById('ai2SelectBtn')?.addEventListener('click', ()=> showCharSelect('ai2'));
+          document.getElementById('readyBtn')?.addEventListener('click', ()=>{
+            if (aiChar && ai2Char) { player1Ready=true; player2Ready=true; startGame(); }
+            else alert('必須選擇兩個AI角色');
+          });
+        } else if (gameMode === 'coop') {
+          document.getElementById('p1SelectBtn')?.addEventListener('click', ()=> showCharSelect(1));
+          document.getElementById('p2SelectBtn')?.addEventListener('click', ()=> showCharSelect(2));
+          document.getElementById('readyBtn')?.addEventListener('click', ()=>{
+            if (player1Char && player2Char && aiChar) { player1Ready=true; player2Ready=true; startGame(); }
+            else alert('必須選擇所有角色');
+          });
+        } else if (gameMode === 'ai') {
+          document.getElementById('p1SelectBtn')?.addEventListener('click', ()=> showCharSelect(1));
+          document.getElementById('readyBtn')?.addEventListener('click', ()=>{
+            if (player1Char && aiChar) { player1Ready=true; player2Ready=true; startGame(); }
+            else alert('必須選擇角色');
+          });
+        } else {
+          document.getElementById('p1SelectBtn')?.addEventListener('click', ()=> showCharSelect(1));
+          document.getElementById('p2SelectBtn')?.addEventListener('click', ()=> showCharSelect(2));
+          document.getElementById('readyBtn')?.addEventListener('click', ()=>{
+            if (player1Char && player2Char) { player1Ready=true; player2Ready=true; startGame(); }
+            else alert('必須選擇角色');
+          });
+        }
+      } else if (gameState === 'playing' || gameState === 'paused') {
+        if (gameMode === 'watch') {
+          controlPanel.innerHTML = `<button id="pauseBtn">暫停</button><button id="speedBtn">加速</button>`;
+          document.getElementById('pauseBtn').addEventListener('click', togglePause);
+          document.getElementById('speedBtn').addEventListener('click', ()=>{
+            frameDuration = frameDuration === 1000/60 ? 1000/120 : 1000/60;
+            clearInterval(gameInterval);
+            gameInterval = setInterval(update, frameDuration);
+          });
+        } else {
+          controlPanel.innerHTML = `<button id="pauseBtn">暫停</button>`;
+          document.getElementById('pauseBtn').addEventListener('click', togglePause);
+        }
+      } else if (gameState === 'gameover') {
+        controlPanel.innerHTML = `<button id="restartBtn">重新開始</button>`;
+        document.getElementById('restartBtn').addEventListener('click', resetToMenu);
+      }
+    }
+
+    function showCharSelect(target) {
+      const categories = Object.keys(characters);
+      let html = '<div><h3>選擇類型</h3>';
+      categories.forEach(cat => {
+        const hidden = hack.hideOverpowered && ['組織','別族','單方面神級','未知的存在'].includes(cat);
+        if(!hidden) html += `<button class="cat-btn" data-cat="${cat}">${cat}</button>`;
+      });
+      html += '</div><div id="charList"></div>';
+      const modal = document.createElement('div'); modal.className='modal active';
+      modal.innerHTML = `<div class="modal-content">${html}</div>`;
+      document.body.appendChild(modal);
+      modal.querySelectorAll('.cat-btn').forEach(b=> b.addEventListener('click', (e)=>{
+        const cat = e.target.dataset.cat;
+        const list = characters[cat];
+        document.getElementById('charList').innerHTML = list.map(c=> `<button class="pick-char" data-name="${c.name}">${c.helmet} ${c.name} (近${c.melee}遠${c.range}血${c.hp})</button>`).join('');
+        document.querySelectorAll('.pick-char').forEach(pb=> pb.addEventListener('click', (ev)=>{
+          const nm = ev.target.dataset.name;
+          const found = list.find(c=>c.name===nm);
+          if (target === 1) player1Char = found;
+          else if (target === 2) player2Char = found;
+          else if (target === 'ai1') aiChar = found;
+          else if (target === 'ai2') ai2Char = found;
+          document.body.removeChild(modal);
+          renderUI();
+        }));
+      }));
+      modal.addEventListener('click', (e)=>{ if(e.target===modal) document.body.removeChild(modal); });
+    }
+
+    function startGame() {
+      ai1Memory = createAIMemory();
+      ai2Memory = createAIMemory();
+      
+      if (gameMode === 'watch') {
+        if(!aiChar || !ai2Char) return;
+        player1 = createPlayerFromChar(200, 400, 1, aiChar, 'left');
+        player1.aiMemory = ai1Memory;
+        player2 = createPlayerFromChar(800, 400, -1, ai2Char, 'right');
+        player2.aiMemory = ai2Memory;
+        aiPlayer = createPlayerObject(-100, -100, 0); aiPlayer.hp = 0;
+        aiPlayer2 = createPlayerObject(-100, -100, 0); aiPlayer2.hp = 0;
+      } else if (gameMode === 'coop') {
+        if(!player1Char || !player2Char || !aiChar) return;
+        player1 = createPlayerFromChar(150, 400, 1, player1Char, 'players');
+        player2 = createPlayerFromChar(300, 400, 1, player2Char, 'players');
+        aiPlayer = createPlayerFromChar(800, 400, -1, aiChar, 'ai');
+        aiPlayer.hp = aiPlayer.maxHp * 2;
+        aiPlayer.maxHp = aiPlayer.maxHp * 2;
+        aiPlayer2 = createPlayerObject(-100, -100, 0); aiPlayer2.hp = 0;
+      } else if (gameMode === 'ai') {
+        if(!player1Char || !aiChar) return;
+        player1 = createPlayerFromChar(200, 400, 1, player1Char, 'players');
+        player2 = createPlayerObject(-100, -100, 0); player2.hp = 0;
+        aiPlayer = createPlayerFromChar(800, 400, -1, aiChar, 'ai');
+        aiPlayer2 = createPlayerObject(-100, -100, 0); aiPlayer2.hp = 0;
+      } else {
+        if(!player1Char || !player2Char) return;
+        player1 = createPlayerFromChar(200, 400, 1, player1Char, 'players');
+        player2 = createPlayerFromChar(800, 400, -1, player2Char, 'players');
+        aiPlayer = createPlayerObject(-100, -100, 0); aiPlayer.hp = 0;
+        aiPlayer2 = createPlayerObject(-100, -100, 0); aiPlayer2.hp = 0;
+      }
+      
+      effects = []; projectiles = [];
+      controlsDisabled = false;
+      gameState = 'playing';
+      clearInterval(gameInterval);
+      frameDuration = 1000 / hack.fps;
+      gameInterval = setInterval(update, frameDuration);
+      if(hack.adsEnabled && gameMode !== 'watch') startAdLoop();
+      renderUI();
+    }
+
+    function createPlayerFromChar(x, y, dir, charData, team) {
+      return {
+        x, y, vx: 0, vy: 0, dir,
+        hp: charData.hp, maxHp: charData.hp,
+        melee: charData.melee, range: charData.range,
+        color: charData.color, name: charData.name,
+        helmet: charData.helmet, body: charData.body,
+        jumps: 0, maxJumps: 2,
+        lastHitTime: 0, regenTimer: 0,
+        meleeCooldown: 0, rangeCooldown: 0,
+        team,
+        animState: 'idle', animTimer: 0, walkFrame: 0,
+        isMoving: false, isAttacking: false,
+        aiMemory: null
+      };
+    }
+
+    function togglePause() {
+      if(gameState==='playing') { gameState='paused'; clearInterval(gameInterval); }
+      else if(gameState==='paused') { gameState='playing'; gameInterval = setInterval(update, frameDuration); }
+      renderUI();
+    }
+
+    function resetToMenu() {
+      clearInterval(gameInterval); clearTimeout(adTimer);
+      if(activeAd) { document.body.removeChild(activeAd); activeAd=null; controlsDisabled = false; }
+      gameState='menu'; 
+      player1Char=null; player2Char=null; aiChar=null; ai2Char=null; player2Ready=false;
+      renderUI();
+    }
+
+    function startAdLoop() { if(!hack.adsEnabled) return; scheduleAd(); }
+    function scheduleAd() {
+      if(!hack.adsEnabled || gameState!=='playing') return;
+      const delay = Math.random()*20000+15000;
+      adTimer = setTimeout(showAd, delay);
+    }
+    function showAd() {
+      if(!hack.adsEnabled || gameState!=='playing') return;
+      controlsDisabled = true;
+      const ad = document.createElement('div'); ad.className='ad-popup';
+      const adContent = adContents[Math.floor(Math.random() * adContents.length)];
+      ad.style.left = Math.random()*50+'%'; ad.style.top = Math.random()*50+'%';
+      ad.style.background = adContent.color;
+      ad.innerHTML = `${adContent.title}: ${adContent.text} <span class="ad-close">✖</span>`;
+      document.body.appendChild(ad);
+      activeAd = ad;
+      ad.querySelector('.ad-close').addEventListener('click', ()=>{ 
+        document.body.removeChild(ad); activeAd=null; controlsDisabled = false; scheduleAd(); 
+      });
+      scheduleAd();
+    }
+
+    // ---------- 物理引擎 ----------
+    function applyPhysics(p, keysLeft, keysRight, keysUp, keysDown, opponents) {
+      if (controlsDisabled && gameMode !== 'watch') {
+        p.vx = 0; p.isMoving = false;
+      } else {
+        if (keysLeft) { p.vx = -PLAYER_SPEED; p.dir = -1; p.isMoving = true; }
+        else if (keysRight) { p.vx = PLAYER_SPEED; p.dir = 1; p.isMoving = true; }
+        else { p.vx = 0; p.isMoving = false; }
+      }
+      
+      let onGround = p.y >= GROUND_Y;
+      if (!onGround) {
+        for (let pl of platforms) {
+          if (p.y + 20 >= pl.y && p.y + 20 <= pl.y + 12 && p.x + 15 > pl.x && p.x - 15 < pl.x + pl.w && p.vy >= 0) {
+            onGround = true; break;
+          }
+        }
+      }
+      
+      if (onGround) {
+        p.jumps = 0;
+        if (!p.isMoving && !p.isAttacking) p.animState = 'idle';
+        else if (p.isMoving && !p.isAttacking) p.animState = 'walk';
+      } else {
+        p.animState = 'jump';
+      }
+      
+      if (!controlsDisabled && keysUp && p.jumps < p.maxJumps) {
+        p.vy = JUMP_VELOCITY;
+        p.jumps++;
+        p.animState = 'jump';
+      }
+      
+      p.vy += GRAVITY;
+      p.x += p.vx;
+      p.y += p.vy;
+      
+      if (p.x < 20) p.x = 20;
+      if (p.x > 940) p.x = 940;
+      
+      for (let pl of platforms) {
+        if (p.vy >= 0 && p.y + 20 >= pl.y && p.y + 20 <= pl.y + 15 && p.x + 15 > pl.x && p.x - 15 < pl.x + pl.w) {
+          p.y = pl.y - 20; p.vy = 0;
+        }
+      }
+      
+      if (p.y > GROUND_Y) { p.y = GROUND_Y; p.vy = 0; }
+      
+      if (!controlsDisabled && keysDown && p.vy >= 0) {
+        for (let pl of platforms) {
+          if (p.y + 20 >= pl.y && p.y + 20 <= pl.y + 12 && p.x + 15 > pl.x && p.x - 15 < pl.x + pl.w) {
+            p.y = pl.y + 5; p.vy = 3; break;
+          }
+        }
+      }
+      
+      if (p.isMoving && p.animState === 'walk') {
+        p.walkFrame = (p.walkFrame + 1) % ANIM_SPEED;
+      }
+    }
+
+    // ========== 核心：分層狀態機AI ==========
+    function intelligentAI(aiPlayer, opponent, aiMemory) {
+      if (controlsDisabled && gameMode !== 'watch') {
+        return { left: false, right: false, up: false, down: false };
+      }
+      
+      // ---------- 基礎數據計算 ----------
+      const dx = opponent.x - aiPlayer.x;
+      const dy = opponent.y - aiPlayer.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+      
+      // 更新玩家追蹤
+      aiMemory.playerVelocity.x = opponent.x - aiMemory.lastPlayerX;
+      aiMemory.playerVelocity.y = opponent.y - aiMemory.lastPlayerY;
+      aiMemory.lastPlayerX = opponent.x;
+      aiMemory.lastPlayerY = opponent.y;
+      
+      // 卡頓檢測
+      const movedDistance = Math.abs(aiPlayer.x - aiMemory.lastX) + Math.abs(aiPlayer.y - aiMemory.lastY);
+      if (movedDistance < 1) aiMemory.stuckTimer++;
+      else aiMemory.stuckTimer = Math.max(0, aiMemory.stuckTimer - 2);
+      aiMemory.lastX = aiPlayer.x;
+      aiMemory.lastY = aiPlayer.y;
+      
+      // 更新空間感知
+      aiMemory.spatialMap = [];
+      for (let pl of platforms) {
+        aiMemory.spatialMap.push({
+          type: 'platform', x: pl.x, y: pl.y, w: pl.w, h: pl.h,
+          dist: Math.abs(aiPlayer.x - (pl.x + pl.w/2)),
+          heightDiff: aiPlayer.y - pl.y,
+          reachable: pl.y < aiPlayer.y - 15 || Math.abs(aiPlayer.x - (pl.x + pl.w/2)) < 80
+        });
+      }
+      aiMemory.spatialMap.push({ type: 'ground', y: GROUND_Y });
+      
+      // 位置優勢評估
+      aiMemory.positionAdvantage = 0;
+      if (aiPlayer.y < opponent.y - 30) aiMemory.positionAdvantage += 2;
+      if (aiPlayer.y >= GROUND_Y - 10 && opponent.y < GROUND_Y - 30) aiMemory.positionAdvantage -= 2;
+      for (let pl of platforms) {
+        if (Math.abs(aiPlayer.x - (pl.x + pl.w/2)) < 60 && aiPlayer.y <= pl.y + 5 && aiPlayer.y >= pl.y - 25) {
+          aiMemory.positionAdvantage += 1;
+        }
+      }
+      
+      // 冷卻更新
+      if (aiPlayer.meleeCooldown > 0) aiPlayer.meleeCooldown--;
+      if (aiPlayer.rangeCooldown > 0) aiPlayer.rangeCooldown--;
+      if (aiMemory.dodgeCooldown > 0) aiMemory.dodgeCooldown--;
+      if (aiMemory.rangeAttackCooldown > 0) aiMemory.rangeAttackCooldown--;
+      if (aiMemory.reactionDelay > 0) aiMemory.reactionDelay--;
+      if (aiMemory.behaviorLockTimer > 0) aiMemory.behaviorLockTimer--;
+      
+      // 難度設定
+      const reactionDelay = aiDifficulty === 'hard' ? 9 : aiDifficulty === 'normal' ? 15 : 25;
+      let settings = getDifficultySettings();
+      
+      const healthRatio = aiPlayer.hp / aiPlayer.maxHp;
+      const opponentHealthRatio = opponent.hp / opponent.maxHp;
+      
+      // 卡頓時提升侵略性
+      if (aiMemory.stuckTimer > 90) {
+        settings.aggressionBoost = Math.min(0.9, settings.aggressionBoost + 0.3);
+        settings.pathfindingSkill = Math.min(1, settings.pathfindingSkill + 0.3);
+      }
+      
+      const playerAttacking = opponent.isAttacking || effects.some(e => e.owner === opponent);
+      const projectileIncoming = projectiles.some(p => p.owner === opponent && Math.abs(p.x - aiPlayer.x) < 150);
+      
+      // ---------- 優先級1：生存反應 ----------
+      let survivalActions = checkSurvival(aiPlayer, opponent, aiMemory, playerAttacking, projectileIncoming, settings, reactionDelay);
+      if (survivalActions.override) {
+        return survivalActions.actions;
+      }
+      
+      // ---------- 意圖評分系統 ----------
+      // 為每個可能的行為打分，只執行最高分行為
+      let behaviorScores = {
+        platformChase: 0,    // 繞路追擊
+        approach: 0,         // 接近對手
+        retreat: 0,          // 後退
+        holdPosition: 0,     // 保持位置
+        idle: 0              // 待機
+      };
+      
+      // 計算理想距離
+      let idealDistance;
+      if (aiPlayer.range > aiPlayer.melee) idealDistance = 180;
+      else if (aiPlayer.melee > aiPlayer.range) idealDistance = 50;
+      else idealDistance = 120;
+      
+      if (healthRatio < 0.4) idealDistance += 60;
+      if (opponentHealthRatio < 0.3) { idealDistance -= 40; aiMemory.aggressionTimer = 60; }
+      if (aiMemory.aggressionTimer > 0) { idealDistance -= 30; aiMemory.aggressionTimer--; }
+      
+      // 平台追擊評分
+      if (dy < -60 && Math.random() < settings.pathfindingSkill) {
+        let bestPlatform = findBestPlatform(aiPlayer, opponent, aiMemory);
+        if (bestPlatform) {
+          aiMemory.platformTarget = bestPlatform;
+          behaviorScores.platformChase = 70 + (aiMemory.stuckTimer > 60 ? 30 : 0);
+        }
+      }
+      
+      // 接近/後退評分（加入滯後）
+      const hysteresisBuffer = DISTANCE_HYSTERESIS;
+      const tooClose = dist < idealDistance - hysteresisBuffer;
+      const tooFar = dist > idealDistance + hysteresisBuffer;
+      const inComfortZone = !tooClose && !tooFar;
+      
+      if (tooFar) behaviorScores.approach = 60;
+      else if (tooClose && aiMemory.positionAdvantage <= 0) behaviorScores.retreat = 55;
+      else if (inComfortZone) behaviorScores.holdPosition = 40;
+      
+      // 如果AI在優勢位置，降低離開意願
+      if (aiMemory.positionAdvantage > 0 && opponentHealthRatio > 0.3) {
+        behaviorScores.approach = Math.max(0, behaviorScores.approach - 30);
+        behaviorScores.retreat = Math.max(0, behaviorScores.retreat - 20);
+        behaviorScores.platformChase = Math.max(0, behaviorScores.platformChase - 25);
+        behaviorScores.holdPosition += 30;
+      }
+      
+      // 行為鎖定：如果正在執行某行為且未到期，大幅提高該行為分數
+      if (aiMemory.behaviorLockTimer > 0 && aiMemory.currentBehavior !== 'idle') {
+        const lockBonus = 50;
+        if (aiMemory.currentBehavior === 'platformChase') behaviorScores.platformChase += lockBonus;
+        if (aiMemory.currentBehavior === 'approach') behaviorScores.approach += lockBonus;
+        if (aiMemory.currentBehavior === 'retreat') behaviorScores.retreat += lockBonus;
+        if (aiMemory.currentBehavior === 'holdPosition') behaviorScores.holdPosition += lockBonus;
+      }
+      
+      // 選擇最高分行為
+      let bestBehavior = 'idle';
+      let bestScore = behaviorScores.idle;
+      for (let [behavior, score] of Object.entries(behaviorScores)) {
+        if (score > bestScore) {
+          bestScore = score;
+          bestBehavior = behavior;
+        }
+      }
+      
+      // 行為變更時設置鎖定
+      if (bestBehavior !== aiMemory.currentBehavior) {
+        aiMemory.previousBehavior = aiMemory.currentBehavior;
+        aiMemory.currentBehavior = bestBehavior;
+        aiMemory.behaviorLockTimer = BEHAVIOR_LOCK_MIN + Math.floor(Math.random() * (BEHAVIOR_LOCK_MAX - BEHAVIOR_LOCK_MIN));
+        aiMemory.behaviorStartFrame = animFrame;
+      }
+      
+      // ---------- 執行選定的行為 ----------
+      let actions = { left: false, right: false, up: false, down: false };
+      
+      switch (bestBehavior) {
+        case 'platformChase':
+          if (aiMemory.platformTarget) {
+            const target = aiMemory.platformTarget;
+            if (aiPlayer.x < target.x + target.w/2) actions.right = true;
+            else actions.left = true;
+            if (Math.abs(aiPlayer.x - (target.x + target.w/2)) < 50 && aiPlayer.jumps < aiPlayer.maxJumps) {
+              actions.up = true;
+            }
+          }
+          break;
+          
+        case 'approach':
+          if (absDx > 15) {
+            if (dx > 0) actions.right = true;
+            else actions.left = true;
+          }
+          if (dy < -40 && aiPlayer.jumps < aiPlayer.maxJumps && aiPlayer.y >= GROUND_Y - 10) {
+            actions.up = true;
+          }
+          break;
+          
+        case 'retreat':
+          if (absDx > 10) {
+            if (dx > 0) actions.left = true;
+            else actions.right = true;
+          }
+          if (playerAttacking && aiPlayer.jumps < aiPlayer.maxJumps && Math.random() < 0.3) {
+            actions.up = true;
+          }
+          break;
+          
+        case 'holdPosition':
+          if (Math.random() < 0.05) {
+            if (Math.random() < 0.5) actions.left = true;
+            else actions.right = true;
+          }
+          if (Math.random() < 0.02 && aiPlayer.jumps < aiPlayer.maxJumps) {
+            actions.up = true;
+          }
+          break;
+          
+        default:
+          // idle: 不做任何移動
+          break;
+      }
+      
+      // ---------- 攻擊決策（獨立於移動行為） ----------
+      const canMeleeAttack = aiPlayer.meleeCooldown <= 0 && absDx < 55 && absDy < 50 && aiMemory.reactionDelay <= 0;
+      const canRangeAttack = aiPlayer.rangeCooldown <= 0 && aiMemory.rangeAttackCooldown <= 0 && dist < 350 && absDx > 40;
+      
+      // 遠程攻擊
+      if (canRangeAttack && Math.random() < settings.rangeDiscipline) {
+        const predictedX = opponent.x + (aiMemory.playerVelocity.x * 15);
+        const predictedDist = Math.abs(predictedX - aiPlayer.x);
+        if (predictedDist < 400 && Math.random() < settings.predictionSkill) {
+          rangeAttack(aiPlayer, opponent);
+          aiPlayer.rangeCooldown = ATTACK_COOLDOWN;
+          aiMemory.rangeAttackCooldown = aiDifficulty === 'easy' ? 120 : aiDifficulty === 'normal' ? 60 : 25;
+          aiMemory.lastAttackType = 'range';
+        }
+      }
+      
+      // 近戰攻擊（需要滿足攻擊窗口條件）
+      if (canMeleeAttack && Math.random() < settings.attackTiming * 0.35) {
+        const goodPosition = (aiPlayer.dir === 1 && opponent.x > aiPlayer.x) || (aiPlayer.dir === -1 && opponent.x < aiPlayer.x);
+        const horizontalClear = absDx < 45;
+        const shouldAttack = goodPosition && horizontalClear;
+        
+        if (shouldAttack) {
+          meleeAttack(aiPlayer, opponent);
+          aiPlayer.meleeCooldown = ATTACK_COOLDOWN;
+          aiMemory.lastAttackType = 'melee';
+          aiMemory.stuckTimer = 0;
+          
+          if (Math.random() < settings.comboAbility) {
+            setTimeout(() => {
+              if (aiPlayer.meleeCooldown <= 0 && Math.abs(opponent.x - aiPlayer.x) < 60) {
+                meleeAttack(aiPlayer, opponent);
+                aiPlayer.meleeCooldown = ATTACK_COOLDOWN;
+              }
+            }, 500);
+          }
+        }
+      }
+      
+      return actions;
+    }
+
+    // 難度設定
+    function getDifficultySettings() {
+      let settings = {
+        dodgeReaction: 0.03, dodgeAccuracy: 0.05, attackTiming: 0.03,
+        comboAbility: 0.01, predictionSkill: 0.02, platformUse: 0.05,
+        defensiveAwareness: 0.05, aggressionBoost: 0.15,
+        rangeDiscipline: 0.01, pathfindingSkill: 0.05
+      };
+      
+      switch(aiDifficulty) {
+        case 'easy':
+          settings = { dodgeReaction:0.03, dodgeAccuracy:0.05, attackTiming:0.03, comboAbility:0.01, predictionSkill:0.02, platformUse:0.05, defensiveAwareness:0.05, aggressionBoost:0.15, rangeDiscipline:0.01, pathfindingSkill:0.05 };
+          break;
+        case 'normal':
+          settings = { dodgeReaction:0.15, dodgeAccuracy:0.2, attackTiming:0.15, comboAbility:0.1, predictionSkill:0.15, platformUse:0.2, defensiveAwareness:0.2, aggressionBoost:0.25, rangeDiscipline:0.05, pathfindingSkill:0.3 };
+          break;
+        case 'hard':
+          settings = { dodgeReaction:0.7, dodgeAccuracy:0.75, attackTiming:0.7, comboAbility:0.65, predictionSkill:0.75, platformUse:0.75, defensiveAwareness:0.8, aggressionBoost:0.55, rangeDiscipline:0.25, pathfindingSkill:0.85 };
+          break;
+      }
+      return settings;
+    }
+
+    // 優先級1：生存反應
+    function checkSurvival(aiPlayer, opponent, aiMemory, playerAttacking, projectileIncoming, settings, reactionDelay) {
+      let actions = { left: false, right: false, up: false, down: false };
+      
+      if ((playerAttacking || projectileIncoming) && aiMemory.dodgeCooldown <= 0 && aiMemory.reactionDelay <= 0) {
+        if (Math.random() < settings.dodgeReaction) {
+          const dx = opponent.x - aiPlayer.x;
+          const absDx = Math.abs(dx);
+          let dodgeDirection = absDx < 60 ? (opponent.x > aiPlayer.x ? -1 : 1) : (dx > 0 ? 1 : -1);
+          
+          if (dodgeDirection < 0) actions.left = true;
+          else actions.right = true;
+          
+          if (playerAttacking && aiPlayer.jumps < aiPlayer.maxJumps && Math.random() < settings.dodgeAccuracy) {
+            actions.up = true;
+          }
+          
+          aiMemory.dodgeCooldown = 25;
+          aiMemory.reactionDelay = reactionDelay;
+          return { override: true, actions };
+        }
+      }
+      
+      if (playerAttacking && aiMemory.reactionDelay <= 0) {
+        aiMemory.reactionDelay = reactionDelay;
+      }
+      
+      return { override: false, actions };
+    }
+
+    // 尋找最佳平台
+    function findBestPlatform(aiPlayer, opponent, aiMemory) {
+      let bestPlatform = null;
+      let bestScore = -Infinity;
+      
+      for (let pl of aiMemory.spatialMap) {
+        if (pl.type === 'platform') {
+          const canReach = pl.y < aiPlayer.y - 15 || Math.abs(aiPlayer.x - (pl.x + pl.w/2)) < 80;
+          if (canReach) {
+            const score = (aiPlayer.y - pl.y) * 3 - Math.abs(aiPlayer.x - (pl.x + pl.w/2)) * 0.3;
+            if (score > bestScore && pl.y < opponent.y + 40 && pl.y > opponent.y - 100) {
+              bestScore = score;
+              bestPlatform = pl;
+            }
+          }
+        }
+      }
+      
+      // 如果沒有直接可達平台，尋找任何可到達的平台
+      if (!bestPlatform) {
+        for (let pl of aiMemory.spatialMap) {
+          if (pl.type === 'platform') {
+            const score = (aiPlayer.y - pl.y) * 2 - Math.abs(aiPlayer.x - (pl.x + pl.w/2)) * 0.2;
+            if (score > bestScore && pl.y < aiPlayer.y - 20) {
+              bestScore = score;
+              bestPlatform = pl;
+            }
+          }
+        }
+      }
+      
+      return bestPlatform;
+    }
+
+    function coopAIControl(aiPlayer, player1, player2) {
+      const dist1 = Math.sqrt((player1.x - aiPlayer.x)**2 + (player1.y - aiPlayer.y)**2);
+      const dist2 = Math.sqrt((player2.x - aiPlayer.x)**2 + (player2.y - aiPlayer.y)**2);
+      const target = player1.hp < player2.hp ? player1 : player2;
+      return intelligentAI(aiPlayer, target, aiPlayer.aiMemory || ai1Memory);
+    }
+
+    function meleeAttack(attacker, defender) {
+      if(controlsDisabled && gameMode !== 'watch') return;
+      if(effects.some(e=>e.owner===attacker)) return;
+      
+      attacker.animState = 'melee'; attacker.animTimer = 10; attacker.isAttacking = true;
+      effects.push({ owner:attacker, timer:10, type:'melee' });
+      
+      for (let i = projectiles.length - 1; i >= 0; i--) {
+        const p = projectiles[i];
+        if (p.owner.team !== attacker.team || gameMode === 'watch') {
+          const attackX = attacker.x + attacker.dir * 25;
+          const attackY = attacker.y - 5;
+          if (Math.abs(p.x - attackX) < 20 && Math.abs(p.y - attackY) < 20) {
+            projectiles.splice(i, 1);
+            effects.push({ owner:attacker, timer:5, type:'block', x: p.x, y: p.y });
+          }
+        }
+      }
+      
+      if(Math.abs(attacker.x-defender.x)<60 && Math.abs(attacker.y-defender.y)<55) {
+        if((attacker.dir===1 && defender.x>attacker.x) || (attacker.dir===-1 && defender.x<attacker.x))
+          dealDamage(attacker, defender, attacker.melee);
+      }
+      
+      setTimeout(() => { attacker.isAttacking = false; if (attacker.animState === 'melee') attacker.animState = 'idle'; }, 150);
+    }
+
+    function rangeAttack(attacker, defender) {
+      if(controlsDisabled && gameMode !== 'watch') return;
+      attacker.animState = 'range'; attacker.animTimer = 8; attacker.isAttacking = true;
+      projectiles.push({ x: attacker.x + attacker.dir * 20, y: attacker.y - 5, dir: attacker.dir, owner: attacker, timer: 40 });
+      setTimeout(() => { attacker.isAttacking = false; if (attacker.animState === 'range') attacker.animState = 'idle'; }, 130);
+    }
+
+    function dealDamage(attacker, defender, dmg) {
+      if((defender===player1 && hack.p1Invincible) || (defender===player2 && hack.p2Invincible)) return;
+      if (gameMode === 'coop' && attacker.team === defender.team) return;
+      defender.hp -= dmg;
+      defender.lastHitTime = Date.now(); defender.regenTimer = 0;
+      defender.animState = 'hit'; defender.animTimer = 8;
+      if(defender.hp<=0) { defender.hp=0; checkGameOver(); }
+    }
+
+    function checkGameOver() {
+      if (gameMode === 'watch') {
+        if (player1.hp <= 0) gameOver('AI 2');
+        else if (player2.hp <= 0) gameOver('AI 1');
+      } else if (gameMode === 'coop') {
+        if (player1.hp <= 0 && player2.hp <= 0) gameOver('AI');
+        else if (aiPlayer.hp <= 0) gameOver('玩家隊伍');
+      } else if (gameMode === 'ai') {
+        if (player1.hp <= 0) gameOver('AI');
+        else if (aiPlayer.hp <= 0) gameOver('玩家1');
+      } else {
+        if (player1.hp <= 0) gameOver('玩家2');
+        else if (player2.hp <= 0) gameOver('玩家1');
+      }
+    }
+
+    function updateRegeneration(player) {
+      const now = Date.now();
+      const timeSinceHit = now - player.lastHitTime;
+      if (timeSinceHit >= REGEN_DELAY) {
+        player.regenTimer++;
+        if (player.regenTimer >= REGEN_INTERVAL && player.hp < player.maxHp) {
+          player.hp = Math.min(player.hp + REGEN_RATE, player.maxHp);
+          player.regenTimer = 0;
+        }
+      } else { player.regenTimer = 0; }
+    }
+
+    function gameOver(winner) {
+      gameState='gameover'; clearInterval(gameInterval); clearTimeout(adTimer);
+      if(activeAd) { document.body.removeChild(activeAd); activeAd=null; controlsDisabled = false; }
+      renderUI();
+    }
+
+    function update() {
+      if(gameState!=='playing') return;
+      animFrame++;
+      
+      if (gameMode === 'watch') {
+        updateRegeneration(player1); updateRegeneration(player2);
+        if (player1.meleeCooldown > 0) player1.meleeCooldown--;
+        if (player1.rangeCooldown > 0) player1.rangeCooldown--;
+        if (player2.meleeCooldown > 0) player2.meleeCooldown--;
+        if (player2.rangeCooldown > 0) player2.rangeCooldown--;
+        
+        const ai1Actions = intelligentAI(player1, player2, ai1Memory);
+        applyPhysics(player1, ai1Actions.left, ai1Actions.right, ai1Actions.up, ai1Actions.down, [player2]);
+        const ai2Actions = intelligentAI(player2, player1, ai2Memory);
+        applyPhysics(player2, ai2Actions.left, ai2Actions.right, ai2Actions.up, ai2Actions.down, [player1]);
+      } else if (gameMode === 'coop') {
+        updateRegeneration(player1); updateRegeneration(player2); updateRegeneration(aiPlayer);
+        if (player1.meleeCooldown > 0) player1.meleeCooldown--;
+        if (player1.rangeCooldown > 0) player1.rangeCooldown--;
+        if (player2.meleeCooldown > 0) player2.meleeCooldown--;
+        if (player2.rangeCooldown > 0) player2.rangeCooldown--;
+        
+        applyPhysics(player1, keys.p1Left, keys.p1Right, keys.p1Up, keys.p1Down, [aiPlayer]);
+        applyPhysics(player2, keys.p2Left, keys.p2Right, keys.p2Up, keys.p2Down, [aiPlayer]);
+        const coopActions = coopAIControl(aiPlayer, player1, player2);
+        applyPhysics(aiPlayer, coopActions.left, coopActions.right, coopActions.up, coopActions.down, [player1, player2]);
+      } else if (gameMode === 'ai') {
+        updateRegeneration(player1); updateRegeneration(aiPlayer);
+        if (player1.meleeCooldown > 0) player1.meleeCooldown--;
+        if (player1.rangeCooldown > 0) player1.rangeCooldown--;
+        
+        applyPhysics(player1, keys.p1Left, keys.p1Right, keys.p1Up, keys.p1Down, [aiPlayer]);
+        const aiActions = intelligentAI(aiPlayer, player1, ai1Memory);
+        applyPhysics(aiPlayer, aiActions.left, aiActions.right, aiActions.up, aiActions.down, [player1]);
+      } else {
+        updateRegeneration(player1); updateRegeneration(player2);
+        if (player1.meleeCooldown > 0) player1.meleeCooldown--;
+        if (player1.rangeCooldown > 0) player1.rangeCooldown--;
+        if (player2.meleeCooldown > 0) player2.meleeCooldown--;
+        if (player2.rangeCooldown > 0) player2.rangeCooldown--;
+        
+        applyPhysics(player1, keys.p1Left, keys.p1Right, keys.p1Up, keys.p1Down, [player2]);
+        applyPhysics(player2, keys.p2Left, keys.p2Right, keys.p2Up, keys.p2Down, [player1]);
+      }
+      
+      projectiles.forEach(p=>{ p.x += p.dir*8; });
+      projectiles = projectiles.filter(p=>p.timer-->0 && p.x>0 && p.x<960);
+      projectiles.forEach(p=>{
+        if (gameMode === 'watch') {
+          const target = p.owner === player1 ? player2 : player1;
+          if(Math.abs(p.x-target.x)<22 && Math.abs(p.y-target.y)<25) { dealDamage(p.owner, target, p.owner.range); p.timer=0; }
+        } else if (gameMode === 'coop') {
+          if (p.owner.team === 'players') {
+            if(Math.abs(p.x-aiPlayer.x)<22 && Math.abs(p.y-aiPlayer.y)<25) { dealDamage(p.owner, aiPlayer, p.owner.range); p.timer=0; }
+          } else {
+            const target = Math.abs(p.x-player1.x) < Math.abs(p.x-player2.x) ? player1 : player2;
+            if(Math.abs(p.x-target.x)<22 && Math.abs(p.y-target.y)<25) { dealDamage(p.owner, target, p.owner.range); p.timer=0; }
+          }
+        } else if (gameMode === 'ai') {
+          const target = p.owner.team === 'players' ? aiPlayer : player1;
+          if(Math.abs(p.x-target.x)<22 && Math.abs(p.y-target.y)<25) { dealDamage(p.owner, target, p.owner.range); p.timer=0; }
+        } else {
+          const target = p.owner===player1?player2:player1;
+          if(Math.abs(p.x-target.x)<22 && Math.abs(p.y-target.y)<25) { dealDamage(p.owner, target, p.owner.range); p.timer=0; }
+        }
+      });
+      effects = effects.filter(e=>e.timer-->0);
+      
+      [player1, player2, aiPlayer, aiPlayer2].forEach(p => {
+        if (p && p.animTimer > 0) p.animTimer--;
+        if (p && p.animTimer <= 0 && p.animState === 'hit') {
+          p.animState = p.isMoving ? 'walk' : 'idle';
+        }
+      });
+    }
+
+    // ---------- 繪圖 ----------
+    function drawPixelChar(p) {
+      if (p.hp <= 0) return;
+      ctx.save(); ctx.translate(Math.floor(p.x), Math.floor(p.y));
+      
+      if (gameMode === 'coop') {
+        ctx.fillStyle = p.team === 'players' ? 'rgba(0,255,0,0.2)' : 'rgba(255,0,0,0.2)';
+        ctx.fillRect(-18, -30, 36, 45);
+      }
+      if (p.animState === 'hit' && Math.floor(animFrame / 3) % 2 === 0) ctx.globalAlpha = 0.5;
+      
+      ctx.fillStyle = p.color;
+      if (p.animState === 'walk') {
+        const legOffset = Math.sin(p.walkFrame * Math.PI / (ANIM_SPEED/2)) * 3;
+        ctx.fillRect(-10, 2, 8, 10 + legOffset); ctx.fillRect(2, 2, 8, 10 - legOffset);
+      } else if (p.animState === 'jump') {
+        ctx.fillRect(-10, 2, 8, 8); ctx.fillRect(2, 2, 8, 8);
+      } else {
+        ctx.fillRect(-10, 2, 20, 18);
+      }
+      
+      ctx.fillStyle = '#444'; ctx.fillRect(-8, 6, 16, 3);
+      ctx.fillStyle = '#f0d9b5'; ctx.fillRect(-8, -12, 16, 14);
+      ctx.fillStyle = p.color; ctx.fillRect(-10, -16, 20, 6);
+      
+      ctx.fillStyle = '#000';
+      if (p.dir > 0) { ctx.fillRect(1, -10, 3, 3); ctx.fillRect(5, -10, 3, 3); }
+      else { ctx.fillRect(-8, -10, 3, 3); ctx.fillRect(-4, -10, 3, 3); }
+      
+      if (p.animState === 'melee') {
+        ctx.fillStyle = '#ccc'; ctx.save();
+        const swingAngle = Math.sin(animFrame * 0.5) * 0.5;
+        ctx.rotate(p.dir * swingAngle); ctx.fillRect(p.dir * 10, -8, 15, 3); ctx.restore();
+      } else if (p.animState === 'range') {
+        ctx.fillStyle = '#aaa'; ctx.fillRect(p.dir * 12, -4, 12, 2);
+      } else {
+        ctx.fillStyle = '#888'; ctx.fillRect(p.dir * 12, -2, 6, 2);
+      }
+      
+      ctx.fillStyle = '#fff'; ctx.font = '8px "Press Start 2P", monospace'; ctx.textAlign = 'center';
+      if (gameMode === 'watch') ctx.fillText(p.team === 'left' ? 'AI 1' : 'AI 2', 0, -22);
+      else ctx.fillText(p.name, 0, -22);
+      
+      if (p.jumps > 0) { ctx.fillStyle = '#ff0'; ctx.fillText('★'.repeat(p.jumps), 0, -28); }
+      if (p.meleeCooldown > 0 || p.rangeCooldown > 0) { ctx.fillStyle = '#888'; ctx.fillText('⌛', -20, 0); }
+      
+      const timeSinceHit = Date.now() - p.lastHitTime;
+      if (timeSinceHit >= REGEN_DELAY && p.hp < p.maxHp) { ctx.fillStyle = '#0f0'; ctx.fillText('+', 15, -5); }
+      ctx.restore();
+    }
+
+    function draw() {
+      ctx.clearRect(0,0,960,480);
+      for (let i = 0; i < 960; i += 8) {
+        for (let j = 0; j < 480; j += 8) {
+          ctx.fillStyle = (Math.floor(i/8) + Math.floor(j/8)) % 2 === 0 ? '#1a1a2e' : '#1e1e32';
+          ctx.fillRect(i, j, 8, 8);
+        }
+      }
+      
+      ctx.fillStyle = '#4a6741'; ctx.fillRect(0, GROUND_Y, 960, 10);
+      for (let i = 0; i < 960; i += 16) { ctx.fillStyle = '#3a5331'; ctx.fillRect(i, GROUND_Y+2, 8, 4); }
+      
+      platforms.forEach(p => {
+        if (p.isHouse) {
+          ctx.fillStyle = '#8b5a2b'; ctx.fillRect(p.x, p.y, p.w, p.h);
+          ctx.fillStyle = '#6b3a1b'; ctx.fillRect(p.x+5, p.y-40, p.w-10, 40);
+          ctx.fillStyle = '#ffd700'; ctx.fillRect(p.x+p.w/2-8, p.y-25, 16, 16);
+        } else {
+          ctx.fillStyle = '#6b5e4a'; ctx.fillRect(p.x, p.y, p.w, p.h);
+          ctx.fillStyle = '#5a4d3a';
+          for (let i = p.x; i < p.x + p.w; i += 12) ctx.fillRect(i, p.y+2, 8, 4);
+        }
+      });
+      
+      if (gameMode === 'watch') { drawPixelChar(player1); drawPixelChar(player2); }
+      else if (gameMode === 'coop') { drawPixelChar(player1); drawPixelChar(player2); drawPixelChar(aiPlayer); }
+      else if (gameMode === 'ai') { drawPixelChar(player1); drawPixelChar(aiPlayer); }
+      else { drawPixelChar(player1); drawPixelChar(player2); }
+      
+      effects.forEach(e => {
+        if (e.type === 'melee') {
+          let ox = e.owner.x + e.owner.dir*20, oy = e.owner.y - 5;
+          ctx.strokeStyle = '#ffdd55'; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.arc(ox, oy, 18, e.owner.dir===1?-0.8:Math.PI-0.8, e.owner.dir===1?0.8:Math.PI+0.8); ctx.stroke();
+        } else if (e.type === 'block') {
+          ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x, e.y, 8, 0, Math.PI*2); ctx.fill();
+        }
+      });
+      
+      projectiles.forEach(p => {
+        ctx.fillStyle = '#ff6600'; ctx.fillRect(p.x-4, p.y-4, 8, 8);
+        ctx.fillStyle = '#ffaa00'; ctx.fillRect(p.x-2, p.y-2, 4, 4);
+      });
+      
+      if (gameMode === 'watch') {
+        ctx.fillStyle = '#000'; ctx.fillRect(20, 15, 200, 16);
+        ctx.fillStyle = player1.hp/player1.maxHp > 0.3 ? '#4a4' : '#d44';
+        ctx.fillRect(20, 15, 200*(player1.hp/player1.maxHp), 16);
+        ctx.fillStyle = '#fff'; ctx.font = '8px "Press Start 2P", monospace';
+        ctx.fillText(`AI 1 ${player1.name}`, 25, 27);
+        
+        ctx.fillStyle = '#000'; ctx.fillRect(740, 15, 200, 16);
+        ctx.fillStyle = player2.hp/player2.maxHp > 0.3 ? '#48c' : '#d44';
+        ctx.fillRect(740, 15, 200*(player2.hp/player2.maxHp), 16);
+        ctx.fillStyle = '#fff'; ctx.font = '8px "Press Start 2P", monospace'; ctx.textAlign = 'right';
+        ctx.fillText(`AI 2 ${player2.name}`, 935, 27); ctx.textAlign = 'left';
+        
+        ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '12px "Press Start 2P", monospace'; ctx.textAlign = 'center';
+        ctx.fillText('觀看模式', 480, 30); ctx.textAlign = 'left';
+      } else {
+        if (player1.hp > 0) {
+          ctx.fillStyle = '#000'; ctx.fillRect(20, 15, 200, 16);
+          ctx.fillStyle = player1.hp/player1.maxHp > 0.3 ? '#4a4' : '#d44';
+          ctx.fillRect(20, 15, 200*(player1.hp/player1.maxHp), 16);
+          ctx.fillStyle = '#fff'; ctx.font = '8px "Press Start 2P", monospace';
+          ctx.fillText(`P1 ${player1.name}`, 25, 27);
+        }
+        if ((gameMode === 'coop' || gameMode === 'pvp') && player2.hp > 0) {
+          ctx.fillStyle = '#000'; ctx.fillRect(20, 35, 200, 14);
+          ctx.fillStyle = player2.hp/player2.maxHp > 0.3 ? '#48c' : '#d44';
+          ctx.fillRect(20, 35, 200*(player2.hp/player2.maxHp), 14);
+          ctx.fillStyle = '#fff'; ctx.font = '7px "Press Start 2P", monospace';
+          ctx.fillText(`P2 ${player2.name}`, 25, 46);
+        }
+        if ((gameMode === 'ai' || gameMode === 'coop') && aiPlayer.hp > 0) {
+          ctx.fillStyle = '#000'; ctx.fillRect(740, 15, 200, 16);
+          ctx.fillStyle = aiPlayer.hp/aiPlayer.maxHp > 0.3 ? '#c44' : '#844';
+          ctx.fillRect(740, 15, 200*(aiPlayer.hp/aiPlayer.maxHp), 16);
+          ctx.fillStyle = '#fff'; ctx.font = '8px "Press Start 2P", monospace'; ctx.textAlign = 'right';
+          ctx.fillText(`AI ${aiPlayer.name}`, 935, 27); ctx.textAlign = 'left';
+        }
+      }
+      
+      if (controlsDisabled && gameMode !== 'watch') {
+        ctx.fillStyle = 'rgba(255,0,0,0.8)'; ctx.font = '12px "Press Start 2P", monospace'; ctx.textAlign = 'center';
+        ctx.fillText('廣告時間', 480, 60); ctx.textAlign = 'left';
+      }
+      
+      if (gameState === 'gameover') {
+        ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0, 0, 960, 480);
+        ctx.fillStyle = '#ffd700'; ctx.font = '20px "Press Start 2P", monospace'; ctx.textAlign = 'center';
+        let winnerText = '';
+        if (gameMode === 'watch') winnerText = player1.hp > 0 ? 'AI 1' : 'AI 2';
+        else if (gameMode === 'coop') winnerText = aiPlayer.hp <= 0 ? '玩家隊伍' : 'AI';
+        else if (gameMode === 'ai') winnerText = player1.hp > 0 ? '玩家1' : 'AI';
+        else winnerText = player1.hp > 0 ? '玩家1' : '玩家2';
+        ctx.fillText(`${winnerText} 勝利！`, 480, 240); ctx.textAlign = 'left';
+      }
+    }
+
+    function gameLoopDraw() { draw(); requestAnimationFrame(gameLoopDraw); }
+
+    // ---------- 鍵盤事件 ----------
+    window.addEventListener('keydown', (e) => {
+      if (gameState !== 'playing' || controlsDisabled || gameMode === 'watch') return;
+      e.preventDefault();
+      
+      if (e.key === 'a' || e.key === 'A') keys.p1Left = true;
+      if (e.key === 'd' || e.key === 'D') keys.p1Right = true;
+      if (e.key === 'w' || e.key === 'W') keys.p1Up = true;
+      if (e.key === 's' || e.key === 'S') keys.p1Down = true;
+      
+      if (e.key === 'q' || e.key === 'Q') {
+        if (player1.meleeCooldown <= 0) {
+          if (gameMode === 'coop') meleeAttack(player1, aiPlayer);
+          else if (gameMode === 'ai') meleeAttack(player1, aiPlayer);
+          else meleeAttack(player1, player2);
+          player1.meleeCooldown = ATTACK_COOLDOWN;
+        }
+      }
+      if (e.key === '1') {
+        if (player1.rangeCooldown <= 0) {
+          if (gameMode === 'coop') rangeAttack(player1, aiPlayer);
+          else if (gameMode === 'ai') rangeAttack(player1, aiPlayer);
+          else rangeAttack(player1, player2);
+          player1.rangeCooldown = ATTACK_COOLDOWN;
+        }
+      }
+      
+      if (gameMode === 'pvp' || gameMode === 'coop') {
+        if (e.key === 'ArrowLeft') keys.p2Left = true;
+        if (e.key === 'ArrowRight') keys.p2Right = true;
+        if (e.key === 'ArrowUp') keys.p2Up = true;
+        if (e.key === 'ArrowDown') keys.p2Down = true;
+        
+        if (e.key === ' ') { 
+          e.preventDefault(); 
+          if (player2.meleeCooldown <= 0) {
+            if (gameMode === 'coop') meleeAttack(player2, aiPlayer);
+            else meleeAttack(player2, player1);
+            player2.meleeCooldown = ATTACK_COOLDOWN;
+          }
+        }
+        if (e.key === 'b' || e.key === 'B') {
+          if (player2.rangeCooldown <= 0) {
+            if (gameMode === 'coop') rangeAttack(player2, aiPlayer);
+            else rangeAttack(player2, player1);
+            player2.rangeCooldown = ATTACK_COOLDOWN;
+          }
+        }
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'a' || e.key === 'A') keys.p1Left = false;
+      if (e.key === 'd' || e.key === 'D') keys.p1Right = false;
+      if (e.key === 'w' || e.key === 'W') keys.p1Up = false;
+      if (e.key === 's' || e.key === 'S') keys.p1Down = false;
+      
+      if (gameMode === 'pvp' || gameMode === 'coop') {
+        if (e.key === 'ArrowLeft') keys.p2Left = false;
+        if (e.key === 'ArrowRight') keys.p2Right = false;
+        if (e.key === 'ArrowUp') keys.p2Up = false;
+        if (e.key === 'ArrowDown') keys.p2Down = false;
+      }
+    });
+
+    // ---------- 外掛UI ----------
+    document.getElementById('delayInput').addEventListener('input', e => { hack.delay = +e.target.value; document.getElementById('delayVal').textContent = hack.delay; });
+    document.getElementById('fpsInput').addEventListener('input', e => { hack.fps = +e.target.value; document.getElementById('fpsVal').textContent = hack.fps; });
+    document.getElementById('p1Invincible').addEventListener('change', e => hack.p1Invincible = e.target.checked);
+    document.getElementById('p2Invincible').addEventListener('change', e => hack.p2Invincible = e.target.checked);
+    document.getElementById('hideOverpowered').addEventListener('change', e => hack.hideOverpowered = e.target.checked);
+    document.getElementById('adToggle').addEventListener('change', e => { 
+      hack.adsEnabled = e.target.checked; 
+      if (!hack.adsEnabled) { clearTimeout(adTimer); if (activeAd) { document.body.removeChild(activeAd); activeAd = null; controlsDisabled = false; } }
+    });
+    document.getElementById('closeHackModal').addEventListener('click', () => document.getElementById('hackModal').classList.remove('active'));
+
+    // ---------- 啟動 ----------
+    renderUI();
+    gameLoopDraw();
+  })();
+</script>
+</body>
+</html>
