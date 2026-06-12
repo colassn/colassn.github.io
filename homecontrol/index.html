@@ -10,7 +10,6 @@
       --bg: #0c0d0e;
       --surface: #141516;
       --surface-2: #1a1b1d;
-      --surface-3: #202124;
       --text: #f5f1e8;
       --muted: rgba(245, 241, 232, 0.58);
       --soft: rgba(245, 241, 232, 0.36);
@@ -18,14 +17,11 @@
       --line-2: rgba(245, 241, 232, 0.18);
       --accent: #f2bd63;
       --accent-2: #ffcf7a;
-      --on: #f2bd63;
-      --off: rgba(245, 241, 232, 0.36);
       --success: #c9ff9d;
       --danger: #ffb3a3;
       --shadow: 0 26px 80px rgba(0, 0, 0, 0.38);
       --radius-xl: 34px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
+      --radius-lg: 26px;
     }
 
     * {
@@ -103,10 +99,6 @@
       border-radius: 50%;
       background: var(--accent);
       box-shadow: 0 0 0 5px rgba(242, 189, 99, 0.08);
-    }
-
-    .brand-text {
-      min-width: 0;
     }
 
     .brand-title {
@@ -254,13 +246,13 @@
 
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
       gap: 14px;
     }
 
     .device-card {
-      min-height: 238px;
-      padding: 18px;
+      min-height: 268px;
+      padding: 20px;
       border-radius: var(--radius-lg);
       background:
         linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025)),
@@ -271,6 +263,10 @@
       justify-content: space-between;
       position: relative;
       overflow: hidden;
+      transition:
+        border-color 180ms ease,
+        background 180ms ease,
+        transform 160ms ease;
     }
 
     .device-card.active {
@@ -280,8 +276,8 @@
         var(--surface);
     }
 
-    .device-card.disabled {
-      opacity: 0.46;
+    .device-card.loading {
+      transform: translateY(-1px);
     }
 
     .card-head {
@@ -292,9 +288,9 @@
     }
 
     .icon-box {
-      width: 48px;
-      height: 48px;
-      border-radius: 17px;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
       background: var(--surface-2);
@@ -311,8 +307,8 @@
     }
 
     .icon-box svg {
-      width: 25px;
-      height: 25px;
+      width: 27px;
+      height: 27px;
       stroke: currentColor;
     }
 
@@ -320,11 +316,11 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      padding: 7px 9px;
+      padding: 8px 10px;
       border-radius: 999px;
       border: 1px solid var(--line);
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       white-space: nowrap;
     }
 
@@ -354,8 +350,18 @@
       background: var(--danger);
     }
 
+    .status-chip.loading::before {
+      background: var(--accent);
+      animation: pulse 0.9s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.35; }
+      to { opacity: 1; }
+    }
+
     .device-body {
-      margin-top: 18px;
+      margin-top: 22px;
     }
 
     .device-type {
@@ -368,75 +374,88 @@
 
     .device-name {
       margin: 0;
-      font-size: 20px;
-      line-height: 1.08;
-      font-weight: 770;
+      font-size: 24px;
+      line-height: 1.05;
+      font-weight: 780;
       letter-spacing: -0.035em;
     }
 
     .device-detail {
-      margin: 10px 0 0;
+      margin: 11px 0 0;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1.45;
     }
 
     .card-actions {
-      margin-top: 18px;
+      margin-top: 22px;
       display: grid;
-      gap: 10px;
+      gap: 12px;
     }
 
     .switch-wrap {
-      height: 46px;
-      padding: 4px;
-      border-radius: 999px;
+      min-height: 82px;
+      padding: 6px;
+      border-radius: 26px;
       background: var(--surface-2);
       border: 1px solid var(--line);
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4px;
+      gap: 6px;
     }
 
     .seg-btn {
-      min-height: 0;
-      height: 36px;
-      border-radius: 999px;
+      min-height: 68px;
+      border-radius: 21px;
       border: 0;
       background: transparent;
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 760;
+      font-size: 20px;
+      font-weight: 800;
       font-family: inherit;
       cursor: pointer;
-      transition: 150ms ease;
+      transition:
+        transform 120ms ease,
+        background 150ms ease,
+        color 150ms ease,
+        box-shadow 150ms ease;
+    }
+
+    .seg-btn:active {
+      transform: scale(0.965);
     }
 
     .seg-btn.active-on {
       background: var(--accent);
       color: #17120a;
+      box-shadow: 0 12px 26px rgba(242, 189, 99, 0.13);
     }
 
     .seg-btn.active-off {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.085);
       color: var(--text);
     }
 
     .seg-btn:disabled {
       cursor: not-allowed;
-      opacity: 0.5;
+      opacity: 0.58;
     }
 
     .refresh-card-btn {
-      height: 42px;
-      border-radius: 15px;
+      min-height: 52px;
+      border-radius: 18px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.035);
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 720;
+      font-size: 15px;
+      font-weight: 750;
       font-family: inherit;
       cursor: pointer;
+      transition: 120ms ease;
+    }
+
+    .refresh-card-btn:active {
+      transform: scale(0.98);
     }
 
     .refresh-card-btn:disabled {
@@ -464,6 +483,16 @@
     .last-sync {
       white-space: nowrap;
       color: var(--soft);
+    }
+
+    @media (min-width: 1181px) {
+      .cards-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .device-card:only-child {
+        grid-column: span 1;
+      }
     }
 
     @media (max-width: 1180px) {
@@ -525,7 +554,16 @@
       }
 
       .device-card {
-        min-height: 222px;
+        min-height: 270px;
+      }
+
+      .switch-wrap {
+        min-height: 88px;
+      }
+
+      .seg-btn {
+        min-height: 74px;
+        font-size: 21px;
       }
 
       .footer {
@@ -558,7 +596,7 @@
         <div class="clock-inner">
           <div class="clock-meta">
             <span>Local Time</span>
-            <span id="refreshHint">Auto refresh · 2s</span>
+            <span id="refreshHint">Auto refresh · 1s</span>
           </div>
 
           <div class="clock-time">
@@ -585,51 +623,25 @@
 
   <script>
     const WORKER_URL = "https://homecontrol.chimhinhin.workers.dev";
-    const REFRESH_INTERVAL_MS = 2000;
+
+    const REFRESH_INTERVAL_MS = 1000;
+    const FAST_REFRESH_INTERVAL_MS = 350;
+    const FAST_REFRESH_DURATION_MS = 3500;
+
+    let fastRefreshUntil = 0;
+    let optimisticLockUntil = 0;
+    let optimisticState = null;
 
     const devices = [
       {
         id: "desk-ambient-light",
         name: "枱底氛圍燈",
         type: "Smart plug",
-        detail: "已接入 Tuya API · switch_1",
+        detail: "Tuya API · switch_1",
         icon: "plug",
         enabled: true,
         workerStatusPath: "/status",
         workerControlPath: "/control",
-        state: null,
-        loading: false,
-        error: false
-      },
-      {
-        id: "room-light",
-        name: "房間主燈",
-        type: "Coming soon",
-        detail: "預留位置 · 之後可接第二個 API",
-        icon: "bulb",
-        enabled: false,
-        state: null,
-        loading: false,
-        error: false
-      },
-      {
-        id: "air-conditioner",
-        name: "冷氣",
-        type: "Coming soon",
-        detail: "可用場景或 IR remote API",
-        icon: "snow",
-        enabled: false,
-        state: null,
-        loading: false,
-        error: false
-      },
-      {
-        id: "scene-mode",
-        name: "睡覺模式",
-        type: "Coming soon",
-        detail: "之後可做一鍵場景控制",
-        icon: "moon",
-        enabled: false,
         state: null,
         loading: false,
         error: false
@@ -659,27 +671,6 @@
             <path d="M7 7h10v5a5 5 0 0 1-10 0V7Z" />
             <path d="M12 17v4" />
           </svg>
-        `,
-        bulb: `
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 18h6" />
-            <path d="M10 22h4" />
-            <path d="M8 14.5A7 7 0 1 1 16 14.5c-.9.7-1.2 1.5-1.3 2.5H9.3c-.1-1-.4-1.8-1.3-2.5Z" />
-          </svg>
-        `,
-        snow: `
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 3v18" />
-            <path d="M5 7l14 10" />
-            <path d="M19 7L5 17" />
-            <path d="M8 4l4 3 4-3" />
-            <path d="M8 20l4-3 4 3" />
-          </svg>
-        `,
-        moon: `
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 15.2A8.4 8.4 0 0 1 8.8 4a7.6 7.6 0 1 0 11.2 11.2Z" />
-          </svg>
         `
       };
 
@@ -694,11 +685,9 @@
         let statusText = "未知";
         let statusClass = "";
 
-        if (!device.enabled) {
-          statusText = "未接入";
-          statusClass = "off";
-        } else if (device.loading) {
-          statusText = "同步中";
+        if (device.loading) {
+          statusText = "處理中";
+          statusClass = "loading";
         } else if (device.error) {
           statusText = "錯誤";
           statusClass = "error";
@@ -710,8 +699,10 @@
           statusClass = "off";
         }
 
+        const canControl = device.enabled && !device.loading;
+
         return `
-          <article class="device-card ${isOn ? "active" : ""} ${!device.enabled ? "disabled" : ""}" id="card-${device.id}">
+          <article class="device-card ${isOn ? "active" : ""} ${device.loading ? "loading" : ""}" id="card-${device.id}">
             <div>
               <div class="card-head">
                 <div class="icon-box">
@@ -733,13 +724,13 @@
               <div class="switch-wrap">
                 <button
                   class="seg-btn ${isOn ? "active-on" : ""}"
-                  ${device.enabled ? "" : "disabled"}
+                  ${canControl ? "" : "disabled"}
                   onclick="controlDevice('${device.id}', 'on')"
                 >開</button>
 
                 <button
                   class="seg-btn ${isOff ? "active-off" : ""}"
-                  ${device.enabled ? "" : "disabled"}
+                  ${canControl ? "" : "disabled"}
                   onclick="controlDevice('${device.id}', 'off')"
                 >關</button>
               </div>
@@ -807,15 +798,22 @@
 
     async function controlDevice(id, action) {
       const device = getDevice(id);
-
       if (!device || !device.enabled) return;
 
+      const nextState = action === "on";
+
+      device.state = nextState;
       device.loading = true;
       device.error = false;
+
+      optimisticState = nextState;
+      optimisticLockUntil = Date.now() + 2500;
+      fastRefreshUntil = Date.now() + FAST_REFRESH_DURATION_MS;
+
       renderCards();
 
-      setSystem("warn", action === "on" ? "正在開啟" : "正在關閉");
-      setLog(action === "on" ? `正在開啟 ${device.name}...` : `正在關閉 ${device.name}...`);
+      setSystem("warn", nextState ? "正在開啟" : "正在關閉");
+      setLog(nextState ? `${device.name} 開啟中...` : `${device.name} 關閉中...`);
 
       try {
         const response = await fetch(`${WORKER_URL}${device.workerControlPath}?action=${action}&t=${Date.now()}`, {
@@ -829,23 +827,24 @@
           throw new Error(JSON.stringify(data));
         }
 
-        device.state = action === "on";
+        device.state = nextState;
         device.error = false;
-        setSystem("ok", device.state ? "燈光已開" : "已連線");
-        setLog(device.state ? `${device.name} 已開啟。` : `${device.name} 已關閉。`);
+
+        setSystem("ok", nextState ? "燈光已開" : "已連線");
+        setLog(nextState ? `${device.name} 已開啟。` : `${device.name} 已關閉。`);
         setLastSync();
 
         try {
           localStorage.setItem("home-control-last-action", JSON.stringify({
             deviceId: id,
-            state: device.state,
+            state: nextState,
             at: Date.now()
           }));
         } catch {}
 
         renderCards();
 
-        setTimeout(() => refreshStatus(false), 450);
+        setTimeout(() => refreshStatus(false), 300);
       } catch (error) {
         device.error = true;
         setSystem("error", "控制失敗");
@@ -862,7 +861,11 @@
       isRefreshing = true;
 
       const device = getDevice("desk-ambient-light");
-      if (!device) return;
+
+      if (!device) {
+        isRefreshing = false;
+        return;
+      }
 
       if (showLog) {
         setLog("正在刷新設備狀態...");
@@ -886,7 +889,15 @@
           : null;
 
         if (switchItem) {
-          device.state = switchItem.value === true;
+          const realState = switchItem.value === true;
+
+          if (Date.now() < optimisticLockUntil && realState !== optimisticState) {
+            setLastSync();
+            isRefreshing = false;
+            return;
+          }
+
+          device.state = realState;
           device.error = false;
 
           setSystem("ok", device.state ? "燈光已開" : "已連線");
@@ -896,6 +907,7 @@
           }
         } else {
           setSystem("warn", "狀態不完整");
+
           if (showLog) {
             setLog("已連線，但狀態資料入面未搵到 switch_1。");
           }
@@ -916,13 +928,20 @@
     }
 
     function startAutoRefresh() {
-      if (refreshTimer) clearInterval(refreshTimer);
-
-      refreshTimer = setInterval(() => {
+      async function loop() {
         if (!document.hidden) {
-          refreshStatus(false);
+          await refreshStatus(false);
         }
-      }, REFRESH_INTERVAL_MS);
+
+        const nextDelay = Date.now() < fastRefreshUntil
+          ? FAST_REFRESH_INTERVAL_MS
+          : REFRESH_INTERVAL_MS;
+
+        refreshTimer = setTimeout(loop, nextDelay);
+      }
+
+      if (refreshTimer) clearTimeout(refreshTimer);
+      loop();
     }
 
     window.addEventListener("storage", event => {
@@ -953,6 +972,7 @@
     renderCards();
     updateClock();
     updateDate();
+
     setInterval(updateDate, 60 * 1000);
 
     refreshStatus(true);
