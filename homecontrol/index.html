@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>私人智能控制中心</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang HK", "Microsoft JhengHei", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(98, 143, 255, 0.25), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(255, 196, 87, 0.28), transparent 35%),
+        linear-gradient(145deg, #101218, #171923 48%, #0d0f14);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: min(430px, 100%);
+      padding: 24px;
+      border-radius: 34px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(24px);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin: 0 0 6px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .status-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .device-card {
+      padding: 22px;
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.08));
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      margin-bottom: 18px;
+    }
+
+    .device-name {
+      font-size: 18px;
+      font-weight: 750;
+      margin-bottom: 6px;
+    }
+
+    .device-desc {
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 13px;
+      margin-bottom: 22px;
+      word-break: break-all;
+    }
+
+    .power-circle {
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.28), transparent 30%),
+        linear-gradient(145deg, #30333d, #11131a);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.14),
+        0 18px 45px rgba(0,0,0,.36);
+      transition: .25s ease;
+    }
+
+    .power-circle.on {
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), transparent 30%),
+        linear-gradient(145deg, #ffd36a, #ff9f1c);
+      box-shadow:
+        0 0 50px rgba(255, 176, 39, .45),
+        0 18px 45px rgba(0,0,0,.36);
+    }
+
+    .power-icon {
+      font-size: 48px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 20px;
+      padding: 17px 16px;
+      font-size: 16px;
+      font-weight: 760;
+      color: #fff;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease, filter .15s ease;
+    }
+
+    button:active {
+      transform: scale(.96);
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .on-btn {
+      background: linear-gradient(145deg, #ffbd45, #ff8a00);
+      box-shadow: 0 12px 30px rgba(255, 142, 0, .28);
+    }
+
+    .off-btn {
+      background: linear-gradient(145deg, #3d4352, #1e222d);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
+    }
+
+    .refresh-btn {
+      margin-top: 12px;
+      width: 100%;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.86);
+    }
+
+    .log {
+      min-height: 46px;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <section class="top">
+      <div>
+        <h1 class="title">私人控制中心</h1>
+        <p class="subtitle">枱底氛圍燈｜Smart Life</p>
+      </div>
+      <div class="status-pill" id="connectionStatus">準備中</div>
+    </section>
+
+    <section class="device-card">
+      <div class="device-name">枱底氛圍燈</div>
+      <div class="device-desc">Device ID：ebf7bd020e95803c71vnuj</div>
+
+      <div class="power-circle" id="powerCircle">
+        <div class="power-icon">⏻</div>
+      </div>
+
+      <div class="buttons">
+        <button class="on-btn" id="onBtn">開燈</button>
+        <button class="off-btn" id="offBtn">關燈</button>
+      </div>
+
+      <button class="refresh-btn" id="refreshBtn">刷新狀態</button>
+
+      <div class="log" id="log">等待操作...</div>
+    </section>
+  </main>
+
+  <script>
+    /***********************
+     * 你只需要改呢幾個位
+     ***********************/
+    const TUYA_ACCESS_ID = "喺呢度貼你個 Access ID / Client ID";
+    const TUYA_ACCESS_SECRET = "喺呢度貼你個 Access Secret / Client Secret";
+
+    const TUYA_ENDPOINT = "https://openapi.tuyaus.com";
+    const DEVICE_ID = "ebf7bd020e95803c71vnuj";
+    const SWITCH_CODE = "switch_1";
+
+    /***********************
+     * UI
+     ***********************/
+    const logEl = document.getElementById("log");
+    const statusEl = document.getElementById("connectionStatus");
+    const powerCircle = document.getElementById("powerCircle");
+    const onBtn = document.getElementById("onBtn");
+    const offBtn = document.getElementById("offBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    onBtn.addEventListener("click", () => controlPlug(true));
+    offBtn.addEventListener("click", () => controlPlug(false));
+    refreshBtn.addEventListener("click", refreshStatus);
+
+    function setLoading(isLoading) {
+      onBtn.disabled = isLoading;
+      offBtn.disabled = isLoading;
+      refreshBtn.disabled = isLoading;
+    }
+
+    function setLog(text) {
+      logEl.textContent = text;
+    }
+
+    function setStatus(text) {
+      statusEl.textContent = text;
+    }
+
+    function setPowerUI(isOn) {
+      powerCircle.classList.toggle("on", !!isOn);
+      setStatus(isOn ? "已開啟" : "已關閉");
+    }
+
+    /***********************
+     * Tuya 控制
+     ***********************/
+    async function controlPlug(value) {
+      setLoading(true);
+      setLog(value ? "正在開燈..." : "正在關燈...");
+
+      try {
+        const token = await getTuyaToken();
+
+        const body = JSON.stringify({
+          commands: [
+            {
+              code: SWITCH_CODE,
+              value: value
+            }
+          ]
+        });
+
+        const result = await tuyaRequest({
+          method: "POST",
+          path: `/v1.0/iot-03/devices/${DEVICE_ID}/commands`,
+          query: {},
+          body,
+          accessToken: token
+        });
+
+        if (result.success) {
+          setPowerUI(value);
+          setLog(value ? "成功開燈 ✅" : "成功關燈 ✅");
+        } else {
+          setLog("Tuya 回傳失敗：\n" + JSON.stringify(result, null, 2));
+        }
+      } catch (err) {
+        setLog("出錯：\n" + err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function refreshStatus() {
+      setLoading(true);
+      setLog("正在刷新狀態...");
+
+      try {
+        const token = await getTuyaToken();
+
+        const result = await tuyaRequest({
+          method: "GET",
+          path: `/v1.0/iot-03/devices/${DEVICE_ID}/status`,
+          query: {},
+          body: "",
+          accessToken: token
+        });
+
+        if (!result.success) {
+          setLog("查詢失敗：\n" + JSON.stringify(result, null, 2));
+          return;
+        }
+
+        const statusList = result.result || [];
+        const switchItem = statusList.find(item => item.code === SWITCH_CODE);
+
+        if (!switchItem) {
+          setLog("查到狀態，但搵唔到 switch_1：\n" + JSON.stringify(result, null, 2));
+          return;
+        }
+
+        setPowerUI(switchItem.value === true);
+        setLog("狀態已刷新 ✅\n" + JSON.stringify(switchItem, null, 2));
+      } catch (err) {
+        setLog("出錯：\n" + err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function getTuyaToken() {
+      const cached = localStorage.getItem("tuya_token_cache");
+
+      if (cached) {
+        try {
+          const data = JSON.parse(cached);
+          if (data.access_token && Date.now() < data.expires_at) {
+            return data.access_token;
+          }
+        } catch {}
+      }
+
+      const result = await tuyaRequest({
+        method: "GET",
+        path: "/v1.0/token",
+        query: { grant_type: "1" },
+        body: "",
+        accessToken: ""
+      });
+
+      if (!result.success) {
+        throw new Error("攞 Tuya token 失敗：\n" + JSON.stringify(result, null, 2));
+      }
+
+      const token = result.result.access_token;
+      const expireSeconds = result.result.expire_time || 7200;
+
+      localStorage.setItem("tuya_token_cache", JSON.stringify({
+        access_token: token,
+        expires_at: Date.now() + Math.max(60, expireSeconds - 120) * 1000
+      }));
+
+      return token;
+    }
+
+    async function tuyaRequest({ method, path, query = {}, body = "", accessToken = "" }) {
+      const queryString = buildQuery(query);
+      const urlPath = queryString ? `${path}?${queryString}` : path;
+      const fullUrl = TUYA_ENDPOINT + urlPath;
+
+      const t = Date.now().toString();
+      const contentHash = await sha256Hex(body || "");
+
+      const stringToSign = [
+        method.toUpperCase(),
+        contentHash,
+        "",
+        urlPath
+      ].join("\n");
+
+      const signStr = TUYA_ACCESS_ID + accessToken + t + stringToSign;
+      const sign = await hmacSha256Hex(TUYA_ACCESS_SECRET, signStr);
+
+      const headers = {
+        "client_id": TUYA_ACCESS_ID,
+        "sign": sign,
+        "t": t,
+        "sign_method": "HMAC-SHA256",
+        "Content-Type": "application/json"
+      };
+
+      if (accessToken) {
+        headers["access_token"] = accessToken;
+      }
+
+      const res = await fetch(fullUrl, {
+        method,
+        headers,
+        body: method.toUpperCase() === "GET" ? undefined : body
+      });
+
+      const text = await res.text();
+
+      try {
+        return JSON.parse(text);
+      } catch {
+        throw new Error("Tuya 回傳唔係 JSON：\n" + text);
+      }
+    }
+
+    function buildQuery(query) {
+      return Object.keys(query)
+        .sort()
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
+        .join("&");
+    }
+
+    async function sha256Hex(message) {
+      const data = new TextEncoder().encode(message);
+      const hash = await crypto.subtle.digest("SHA-256", data);
+      return bufferToHex(hash).toLowerCase();
+    }
+
+    async function hmacSha256Hex(secret, message) {
+      const key = await crypto.subtle.importKey(
+        "raw",
+        new TextEncoder().encode(secret),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+      );
+
+      const signature = await crypto.subtle.sign(
+        "HMAC",
+        key,
+        new TextEncoder().encode(message)
+      );
+
+      return bufferToHex(signature).toUpperCase();
+    }
+
+    function bufferToHex(buffer) {
+      return [...new Uint8Array(buffer)]
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    window.addEventListener("load", () => {
+      setStatus("已載入");
+      refreshStatus();
+    });
+  </script>
+</body>
+</html>
