@@ -7,20 +7,24 @@
 
   <style>
     :root {
-      --bg: #0b0c0d;
-      --panel: #141516;
-      --panel-soft: #1b1c1e;
-      --text: #f4f1ea;
-      --muted: rgba(244, 241, 234, 0.58);
-      --line: rgba(244, 241, 234, 0.12);
-      --line-strong: rgba(244, 241, 234, 0.22);
-      --accent: #f2c46d;
-      --accent-strong: #ffbe45;
-      --danger: #d8d2c6;
-      --ok: #d7ff9f;
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
-      --radius-xl: 36px;
-      --radius-lg: 26px;
+      --bg: #0c0d0e;
+      --surface: #141516;
+      --surface-2: #1a1b1d;
+      --surface-3: #202124;
+      --text: #f5f1e8;
+      --muted: rgba(245, 241, 232, 0.58);
+      --soft: rgba(245, 241, 232, 0.36);
+      --line: rgba(245, 241, 232, 0.11);
+      --line-2: rgba(245, 241, 232, 0.18);
+      --accent: #f2bd63;
+      --accent-2: #ffcf7a;
+      --on: #f2bd63;
+      --off: rgba(245, 241, 232, 0.36);
+      --success: #c9ff9d;
+      --danger: #ffb3a3;
+      --shadow: 0 26px 80px rgba(0, 0, 0, 0.38);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
       --radius-md: 18px;
     }
 
@@ -53,21 +57,26 @@
 
     .page {
       min-height: 100vh;
-      padding: max(22px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) max(22px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+      padding:
+        max(18px, env(safe-area-inset-top))
+        max(18px, env(safe-area-inset-right))
+        max(18px, env(safe-area-inset-bottom))
+        max(18px, env(safe-area-inset-left));
       display: grid;
       grid-template-rows: auto 1fr auto;
-      gap: 18px;
+      gap: 16px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.035), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,0.04), transparent 35%),
+        radial-gradient(circle at 50% -20%, rgba(242,189,99,0.08), transparent 38%),
         var(--bg);
     }
 
     .topbar {
+      min-height: 42px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      min-height: 44px;
+      gap: 14px;
     }
 
     .brand {
@@ -77,24 +86,23 @@
       min-width: 0;
     }
 
-    .mark {
+    .brand-mark {
       width: 34px;
       height: 34px;
       border-radius: 12px;
-      border: 1px solid var(--line-strong);
-      background: #111213;
       display: grid;
       place-items: center;
+      background: var(--surface);
+      border: 1px solid var(--line);
       flex: 0 0 auto;
     }
 
-    .mark::before {
-      content: "";
+    .brand-mark span {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background: var(--accent);
-      box-shadow: 0 0 0 5px rgba(242, 196, 109, 0.08);
+      box-shadow: 0 0 0 5px rgba(242, 189, 99, 0.08);
     }
 
     .brand-text {
@@ -104,364 +112,361 @@
     .brand-title {
       margin: 0;
       font-size: 14px;
-      font-weight: 720;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
+      font-weight: 750;
+      letter-spacing: 0.01em;
     }
 
     .brand-subtitle {
       margin: 3px 0 0;
-      font-size: 12px;
       color: var(--muted);
+      font-size: 12px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .top-status {
+    .system-pill {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 9px 13px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--muted);
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #777;
-    }
-
-    .dot.online {
-      background: var(--ok);
-    }
-
-    .dot.on {
-      background: var(--accent);
-    }
-
-    .screen {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 18px;
-      min-height: 0;
-    }
-
-    .clock-panel {
-      position: relative;
-      min-height: 0;
-      border-radius: var(--radius-xl);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.025)),
-        var(--panel);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: clamp(28px, 5vw, 72px);
-    }
-
-    .clock-panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 56px 56px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent 75%);
-      pointer-events: none;
-    }
-
-    .clock-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 28px;
-      padding: 9px 13px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .time {
-      display: flex;
-      align-items: baseline;
-      gap: clamp(8px, 1vw, 14px);
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -0.07em;
-      line-height: 0.86;
-      user-select: none;
-    }
-
-    .time-main {
-      font-size: clamp(68px, 14vw, 210px);
-      font-weight: 760;
-    }
-
-    .time-ms {
-      font-size: clamp(25px, 4.2vw, 68px);
-      font-weight: 650;
-      color: var(--accent);
-      letter-spacing: -0.04em;
-      min-width: 1.4em;
-    }
-
-    .date-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 30px;
-      color: var(--muted);
-      font-size: clamp(14px, 1.6vw, 20px);
-      letter-spacing: 0.02em;
-    }
-
-    .divider-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--line-strong);
-    }
-
-    .side {
-      display: grid;
-      grid-template-rows: 1fr auto;
-      gap: 18px;
-      min-height: 0;
-    }
-
-    .device-panel {
-      border-radius: var(--radius-xl);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025)),
-        var(--panel);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 0;
-    }
-
-    .device-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-
-    .device-label {
-      margin: 0 0 7px;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .device-name {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 760;
-      letter-spacing: -0.03em;
-    }
-
-    .state-badge {
-      padding: 8px 11px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
       background: rgba(255,255,255,0.035);
       color: var(--muted);
       font-size: 12px;
       white-space: nowrap;
     }
 
-    .state-badge.active {
-      color: #1d1608;
-      background: var(--accent);
-      border-color: transparent;
-    }
-
-    .power-visual {
-      width: 172px;
-      height: 172px;
-      margin: 8px auto 30px;
+    .system-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      position: relative;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 40%, rgba(255,255,255,0.08), transparent 48%),
-        #101112;
-      transition: 260ms ease;
+      background: #777;
     }
 
-    .power-visual::before {
+    .system-dot.ok {
+      background: var(--success);
+    }
+
+    .system-dot.warn {
+      background: var(--accent);
+    }
+
+    .system-dot.error {
+      background: var(--danger);
+    }
+
+    .main {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: minmax(260px, 1fr) auto;
+      gap: 16px;
+    }
+
+    .clock-screen {
+      position: relative;
+      min-height: 0;
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.026)),
+        var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(28px, 5vw, 64px);
+    }
+
+    .clock-screen::before {
       content: "";
       position: absolute;
-      inset: 15px;
-      border-radius: 50%;
-      border: 1px solid rgba(244, 241, 234, 0.1);
-    }
-
-    .power-visual::after {
-      content: "";
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 2px solid rgba(244, 241, 234, 0.42);
-      border-top-color: transparent;
-      transform: rotate(45deg);
-      transition: 260ms ease;
-    }
-
-    .power-visual.on {
+      inset: 0;
       background:
-        radial-gradient(circle at 50% 42%, rgba(242,196,109,0.42), transparent 43%),
-        #15130e;
-      border-color: rgba(242, 196, 109, 0.42);
-      box-shadow: 0 0 44px rgba(242, 196, 109, 0.16);
+        linear-gradient(90deg, rgba(255,255,255,0.026) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.48), transparent 80%);
+      pointer-events: none;
     }
 
-    .power-visual.on::after {
-      border-color: var(--accent);
-      border-top-color: transparent;
-    }
-
-    .actions {
-      display: grid;
-      gap: 12px;
-    }
-
-    .button-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    button {
-      appearance: none;
-      border: 0;
-      border-radius: 18px;
-      padding: 17px 15px;
-      min-height: 56px;
-      font-size: 15px;
-      font-weight: 720;
-      cursor: pointer;
-      transition:
-        transform 140ms ease,
-        opacity 140ms ease,
-        background 180ms ease,
-        border-color 180ms ease;
-      font-family: inherit;
-    }
-
-    button:active {
-      transform: scale(0.975);
-    }
-
-    button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    .btn-primary {
-      color: #17120a;
-      background: var(--accent);
-    }
-
-    .btn-secondary {
-      color: var(--text);
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--line);
-    }
-
-    .btn-wide {
+    .clock-inner {
+      position: relative;
+      z-index: 1;
       width: 100%;
-      color: var(--text);
-      background: transparent;
-      border: 1px solid var(--line);
     }
 
-    .info-panel {
-      border-radius: var(--radius-lg);
-      background: var(--panel-soft);
-      border: 1px solid var(--line);
-      padding: 18px;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .clock-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 14px;
-    }
-
-    .info-item {
-      min-width: 0;
-    }
-
-    .info-label {
-      margin: 0 0 6px;
+      margin-bottom: 26px;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .info-value {
-      margin: 0;
-      font-size: 13px;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .clock-time {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: clamp(8px, 1vw, 14px);
+      font-variant-numeric: tabular-nums;
+      line-height: 0.84;
+      letter-spacing: -0.075em;
+      user-select: none;
     }
 
-    .bottom-log {
-      min-height: 48px;
+    .clock-main {
+      font-size: clamp(74px, 17vw, 214px);
+      font-weight: 780;
+    }
+
+    .clock-ms {
+      min-width: 1.45em;
+      font-size: clamp(26px, 4.8vw, 66px);
+      font-weight: 680;
+      color: var(--accent);
+      letter-spacing: -0.045em;
+    }
+
+    .date-row {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: clamp(14px, 1.6vw, 19px);
+    }
+
+    .tiny-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--line-2);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .device-card {
+      min-height: 238px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025)),
+        var(--surface);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .device-card.active {
+      border-color: rgba(242, 189, 99, 0.34);
+      background:
+        linear-gradient(180deg, rgba(242,189,99,0.12), rgba(255,255,255,0.025)),
+        var(--surface);
+    }
+
+    .device-card.disabled {
+      opacity: 0.46;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      color: var(--soft);
+      transition: 180ms ease;
+    }
+
+    .device-card.active .icon-box {
+      color: #181109;
+      background: var(--accent);
+      border-color: transparent;
+      box-shadow: 0 12px 28px rgba(242, 189, 99, 0.14);
+    }
+
+    .icon-box svg {
+      width: 25px;
+      height: 25px;
+      stroke: currentColor;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .status-chip::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #777;
+    }
+
+    .status-chip.on {
+      color: var(--accent-2);
+      border-color: rgba(242, 189, 99, 0.26);
+    }
+
+    .status-chip.on::before {
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(242, 189, 99, 0.08);
+    }
+
+    .status-chip.off::before {
+      background: rgba(245, 241, 232, 0.4);
+    }
+
+    .status-chip.error::before {
+      background: var(--danger);
+    }
+
+    .device-body {
+      margin-top: 18px;
+    }
+
+    .device-type {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .device-name {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.08;
+      font-weight: 770;
+      letter-spacing: -0.035em;
+    }
+
+    .device-detail {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .card-actions {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .switch-wrap {
+      height: 46px;
+      padding: 4px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
+    .seg-btn {
+      min-height: 0;
+      height: 36px;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+      font-family: inherit;
+      cursor: pointer;
+      transition: 150ms ease;
+    }
+
+    .seg-btn.active-on {
+      background: var(--accent);
+      color: #17120a;
+    }
+
+    .seg-btn.active-off {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+
+    .seg-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .refresh-card-btn {
+      height: 42px;
+      border-radius: 15px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.035);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 720;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .refresh-card-btn:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
+
+    .footer {
+      min-height: 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 0 3px;
+      gap: 14px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
     }
 
-    .log-text {
+    .log {
+      min-width: 0;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .last-sync {
       white-space: nowrap;
+      color: var(--soft);
     }
 
-    .worker-link {
-      color: var(--muted);
-      text-decoration: none;
-      border-bottom: 1px solid var(--line-strong);
-    }
-
-    @media (max-width: 920px) {
+    @media (max-width: 1180px) {
       body {
         overflow: auto;
       }
@@ -470,31 +475,18 @@
         min-height: 100svh;
       }
 
-      .screen {
-        grid-template-columns: 1fr;
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .clock-panel {
-        min-height: 48svh;
-      }
-
-      .side {
-        grid-template-rows: auto auto;
-      }
-
-      .device-panel {
-        min-height: auto;
-      }
-
-      .power-visual {
-        width: 150px;
-        height: 150px;
+      .clock-main {
+        font-size: clamp(72px, 18vw, 176px);
       }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 620px) {
       .page {
-        padding: 16px;
+        padding: 14px;
         gap: 14px;
       }
 
@@ -502,40 +494,41 @@
         align-items: flex-start;
       }
 
-      .brand-subtitle {
-        max-width: 180px;
-      }
-
-      .top-status {
+      .system-pill {
         padding: 8px 10px;
       }
 
-      .clock-panel,
-      .device-panel {
+      .clock-screen {
         border-radius: 28px;
+        min-height: 300px;
+        padding: 24px 18px;
       }
 
-      .clock-panel {
-        padding: 28px 22px;
+      .clock-meta {
+        margin-bottom: 20px;
       }
 
-      .kicker {
-        margin-bottom: 22px;
+      .clock-main {
+        font-size: clamp(54px, 16vw, 88px);
       }
 
-      .time {
-        gap: 8px;
+      .clock-ms {
+        font-size: clamp(22px, 6vw, 34px);
       }
 
       .date-row {
-        margin-top: 24px;
+        margin-top: 22px;
       }
 
-      .button-row {
+      .cards-grid {
         grid-template-columns: 1fr;
       }
 
-      .bottom-log {
+      .device-card {
+        min-height: 222px;
+      }
+
+      .footer {
         flex-direction: column;
         align-items: flex-start;
       }
@@ -547,113 +540,239 @@
   <main class="page">
     <header class="topbar">
       <div class="brand">
-        <div class="mark" aria-hidden="true"></div>
+        <div class="brand-mark"><span></span></div>
         <div class="brand-text">
           <p class="brand-title">Home Control</p>
-          <p class="brand-subtitle">Private display · Smart Life</p>
+          <p class="brand-subtitle">Smart Life · Private dashboard</p>
         </div>
       </div>
 
-      <div class="top-status" id="networkStatus">
-        <span class="dot" id="networkDot"></span>
-        <span id="networkText">準備連線</span>
+      <div class="system-pill">
+        <span class="system-dot" id="systemDot"></span>
+        <span id="systemText">準備連線</span>
       </div>
     </header>
 
-    <section class="screen">
-      <section class="clock-panel" aria-label="Current time">
-        <div class="clock-content">
-          <div class="kicker">Local Time</div>
+    <section class="main">
+      <section class="clock-screen">
+        <div class="clock-inner">
+          <div class="clock-meta">
+            <span>Local Time</span>
+            <span id="refreshHint">Auto refresh · 2s</span>
+          </div>
 
-          <div class="time">
-            <span class="time-main" id="timeMain">00:00:00</span>
-            <span class="time-ms" id="timeMs">00</span>
+          <div class="clock-time">
+            <span class="clock-main" id="timeMain">00:00:00</span>
+            <span class="clock-ms" id="timeMs">00</span>
           </div>
 
           <div class="date-row">
             <span id="dateText">正在讀取日期</span>
-            <span class="divider-dot"></span>
+            <span class="tiny-dot"></span>
             <span id="weekdayText">星期</span>
           </div>
         </div>
       </section>
 
-      <aside class="side">
-        <section class="device-panel">
-          <div>
-            <div class="device-head">
-              <div>
-                <p class="device-label">Device</p>
-                <h1 class="device-name">枱底氛圍燈</h1>
-              </div>
-              <div class="state-badge" id="stateBadge">未知</div>
-            </div>
-
-            <div class="power-visual" id="powerVisual" aria-hidden="true"></div>
-          </div>
-
-          <div class="actions">
-            <div class="button-row">
-              <button class="btn-primary" id="onBtn">開燈</button>
-              <button class="btn-secondary" id="offBtn">關燈</button>
-            </div>
-            <button class="btn-wide" id="refreshBtn">刷新狀態</button>
-          </div>
-        </section>
-
-        <section class="info-panel">
-          <div class="info-grid">
-            <div class="info-item">
-              <p class="info-label">Control</p>
-              <p class="info-value" id="controlStatus">待命</p>
-            </div>
-            <div class="info-item">
-              <p class="info-label">Worker</p>
-              <p class="info-value">Cloudflare</p>
-            </div>
-            <div class="info-item">
-              <p class="info-label">Device ID</p>
-              <p class="info-value">...71vnuj</p>
-            </div>
-            <div class="info-item">
-              <p class="info-label">Code</p>
-              <p class="info-value">switch_1</p>
-            </div>
-          </div>
-        </section>
-      </aside>
+      <section class="cards-grid" id="cardsGrid"></section>
     </section>
 
-    <footer class="bottom-log">
-      <span class="log-text" id="logText">系統已載入，等待操作。</span>
-      <a class="worker-link" href="https://homecontrol.chimhinhin.workers.dev/status" target="_blank" rel="noreferrer">
-        查看狀態
-      </a>
+    <footer class="footer">
+      <span class="log" id="logText">系統已載入，等待操作。</span>
+      <span class="last-sync" id="lastSyncText">尚未同步</span>
     </footer>
   </main>
 
   <script>
     const WORKER_URL = "https://homecontrol.chimhinhin.workers.dev";
+    const REFRESH_INTERVAL_MS = 2000;
+
+    const devices = [
+      {
+        id: "desk-ambient-light",
+        name: "枱底氛圍燈",
+        type: "Smart plug",
+        detail: "已接入 Tuya API · switch_1",
+        icon: "plug",
+        enabled: true,
+        workerStatusPath: "/status",
+        workerControlPath: "/control",
+        state: null,
+        loading: false,
+        error: false
+      },
+      {
+        id: "room-light",
+        name: "房間主燈",
+        type: "Coming soon",
+        detail: "預留位置 · 之後可接第二個 API",
+        icon: "bulb",
+        enabled: false,
+        state: null,
+        loading: false,
+        error: false
+      },
+      {
+        id: "air-conditioner",
+        name: "冷氣",
+        type: "Coming soon",
+        detail: "可用場景或 IR remote API",
+        icon: "snow",
+        enabled: false,
+        state: null,
+        loading: false,
+        error: false
+      },
+      {
+        id: "scene-mode",
+        name: "睡覺模式",
+        type: "Coming soon",
+        detail: "之後可做一鍵場景控制",
+        icon: "moon",
+        enabled: false,
+        state: null,
+        loading: false,
+        error: false
+      }
+    ];
+
+    const cardsGrid = document.getElementById("cardsGrid");
+    const systemDot = document.getElementById("systemDot");
+    const systemText = document.getElementById("systemText");
+    const logText = document.getElementById("logText");
+    const lastSyncText = document.getElementById("lastSyncText");
 
     const timeMainEl = document.getElementById("timeMain");
     const timeMsEl = document.getElementById("timeMs");
     const dateTextEl = document.getElementById("dateText");
     const weekdayTextEl = document.getElementById("weekdayText");
 
-    const networkDotEl = document.getElementById("networkDot");
-    const networkTextEl = document.getElementById("networkText");
-    const powerVisualEl = document.getElementById("powerVisual");
-    const stateBadgeEl = document.getElementById("stateBadge");
-    const controlStatusEl = document.getElementById("controlStatus");
-    const logTextEl = document.getElementById("logText");
+    let refreshTimer = null;
+    let isRefreshing = false;
 
-    const onBtn = document.getElementById("onBtn");
-    const offBtn = document.getElementById("offBtn");
-    const refreshBtn = document.getElementById("refreshBtn");
+    function iconSvg(name) {
+      const icons = {
+        plug: `
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 7V3" />
+            <path d="M15 7V3" />
+            <path d="M7 7h10v5a5 5 0 0 1-10 0V7Z" />
+            <path d="M12 17v4" />
+          </svg>
+        `,
+        bulb: `
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18h6" />
+            <path d="M10 22h4" />
+            <path d="M8 14.5A7 7 0 1 1 16 14.5c-.9.7-1.2 1.5-1.3 2.5H9.3c-.1-1-.4-1.8-1.3-2.5Z" />
+          </svg>
+        `,
+        snow: `
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v18" />
+            <path d="M5 7l14 10" />
+            <path d="M19 7L5 17" />
+            <path d="M8 4l4 3 4-3" />
+            <path d="M8 20l4-3 4 3" />
+          </svg>
+        `,
+        moon: `
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 15.2A8.4 8.4 0 0 1 8.8 4a7.6 7.6 0 1 0 11.2 11.2Z" />
+          </svg>
+        `
+      };
 
-    onBtn.addEventListener("click", () => controlLight("on"));
-    offBtn.addEventListener("click", () => controlLight("off"));
-    refreshBtn.addEventListener("click", refreshStatus);
+      return icons[name] || icons.plug;
+    }
+
+    function renderCards() {
+      cardsGrid.innerHTML = devices.map(device => {
+        const isOn = device.state === true;
+        const isOff = device.state === false;
+
+        let statusText = "未知";
+        let statusClass = "";
+
+        if (!device.enabled) {
+          statusText = "未接入";
+          statusClass = "off";
+        } else if (device.loading) {
+          statusText = "同步中";
+        } else if (device.error) {
+          statusText = "錯誤";
+          statusClass = "error";
+        } else if (isOn) {
+          statusText = "已開";
+          statusClass = "on";
+        } else if (isOff) {
+          statusText = "已關";
+          statusClass = "off";
+        }
+
+        return `
+          <article class="device-card ${isOn ? "active" : ""} ${!device.enabled ? "disabled" : ""}" id="card-${device.id}">
+            <div>
+              <div class="card-head">
+                <div class="icon-box">
+                  ${iconSvg(device.icon)}
+                </div>
+                <div class="status-chip ${statusClass}" id="status-${device.id}">
+                  ${statusText}
+                </div>
+              </div>
+
+              <div class="device-body">
+                <p class="device-type">${device.type}</p>
+                <h2 class="device-name">${device.name}</h2>
+                <p class="device-detail">${device.detail}</p>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <div class="switch-wrap">
+                <button
+                  class="seg-btn ${isOn ? "active-on" : ""}"
+                  ${device.enabled ? "" : "disabled"}
+                  onclick="controlDevice('${device.id}', 'on')"
+                >開</button>
+
+                <button
+                  class="seg-btn ${isOff ? "active-off" : ""}"
+                  ${device.enabled ? "" : "disabled"}
+                  onclick="controlDevice('${device.id}', 'off')"
+                >關</button>
+              </div>
+
+              <button
+                class="refresh-card-btn"
+                ${device.enabled ? "" : "disabled"}
+                onclick="refreshStatus(true)"
+              >刷新狀態</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function setSystem(state, text) {
+      systemDot.className = "system-dot";
+
+      if (state === "ok") systemDot.classList.add("ok");
+      if (state === "warn") systemDot.classList.add("warn");
+      if (state === "error") systemDot.classList.add("error");
+
+      systemText.textContent = text;
+    }
+
+    function setLog(text) {
+      logText.textContent = text;
+    }
+
+    function setLastSync() {
+      const now = new Date();
+      lastSyncText.textContent = `最後同步 ${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`;
+    }
 
     function pad2(value) {
       return String(value).padStart(2, "0");
@@ -662,13 +781,8 @@
     function updateClock() {
       const now = new Date();
 
-      const hh = pad2(now.getHours());
-      const mm = pad2(now.getMinutes());
-      const ss = pad2(now.getSeconds());
-      const cs = pad2(Math.floor(now.getMilliseconds() / 10));
-
-      timeMainEl.textContent = `${hh}:${mm}:${ss}`;
-      timeMsEl.textContent = cs;
+      timeMainEl.textContent = `${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`;
+      timeMsEl.textContent = pad2(Math.floor(now.getMilliseconds() / 10));
 
       requestAnimationFrame(updateClock);
     }
@@ -676,68 +790,35 @@
     function updateDate() {
       const now = new Date();
 
-      const dateFormatter = new Intl.DateTimeFormat("zh-HK", {
+      dateTextEl.textContent = new Intl.DateTimeFormat("zh-HK", {
         year: "numeric",
         month: "long",
         day: "numeric"
-      });
+      }).format(now);
 
-      const weekdayFormatter = new Intl.DateTimeFormat("zh-HK", {
+      weekdayTextEl.textContent = new Intl.DateTimeFormat("zh-HK", {
         weekday: "long"
-      });
-
-      dateTextEl.textContent = dateFormatter.format(now);
-      weekdayTextEl.textContent = weekdayFormatter.format(now);
+      }).format(now);
     }
 
-    function setBusy(isBusy) {
-      onBtn.disabled = isBusy;
-      offBtn.disabled = isBusy;
-      refreshBtn.disabled = isBusy;
+    function getDevice(id) {
+      return devices.find(device => device.id === id);
     }
 
-    function setLog(message) {
-      logTextEl.textContent = message;
-    }
+    async function controlDevice(id, action) {
+      const device = getDevice(id);
 
-    function setConnection(state, text) {
-      networkDotEl.className = "dot";
+      if (!device || !device.enabled) return;
 
-      if (state === "online") {
-        networkDotEl.classList.add("online");
-      }
+      device.loading = true;
+      device.error = false;
+      renderCards();
 
-      if (state === "on") {
-        networkDotEl.classList.add("on");
-      }
-
-      networkTextEl.textContent = text;
-    }
-
-    function setPowerState(isOn) {
-      powerVisualEl.classList.toggle("on", isOn);
-      stateBadgeEl.classList.toggle("active", isOn);
-
-      if (isOn) {
-        stateBadgeEl.textContent = "已開啟";
-        controlStatusEl.textContent = "燈光開啟";
-        setConnection("on", "燈光已開");
-      } else {
-        stateBadgeEl.textContent = "已關閉";
-        controlStatusEl.textContent = "燈光關閉";
-        setConnection("online", "已連線");
-      }
-    }
-
-    async function controlLight(action) {
-      const isOn = action === "on";
-
-      setBusy(true);
-      setLog(isOn ? "正在開啟枱底氛圍燈..." : "正在關閉枱底氛圍燈...");
-      controlStatusEl.textContent = "處理中";
+      setSystem("warn", action === "on" ? "正在開啟" : "正在關閉");
+      setLog(action === "on" ? `正在開啟 ${device.name}...` : `正在關閉 ${device.name}...`);
 
       try {
-        const response = await fetch(`${WORKER_URL}/control?action=${action}`, {
+        const response = await fetch(`${WORKER_URL}${device.workerControlPath}?action=${action}&t=${Date.now()}`, {
           method: "GET",
           cache: "no-store"
         });
@@ -745,27 +826,50 @@
         const data = await response.json();
 
         if (!response.ok || data.ok !== true) {
-          throw new Error(JSON.stringify(data, null, 2));
+          throw new Error(JSON.stringify(data));
         }
 
-        setPowerState(isOn);
-        setLog(isOn ? "枱底氛圍燈已開啟。" : "枱底氛圍燈已關閉。");
+        device.state = action === "on";
+        device.error = false;
+        setSystem("ok", device.state ? "燈光已開" : "已連線");
+        setLog(device.state ? `${device.name} 已開啟。` : `${device.name} 已關閉。`);
+        setLastSync();
+
+        try {
+          localStorage.setItem("home-control-last-action", JSON.stringify({
+            deviceId: id,
+            state: device.state,
+            at: Date.now()
+          }));
+        } catch {}
+
+        renderCards();
+
+        setTimeout(() => refreshStatus(false), 450);
       } catch (error) {
-        setConnection("", "控制失敗");
-        controlStatusEl.textContent = "錯誤";
+        device.error = true;
+        setSystem("error", "控制失敗");
         setLog(`操作失敗：${error.message}`);
+        renderCards();
       } finally {
-        setBusy(false);
+        device.loading = false;
+        renderCards();
       }
     }
 
-    async function refreshStatus() {
-      setBusy(true);
-      setLog("正在刷新設備狀態...");
-      controlStatusEl.textContent = "刷新中";
+    async function refreshStatus(showLog = false) {
+      if (isRefreshing) return;
+      isRefreshing = true;
+
+      const device = getDevice("desk-ambient-light");
+      if (!device) return;
+
+      if (showLog) {
+        setLog("正在刷新設備狀態...");
+      }
 
       try {
-        const response = await fetch(`${WORKER_URL}/status`, {
+        const response = await fetch(`${WORKER_URL}${device.workerStatusPath}?t=${Date.now()}`, {
           method: "GET",
           cache: "no-store"
         });
@@ -773,7 +877,7 @@
         const data = await response.json();
 
         if (!response.ok || data.ok !== true) {
-          throw new Error(JSON.stringify(data, null, 2));
+          throw new Error(JSON.stringify(data));
         }
 
         const result = data?.tuya?.result;
@@ -781,31 +885,78 @@
           ? result.find(item => item.code === "switch_1")
           : null;
 
-        if (!switchItem) {
-          setConnection("online", "已連線");
-          controlStatusEl.textContent = "已連線";
-          setLog("已連線，但狀態資料入面未搵到 switch_1。");
-          return;
+        if (switchItem) {
+          device.state = switchItem.value === true;
+          device.error = false;
+
+          setSystem("ok", device.state ? "燈光已開" : "已連線");
+
+          if (showLog) {
+            setLog("設備狀態已刷新。");
+          }
+        } else {
+          setSystem("warn", "狀態不完整");
+          if (showLog) {
+            setLog("已連線，但狀態資料入面未搵到 switch_1。");
+          }
         }
 
-        setPowerState(switchItem.value === true);
-        setLog("設備狀態已刷新。");
+        setLastSync();
       } catch (error) {
-        setConnection("", "連線失敗");
-        controlStatusEl.textContent = "錯誤";
-        setLog(`刷新失敗：${error.message}`);
+        device.error = true;
+        setSystem("error", "同步失敗");
+
+        if (showLog) {
+          setLog(`刷新失敗：${error.message}`);
+        }
       } finally {
-        setBusy(false);
+        isRefreshing = false;
+        renderCards();
       }
     }
 
+    function startAutoRefresh() {
+      if (refreshTimer) clearInterval(refreshTimer);
+
+      refreshTimer = setInterval(() => {
+        if (!document.hidden) {
+          refreshStatus(false);
+        }
+      }, REFRESH_INTERVAL_MS);
+    }
+
+    window.addEventListener("storage", event => {
+      if (event.key !== "home-control-last-action" || !event.newValue) return;
+
+      try {
+        const payload = JSON.parse(event.newValue);
+        const device = getDevice(payload.deviceId);
+
+        if (device) {
+          device.state = payload.state;
+          renderCards();
+          setLastSync();
+        }
+      } catch {}
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        refreshStatus(false);
+      }
+    });
+
+    window.addEventListener("focus", () => {
+      refreshStatus(false);
+    });
+
+    renderCards();
     updateClock();
     updateDate();
     setInterval(updateDate, 60 * 1000);
 
-    window.addEventListener("load", () => {
-      refreshStatus();
-    });
+    refreshStatus(true);
+    startAutoRefresh();
   </script>
 </body>
 </html>
