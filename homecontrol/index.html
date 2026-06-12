@@ -485,16 +485,6 @@
       color: var(--soft);
     }
 
-    @media (min-width: 1181px) {
-      .cards-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .device-card:only-child {
-        grid-column: span 1;
-      }
-    }
-
     @media (max-width: 1180px) {
       body {
         overflow: auto;
@@ -502,10 +492,6 @@
 
       .page {
         min-height: 100svh;
-      }
-
-      .cards-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .clock-main {
@@ -627,10 +613,10 @@
     const REFRESH_INTERVAL_MS = 1000;
     const FAST_REFRESH_INTERVAL_MS = 350;
     const FAST_REFRESH_DURATION_MS = 3500;
+    const CONFIRM_TIMEOUT_MS = 30000;
 
     let fastRefreshUntil = 0;
-    let optimisticLockUntil = 0;
-    let optimisticState = null;
+    let pendingIntent = null;
 
     const devices = [
       {
@@ -663,29 +649,47 @@
     let isRefreshing = false;
 
     function iconSvg(name) {
-      const icons = {
-        plug: `
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 7V3" />
-            <path d="M15 7V3" />
-            <path d="M7 7h10v5a5 5 0 0 1-10 0V7Z" />
-            <path d="M12 17v4" />
-          </svg>
-        `
-      };
+      return `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 7V3" />
+          <path d="M15 7V3" />
+          <path d="M7 7h10v5a5 5 0 0 1-10 0V7Z" />
+          <path d="M12 17v4" />
+        </svg>
+      `;
+    }
 
-      return icons[name] || icons.plug;
+    function getPendingForDevice(deviceId) {
+      if (!pendingIntent) return null;
+      if (pendingIntent.deviceId !== deviceId) return null;
+
+      if (Date.now() > pendingIntent.until) {
+        pendingIntent = null;
+        return null;
+      }
+
+      return pendingIntent;
+    }
+
+    function clearPendingForDevice(deviceId) {
+      if (pendingIntent && pendingIntent.deviceId === deviceId) {
+        pendingIntent = null;
+      }
     }
 
     function renderCards() {
       cardsGrid.innerHTML = devices.map(device => {
+        const pending = getPendingForDevice(device.id);
         const isOn = device.state === true;
         const isOff = device.state === false;
 
         let statusText = "未知";
         let statusClass = "";
 
-        if (device.loading) {
+        if (pending) {
+          statusText = pending.state ? "開啟中" : "關閉中";
+          statusClass = "loading";
+        } else if (device.loading) {
           statusText = "處理中";
           statusClass = "loading";
         } else if (device.error) {
@@ -705,12 +709,8 @@
           <article class="device-card ${isOn ? "active" : ""} ${device.loading ? "loading" : ""}" id="card-${device.id}">
             <div>
               <div class="card-head">
-                <div class="icon-box">
-                  ${iconSvg(device.icon)}
-                </div>
-                <div class="status-chip ${statusClass}" id="status-${device.id}">
-                  ${statusText}
-                </div>
+                <div class="icon-box">${iconSvg(device.icon)}</div>
+                <div class="status-chip ${statusClass}">${statusText}</div>
               </div>
 
               <div class="device-body">
@@ -748,11 +748,9 @@
 
     function setSystem(state, text) {
       systemDot.className = "system-dot";
-
       if (state === "ok") systemDot.classList.add("ok");
       if (state === "warn") systemDot.classList.add("warn");
       if (state === "error") systemDot.classList.add("error");
-
       systemText.textContent = text;
     }
 
@@ -771,10 +769,8 @@
 
     function updateClock() {
       const now = new Date();
-
       timeMainEl.textContent = `${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`;
       timeMsEl.textContent = pad2(Math.floor(now.getMilliseconds() / 10));
-
       requestAnimationFrame(updateClock);
     }
 
@@ -796,24 +792,56 @@
       return devices.find(device => device.id === id);
     }
 
+    function loadLastKnownState() {
+      try {
+        const saved = localStorage.getItem("home-control-last-state");
+        if (!saved) return;
+
+        const payload = JSON.parse(saved);
+        const device = getDevice("desk-ambient-light");
+
+        if (device && typeof payload.state === "boolean") {
+          device.state = payload.state;
+          device.error = false;
+          setSystem("ok", payload.state ? "燈光已開" : "已連線");
+          setLog("已載入上次狀態，正在背景同步。");
+          renderCards();
+        }
+      } catch {}
+    }
+
+    function saveLastKnownState(state) {
+      try {
+        localStorage.setItem("home-control-last-state", JSON.stringify({
+          state,
+          at: Date.now()
+        }));
+      } catch {}
+    }
+
     async function controlDevice(id, action) {
       const device = getDevice(id);
       if (!device || !device.enabled) return;
 
+      const previousState = device.state;
       const nextState = action === "on";
 
       device.state = nextState;
       device.loading = true;
       device.error = false;
 
-      optimisticState = nextState;
-      optimisticLockUntil = Date.now() + 2500;
+      pendingIntent = {
+        deviceId: id,
+        state: nextState,
+        until: Date.now() + CONFIRM_TIMEOUT_MS
+      };
+
       fastRefreshUntil = Date.now() + FAST_REFRESH_DURATION_MS;
 
       renderCards();
 
       setSystem("warn", nextState ? "正在開啟" : "正在關閉");
-      setLog(nextState ? `${device.name} 開啟中...` : `${device.name} 關閉中...`);
+      setLog(nextState ? `${device.name} 開啟中，等待設備確認...` : `${device.name} 關閉中，等待設備確認...`);
 
       try {
         const response = await fetch(`${WORKER_URL}${device.workerControlPath}?action=${action}&t=${Date.now()}`, {
@@ -829,10 +857,12 @@
 
         device.state = nextState;
         device.error = false;
+        device.loading = false;
 
-        setSystem("ok", nextState ? "燈光已開" : "已連線");
-        setLog(nextState ? `${device.name} 已開啟。` : `${device.name} 已關閉。`);
+        setSystem("warn", nextState ? "等待開啟確認" : "等待關閉確認");
+        setLog(nextState ? `${device.name} 指令已送出，等待設備開啟確認。` : `${device.name} 指令已送出，等待設備關閉確認。`);
         setLastSync();
+        saveLastKnownState(nextState);
 
         try {
           localStorage.setItem("home-control-last-action", JSON.stringify({
@@ -843,15 +873,15 @@
         } catch {}
 
         renderCards();
-
-        setTimeout(() => refreshStatus(false), 300);
+        setTimeout(() => refreshStatus(false), 500);
       } catch (error) {
+        device.state = previousState;
+        device.loading = false;
         device.error = true;
+        clearPendingForDevice(id);
+
         setSystem("error", "控制失敗");
         setLog(`操作失敗：${error.message}`);
-        renderCards();
-      } finally {
-        device.loading = false;
         renderCards();
       }
     }
@@ -890,20 +920,40 @@
 
         if (switchItem) {
           const realState = switchItem.value === true;
+          const pending = getPendingForDevice(device.id);
 
-          if (Date.now() < optimisticLockUntil && realState !== optimisticState) {
-            setLastSync();
-            isRefreshing = false;
-            return;
-          }
+          if (pending) {
+            if (realState === pending.state) {
+              device.state = realState;
+              device.error = false;
+              device.loading = false;
+              clearPendingForDevice(device.id);
 
-          device.state = realState;
-          device.error = false;
+              setSystem("ok", device.state ? "燈光已開" : "已連線");
+              setLog(device.state ? `${device.name} 已確認開啟。` : `${device.name} 已確認關閉。`);
+              saveLastKnownState(realState);
+            } else {
+              device.state = pending.state;
+              device.error = false;
+              device.loading = false;
 
-          setSystem("ok", device.state ? "燈光已開" : "已連線");
+              setSystem("warn", pending.state ? "等待開啟確認" : "等待關閉確認");
 
-          if (showLog) {
-            setLog("設備狀態已刷新。");
+              if (showLog) {
+                setLog(pending.state ? "指令已送出，設備仍在開啟同步中。" : "指令已送出，設備仍在關閉同步中。");
+              }
+            }
+          } else {
+            device.state = realState;
+            device.error = false;
+            device.loading = false;
+
+            setSystem("ok", device.state ? "燈光已開" : "已連線");
+            saveLastKnownState(realState);
+
+            if (showLog) {
+              setLog("設備狀態已刷新。");
+            }
           }
         } else {
           setSystem("warn", "狀態不完整");
@@ -916,6 +966,7 @@
         setLastSync();
       } catch (error) {
         device.error = true;
+        device.loading = false;
         setSystem("error", "同步失敗");
 
         if (showLog) {
@@ -972,11 +1023,14 @@
     renderCards();
     updateClock();
     updateDate();
+    loadLastKnownState();
 
     setInterval(updateDate, 60 * 1000);
 
-    refreshStatus(true);
-    startAutoRefresh();
+    setTimeout(() => {
+      refreshStatus(true);
+      startAutoRefresh();
+    }, 250);
   </script>
 </body>
 </html>
