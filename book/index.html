@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="book-pos-version" content="v1.4.1-precompiled-stable-catalog">
+    <meta name="book-pos-version" content="v1.4.3-f3-to-f1-f2-sync">
     <title>收書管理系統 - 穩定可用版</title>
     
     <!-- 
         更新說明 / Update Notes
-        Version: v1.4.1-precompiled-stable-catalog
+        Version: v1.4.3-f3-to-f1-f2-sync
         Date: 2026-06-05
         1. 在 v1.1.0 基礎上升級全站視覺，不改 Firebase / React / 單檔架構。
         2. 重畫主介面成 Premium POS App 風格：淺色漸變背景、玻璃 Header、柔和光暈、立體卡片。
@@ -21,6 +21,7 @@
         9. 重整購物車明細卡片，手機與 iPad 都以橫向資訊列顯示，避免文字被擠成直排。
         10. v1.4.1：App 代碼已預編譯成普通 JavaScript，避免 Babel 於手機瀏覽器產生 import 語法錯誤。
         11. v1.4.1：書單設定加入本機備份 + Firebase 同步保護；中三預設價錢只套用於 F.3。
+        12. v1.4.2：中三 F.3 科目表同步到中一 F.1 及中二 F.2；同步結果會連同版本號寫入 Firebase。
     -->
 
     <!-- Tailwind CSS -->
@@ -290,7 +291,7 @@
     </script>
 
     <script>
-/* v1.4.1-precompiled-stable-catalog | compiled JS, no Babel runtime JSX transform */
+/* v1.4.3-f3-to-f1-f2-sync | compiled JS, no Babel runtime JSX transform */
 const { useState, useEffect, useMemo, useCallback } = React;
 const firebaseConfig = {
     apiKey: "AIzaSyC5AFCRymqpPuLpz7hOMcN5CZF7X7P8OVI",
@@ -397,6 +398,7 @@ const IconClipboardList = () => React.createElement("svg", { xmlns: "http://www.
     React.createElement("path", { d: "M8 11h.01" }),
     React.createElement("path", { d: "M8 16h.01" }));
 const CATALOG_CACHE_KEY = "bookRecyclingCatalogCache_v2";
+const CATALOG_SCHEMA_VERSION = "v1.4.3-f3-to-f1-f2-sync";
 const getSafeCollectorName = () => { try {
     return localStorage.getItem("collectorName") || "";
 }
@@ -433,7 +435,7 @@ const buildDefaultCatalog = (idSuffix = "") => {
                     form: f,
                     subject: subj.s,
                     name: item.name,
-                    price: f === '3' ? item.f3Price : 0,
+                    price: ['1', '2', '3'].includes(f) ? item.f3Price : 0,
                     isPackage: item.pkg
                 });
             });
@@ -449,6 +451,41 @@ const sanitizeCatalogItems = (items) => (Array.isArray(items) ? items : []).map(
     price: Number(item.price) || 0,
     isPackage: !!item.isPackage
 }));
+const getCatalogSyncKey = (item) => `${item.subject || ''}|||${item.name || ''}|||${item.isPackage ? 'pkg' : 'single'}`;
+const syncForm3CatalogToForm1 = (items) => {
+    const cleanItems = sanitizeCatalogItems(items);
+    const f3Items = cleanItems.filter(item => item.form === '3');
+    if (f3Items.length === 0)
+        return cleanItems;
+    const f3Keys = new Set(f3Items.map(getCatalogSyncKey));
+    const buildSyncedItemsForForm = (targetForm) => {
+        const existingTargetItems = cleanItems.filter(item => item.form === targetForm);
+        const existingTargetByKey = {};
+        existingTargetItems.forEach(item => { existingTargetByKey[getCatalogSyncKey(item)] = item; });
+        const syncedItems = f3Items.map((item, idx) => {
+            const oldTarget = existingTargetByKey[getCatalogSyncKey(item)];
+            return {
+                ...item,
+                id: oldTarget?.id || `sync_f${targetForm}_from_f3_${idx}`,
+                form: targetForm,
+                subject: item.subject,
+                name: item.name,
+                price: Number(item.price) || 0,
+                isPackage: !!item.isPackage
+            };
+        });
+        const customTargetItems = existingTargetItems.filter(item => !f3Keys.has(getCatalogSyncKey(item)));
+        return [...syncedItems, ...customTargetItems];
+    };
+    const otherItems = cleanItems.filter(item => item.form !== '1' && item.form !== '2');
+    return [...buildSyncedItemsForForm('1'), ...buildSyncedItemsForForm('2'), ...otherItems];
+};
+const migrateCatalogForCurrentVersion = (items, schemaVersion) => {
+    const cleanItems = sanitizeCatalogItems(items);
+    if (schemaVersion === CATALOG_SCHEMA_VERSION)
+        return { items: cleanItems, changed: false };
+    return { items: syncForm3CatalogToForm1(cleanItems), changed: true };
+};
 const formatBookTitle = (item) => item.form !== 'all' ? `F.${item.form} ${item.subject} ${item.name}` : item.name;
 class ErrorBoundary extends React.Component {
     constructor(props) { super(props); this.state = { hasError: false, error: null }; }
@@ -667,17 +704,28 @@ function App() {
             setLoading(false);
         }, () => { showToast("載入名單失敗", "error"); setLoading(false); });
         const unsubCatalog = getCatalogRef().onSnapshot(docSnap => {
-            const cloudItems = docSnap.exists && docSnap.data().items ? sanitizeCatalogItems(docSnap.data().items) : [];
+            const catalogData = docSnap.exists ? docSnap.data() : {};
+            const cloudItems = catalogData && catalogData.items ? sanitizeCatalogItems(catalogData.items) : [];
             if (cloudItems.length > 0) {
-                setCatalog(cloudItems);
-                setSafeCatalogCache(cloudItems);
+                const migrated = migrateCatalogForCurrentVersion(cloudItems, catalogData.catalogSchemaVersion);
+                setCatalog(migrated.items);
+                setSafeCatalogCache(migrated.items);
+                if (migrated.changed) {
+                    getCatalogRef().set({
+                        items: migrated.items,
+                        updatedAt: new Date().toISOString(),
+                        catalogSchemaVersion: CATALOG_SCHEMA_VERSION,
+                        f1f2SyncedFromF3: true
+                    }, { merge: true }).catch(() => showToast("中三同步到中一及中二失敗，已暫存在本機", "error"));
+                }
             }
             else {
                 const latestCache = getSafeCatalogCache();
-                const fallbackCatalog = latestCache.length > 0 ? sanitizeCatalogItems(latestCache) : buildDefaultCatalog();
+                const baseCatalog = latestCache.length > 0 ? sanitizeCatalogItems(latestCache) : buildDefaultCatalog();
+                const fallbackCatalog = syncForm3CatalogToForm1(baseCatalog);
                 setCatalog(fallbackCatalog);
                 setSafeCatalogCache(fallbackCatalog);
-                getCatalogRef().set({ items: fallbackCatalog, updatedAt: new Date().toISOString() }, { merge: true }).catch(() => showToast("書單雲端初始化失敗，已使用本機資料", "error"));
+                getCatalogRef().set({ items: fallbackCatalog, updatedAt: new Date().toISOString(), catalogSchemaVersion: CATALOG_SCHEMA_VERSION, f1f2SyncedFromF3: true }, { merge: true }).catch(() => showToast("書單雲端初始化失敗，已使用本機資料", "error"));
             }
         }, () => {
             const latestCache = getSafeCatalogCache();
@@ -758,7 +806,7 @@ function App() {
         setCatalog(cleanCatalog);
         setSafeCatalogCache(cleanCatalog);
         try {
-            await getCatalogRef().set({ items: cleanCatalog, updatedAt: new Date().toISOString() }, { merge: true });
+            await getCatalogRef().set({ items: cleanCatalog, updatedAt: new Date().toISOString(), catalogSchemaVersion: CATALOG_SCHEMA_VERSION }, { merge: true });
             showToast("設定已儲存");
         }
         catch (err) {
@@ -768,7 +816,7 @@ function App() {
     function handleResetDefaultCatalog() {
         openConfirm({
             title: "載入預設全科書單？",
-            message: "這會清除目前所有自訂書單設定，並重新建立中一至中三預設項目。",
+            message: "這會清除目前所有自訂書單設定，並重新建立書單；中一及中二會直接使用中三科目表與價錢。",
             tone: "warning",
             confirmText: "載入預設",
             cancelText: "取消",
@@ -776,6 +824,21 @@ function App() {
                 const stamp = `_${Date.now()}`;
                 const defaultCat = buildDefaultCatalog(stamp);
                 await saveCatalogToDB(defaultCat);
+            }
+        });
+    }
+    function handleSyncF3ToF1() {
+        openConfirm({
+            title: "同步中三書單到中一及中二？",
+            message: "系統會將現時中三 F.3 的科目、書名、套餐設定與價錢複製到中一 F.1 及中二 F.2，並即時儲存到資料庫。",
+            tone: "warning",
+            confirmText: "同步並儲存",
+            cancelText: "取消",
+            onConfirm: async () => {
+                const syncedCatalog = syncForm3CatalogToForm1(normalizedCatalog);
+                await saveCatalogToDB(syncedCatalog);
+                setSettingsFilterForm("1");
+                showToast("已同步中三書單到中一及中二");
             }
         });
     }
@@ -1263,6 +1326,7 @@ function App() {
                             React.createElement(IconSettings, null),
                             " \u66F8\u55AE\u7E3D\u8A2D\u5B9A"),
                         React.createElement("button", { type: "button", onClick: handleResetDefaultCatalog, className: "tap-target px-3 py-1.5 bg-white text-brand-600 border border-brand-200 hover:bg-brand-50 rounded-lg text-xs font-bold transition-colors shadow-sm btn-spring" }, "\uD83D\uDCE5 \u8F09\u5165\u9810\u8A2D\u5168\u79D1"),
+                        React.createElement("button", { type: "button", onClick: handleSyncF3ToF1, className: "tap-target px-3 py-1.5 bg-slate-900 text-white border border-slate-900 hover:bg-slate-800 rounded-lg text-xs font-bold transition-colors shadow-sm btn-spring" }, "\uD83D\uDD01 \u4E2D\u4E09\u540C\u6B65\u5230\u4E2D\u4E00"),
                         hasZeroPriceWarning && React.createElement("span", { className: "px-2 py-1.5 bg-red-100 text-red-600 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm" },
                             React.createElement(IconWarning, null),
                             " \u5C1A\u6709 $0 \u9805\u76EE")),
