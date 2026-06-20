@@ -110,7 +110,7 @@
 
   <div id="loader">
     <div class="spinner"></div>
-    <p style="margin-top: 10px; color: #999; font-size: 12px; font-weight: bold;">LOADING APP...</p>
+    <p style="margin-top: 10px; color: #999; font-size: 12px; font-weight: bold;">載入系統中...</p>
   </div>
   
   <div id="root"></div>
@@ -119,9 +119,9 @@
     window.onerror = function(msg, url, line, col, error) {
       document.getElementById('loader').innerHTML = `
         <div style="padding: 20px; text-align: center; color: #ef4444;">
-          <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">App Load Failed</h2>
-          <p style="font-size: 12px;">${msg}</p>
-          <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #fff; border: 1px solid #ddd; border-radius: 8px;">Reload</button>
+          <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">系統發生錯誤</h2>
+          <p style="font-size: 12px; word-break: break-all;">${msg}</p>
+          <button onclick="localStorage.clear(); location.reload();" style="margin-top: 20px; padding: 10px 20px; background: #fff; border: 1px solid #ddd; border-radius: 8px;">清除數據並重啟</button>
         </div>
       `;
     };
@@ -145,7 +145,7 @@
     const LOGO_URL = "https://i.ibb.co/1Yf4N9qy/pack-icon-20240802-010959-0000.png";
 
     // ==========================================
-    // 2. 數據設定 (書本取代銀紙)
+    // 2. 數據設定 (書本科目)
     // ==========================================
     const BOOK_DATA = [
       { id: 'chi', label: '中一中文', bg: 'bg-gradient-to-br from-red-400/80 to-red-600/70', border: 'border-red-400/50', text: 'text-white', colorCode: '#ef4444' },
@@ -155,6 +155,24 @@
       { id: 'sci', label: '綜合科學', bg: 'bg-gradient-to-br from-orange-400/80 to-orange-600/70', border: 'border-orange-400/50', text: 'text-white', colorCode: '#f97316' },
       { id: 'hist', label: '中史', bg: 'bg-gradient-to-br from-purple-400/80 to-purple-600/70', border: 'border-purple-400/50', text: 'text-white', colorCode: '#a855f7' },
     ];
+
+    // 工具函數：安全觸發震動回饋 (兼容 iPad/Safari)
+    const triggerHaptic = () => {
+      if (typeof window.navigator.vibrate === 'function') {
+        window.navigator.vibrate(10);
+      }
+    };
+
+    // 工具函數：安全讀取 LocalStorage
+    const getStorageData = (key) => {
+      try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : {};
+      } catch (error) {
+        console.warn(`Error reading ${key} from LocalStorage`, error);
+        return {};
+      }
+    };
 
     // ==========================================
     // 3. 共用 UI 組件
@@ -176,7 +194,7 @@
         <div className="glass-panel rounded-[2rem] p-4 flex flex-col w-full shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
           <div className="flex justify-between items-end mb-3">
             <div className="flex flex-col">
-              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-0.5">Total Books</span>
+              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-0.5">總共收集數量</span>
               <span className="text-4xl font-black text-gray-800">{total}</span>
             </div>
             <div className="text-right flex gap-4">
@@ -208,7 +226,7 @@
         <div className="absolute top-[120px] bottom-0 w-full flex flex-col">
           <div className="flex-none px-4 pt-4 pb-2 z-20 relative pointer-events-auto">
              <div className="glass-panel rounded-2xl px-2 py-2 flex justify-center">
-                 <button onClick={clearAll} className="w-full h-12 rounded-xl glass-button flex items-center justify-center gap-2 text-sm font-bold text-rose-600 bg-rose-50/50 border-rose-200 hover:bg-rose-100/80 transition-all active:scale-95 shadow-sm">
+                 <button onClick={clearAll} className="w-full h-12 rounded-xl glass-button flex items-center justify-center gap-2 text-sm font-bold text-rose-600 bg-rose-50/50 border-rose-200 hover:bg-rose-100/80 transition-all active:scale-95 shadow-sm cursor-pointer">
                    <Trash2 size={20} /> 清除所有記錄
                  </button>
              </div>
@@ -222,12 +240,12 @@
                     {book.label}
                   </div>
                   <div className="flex w-full gap-2 justify-between">
-                    <button onClick={() => addBook(book.id, 'me')} className="flex-1 flex flex-col items-center justify-center py-2 glass-button rounded-xl bg-blue-50/40 border-blue-100 hover:bg-blue-100/60 active:scale-90 transition-transform">
+                    <button onClick={() => addBook(book.id, 'me')} className="flex-1 flex flex-col items-center justify-center py-2 glass-button rounded-xl bg-blue-50/40 border-blue-100 hover:bg-blue-100/60 active:scale-90 transition-transform cursor-pointer">
                       <span className="text-[10px] text-blue-500 font-bold mb-0.5">我</span>
                       <span className="text-2xl font-black text-gray-800">{myCounts[book.id] || 0}</span>
                       <span className="text-[10px] font-bold text-blue-600 mt-0.5">+1</span>
                     </button>
-                    <button onClick={() => addBook(book.id, 'friend')} className="flex-1 flex flex-col items-center justify-center py-2 glass-button rounded-xl bg-emerald-50/40 border-emerald-100 hover:bg-emerald-100/60 active:scale-90 transition-transform">
+                    <button onClick={() => addBook(book.id, 'friend')} className="flex-1 flex flex-col items-center justify-center py-2 glass-button rounded-xl bg-emerald-50/40 border-emerald-100 hover:bg-emerald-100/60 active:scale-90 transition-transform cursor-pointer">
                       <span className="text-[10px] text-emerald-500 font-bold mb-0.5">朋友</span>
                       <span className="text-2xl font-black text-gray-800">{friendCounts[book.id] || 0}</span>
                       <span className="text-[10px] font-bold text-emerald-600 mt-0.5">+1</span>
@@ -248,12 +266,11 @@
     };
 
     // ==========================================
-    // 分頁 2: 數據統計 (取代 Keypad)
+    // 分頁 2: 數據統計
     // ==========================================
     const StatsPanel = ({ isVisible, myCounts, friendCounts }) => {
       if (!isVisible) return null;
 
-      // 計算每科總數並排序
       const stats = BOOK_DATA.map(book => {
         const m = myCounts[book.id] || 0;
         const f = friendCounts[book.id] || 0;
@@ -276,7 +293,6 @@
                   </div>
                   <span className="font-mono font-black text-xl text-gray-800">{stat.total}</span>
                 </div>
-                {/* 迷你比例條 */}
                 <div className="w-full h-1.5 bg-gray-100 rounded-full flex overflow-hidden mt-2">
                   <div className="h-full bg-blue-400" style={{width: `${mPercent}%`}}></div>
                   <div className="h-full bg-emerald-400" style={{width: `${fPercent}%`}}></div>
@@ -296,22 +312,21 @@
     };
 
     // ==========================================
-    // 分頁 3: 視覺書架 (取代滿天飛銀紙)
+    // 分頁 3: 視覺書架
     // ==========================================
     const BookshelfPanel = ({ isVisible, myCounts, friendCounts }) => {
       if (!isVisible) return null;
 
-      // 將數字轉換成獨立的「書本」陣列
       const renderBooks = () => {
         let books = [];
         BOOK_DATA.forEach(book => {
-          const total = (myCounts[book.id] || 0) + (friendCounts[book.id] || 0);
-          for(let i=0; i<total; i++){
-             // 隨機產生稍微不同嘅高度同顏色深淺，令書架睇落更自然
-             const height = 40 + Math.random() * 20; 
+          // 限制最多顯示每科 100 本，防止效能問題
+          const total = Math.min((myCounts[book.id] || 0) + (friendCounts[book.id] || 0), 100);
+          for(let i = 0; i < total; i++){
+             const height = 40 + (Math.sin(i + book.id.length) * 10) + 10; 
              books.push(
                <div key={`${book.id}-${i}`} className="w-4 rounded-sm shadow-sm border border-black/10" 
-                    style={{ height: `${height}px`, backgroundColor: book.colorCode, opacity: 0.85 + Math.random()*0.15 }} />
+                    style={{ height: `${height}px`, backgroundColor: book.colorCode, opacity: 0.85 + (i % 3)*0.05 }} />
              );
           }
         });
@@ -319,13 +334,11 @@
       };
 
       const booksArray = renderBooks();
-      // 將書分成每層最多 20 本
       const shelves = [];
       for (let i = 0; i < Math.max(booksArray.length, 1); i += 20) {
           shelves.push(booksArray.slice(i, i + 20));
       }
-      // 如果完全無書，都顯示三個空書架
-      while(shelves.length < 3) shelves.push([]);
+      while(shelves.length < 3) shelves.push([]); // 保證最少有三層書架
 
       return (
         <div className="absolute top-[120px] bottom-0 w-full overflow-y-auto px-4 py-8 space-y-8 no-scrollbar bg-amber-900/5">
@@ -339,26 +352,28 @@
     };
 
     // ==========================================
-    // App 主程式 (整合 State & LocalStorage)
+    // App 主程式
     // ==========================================
     const App = () => {
       const [activeTab, setActiveTab] = useState('input');
       
-      // 讀取 LocalStorage (或預設空物件)
-      const [myCounts, setMyCounts] = useState(() => JSON.parse(localStorage.getItem('myBookCounts')) || {});
-      const [friendCounts, setFriendCounts] = useState(() => JSON.parse(localStorage.getItem('friendBookCounts')) || {});
+      const [myCounts, setMyCounts] = useState(() => getStorageData('myBookCounts'));
+      const [friendCounts, setFriendCounts] = useState(() => getStorageData('friendBookCounts'));
 
-      // 儲存至 LocalStorage
       useEffect(() => {
-        localStorage.setItem('myBookCounts', JSON.stringify(myCounts));
-        localStorage.setItem('friendBookCounts', JSON.stringify(friendCounts));
+        try {
+          localStorage.setItem('myBookCounts', JSON.stringify(myCounts));
+          localStorage.setItem('friendBookCounts', JSON.stringify(friendCounts));
+        } catch (e) {
+          console.warn("無法儲存至 LocalStorage", e);
+        }
       }, [myCounts, friendCounts]);
 
       const myTotal = Object.values(myCounts).reduce((a, b) => a + b, 0);
       const friendTotal = Object.values(friendCounts).reduce((a, b) => a + b, 0);
 
       const addBook = (id, person) => {
-        if (navigator.vibrate) navigator.vibrate(10);
+        triggerHaptic();
         if (person === 'me') {
           setMyCounts(p => ({ ...p, [id]: (p[id] || 0) + 1 }));
         } else {
@@ -367,6 +382,7 @@
       };
 
       const clearAll = () => {
+        triggerHaptic();
         if (window.confirm("確定要清除所有收書記錄？")) {
           setMyCounts({});
           setFriendCounts({});
@@ -375,7 +391,6 @@
         }
       };
 
-      // 移除載入畫面
       useEffect(() => {
         const loader = document.getElementById('loader');
         if(loader) { loader.style.opacity = 0; setTimeout(() => loader.remove(), 500); }
@@ -385,25 +400,23 @@
         <div className="fixed inset-0 flex flex-col overflow-hidden bg-[#F5F5F7] text-gray-800">
           <LiquidBackground />
           
-          {/* 頂部導航列 */}
           <div className="relative z-50 flex-none h-[120px] pt-safe flex flex-col items-center justify-center bg-white/60 backdrop-blur-xl border-b border-white/40 shadow-sm">
             <img src={LOGO_URL} alt="Logo" className="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover mb-2 animate-bounce" style={{animationDuration:'3s'}} />
             <div className="grid grid-cols-3 p-1 bg-white/50 backdrop-blur-xl border border-white/60 rounded-full shadow-inner w-[320px]">
                 <div className={`absolute top-1 bottom-1 w-[calc(33.33%-0.5rem)] bg-white border border-white/60 shadow-sm rounded-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${activeTab === 'input' ? 'left-1' : activeTab === 'stats' ? 'left-[calc(33.33%+0.25rem)]' : 'left-[calc(66.66%-0.5rem)]'}`} />
                 
-                <button onClick={() => setActiveTab('input')} className={`relative z-10 py-1.5 rounded-full text-[10px] font-bold flex items-center justify-center gap-1 transition-all duration-300 ${activeTab === 'input' ? 'text-gray-900 scale-105' : 'text-gray-400'}`}>
+                <button onClick={() => { triggerHaptic(); setActiveTab('input'); }} className={`relative z-10 py-1.5 rounded-full text-[10px] font-bold flex items-center justify-center gap-1 transition-all duration-300 cursor-pointer ${activeTab === 'input' ? 'text-gray-900 scale-105' : 'text-gray-400'}`}>
                   <Book size={14}/> 入數清單
                 </button>
-                <button onClick={() => setActiveTab('stats')} className={`relative z-10 py-1.5 rounded-full text-[10px] font-bold flex items-center justify-center gap-1 transition-all duration-300 ${activeTab === 'stats' ? 'text-gray-900 scale-105' : 'text-gray-400'}`}>
+                <button onClick={() => { triggerHaptic(); setActiveTab('stats'); }} className={`relative z-10 py-1.5 rounded-full text-[10px] font-bold flex items-center justify-center gap-1 transition-all duration-300 cursor-pointer ${activeTab === 'stats' ? 'text-gray-900 scale-105' : 'text-gray-400'}`}>
                   <PieChart size={14}/> 數據統計
                 </button>
-                <button onClick={() => setActiveTab('bookshelf')} className={`relative z-10 py-1.5 rounded-full text-[10px] font-bold flex items-center justify-center gap-1 transition-all duration-300 ${activeTab === 'bookshelf' ? 'text-gray-900 scale-105' : 'text-gray-400'}`}>
+                <button onClick={() => { triggerHaptic(); setActiveTab('bookshelf'); }} className={`relative z-10 py-1.5 rounded-full text-[10px] font-bold flex items-center justify-center gap-1 transition-all duration-300 cursor-pointer ${activeTab === 'bookshelf' ? 'text-gray-900 scale-105' : 'text-gray-400'}`}>
                   <Library size={14}/> 視覺書架
                 </button>
             </div>
           </div>
 
-          {/* 分頁內容 */}
           <BooksPanel isVisible={activeTab === 'input'} myCounts={myCounts} friendCounts={friendCounts} addBook={addBook} myTotal={myTotal} friendTotal={friendTotal} clearAll={clearAll} />
           <StatsPanel isVisible={activeTab === 'stats'} myCounts={myCounts} friendCounts={friendCounts} />
           <BookshelfPanel isVisible={activeTab === 'bookshelf'} myCounts={myCounts} friendCounts={friendCounts} />
