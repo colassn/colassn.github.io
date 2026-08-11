@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Piano 100 — 我的鋼琴日誌</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #101014;
+      --soft-ink: #24242a;
+      --paper: #f5f5f7;
+      --card: #ffffff;
+      --subtle: #73737d;
+      --line: rgba(16, 16, 20, .085);
+      --lime: #c8ff4d;
+      --lime-deep: #92c400;
+      --violet: #7558ff;
+      --danger: #ff5a43;
+      --warning: #ffb23f;
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --shadow: 0 18px 50px rgba(22, 22, 28, .08);
+      --safe-bottom: max(18px, env(safe-area-inset-bottom));
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: #e9e9ed; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(117, 88, 255, .13), transparent 28rem),
+        radial-gradient(circle at 85% 85%, rgba(200, 255, 77, .16), transparent 30rem),
+        #e9e9ed;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang HK", "Noto Sans TC", "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .icon { width: 20px; height: 20px; display: block; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    .app {
+      width: min(100%, 560px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 0 18px calc(112px + var(--safe-bottom));
+      background: var(--paper);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      box-shadow: 0 0 80px rgba(24, 24, 32, .12);
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 260px;
+      height: 260px;
+      top: -125px;
+      right: -110px;
+      border-radius: 50%;
+      background: rgba(200, 255, 77, .18);
+      filter: blur(8px);
+    }
+
+    .topbar {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      margin: 0 -18px;
+      padding: max(18px, env(safe-area-inset-top)) 18px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(245, 245, 247, .82);
+      backdrop-filter: blur(22px) saturate(1.35);
+      -webkit-backdrop-filter: blur(22px) saturate(1.35);
+    }
+
+    .wordmark { display: flex; align-items: center; gap: 10px; }
+    .wordmark-mark {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--ink);
+      color: var(--lime);
+      font-size: 20px;
+      box-shadow: 0 7px 18px rgba(16, 16, 20, .16);
+    }
+    .wordmark strong { display: block; font-size: 14px; letter-spacing: -.02em; }
+    .wordmark small { display: block; color: var(--subtle); font-size: 9px; margin-top: 1px; letter-spacing: .08em; text-transform: uppercase; }
+    .sync-chip { max-width: 150px; display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.78); padding: 8px 10px; color: #5d5d66; font-size: 9px; font-weight: 750; white-space: nowrap; overflow: hidden; }
+    .sync-chip span:last-child { overflow: hidden; text-overflow: ellipsis; }
+    .sync-dot { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: #20b86a; box-shadow: 0 0 0 4px rgba(32,184,106,.10); }
+    .sync-chip.waiting .sync-dot { background: var(--warning); box-shadow: 0 0 0 4px rgba(255,178,63,.13); }
+    .sync-chip.syncing .sync-dot { background: var(--violet); box-shadow: 0 0 0 4px rgba(117,88,255,.12); animation: syncPulse 1.1s infinite; }
+    .sync-chip.error .sync-dot { background: var(--danger); box-shadow: 0 0 0 4px rgba(255,90,67,.10); }
+    @keyframes syncPulse { 50% { opacity: .35; transform: scale(.72); } }
+
+    .hero { margin-top: 12px; }
+    .hero-card {
+      min-height: 248px;
+      border-radius: var(--radius-xl);
+      color: white;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(200, 255, 77, .16), transparent 36%),
+        linear-gradient(145deg, #0c0c0f, #202027);
+      padding: 25px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 55px rgba(16, 16, 20, .22);
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -45px -95px auto;
+      width: 230px;
+      height: 230px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 50%;
+      box-shadow: 0 0 0 34px rgba(255,255,255,.018), 0 0 0 68px rgba(255,255,255,.012);
+    }
+    .hero-kicker { color: #a7a7b0; font-size: 10px; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
+    .hero-main { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-top: 22px; position: relative; z-index: 2; }
+    .day-number { font-size: clamp(72px, 23vw, 108px); font-weight: 780; line-height: .82; letter-spacing: -.085em; }
+    .day-copy { margin-top: 16px; }
+    .day-copy strong { display: block; font-size: 15px; letter-spacing: -.02em; }
+    .day-copy span { display: block; color: #9d9da7; font-size: 11px; margin-top: 4px; }
+    .progress-ring {
+      --progress: 7deg;
+      width: 82px;
+      height: 82px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: conic-gradient(var(--lime) var(--progress), rgba(255,255,255,.11) 0);
+    }
+    .progress-ring::before { content: ""; position: absolute; inset: 7px; border-radius: inherit; background: #17171c; }
+    .progress-ring span { position: relative; text-align: center; }
+    .progress-ring strong { display: block; font-size: 19px; line-height: 1; }
+    .progress-ring small { display: block; color: #8e8e97; font-size: 7px; margin-top: 4px; letter-spacing: .1em; }
+    .hero-progress { margin-top: 23px; display: flex; align-items: center; gap: 10px; position: relative; z-index: 2; }
+    .hero-progress-line { height: 3px; flex: 1; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.12); }
+    .hero-progress-line span { height: 100%; min-width: 7px; display: block; border-radius: inherit; background: var(--lime); transition: width .5s cubic-bezier(.2,.8,.2,1); }
+    .hero-progress em { color: #84848d; font-style: normal; font-size: 9px; }
+
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 11px; }
+    .metric { min-width: 0; padding: 14px 14px 13px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.76); }
+    .metric span { display: block; color: var(--subtle); font-size: 9px; }
+    .metric strong { display: block; margin-top: 5px; font-size: 20px; letter-spacing: -.05em; }
+    .metric strong small { color: #92929b; font-size: 9px; font-weight: 650; margin-left: 3px; }
+
+    .repeat-callout {
+      width: 100%;
+      border: 0;
+      margin: 11px 0 0;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      color: #5d3700;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #fff2d5, #ffe7bd);
+      transition: transform .18s ease;
+    }
+    .repeat-callout:active { transform: scale(.985); }
+    .repeat-callout[hidden] { display: none; }
+    .repeat-icon { width: 36px; height: 36px; flex: 0 0 auto; border-radius: 13px; display: grid; place-items: center; color: white; background: #f39a24; box-shadow: 0 8px 18px rgba(243,154,36,.25); }
+    .repeat-copy { min-width: 0; flex: 1; }
+    .repeat-copy strong { display: block; font-size: 11px; }
+    .repeat-copy span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #95631e; font-size: 9px; margin-top: 3px; }
+    .repeat-arrow { font-size: 18px; opacity: .55; }
+
+    .records-section { margin-top: 30px; scroll-margin-top: 82px; }
+    .section-title { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 14px; }
+    .section-title p { margin: 0 0 5px; color: var(--violet); font-size: 9px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .section-title h1 { margin: 0; font-size: 25px; letter-spacing: -.045em; }
+    .record-count { color: #8a8a94; font-size: 10px; font-weight: 700; }
+
+    .search {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 19px;
+      background: var(--card);
+      color: #8a8a94;
+      box-shadow: 0 8px 24px rgba(22,22,28,.035);
+      transition: border-color .18s, box-shadow .18s, transform .18s;
+    }
+    .search:focus-within { color: var(--ink); border-color: rgba(117,88,255,.45); box-shadow: 0 0 0 4px rgba(117,88,255,.08), 0 12px 30px rgba(22,22,28,.05); transform: translateY(-1px); }
+    .search input { width: 100%; min-width: 0; border: 0; outline: 0; padding: 0; color: var(--ink); background: transparent; font-size: 13px; appearance: none; }
+    .search input::placeholder { color: #a4a4ad; }
+    .search-clear { width: 27px; height: 27px; flex: 0 0 auto; border: 0; border-radius: 50%; display: none; place-items: center; color: #777781; background: #eeeeF1; }
+    .search-clear.show { display: grid; }
+
+    .segments { margin: 12px 0 14px; padding: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: 16px; background: #eaeaee; }
+    .segment { height: 36px; border: 0; border-radius: 12px; color: #73737d; background: transparent; font-size: 10px; font-weight: 750; transition: .18s ease; }
+    .segment.active { color: var(--ink); background: white; box-shadow: 0 4px 14px rgba(22,22,28,.07); }
+
+    .record-list { display: grid; gap: 10px; }
+    .record-card {
+      min-height: 86px;
+      padding: 12px 13px 12px 12px;
+      display: grid;
+      grid-template-columns: 55px minmax(0, 1fr) 40px;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--card);
+      box-shadow: 0 8px 22px rgba(22,22,28,.035);
+      animation: lift-in .35s both;
+      transition: transform .18s, box-shadow .18s;
+    }
+    .record-card:active { transform: scale(.988); }
+    .record-card.is-repeat { border-color: rgba(255,90,67,.24); background: linear-gradient(145deg, #fff, #fff7f5); }
+    @keyframes lift-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .record-day { width: 55px; height: 55px; display: grid; place-content: center; text-align: center; border-radius: 17px; color: white; background: var(--ink); }
+    .record-day small { color: #888891; font-size: 7px; font-weight: 800; letter-spacing: .1em; }
+    .record-day strong { margin-top: 2px; font-size: 18px; letter-spacing: -.04em; }
+    .record-main { min-width: 0; }
+    .record-name { display: flex; align-items: center; gap: 6px; min-width: 0; }
+    .record-name strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; letter-spacing: -.02em; }
+    .repeat-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 4px rgba(255,90,67,.09); }
+    .record-artist { color: var(--subtle); font-size: 10px; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .record-meta { display: flex; gap: 7px; align-items: center; color: #a0a0a8; font-size: 8px; margin-top: 6px; }
+    .record-meta i { width: 3px; height: 3px; border-radius: 50%; background: #c5c5ca; }
+    .play-button { width: 39px; height: 39px; border-radius: 14px; display: grid; place-items: center; color: var(--ink); text-decoration: none; background: #f0f0f3; transition: background .18s, color .18s, transform .18s; }
+    .play-button:active { transform: scale(.92); background: var(--lime); }
+    .play-button .icon { width: 17px; height: 17px; fill: currentColor; stroke: none; transform: translateX(1px); }
+    .empty { padding: 40px 20px; border: 1px dashed rgba(16,16,20,.14); border-radius: 24px; text-align: center; color: #898992; }
+    .empty-bubble { width: 48px; height: 48px; margin: 0 auto 12px; display: grid; place-items: center; border-radius: 17px; color: var(--violet); background: rgba(117,88,255,.09); }
+    .empty strong { display: block; color: var(--ink); font-size: 13px; }
+    .empty span { display: block; margin-top: 5px; font-size: 10px; }
+
+    .bottom-nav {
+      position: fixed;
+      z-index: 40;
+      left: 50%;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      width: min(calc(100% - 24px), 522px);
+      height: 70px;
+      transform: translateX(-50%);
+      padding: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr 1fr;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 24px;
+      color: white;
+      background: rgba(14,14,17,.92);
+      box-shadow: 0 20px 50px rgba(16,16,20,.34);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+    .nav-button { height: 52px; border: 0; border-radius: 18px; display: flex; align-items: center; justify-content: center; gap: 7px; color: #a1a1aa; background: transparent; font-size: 9px; font-weight: 750; }
+    .nav-button.active { color: white; }
+    .nav-add { color: var(--ink); background: var(--lime); font-size: 11px; box-shadow: 0 8px 20px rgba(200,255,77,.18); }
+    .nav-add .icon { width: 18px; height: 18px; }
+    .nav-button .badge { min-width: 17px; height: 17px; padding: 0 4px; display: grid; place-items: center; border-radius: 999px; color: white; background: var(--danger); font-size: 8px; }
+
+    .overlay { position: fixed; z-index: 100; inset: 0; display: grid; place-items: end center; padding: 14px; background: rgba(8,8,11,.56); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); opacity: 0; pointer-events: none; transition: opacity .22s ease; }
+    .overlay.open { opacity: 1; pointer-events: auto; }
+    .sheet { width: min(100%, 530px); max-height: calc(100dvh - 28px); overflow: auto; padding: 9px 20px calc(20px + env(safe-area-inset-bottom)); border-radius: 31px; background: #f8f8fa; box-shadow: 0 30px 90px rgba(0,0,0,.35); transform: translateY(28px) scale(.98); transition: transform .27s cubic-bezier(.2,.85,.2,1); }
+    .overlay.open .sheet { transform: translateY(0) scale(1); }
+    .sheet-handle { width: 37px; height: 4px; margin: 3px auto 20px; border-radius: 999px; background: #d3d3d8; }
+    .sheet-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+    .sheet-eyebrow { color: var(--violet); font-size: 8px; font-weight: 850; letter-spacing: .15em; text-transform: uppercase; }
+    .sheet h2 { margin: 5px 0 0; font-size: 26px; letter-spacing: -.055em; }
+    .sheet-close { width: 37px; height: 37px; flex: 0 0 auto; border: 0; border-radius: 50%; display: grid; place-items: center; color: #64646e; background: #e9e9ed; }
+    .composer-grid { display: grid; gap: 11px; margin-top: 22px; }
+    .field { position: relative; min-height: 68px; padding: 12px 15px 9px; border: 1px solid transparent; border-radius: 19px; background: white; box-shadow: 0 7px 20px rgba(22,22,28,.035); transition: border-color .18s, box-shadow .18s; }
+    .field:focus-within { border-color: rgba(117,88,255,.42); box-shadow: 0 0 0 4px rgba(117,88,255,.075); }
+    .field label { display: block; color: #898992; font-size: 8px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .field input { width: 100%; border: 0; outline: 0; margin-top: 6px; padding: 0; color: var(--ink); background: transparent; font-size: 14px; font-weight: 650; appearance: none; -webkit-appearance: none; }
+    .field input::placeholder { color: #c0c0c7; font-weight: 500; }
+    .day-field { display: flex; align-items: center; justify-content: space-between; }
+    .day-field-copy span { display: block; color: #898992; font-size: 8px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .day-value { display: block; margin-top: 4px; font-size: 22px; font-weight: 800; letter-spacing: -.05em; }
+    .day-stepper { display: flex; align-items: center; gap: 7px; }
+    .step-button { width: 38px; height: 38px; border: 0; border-radius: 13px; display: grid; place-items: center; color: var(--ink); background: #efeff2; font-size: 20px; }
+    .step-button:active { background: var(--lime); transform: scale(.94); }
+    .live-warning { display: none; align-items: center; gap: 9px; padding: 11px 12px; border-radius: 15px; color: #7e4600; background: #fff0d2; font-size: 9px; font-weight: 700; line-height: 1.4; }
+    .live-warning.show { display: flex; }
+    .live-warning-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--warning); box-shadow: 0 0 0 4px rgba(255,178,63,.14); }
+    .save-button { width: 100%; height: 55px; margin-top: 17px; border: 0; border-radius: 19px; display: flex; align-items: center; justify-content: center; gap: 9px; color: white; background: var(--ink); font-size: 12px; font-weight: 800; box-shadow: 0 15px 30px rgba(16,16,20,.18); transition: transform .18s; }
+    .save-button:active { transform: scale(.985); }
+    .save-button .icon { color: var(--lime); }
+
+    .generator-intro { margin: 10px 0 0; color: #777780; font-size: 11px; line-height: 1.6; }
+    .generator-day { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 999px; color: #4f3ac4; background: rgba(117,88,255,.10); font-size: 9px; font-weight: 850; letter-spacing: .06em; }
+    .generator-result { margin-top: 13px; padding: 16px; border-radius: 21px; color: white; background: linear-gradient(145deg, #111116, #23232b); box-shadow: 0 18px 38px rgba(16,16,20,.17); }
+    .result-label { color: #94949e; font-size: 8px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+    .result-title { min-height: 42px; margin-top: 8px; font-size: 13px; font-weight: 750; line-height: 1.55; word-break: break-word; }
+    .hashtag-list { margin-top: 13px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .hashtag-chip { padding: 6px 8px; border-radius: 999px; color: #d8ff78; background: rgba(200,255,77,.10); font-size: 8px; font-weight: 750; }
+    .generator-actions { margin-top: 13px; display: grid; grid-template-columns: 1fr 1.25fr; gap: 9px; }
+    .copy-button { height: 50px; border: 0; border-radius: 17px; color: var(--ink); background: #e8e8ec; font-size: 10px; font-weight: 800; }
+    .copy-button.primary { color: var(--ink); background: var(--lime); }
+    .settings-copy { margin: 10px 0 18px; color: #73737d; font-size: 11px; line-height: 1.65; }
+    .settings-help { margin-top: 11px; padding: 12px 14px; border-radius: 16px; color: #6f604c; background: #eee8dd; font-size: 9px; line-height: 1.55; }
+    .settings-status { min-height: 17px; margin-top: 10px; color: #777780; font-size: 9px; line-height: 1.5; }
+    .settings-status.error { color: var(--danger); }
+    .settings-actions { display: grid; grid-template-columns: 1fr 1.35fr; gap: 9px; margin-top: 15px; }
+    .settings-secondary { height: 55px; border: 0; border-radius: 19px; color: #5f5f68; background: #e6e6ea; font-size: 10px; font-weight: 800; }
+    .settings-actions .save-button { margin: 0; }
+
+    .notice-sheet { padding-top: 20px; text-align: center; }
+    .notice-orb { width: 66px; height: 66px; margin: 3px auto 16px; display: grid; place-items: center; border-radius: 24px; color: #a85c00; background: linear-gradient(145deg, #ffe4ad, #ffc56d); box-shadow: 0 14px 30px rgba(255,178,63,.20); }
+    .notice-orb.danger { color: white; background: linear-gradient(145deg, #ff7966, #ff4f38); }
+    .notice-sheet h2 { font-size: 25px; }
+    .notice-sheet > p { max-width: 390px; margin: 10px auto 0; color: #73737d; font-size: 11px; line-height: 1.65; }
+    .match-card { margin-top: 18px; display: grid; gap: 7px; text-align: left; }
+    .match-row { padding: 12px 14px; display: flex; align-items: center; gap: 12px; border-radius: 17px; background: white; }
+    .match-day { color: var(--danger); font-size: 9px; font-weight: 850; white-space: nowrap; }
+    .match-row strong { font-size: 11px; }
+    .notice-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 18px; }
+    .action-button { height: 51px; border: 0; border-radius: 17px; font-size: 10px; font-weight: 800; }
+    .action-button.soft { color: var(--ink); background: #eaeaee; }
+    .action-button.warning { color: white; background: var(--danger); }
+    .action-button.single { grid-column: 1 / -1; color: white; background: var(--ink); }
+
+    .toast { position: fixed; z-index: 150; left: 50%; bottom: calc(93px + var(--safe-bottom)); width: min(calc(100% - 42px), 490px); min-height: 48px; padding: 11px 15px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 16px; color: white; background: rgba(16,16,20,.94); box-shadow: 0 14px 35px rgba(16,16,20,.26); font-size: 10px; font-weight: 750; transform: translate(-50%, 18px); opacity: 0; pointer-events: none; transition: .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast-mark { color: var(--lime); font-size: 15px; }
+
+    @media (min-width: 680px) {
+      .app { margin-top: 26px; margin-bottom: 26px; min-height: calc(100vh - 52px); border-radius: 38px; }
+      .topbar { border-radius: 38px 38px 0 0; }
+      .bottom-nav { bottom: 24px; }
+    }
+
+    @media (max-width: 370px) {
+      .app { padding-left: 14px; padding-right: 14px; }
+      .topbar { margin-left: -14px; margin-right: -14px; padding-left: 14px; padding-right: 14px; }
+      .sync-chip { max-width: 112px; }
+      .hero-card { padding: 21px; }
+      .day-number { font-size: 75px; }
+      .progress-ring { width: 72px; height: 72px; }
+      .metric { padding-left: 11px; padding-right: 11px; }
+      .metric strong { font-size: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="top">
+    <header class="topbar">
+      <div class="wordmark">
+        <span class="wordmark-mark" aria-hidden="true">♩</span>
+        <span><strong>PIANO / 100</strong><small>My private log</small></span>
+      </div>
+      <button class="sync-chip waiting" id="syncSettingsButton" type="button" aria-label="YouTube 自動同步設定">
+        <span class="sync-dot"></span><span id="syncLabel">設定同步</span>
+      </button>
+    </header>
+
+    <section class="hero" aria-label="挑戰進度">
+      <article class="hero-card">
+        <div class="hero-kicker">100 Days Piano Challenge</div>
+        <div class="hero-main">
+          <div>
+            <div class="day-number" id="heroDay">007</div>
+            <div class="day-copy"><strong id="heroSong">告別校園時</strong><span id="heroArtist">李克勤 · 最新紀錄</span></div>
+          </div>
+          <div class="progress-ring" id="progressRing"><span><strong id="progressValue">7%</strong><small>完成</small></span></div>
+        </div>
+        <div class="hero-progress"><div class="hero-progress-line"><span id="progressLine" style="width:7%"></span></div><em id="progressCaption">7 / 100</em></div>
+      </article>
+
+      <div class="metrics">
+        <div class="metric"><span>已記錄</span><strong id="totalMetric">7<small>首</small></strong></div>
+        <div class="metric"><span>不重複</span><strong id="uniqueMetric">6<small>首</small></strong></div>
+        <div class="metric"><span>重複</span><strong id="repeatMetric">1<small>次</small></strong></div>
+      </div>
+
+      <button class="repeat-callout" id="repeatCallout" type="button">
+        <span class="repeat-icon">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7h-9a4 4 0 0 0-4 4v1"/><path d="m17 4 3 3-3 3"/><path d="M4 17h9a4 4 0 0 0 4-4v-1"/><path d="m7 20-3-3 3-3"/></svg>
+        </span>
+        <span class="repeat-copy"><strong id="repeatTitle">發現 1 次重複</strong><span id="repeatDescription">Day 005、006 · 小城夏天</span></span>
+        <span class="repeat-arrow">›</span>
+      </button>
+    </section>
+
+    <section class="records-section" id="records">
+      <div class="section-title">
+        <div><p>Practice archive</p><h1>挑戰紀錄</h1></div>
+        <span class="record-count" id="recordCount">7 records</span>
+      </div>
+
+      <label class="search">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.7-3.7"/></svg>
+        <span class="sr-only">搜尋歌曲、歌手或 Day</span>
+        <input id="searchInput" type="search" inputmode="search" autocomplete="off" placeholder="搜尋歌曲、歌手或 Day" />
+        <button class="search-clear" id="searchClear" type="button" aria-label="清除搜尋">×</button>
+      </label>
+
+      <div class="segments" role="group" aria-label="紀錄篩選">
+        <button class="segment active" type="button" data-filter="all">全部紀錄</button>
+        <button class="segment" type="button" data-filter="repeat">只看重複</button>
+      </div>
+
+      <div class="record-list" id="recordList"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="主要操作">
+    <button class="nav-button active" id="homeButton" type="button">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg>總覽
+    </button>
+    <button class="nav-button nav-add" id="generatorButton" type="button">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/><path d="m6 6 12 12M18 6 6 18"/></svg>標題助手
+    </button>
+    <button class="nav-button" id="repeatButton" type="button">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7h-9a4 4 0 0 0-4 4v1"/><path d="m17 4 3 3-3 3"/><path d="M4 17h9a4 4 0 0 0 4-4v-1"/><path d="m7 20-3-3 3-3"/></svg>重複<span class="badge" id="repeatBadge">1</span>
+    </button>
+  </nav>
+
+  <div class="overlay" id="composerOverlay" aria-hidden="true">
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="composerTitle">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div><div class="sheet-eyebrow">New record</div><h2 id="composerTitle">加入今日一曲</h2></div>
+        <button class="sheet-close" id="closeComposer" type="button" aria-label="關閉">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+
+      <form id="recordForm" novalidate>
+        <div class="composer-grid">
+          <div class="field day-field">
+            <div class="day-field-copy"><span>Challenge day</span><strong class="day-value">Day <b id="dayValue">008</b></strong></div>
+            <div class="day-stepper" aria-label="調整 Day">
+              <button class="step-button" id="dayMinus" type="button" aria-label="減少一天">−</button>
+              <button class="step-button" id="dayPlus" type="button" aria-label="增加一天">＋</button>
+            </div>
+          </div>
+          <div class="field"><label for="songInput">歌曲名稱 *</label><input id="songInput" autocomplete="off" placeholder="例如：晴天" /></div>
+          <div class="live-warning" id="liveWarning"><span class="live-warning-dot"></span><span id="liveWarningText"></span></div>
+          <div class="field"><label for="artistInput">歌手／作曲者</label><input id="artistInput" autocomplete="off" placeholder="例如：周杰倫" /></div>
+          <div class="field"><label for="dateInput">日期</label><input id="dateInput" inputmode="numeric" autocomplete="off" placeholder="YYYY-MM-DD" maxlength="10" /></div>
+          <div class="field"><label for="urlInput">YouTube 連結</label><input id="urlInput" inputmode="url" autocomplete="off" placeholder="貼上 Shorts 連結（可留空）" /></div>
+        </div>
+        <button class="save-button" type="submit">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>儲存呢次挑戰
+        </button>
+      </form>
+    </section>
+  </div>
+
+  <div class="overlay" id="generatorOverlay" aria-hidden="true">
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="generatorTitle">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div><div class="sheet-eyebrow">Title studio</div><h2 id="generatorTitle">整今日標題</h2></div>
+        <button class="sheet-close" id="closeGenerator" type="button" aria-label="關閉標題助手"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      </div>
+      <p class="generator-intro">輸入歌名同歌手／作者，就會自動整好符合系列格式嘅 YouTube 標題同適量 hashtag。</p>
+      <div class="generator-day">下一條影片 · DAY <span id="generatorDay">008</span></div>
+      <div class="composer-grid">
+        <div class="field"><label for="generatorSong">歌曲名稱</label><input id="generatorSong" autocomplete="off" placeholder="例如：晴天" /></div>
+        <div class="field"><label for="generatorArtist">歌手／作者</label><input id="generatorArtist" autocomplete="off" placeholder="例如：周杰倫" /></div>
+      </div>
+      <div class="generator-result" aria-live="polite">
+        <div class="result-label">YouTube title</div>
+        <div class="result-title" id="generatedTitle">輸入資料後會喺度產生標題</div>
+        <div class="hashtag-list" id="generatedHashtags"></div>
+      </div>
+      <div class="generator-actions">
+        <button class="copy-button" id="copyTitleButton" type="button">複製標題</button>
+        <button class="copy-button primary" id="copyAllButton" type="button">複製標題＋Hashtag</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="settingsOverlay" aria-hidden="true">
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div><div class="sheet-eyebrow">Auto sync</div><h2 id="settingsTitle">連接 YouTube</h2></div>
+        <button class="sheet-close" id="closeSettings" type="button" aria-label="關閉同步設定"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      </div>
+      <p class="settings-copy">喺呢部手機設定一次 YouTube API Key，之後每次打開網站都會自動檢查新挑戰同更新標題。</p>
+      <div class="field"><label for="apiKeyInput">YouTube Data API Key</label><input id="apiKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="貼上新 API Key" /></div>
+      <div class="settings-help">密鑰只保存在目前瀏覽器，唔會寫入 HTML。建議限制為 YouTube Data API v3 同你嘅 GitHub Pages 網址。</div>
+      <div class="settings-status" id="settingsStatus"></div>
+      <div class="settings-actions">
+        <button class="settings-secondary" id="clearKeyButton" type="button">清除密鑰</button>
+        <button class="save-button" id="saveKeyButton" type="button">儲存並同步</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="noticeOverlay" aria-hidden="true">
+    <section class="sheet notice-sheet" role="alertdialog" aria-modal="true" aria-labelledby="noticeTitle">
+      <div class="sheet-handle"></div>
+      <div class="notice-orb" id="noticeOrb">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+      </div>
+      <h2 id="noticeTitle">呢首歌彈過喇</h2>
+      <p id="noticeText">系統喺之前嘅紀錄搵到相同歌曲。</p>
+      <div class="match-card" id="matchCard"></div>
+      <div class="notice-actions" id="noticeActions"></div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status"><span class="toast-mark">✓</span><span id="toastText">紀錄已保存</span></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const STORAGE_KEY = 'piano100.private.records.v3';
+      const API_KEY_STORAGE = 'piano100.github.youtube-key.v1';
+      const LAST_SYNC_STORAGE = 'piano100.github.last-sync.v1';
+      const UPLOADS_PLAYLIST = 'UULSkqO6rRgtDJ9QCOeH4hqA';
+      const INITIAL_RECORDS = [
+        { id: 1, day: 1, artist: '許冠傑', song: '學生哥', date: '2026-06-19', url: 'https://www.youtube.com/shorts/_XglSdc4YIw' },
+        { id: 2, day: 2, artist: 'Beyond', song: 'Amani', date: '2026-06-22', url: 'https://www.youtube.com/shorts/S66xxsf_6S4' },
+        { id: 3, day: 3, artist: '周杰倫', song: '青花瓷', date: '2026-06-24', url: 'https://www.youtube.com/shorts/xdjR9GU4uyQ' },
+        { id: 4, day: 4, artist: '譚詠麟', song: '講不出再見', date: '2026-06-27', url: 'https://www.youtube.com/shorts/ETZO2VfFDIA' },
+        { id: 5, day: 5, artist: 'LBI利比', song: '小城夏天', date: '2026-07-01', url: 'https://www.youtube.com/shorts/CNXvnSPrdso' },
+        { id: 6, day: 6, artist: 'LBI利比', song: '小城夏天', date: '2026-07-17', url: 'https://www.youtube.com/shorts/3Ab0IbkvmMg' },
+        { id: 7, day: 7, artist: '李克勤', song: '告別校園時', date: '2026-07-19', url: 'https://www.youtube.com/shorts/7pzp-4P9oOw' }
+      ];
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => [...document.querySelectorAll(selector)];
+      const icons = {
+        play: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+        note: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>'
+      };
+
+      const loadRecords = () => {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (Array.isArray(saved) && saved.length) return saved;
+        } catch (_) {}
+        return INITIAL_RECORDS.map(item => ({ ...item }));
+      };
+
+      const state = { records: loadRecords(), filter: 'all', query: '', draftDay: 8, pending: null, syncing: false };
+      let toastTimer;
+
+      const normalize = (value) => (value || '').normalize('NFKC').toLocaleLowerCase('zh-HK').replace(/[\s\p{P}\p{S}]/gu, '');
+      const pad = (day) => String(day).padStart(3, '0');
+      const safe = (value) => String(value || '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+      const formatDate = (date) => {
+        if (!date) return '日期未填';
+        const parts = date.split('-');
+        return parts.length === 3 ? `${parts[2]}.${parts[1]}.${parts[0]}` : date;
+      };
+
+      const groups = () => {
+        const map = new Map();
+        state.records.forEach(record => {
+          const key = normalize(record.song);
+          map.set(key, [...(map.get(key) || []), record]);
+        });
+        return map;
+      };
+
+      const repeatRecords = () => {
+        const map = groups();
+        return state.records.filter(record => (map.get(normalize(record.song)) || []).length > 1);
+      };
+
+      const duplicateMatches = (song) => state.records.filter(record => normalize(record.song) === normalize(song));
+      const saveToDevice = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state.records));
+
+      function updateSummary() {
+        const sorted = [...state.records].sort((a, b) => b.day - a.day);
+        const latest = sorted[0];
+        const unique = groups().size;
+        const repeats = state.records.length - unique;
+        const progress = Math.min(latest ? latest.day : 0, 100);
+
+        $('#heroDay').textContent = latest ? pad(latest.day) : '000';
+        $('#heroSong').textContent = latest ? latest.song : '未有紀錄';
+        $('#heroArtist').textContent = latest ? `${latest.artist || '歌手未填'} · 最新紀錄` : '由第一首歌開始';
+        $('#progressValue').textContent = `${progress}%`;
+        $('#progressRing').style.setProperty('--progress', `${progress * 3.6}deg`);
+        $('#progressLine').style.width = `${progress}%`;
+        $('#progressCaption').textContent = `${progress} / 100`;
+        $('#totalMetric').innerHTML = `${state.records.length}<small>首</small>`;
+        $('#uniqueMetric').innerHTML = `${unique}<small>首</small>`;
+        $('#repeatMetric').innerHTML = `${repeats}<small>次</small>`;
+        $('#repeatBadge').textContent = repeats;
+        $('#recordCount').textContent = `${state.records.length} records`;
+
+        const repeatingGroups = [...groups().values()].filter(items => items.length > 1);
+        $('#repeatCallout').hidden = repeats === 0;
+        if (repeatingGroups.length) {
+          const first = repeatingGroups[0];
+          $('#repeatTitle').textContent = `發現 ${repeats} 次重複`;
+          $('#repeatDescription').textContent = `Day ${first.map(item => pad(item.day)).join('、')} · ${first[0].song}`;
+        }
+      }
+
+      function renderRecords() {
+        const map = groups();
+        const term = state.query.trim().toLocaleLowerCase('zh-HK');
+        let records = [...state.records].sort((a, b) => b.day - a.day);
+        if (state.filter === 'repeat') records = records.filter(record => (map.get(normalize(record.song)) || []).length > 1);
+        if (term) records = records.filter(record => `${record.day} ${record.song} ${record.artist}`.toLocaleLowerCase('zh-HK').includes(term));
+
+        if (!records.length) {
+          $('#recordList').innerHTML = `<div class="empty"><div class="empty-bubble">${icons.note}</div><strong>搵唔到相符紀錄</strong><span>試下另一個搜尋字，或者返回全部紀錄。</span></div>`;
+          return;
+        }
+
+        $('#recordList').innerHTML = records.map((record, index) => {
+          const repeated = (map.get(normalize(record.song)) || []).length > 1;
+          const play = record.url
+            ? `<a class="play-button" href="${safe(record.url)}" target="_blank" rel="noreferrer" aria-label="播放 ${safe(record.song)}">${icons.play}</a>`
+            : `<span class="play-button" aria-hidden="true">${icons.note}</span>`;
+          return `<article class="record-card${repeated ? ' is-repeat' : ''}" style="animation-delay:${Math.min(index * 28, 180)}ms">
+            <div class="record-day"><small>DAY</small><strong>${pad(record.day)}</strong></div>
+            <div class="record-main">
+              <div class="record-name"><strong>${safe(record.song)}</strong>${repeated ? '<span class="repeat-dot" title="重複歌曲"></span>' : ''}</div>
+              <div class="record-artist">${safe(record.artist || '歌手未填')}</div>
+              <div class="record-meta"><span>${formatDate(record.date)}</span><i></i><span>${repeated ? '重複挑戰' : '每日一曲'}</span></div>
+            </div>${play}</article>`;
+        }).join('');
+      }
+
+      function render() {
+        updateSummary();
+        renderRecords();
+      }
+
+      function setFilter(filter, shouldScroll = false) {
+        state.filter = filter;
+        $$('.segment').forEach(button => button.classList.toggle('active', button.dataset.filter === filter));
+        $('#repeatButton').classList.toggle('active', filter === 'repeat');
+        $('#homeButton').classList.toggle('active', filter === 'all');
+        renderRecords();
+        if (shouldScroll) $('#records').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function openOverlay(element) {
+        element.classList.add('open');
+        element.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeOverlay(element) {
+        element.classList.remove('open');
+        element.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      function resetComposer() {
+        state.draftDay = Math.min(Math.max(...state.records.map(item => item.day), 0) + 1, 100);
+        $('#dayValue').textContent = pad(state.draftDay);
+        $('#songInput').value = '';
+        $('#artistInput').value = '';
+        $('#dateInput').value = new Date().toISOString().slice(0, 10);
+        $('#urlInput').value = '';
+        $('#liveWarning').classList.remove('show');
+      }
+
+      function openComposer() {
+        resetComposer();
+        openOverlay($('#composerOverlay'));
+        setTimeout(() => $('#songInput').focus(), 280);
+      }
+
+      function updateLiveWarning() {
+        const matches = duplicateMatches($('#songInput').value);
+        $('#liveWarning').classList.toggle('show', matches.length > 0);
+        if (matches.length) $('#liveWarningText').textContent = `已經喺 Day ${matches.map(item => pad(item.day)).join('、')} 彈過呢首歌`;
+      }
+
+      function showToast(text) {
+        clearTimeout(toastTimer);
+        $('#toastText').textContent = text;
+        $('#toast').classList.add('show');
+        toastTimer = setTimeout(() => $('#toast').classList.remove('show'), 2600);
+      }
+
+      const videoIdOf = record => record.videoId || String(record.url || '').match(/(?:shorts\/|v=|youtu\.be\/)([\w-]{11})/)?.[1] || '';
+
+      function setSyncStatus(type, label) {
+        const chip = $('#syncSettingsButton');
+        chip.classList.remove('waiting', 'syncing', 'error');
+        if (type) chip.classList.add(type);
+        $('#syncLabel').textContent = label;
+      }
+
+      function parsePianoTitle(value, fallbackDay) {
+        const title = String(value || '').replace(/\s+/g, ' ').trim();
+        if (fallbackDay == null && !/100\s*天鋼琴挑戰/i.test(title)) return null;
+        const marker = title.match(/DAY\s*0*(\d{1,3})\s*[：:]?/i);
+        const day = marker ? Number(marker[1]) : fallbackDay;
+        if (!Number.isInteger(day) || day < 1 || day > 100) return null;
+        const markerEnd = marker && marker.index != null ? marker.index + marker[0].length : 0;
+        const details = title.slice(markerEnd).replace(/^\s*[：:]\s*/, '').replace(/#.*$/, '').trim();
+        const split = details.match(/^(.+?)\s*[—–－-]\s*(.+)$/);
+        const artist = split?.[1]?.trim() || '';
+        const song = split?.[2]?.trim() || details;
+        return song ? { day, artist, song } : null;
+      }
+
+      async function youtubeJson(path, key) {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/${path}${path.includes('?') ? '&' : '?'}key=${encodeURIComponent(key)}`);
+        const data = await response.json();
+        if (!response.ok) {
+          const reason = data?.error?.errors?.[0]?.reason;
+          if (reason === 'quotaExceeded') throw new Error('YouTube API 今日配額已用完，聽日會自動再試。');
+          if (reason === 'keyInvalid' || reason === 'forbidden') throw new Error('API Key 無效或限制未設定好。');
+          throw new Error(data?.error?.message || '暫時未能讀取 YouTube。');
+        }
+        return data;
+      }
+
+      async function getChannelVideos(key) {
+        const ids = [];
+        let pageToken = '';
+        do {
+          const params = new URLSearchParams({ part: 'contentDetails', playlistId: UPLOADS_PLAYLIST, maxResults: '50' });
+          if (pageToken) params.set('pageToken', pageToken);
+          const page = await youtubeJson(`playlistItems?${params}`, key);
+          ids.push(...(page.items || []).map(item => item.contentDetails?.videoId).filter(Boolean));
+          pageToken = page.nextPageToken || '';
+        } while (pageToken && ids.length < 150);
+
+        const videos = [];
+        for (let index = 0; index < ids.length; index += 50) {
+          const params = new URLSearchParams({ part: 'snippet', id: ids.slice(index, index + 50).join(','), maxResults: '50' });
+          const page = await youtubeJson(`videos?${params}`, key);
+          videos.push(...(page.items || []));
+        }
+        return videos;
+      }
+
+      async function syncYouTube(announce = false) {
+        if (state.syncing) return;
+        const key = localStorage.getItem(API_KEY_STORAGE) || '';
+        if (!key) {
+          setSyncStatus('waiting', '設定同步');
+          if (announce) openOverlay($('#settingsOverlay'));
+          return;
+        }
+        state.syncing = true;
+        setSyncStatus('syncing', '同步緊 YouTube');
+        $('#settingsStatus').classList.remove('error');
+        $('#settingsStatus').textContent = '正在檢查新影片同最新標題…';
+        try {
+          const videos = await getChannelVideos(key);
+          const byVideo = new Map(state.records.map(record => [videoIdOf(record), record]).filter(([id]) => id));
+          const byDay = new Map(state.records.map(record => [Number(record.day), record]));
+          const added = [];
+          const updated = [];
+          let duplicateAlert = null;
+
+          videos.forEach(video => {
+            const existing = byVideo.get(video.id);
+            const parsed = parsePianoTitle(video.snippet?.title, existing?.day);
+            if (!parsed) return;
+            const record = existing || byDay.get(parsed.day);
+            const next = { id: video.id, videoId: video.id, day: parsed.day, song: parsed.song, artist: parsed.artist, date: String(video.snippet?.publishedAt || '').slice(0, 10), url: `https://www.youtube.com/shorts/${video.id}` };
+            if (record) {
+              const changed = record.song !== next.song || record.artist !== next.artist || videoIdOf(record) !== video.id || Number(record.day) !== next.day;
+              Object.assign(record, next);
+              byVideo.set(video.id, record);
+              byDay.set(next.day, record);
+              if (changed) updated.push(record);
+            } else {
+              const matches = duplicateMatches(next.song);
+              state.records.push(next);
+              byVideo.set(video.id, next);
+              byDay.set(next.day, next);
+              added.push(next);
+              if (!duplicateAlert && matches.length) duplicateAlert = { record: next, matches };
+            }
+          });
+
+          state.records = [...new Map(state.records.sort((a, b) => a.day - b.day).map(record => [Number(record.day), record])).values()];
+          saveToDevice();
+          localStorage.setItem(LAST_SYNC_STORAGE, new Date().toISOString());
+          render();
+          const time = new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
+          setSyncStatus('', `已同步 ${time}`);
+          $('#settingsStatus').textContent = `完成：${added.length} 個新挑戰，${updated.length} 個標題更新。`;
+          if (added.length || updated.length) showToast(`加入 ${added.length} 個新挑戰，更新 ${updated.length} 個標題`);
+          else if (announce) showToast('已經係最新紀錄');
+          if (duplicateAlert) showNotice({ title: '呢首歌彈過喇', text: `新嘅 Day ${pad(duplicateAlert.record.day)}《${duplicateAlert.record.song}》同之前紀錄相同。`, matches: duplicateAlert.matches, danger: true });
+          else if ($('#settingsOverlay').classList.contains('open')) setTimeout(() => closeOverlay($('#settingsOverlay')), 650);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : '暫時未能同步 YouTube。';
+          setSyncStatus('error', '同步失敗・撳我');
+          $('#settingsStatus').textContent = message;
+          $('#settingsStatus').classList.add('error');
+          if (announce) openOverlay($('#settingsOverlay'));
+        } finally {
+          state.syncing = false;
+        }
+      }
+
+      function nextGeneratorDay() {
+        return Math.min(Math.max(...state.records.map(item => Number(item.day) || 0), 0) + 1, 100);
+      }
+
+      function cleanHashtag(value) {
+        return String(value || '').normalize('NFKC').replace(/[\s\p{P}\p{S}]/gu, '');
+      }
+
+      function generatorOutput() {
+        const day = nextGeneratorDay();
+        const song = $('#generatorSong').value.trim();
+        const artist = $('#generatorArtist').value.trim();
+        const title = song && artist ? `100天鋼琴挑戰 DAY ${pad(day)}：${artist} — ${song}` : '';
+        const tags = [...new Set(['100天鋼琴挑戰', '鋼琴', 'PianoCover', 'Shorts', cleanHashtag(artist), cleanHashtag(song)].filter(Boolean))].slice(0, 6).map(tag => `#${tag}`);
+        $('#generatorDay').textContent = pad(day);
+        $('#generatedTitle').textContent = title || '輸入資料後會喺度產生標題';
+        $('#generatedHashtags').innerHTML = title ? tags.map(tag => `<span class="hashtag-chip">${safe(tag)}</span>`).join('') : '';
+        return { title, hashtags: tags.join(' ') };
+      }
+
+      async function copyText(value, success) {
+        if (!value.trim()) {
+          showToast('請先輸入歌曲名同歌手／作者');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(value);
+        } catch (_) {
+          const helper = document.createElement('textarea');
+          helper.value = value;
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.appendChild(helper);
+          helper.select();
+          document.execCommand('copy');
+          helper.remove();
+        }
+        showToast(success);
+      }
+
+      function openGenerator() {
+        $('#generatorSong').value = '';
+        $('#generatorArtist').value = '';
+        generatorOutput();
+        openOverlay($('#generatorOverlay'));
+        setTimeout(() => $('#generatorSong').focus(), 280);
+      }
+
+      function showNotice({ title, text, matches = [], canConfirm = false, danger = false }) {
+        $('#noticeTitle').textContent = title;
+        $('#noticeText').textContent = text;
+        $('#noticeOrb').classList.toggle('danger', danger);
+        $('#matchCard').innerHTML = matches.map(item => `<div class="match-row"><span class="match-day">DAY ${pad(item.day)}</span><strong>${safe(item.artist || '歌手未填')} · ${safe(item.song)}</strong></div>`).join('');
+        $('#noticeActions').innerHTML = canConfirm
+          ? '<button class="action-button soft" id="noticeBack" type="button">返回改歌</button><button class="action-button warning" id="noticeConfirm" type="button">仍然加入</button>'
+          : '<button class="action-button single" id="noticeBack" type="button">知道了</button>';
+        openOverlay($('#noticeOverlay'));
+        $('#noticeBack').addEventListener('click', () => closeOverlay($('#noticeOverlay')));
+        if (canConfirm) $('#noticeConfirm').addEventListener('click', () => commitRecord(state.pending));
+      }
+
+      function commitRecord(record) {
+        if (!record) return;
+        state.records.push({ ...record, id: Date.now() });
+        saveToDevice();
+        state.pending = null;
+        closeOverlay($('#noticeOverlay'));
+        closeOverlay($('#composerOverlay'));
+        setFilter('all');
+        render();
+        showToast(`Day ${pad(record.day)} 已保存`);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      $('#recordForm').addEventListener('submit', event => {
+        event.preventDefault();
+        const song = $('#songInput').value.trim();
+        if (!song) {
+          $('#songInput').focus();
+          showToast('請先輸入歌曲名稱');
+          return;
+        }
+        if (state.records.some(item => Number(item.day) === Number(state.draftDay))) {
+          showNotice({ title: `Day ${pad(state.draftDay)} 已有紀錄`, text: '每一日只會保留一條紀錄。請返回調整 Day 編號。', danger: true });
+          return;
+        }
+
+        state.pending = {
+          day: state.draftDay,
+          song,
+          artist: $('#artistInput').value.trim(),
+          date: $('#dateInput').value.trim(),
+          url: $('#urlInput').value.trim()
+        };
+        const matches = duplicateMatches(song);
+        if (matches.length) {
+          showNotice({ title: '呢首歌彈過喇', text: `你準備喺 Day ${pad(state.draftDay)} 再次加入《${song}》。如果係重新挑戰，可以照樣保存。`, matches, canConfirm: true });
+          return;
+        }
+        commitRecord(state.pending);
+      });
+
+      $('#songInput').addEventListener('input', updateLiveWarning);
+      $('#dayMinus').addEventListener('click', () => { state.draftDay = Math.max(1, state.draftDay - 1); $('#dayValue').textContent = pad(state.draftDay); });
+      $('#dayPlus').addEventListener('click', () => { state.draftDay = Math.min(100, state.draftDay + 1); $('#dayValue').textContent = pad(state.draftDay); });
+      $('#generatorButton').addEventListener('click', openGenerator);
+      $('#closeGenerator').addEventListener('click', () => closeOverlay($('#generatorOverlay')));
+      $('#generatorSong').addEventListener('input', generatorOutput);
+      $('#generatorArtist').addEventListener('input', generatorOutput);
+      $('#copyTitleButton').addEventListener('click', () => {
+        const output = generatorOutput();
+        void copyText(output.title, '標題已複製');
+      });
+      $('#copyAllButton').addEventListener('click', () => {
+        const output = generatorOutput();
+        void copyText(`${output.title}\n\n${output.hashtags}`, '標題同 Hashtag 已複製');
+      });
+      $('#syncSettingsButton').addEventListener('click', () => {
+        const key = localStorage.getItem(API_KEY_STORAGE) || '';
+        $('#apiKeyInput').value = key;
+        if (key) void syncYouTube(true);
+        else openOverlay($('#settingsOverlay'));
+      });
+      $('#closeSettings').addEventListener('click', () => closeOverlay($('#settingsOverlay')));
+      $('#saveKeyButton').addEventListener('click', () => {
+        const key = $('#apiKeyInput').value.trim();
+        if (!key) {
+          $('#settingsStatus').textContent = '請先貼上 API Key。';
+          $('#settingsStatus').classList.add('error');
+          return;
+        }
+        localStorage.setItem(API_KEY_STORAGE, key);
+        $('#settingsStatus').classList.remove('error');
+        void syncYouTube(true);
+      });
+      $('#clearKeyButton').addEventListener('click', () => {
+        localStorage.removeItem(API_KEY_STORAGE);
+        $('#apiKeyInput').value = '';
+        $('#settingsStatus').textContent = '已經由呢部裝置清除 API Key。';
+        $('#settingsStatus').classList.remove('error');
+        setSyncStatus('waiting', '設定同步');
+      });
+      $('#closeComposer').addEventListener('click', () => closeOverlay($('#composerOverlay')));
+      $('#homeButton').addEventListener('click', () => { setFilter('all'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      $('#repeatButton').addEventListener('click', () => setFilter('repeat', true));
+      $('#repeatCallout').addEventListener('click', () => setFilter('repeat', true));
+      $$('.segment').forEach(button => button.addEventListener('click', () => setFilter(button.dataset.filter)));
+      $('#searchInput').addEventListener('input', event => {
+        state.query = event.target.value;
+        $('#searchClear').classList.toggle('show', Boolean(state.query));
+        renderRecords();
+      });
+      $('#searchClear').addEventListener('click', () => {
+        state.query = '';
+        $('#searchInput').value = '';
+        $('#searchClear').classList.remove('show');
+        renderRecords();
+        $('#searchInput').focus();
+      });
+
+      [$('#composerOverlay'), $('#generatorOverlay'), $('#settingsOverlay'), $('#noticeOverlay')].forEach(overlay => overlay.addEventListener('mousedown', event => {
+        if (event.target === overlay) closeOverlay(overlay);
+      }));
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        if ($('#noticeOverlay').classList.contains('open')) closeOverlay($('#noticeOverlay'));
+        else if ($('#settingsOverlay').classList.contains('open')) closeOverlay($('#settingsOverlay'));
+        else if ($('#generatorOverlay').classList.contains('open')) closeOverlay($('#generatorOverlay'));
+        else if ($('#composerOverlay').classList.contains('open')) closeOverlay($('#composerOverlay'));
+      });
+
+      render();
+      const lastSync = localStorage.getItem(LAST_SYNC_STORAGE);
+      if (localStorage.getItem(API_KEY_STORAGE)) {
+        setSyncStatus('', lastSync ? `上次 ${new Date(lastSync).toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' })}` : '自動同步已開啟');
+        void syncYouTube(false);
+      } else {
+        setSyncStatus('waiting', '設定同步');
+      }
+      window.addEventListener('online', () => void syncYouTube(false));
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && navigator.onLine) void syncYouTube(false);
+      });
+      setInterval(() => {
+        if (navigator.onLine && document.visibilityState === 'visible') void syncYouTube(false);
+      }, 5 * 60 * 1000);
+    })();
+  </script>
+</body>
+</html>
