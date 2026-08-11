@@ -102,7 +102,7 @@
     }
     .wordmark strong { display: block; font-size: 14px; letter-spacing: -.02em; }
     .wordmark small { display: block; color: var(--subtle); font-size: 9px; margin-top: 1px; letter-spacing: .08em; text-transform: uppercase; }
-    .sync-chip { max-width: 170px; display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.78); padding: 8px 10px; color: #5d5d66; font-size: 9px; font-weight: 750; white-space: nowrap; overflow: hidden; }
+    .sync-chip { max-width: 150px; display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.78); padding: 8px 10px; color: #5d5d66; font-size: 9px; font-weight: 750; white-space: nowrap; overflow: hidden; }
     .sync-chip span:last-child { overflow: hidden; text-overflow: ellipsis; }
     .sync-dot { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: #20b86a; box-shadow: 0 0 0 4px rgba(32,184,106,.10); }
     .sync-chip.waiting .sync-dot { background: var(--warning); box-shadow: 0 0 0 4px rgba(255,178,63,.13); }
@@ -306,16 +306,23 @@
     .save-button:active { transform: scale(.985); }
     .save-button .icon { color: var(--lime); }
 
-    #composerOverlay { display: none !important; }
-    .settings-copy { margin: 9px 0 18px; color: #73737d; font-size: 11px; line-height: 1.65; }
-    .settings-copy strong { color: var(--ink); }
+    .generator-intro { margin: 10px 0 0; color: #777780; font-size: 11px; line-height: 1.6; }
+    .generator-day { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 999px; color: #4f3ac4; background: rgba(117,88,255,.10); font-size: 9px; font-weight: 850; letter-spacing: .06em; }
+    .generator-result { margin-top: 13px; padding: 16px; border-radius: 21px; color: white; background: linear-gradient(145deg, #111116, #23232b); box-shadow: 0 18px 38px rgba(16,16,20,.17); }
+    .result-label { color: #94949e; font-size: 8px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+    .result-title { min-height: 42px; margin-top: 8px; font-size: 13px; font-weight: 750; line-height: 1.55; word-break: break-word; }
+    .hashtag-list { margin-top: 13px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .hashtag-chip { padding: 6px 8px; border-radius: 999px; color: #d8ff78; background: rgba(200,255,77,.10); font-size: 8px; font-weight: 750; }
+    .generator-actions { margin-top: 13px; display: grid; grid-template-columns: 1fr 1.25fr; gap: 9px; }
+    .copy-button { height: 50px; border: 0; border-radius: 17px; color: var(--ink); background: #e8e8ec; font-size: 10px; font-weight: 800; }
+    .copy-button.primary { color: var(--ink); background: var(--lime); }
+    .settings-copy { margin: 10px 0 18px; color: #73737d; font-size: 11px; line-height: 1.65; }
     .settings-help { margin-top: 11px; padding: 12px 14px; border-radius: 16px; color: #6f604c; background: #eee8dd; font-size: 9px; line-height: 1.55; }
-    .settings-help a { color: #5a42d7; font-weight: 800; }
-    .settings-actions { display: grid; grid-template-columns: 1fr 1.35fr; gap: 9px; margin-top: 15px; }
-    .settings-actions .save-button { margin: 0; }
-    .settings-secondary { height: 55px; border: 0; border-radius: 19px; color: #5f5f68; background: #e6e6ea; font-size: 10px; font-weight: 800; }
     .settings-status { min-height: 17px; margin-top: 10px; color: #777780; font-size: 9px; line-height: 1.5; }
     .settings-status.error { color: var(--danger); }
+    .settings-actions { display: grid; grid-template-columns: 1fr 1.35fr; gap: 9px; margin-top: 15px; }
+    .settings-secondary { height: 55px; border: 0; border-radius: 19px; color: #5f5f68; background: #e6e6ea; font-size: 10px; font-weight: 800; }
+    .settings-actions .save-button { margin: 0; }
 
     .notice-sheet { padding-top: 20px; text-align: center; }
     .notice-orb { width: 66px; height: 66px; margin: 3px auto 16px; display: grid; place-items: center; border-radius: 24px; color: #a85c00; background: linear-gradient(145deg, #ffe4ad, #ffc56d); box-shadow: 0 14px 30px rgba(255,178,63,.20); }
@@ -345,7 +352,7 @@
     @media (max-width: 370px) {
       .app { padding-left: 14px; padding-right: 14px; }
       .topbar { margin-left: -14px; margin-right: -14px; padding-left: 14px; padding-right: 14px; }
-      .sync-chip { max-width: 118px; }
+      .sync-chip { max-width: 112px; }
       .hero-card { padding: 21px; }
       .day-number { font-size: 75px; }
       .progress-ring { width: 72px; height: 72px; }
@@ -365,8 +372,8 @@
         <span class="wordmark-mark" aria-hidden="true">♩</span>
         <span><strong>PIANO / 100</strong><small>My private log</small></span>
       </div>
-      <button class="sync-chip waiting" id="settingsButton" type="button" aria-label="YouTube 自動同步設定">
-        <span class="sync-dot"></span><span id="syncLabel">需要一次設定</span>
+      <button class="sync-chip waiting" id="syncSettingsButton" type="button" aria-label="YouTube 自動同步設定">
+        <span class="sync-dot"></span><span id="syncLabel">設定同步</span>
       </button>
     </header>
 
@@ -424,8 +431,8 @@
     <button class="nav-button active" id="homeButton" type="button">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg>總覽
     </button>
-    <button class="nav-button nav-add" id="syncButton" type="button">
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7h-9a7 7 0 1 0 6.1 10.4"/><path d="m17 4 3 3-3 3"/></svg>立即同步
+    <button class="nav-button nav-add" id="generatorButton" type="button">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/><path d="m6 6 12 12M18 6 6 18"/></svg>標題助手
     </button>
     <button class="nav-button" id="repeatButton" type="button">
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7h-9a4 4 0 0 0-4 4v1"/><path d="m17 4 3 3-3 3"/><path d="M4 17h9a4 4 0 0 0 4-4v-1"/><path d="m7 20-3-3 3-3"/></svg>重複<span class="badge" id="repeatBadge">1</span>
@@ -464,24 +471,45 @@
     </section>
   </div>
 
+  <div class="overlay" id="generatorOverlay" aria-hidden="true">
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="generatorTitle">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div><div class="sheet-eyebrow">Title studio</div><h2 id="generatorTitle">整今日標題</h2></div>
+        <button class="sheet-close" id="closeGenerator" type="button" aria-label="關閉標題助手"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      </div>
+      <p class="generator-intro">輸入歌名同歌手／作者，就會自動整好符合系列格式嘅 YouTube 標題同適量 hashtag。</p>
+      <div class="generator-day">下一條影片 · DAY <span id="generatorDay">008</span></div>
+      <div class="composer-grid">
+        <div class="field"><label for="generatorSong">歌曲名稱</label><input id="generatorSong" autocomplete="off" placeholder="例如：晴天" /></div>
+        <div class="field"><label for="generatorArtist">歌手／作者</label><input id="generatorArtist" autocomplete="off" placeholder="例如：周杰倫" /></div>
+      </div>
+      <div class="generator-result" aria-live="polite">
+        <div class="result-label">YouTube title</div>
+        <div class="result-title" id="generatedTitle">輸入資料後會喺度產生標題</div>
+        <div class="hashtag-list" id="generatedHashtags"></div>
+      </div>
+      <div class="generator-actions">
+        <button class="copy-button" id="copyTitleButton" type="button">複製標題</button>
+        <button class="copy-button primary" id="copyAllButton" type="button">複製標題＋Hashtag</button>
+      </div>
+    </section>
+  </div>
+
   <div class="overlay" id="settingsOverlay" aria-hidden="true">
     <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
       <div class="sheet-handle"></div>
       <div class="sheet-head">
         <div><div class="sheet-eyebrow">Auto sync</div><h2 id="settingsTitle">連接 YouTube</h2></div>
-        <button class="sheet-close" id="closeSettings" type="button" aria-label="關閉">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
-        </button>
+        <button class="sheet-close" id="closeSettings" type="button" aria-label="關閉同步設定"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
-      <p class="settings-copy">GitHub Pages 冇後台，所以只需要喺呢部手機<strong>設定一次</strong> YouTube API Key。之後每次打開網站都會自動檢查新挑戰同更新標題。</p>
+      <p class="settings-copy">喺呢部手機設定一次 YouTube API Key，之後每次打開網站都會自動檢查新挑戰同更新標題。</p>
       <div class="field"><label for="apiKeyInput">YouTube Data API Key</label><input id="apiKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="貼上新 API Key" /></div>
-      <div class="settings-help">密鑰只會保存在你目前瀏覽器，唔會寫入 GitHub HTML。建議喺 Google Cloud 將密鑰限制為 <strong>YouTube Data API v3</strong> 同你嘅 GitHub Pages 網址。舊密鑰曾經公開過，請先輪替。</div>
+      <div class="settings-help">密鑰只保存在目前瀏覽器，唔會寫入 HTML。建議限制為 YouTube Data API v3 同你嘅 GitHub Pages 網址。</div>
       <div class="settings-status" id="settingsStatus"></div>
       <div class="settings-actions">
         <button class="settings-secondary" id="clearKeyButton" type="button">清除密鑰</button>
-        <button class="save-button" id="saveKeyButton" type="button">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>儲存並同步
-        </button>
+        <button class="save-button" id="saveKeyButton" type="button">儲存並同步</button>
       </div>
     </section>
   </div>
@@ -501,11 +529,14 @@
 
   <div class="toast" id="toast" role="status"><span class="toast-mark">✓</span><span id="toastText">紀錄已保存</span></div>
 
-  <script type="text/plain" id="legacyCode">
+  <script>
     (() => {
       'use strict';
 
       const STORAGE_KEY = 'piano100.private.records.v3';
+      const API_KEY_STORAGE = 'piano100.github.youtube-key.v1';
+      const LAST_SYNC_STORAGE = 'piano100.github.last-sync.v1';
+      const UPLOADS_PLAYLIST = 'UULSkqO6rRgtDJ9QCOeH4hqA';
       const INITIAL_RECORDS = [
         { id: 1, day: 1, artist: '許冠傑', song: '學生哥', date: '2026-06-19', url: 'https://www.youtube.com/shorts/_XglSdc4YIw' },
         { id: 2, day: 2, artist: 'Beyond', song: 'Amani', date: '2026-06-22', url: 'https://www.youtube.com/shorts/S66xxsf_6S4' },
@@ -531,7 +562,7 @@
         return INITIAL_RECORDS.map(item => ({ ...item }));
       };
 
-      const state = { records: loadRecords(), filter: 'all', query: '', draftDay: 8, pending: null };
+      const state = { records: loadRecords(), filter: 'all', query: '', draftDay: 8, pending: null, syncing: false };
       let toastTimer;
 
       const normalize = (value) => (value || '').normalize('NFKC').toLocaleLowerCase('zh-HK').replace(/[\s\p{P}\p{S}]/gu, '');
@@ -671,6 +702,173 @@
         toastTimer = setTimeout(() => $('#toast').classList.remove('show'), 2600);
       }
 
+      const videoIdOf = record => record.videoId || String(record.url || '').match(/(?:shorts\/|v=|youtu\.be\/)([\w-]{11})/)?.[1] || '';
+
+      function setSyncStatus(type, label) {
+        const chip = $('#syncSettingsButton');
+        chip.classList.remove('waiting', 'syncing', 'error');
+        if (type) chip.classList.add(type);
+        $('#syncLabel').textContent = label;
+      }
+
+      function parsePianoTitle(value, fallbackDay) {
+        const title = String(value || '').replace(/\s+/g, ' ').trim();
+        if (fallbackDay == null && !/100\s*天鋼琴挑戰/i.test(title)) return null;
+        const marker = title.match(/DAY\s*0*(\d{1,3})\s*[：:]?/i);
+        const day = marker ? Number(marker[1]) : fallbackDay;
+        if (!Number.isInteger(day) || day < 1 || day > 100) return null;
+        const markerEnd = marker && marker.index != null ? marker.index + marker[0].length : 0;
+        const details = title.slice(markerEnd).replace(/^\s*[：:]\s*/, '').replace(/#.*$/, '').trim();
+        const split = details.match(/^(.+?)\s*[—–－-]\s*(.+)$/);
+        const artist = split?.[1]?.trim() || '';
+        const song = split?.[2]?.trim() || details;
+        return song ? { day, artist, song } : null;
+      }
+
+      async function youtubeJson(path, key) {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/${path}${path.includes('?') ? '&' : '?'}key=${encodeURIComponent(key)}`);
+        const data = await response.json();
+        if (!response.ok) {
+          const reason = data?.error?.errors?.[0]?.reason;
+          if (reason === 'quotaExceeded') throw new Error('YouTube API 今日配額已用完，聽日會自動再試。');
+          if (reason === 'keyInvalid' || reason === 'forbidden') throw new Error('API Key 無效或限制未設定好。');
+          throw new Error(data?.error?.message || '暫時未能讀取 YouTube。');
+        }
+        return data;
+      }
+
+      async function getChannelVideos(key) {
+        const ids = [];
+        let pageToken = '';
+        do {
+          const params = new URLSearchParams({ part: 'contentDetails', playlistId: UPLOADS_PLAYLIST, maxResults: '50' });
+          if (pageToken) params.set('pageToken', pageToken);
+          const page = await youtubeJson(`playlistItems?${params}`, key);
+          ids.push(...(page.items || []).map(item => item.contentDetails?.videoId).filter(Boolean));
+          pageToken = page.nextPageToken || '';
+        } while (pageToken && ids.length < 150);
+
+        const videos = [];
+        for (let index = 0; index < ids.length; index += 50) {
+          const params = new URLSearchParams({ part: 'snippet', id: ids.slice(index, index + 50).join(','), maxResults: '50' });
+          const page = await youtubeJson(`videos?${params}`, key);
+          videos.push(...(page.items || []));
+        }
+        return videos;
+      }
+
+      async function syncYouTube(announce = false) {
+        if (state.syncing) return;
+        const key = localStorage.getItem(API_KEY_STORAGE) || '';
+        if (!key) {
+          setSyncStatus('waiting', '設定同步');
+          if (announce) openOverlay($('#settingsOverlay'));
+          return;
+        }
+        state.syncing = true;
+        setSyncStatus('syncing', '同步緊 YouTube');
+        $('#settingsStatus').classList.remove('error');
+        $('#settingsStatus').textContent = '正在檢查新影片同最新標題…';
+        try {
+          const videos = await getChannelVideos(key);
+          const byVideo = new Map(state.records.map(record => [videoIdOf(record), record]).filter(([id]) => id));
+          const byDay = new Map(state.records.map(record => [Number(record.day), record]));
+          const added = [];
+          const updated = [];
+          let duplicateAlert = null;
+
+          videos.forEach(video => {
+            const existing = byVideo.get(video.id);
+            const parsed = parsePianoTitle(video.snippet?.title, existing?.day);
+            if (!parsed) return;
+            const record = existing || byDay.get(parsed.day);
+            const next = { id: video.id, videoId: video.id, day: parsed.day, song: parsed.song, artist: parsed.artist, date: String(video.snippet?.publishedAt || '').slice(0, 10), url: `https://www.youtube.com/shorts/${video.id}` };
+            if (record) {
+              const changed = record.song !== next.song || record.artist !== next.artist || videoIdOf(record) !== video.id || Number(record.day) !== next.day;
+              Object.assign(record, next);
+              byVideo.set(video.id, record);
+              byDay.set(next.day, record);
+              if (changed) updated.push(record);
+            } else {
+              const matches = duplicateMatches(next.song);
+              state.records.push(next);
+              byVideo.set(video.id, next);
+              byDay.set(next.day, next);
+              added.push(next);
+              if (!duplicateAlert && matches.length) duplicateAlert = { record: next, matches };
+            }
+          });
+
+          state.records = [...new Map(state.records.sort((a, b) => a.day - b.day).map(record => [Number(record.day), record])).values()];
+          saveToDevice();
+          localStorage.setItem(LAST_SYNC_STORAGE, new Date().toISOString());
+          render();
+          const time = new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
+          setSyncStatus('', `已同步 ${time}`);
+          $('#settingsStatus').textContent = `完成：${added.length} 個新挑戰，${updated.length} 個標題更新。`;
+          if (added.length || updated.length) showToast(`加入 ${added.length} 個新挑戰，更新 ${updated.length} 個標題`);
+          else if (announce) showToast('已經係最新紀錄');
+          if (duplicateAlert) showNotice({ title: '呢首歌彈過喇', text: `新嘅 Day ${pad(duplicateAlert.record.day)}《${duplicateAlert.record.song}》同之前紀錄相同。`, matches: duplicateAlert.matches, danger: true });
+          else if ($('#settingsOverlay').classList.contains('open')) setTimeout(() => closeOverlay($('#settingsOverlay')), 650);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : '暫時未能同步 YouTube。';
+          setSyncStatus('error', '同步失敗・撳我');
+          $('#settingsStatus').textContent = message;
+          $('#settingsStatus').classList.add('error');
+          if (announce) openOverlay($('#settingsOverlay'));
+        } finally {
+          state.syncing = false;
+        }
+      }
+
+      function nextGeneratorDay() {
+        return Math.min(Math.max(...state.records.map(item => Number(item.day) || 0), 0) + 1, 100);
+      }
+
+      function cleanHashtag(value) {
+        return String(value || '').normalize('NFKC').replace(/[\s\p{P}\p{S}]/gu, '');
+      }
+
+      function generatorOutput() {
+        const day = nextGeneratorDay();
+        const song = $('#generatorSong').value.trim();
+        const artist = $('#generatorArtist').value.trim();
+        const title = song && artist ? `100天鋼琴挑戰 DAY ${pad(day)}：${artist} — ${song}` : '';
+        const tags = [...new Set(['100天鋼琴挑戰', '鋼琴', 'PianoCover', 'Shorts', cleanHashtag(artist), cleanHashtag(song)].filter(Boolean))].slice(0, 6).map(tag => `#${tag}`);
+        $('#generatorDay').textContent = pad(day);
+        $('#generatedTitle').textContent = title || '輸入資料後會喺度產生標題';
+        $('#generatedHashtags').innerHTML = title ? tags.map(tag => `<span class="hashtag-chip">${safe(tag)}</span>`).join('') : '';
+        return { title, hashtags: tags.join(' ') };
+      }
+
+      async function copyText(value, success) {
+        if (!value.trim()) {
+          showToast('請先輸入歌曲名同歌手／作者');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(value);
+        } catch (_) {
+          const helper = document.createElement('textarea');
+          helper.value = value;
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.appendChild(helper);
+          helper.select();
+          document.execCommand('copy');
+          helper.remove();
+        }
+        showToast(success);
+      }
+
+      function openGenerator() {
+        $('#generatorSong').value = '';
+        $('#generatorArtist').value = '';
+        generatorOutput();
+        openOverlay($('#generatorOverlay'));
+        setTimeout(() => $('#generatorSong').focus(), 280);
+      }
+
       function showNotice({ title, text, matches = [], canConfirm = false, danger = false }) {
         $('#noticeTitle').textContent = title;
         $('#noticeText').textContent = text;
@@ -728,7 +926,43 @@
       $('#songInput').addEventListener('input', updateLiveWarning);
       $('#dayMinus').addEventListener('click', () => { state.draftDay = Math.max(1, state.draftDay - 1); $('#dayValue').textContent = pad(state.draftDay); });
       $('#dayPlus').addEventListener('click', () => { state.draftDay = Math.min(100, state.draftDay + 1); $('#dayValue').textContent = pad(state.draftDay); });
-      $('#addButton').addEventListener('click', openComposer);
+      $('#generatorButton').addEventListener('click', openGenerator);
+      $('#closeGenerator').addEventListener('click', () => closeOverlay($('#generatorOverlay')));
+      $('#generatorSong').addEventListener('input', generatorOutput);
+      $('#generatorArtist').addEventListener('input', generatorOutput);
+      $('#copyTitleButton').addEventListener('click', () => {
+        const output = generatorOutput();
+        void copyText(output.title, '標題已複製');
+      });
+      $('#copyAllButton').addEventListener('click', () => {
+        const output = generatorOutput();
+        void copyText(`${output.title}\n\n${output.hashtags}`, '標題同 Hashtag 已複製');
+      });
+      $('#syncSettingsButton').addEventListener('click', () => {
+        const key = localStorage.getItem(API_KEY_STORAGE) || '';
+        $('#apiKeyInput').value = key;
+        if (key) void syncYouTube(true);
+        else openOverlay($('#settingsOverlay'));
+      });
+      $('#closeSettings').addEventListener('click', () => closeOverlay($('#settingsOverlay')));
+      $('#saveKeyButton').addEventListener('click', () => {
+        const key = $('#apiKeyInput').value.trim();
+        if (!key) {
+          $('#settingsStatus').textContent = '請先貼上 API Key。';
+          $('#settingsStatus').classList.add('error');
+          return;
+        }
+        localStorage.setItem(API_KEY_STORAGE, key);
+        $('#settingsStatus').classList.remove('error');
+        void syncYouTube(true);
+      });
+      $('#clearKeyButton').addEventListener('click', () => {
+        localStorage.removeItem(API_KEY_STORAGE);
+        $('#apiKeyInput').value = '';
+        $('#settingsStatus').textContent = '已經由呢部裝置清除 API Key。';
+        $('#settingsStatus').classList.remove('error');
+        setSyncStatus('waiting', '設定同步');
+      });
       $('#closeComposer').addEventListener('click', () => closeOverlay($('#composerOverlay')));
       $('#homeButton').addEventListener('click', () => { setFilter('all'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
       $('#repeatButton').addEventListener('click', () => setFilter('repeat', true));
@@ -747,346 +981,29 @@
         $('#searchInput').focus();
       });
 
-      [$('#composerOverlay'), $('#noticeOverlay')].forEach(overlay => overlay.addEventListener('mousedown', event => {
-        if (event.target === overlay) closeOverlay(overlay);
-      }));
-      document.addEventListener('keydown', event => {
-        if (event.key !== 'Escape') return;
-        if ($('#noticeOverlay').classList.contains('open')) closeOverlay($('#noticeOverlay'));
-        else if ($('#composerOverlay').classList.contains('open')) closeOverlay($('#composerOverlay'));
-      });
-
-      render();
-    })();
-  </script>
-  <script>
-    (() => {
-      'use strict';
-
-      const RECORDS_KEY = 'piano100.github.records.v1';
-      const API_KEY = 'piano100.github.youtube-key.v1';
-      const LAST_SYNC_KEY = 'piano100.github.last-sync.v1';
-      const UPLOADS_PLAYLIST = 'UULSkqO6rRgtDJ9QCOeH4hqA';
-      const INITIAL_RECORDS = [
-        { id: '_XglSdc4YIw', videoId: '_XglSdc4YIw', day: 1, artist: '許冠傑', song: '學生哥', date: '2026-06-19', url: 'https://www.youtube.com/shorts/_XglSdc4YIw' },
-        { id: 'S66xxsf_6S4', videoId: 'S66xxsf_6S4', day: 2, artist: 'Beyond', song: 'Amani', date: '2026-06-22', url: 'https://www.youtube.com/shorts/S66xxsf_6S4' },
-        { id: 'xdjR9GU4uyQ', videoId: 'xdjR9GU4uyQ', day: 3, artist: '周杰倫', song: '青花瓷', date: '2026-06-24', url: 'https://www.youtube.com/shorts/xdjR9GU4uyQ' },
-        { id: 'ETZO2VfFDIA', videoId: 'ETZO2VfFDIA', day: 4, artist: '譚詠麟', song: '講不出再見', date: '2026-06-27', url: 'https://www.youtube.com/shorts/ETZO2VfFDIA' },
-        { id: 'CNXvnSPrdso', videoId: 'CNXvnSPrdso', day: 5, artist: 'LBI利比', song: '小城夏天', date: '2026-07-01', url: 'https://www.youtube.com/shorts/CNXvnSPrdso' },
-        { id: '3Ab0IbkvmMg', videoId: '3Ab0IbkvmMg', day: 6, artist: 'LBI利比', song: '小城夏天', date: '2026-07-17', url: 'https://www.youtube.com/shorts/3Ab0IbkvmMg' },
-        { id: '7pzp-4P9oOw', videoId: '7pzp-4P9oOw', day: 7, artist: '李克勤', song: '告別校園時', date: '2026-07-19', url: 'https://www.youtube.com/shorts/7pzp-4P9oOw' }
-      ];
-
-      const $ = selector => document.querySelector(selector);
-      const $$ = selector => [...document.querySelectorAll(selector)];
-      const safe = value => String(value || '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
-      const normalize = value => (value || '').normalize('NFKC').toLocaleLowerCase('zh-HK').replace(/[\s\p{P}\p{S}]/gu, '');
-      const pad = day => String(day).padStart(3, '0');
-      const videoIdOf = record => record.videoId || String(record.url || '').match(/(?:shorts\/|v=|youtu\.be\/)([\w-]{11})/)?.[1] || '';
-      const icons = {
-        play: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
-        note: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>'
-      };
-
-      function loadRecords() {
-        try {
-          const saved = JSON.parse(localStorage.getItem(RECORDS_KEY));
-          if (Array.isArray(saved) && saved.length) return saved;
-        } catch (_) {}
-        return INITIAL_RECORDS.map(item => ({ ...item }));
-      }
-
-      const state = { records: loadRecords(), filter: 'all', query: '', syncing: false };
-      let toastTimer;
-
-      function groups() {
-        const map = new Map();
-        state.records.forEach(record => {
-          const key = normalize(record.song);
-          if (!key) return;
-          map.set(key, [...(map.get(key) || []), record]);
-        });
-        return map;
-      }
-
-      function formatDate(date) {
-        if (!date) return '日期未記錄';
-        const value = String(date).slice(0, 10);
-        const parts = value.split('-');
-        return parts.length === 3 ? `${parts[2]}.${parts[1]}.${parts[0]}` : value;
-      }
-
-      function parseTitle(value, fallbackDay) {
-        const title = String(value || '').replace(/\s+/g, ' ').trim();
-        if (fallbackDay == null && !/100\s*天鋼琴挑戰/i.test(title)) return null;
-        const dayMarker = title.match(/DAY\s*0*(\d{1,3})\s*[：:]?/i);
-        const day = dayMarker ? Number(dayMarker[1]) : fallbackDay;
-        if (!Number.isInteger(day) || day < 1 || day > 100) return null;
-        const markerEnd = dayMarker && dayMarker.index != null ? dayMarker.index + dayMarker[0].length : 0;
-        const details = title.slice(markerEnd).replace(/^\s*[：:]\s*/, '').replace(/#.*$/, '').trim();
-        const split = details.match(/^(.+?)\s*[—–－-]\s*(.+)$/);
-        const artist = split?.[1]?.trim() || '';
-        const song = split?.[2]?.trim() || details;
-        return song ? { day, artist, song } : null;
-      }
-
-      function saveRecords() {
-        localStorage.setItem(RECORDS_KEY, JSON.stringify(state.records));
-      }
-
-      function setSyncStatus(type, label) {
-        const chip = $('#settingsButton');
-        chip.classList.remove('waiting', 'syncing', 'error');
-        if (type) chip.classList.add(type);
-        $('#syncLabel').textContent = label;
-      }
-
-      function showToast(text) {
-        clearTimeout(toastTimer);
-        $('#toastText').textContent = text;
-        $('#toast').classList.add('show');
-        toastTimer = setTimeout(() => $('#toast').classList.remove('show'), 2800);
-      }
-
-      function openOverlay(element) {
-        element.classList.add('open');
-        element.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeOverlay(element) {
-        element.classList.remove('open');
-        element.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-      }
-
-      function updateSummary() {
-        const sorted = [...state.records].sort((a, b) => b.day - a.day);
-        const latest = sorted[0];
-        const unique = groups().size;
-        const repeats = state.records.length - unique;
-        const progress = Math.min(latest ? latest.day : 0, 100);
-        $('#heroDay').textContent = latest ? pad(latest.day) : '000';
-        $('#heroSong').textContent = latest ? latest.song : '等待第一個挑戰';
-        $('#heroArtist').textContent = latest ? `${latest.artist || '歌手未填'} · 最新紀錄` : 'YouTube 自動紀錄';
-        $('#progressValue').textContent = `${progress}%`;
-        $('#progressRing').style.setProperty('--progress', `${progress * 3.6}deg`);
-        $('#progressLine').style.width = `${progress}%`;
-        $('#progressCaption').textContent = `${progress} / 100`;
-        $('#totalMetric').innerHTML = `${state.records.length}<small>首</small>`;
-        $('#uniqueMetric').innerHTML = `${unique}<small>首</small>`;
-        $('#repeatMetric').innerHTML = `${repeats}<small>次</small>`;
-        $('#repeatBadge').textContent = repeats;
-        $('#recordCount').textContent = `${state.records.length} records`;
-        const duplicateGroups = [...groups().values()].filter(items => items.length > 1);
-        $('#repeatCallout').hidden = repeats === 0;
-        if (duplicateGroups.length) {
-          const first = duplicateGroups.sort((a, b) => Math.max(...b.map(item => item.day)) - Math.max(...a.map(item => item.day)))[0];
-          $('#repeatTitle').textContent = `發現 ${repeats} 次重複`;
-          $('#repeatDescription').textContent = `Day ${first.map(item => pad(item.day)).join('、')} · ${first[0].song}`;
-        }
-      }
-
-      function renderRecords() {
-        const map = groups();
-        const term = state.query.trim().toLocaleLowerCase('zh-HK');
-        let records = [...state.records].sort((a, b) => b.day - a.day);
-        if (state.filter === 'repeat') records = records.filter(record => (map.get(normalize(record.song)) || []).length > 1);
-        if (term) records = records.filter(record => `${record.day} ${record.song} ${record.artist}`.toLocaleLowerCase('zh-HK').includes(term));
-        if (!records.length) {
-          $('#recordList').innerHTML = `<div class="empty"><div class="empty-bubble">${icons.note}</div><strong>搵唔到相符紀錄</strong><span>試下另一個搜尋字，或者返回全部紀錄。</span></div>`;
-          return;
-        }
-        $('#recordList').innerHTML = records.map((record, index) => {
-          const repeated = (map.get(normalize(record.song)) || []).length > 1;
-          const play = record.url ? `<a class="play-button" href="${safe(record.url)}" target="_blank" rel="noreferrer" aria-label="播放 ${safe(record.song)}">${icons.play}</a>` : `<span class="play-button" aria-hidden="true">${icons.note}</span>`;
-          return `<article class="record-card${repeated ? ' is-repeat' : ''}" style="animation-delay:${Math.min(index * 28, 180)}ms"><div class="record-day"><small>DAY</small><strong>${pad(record.day)}</strong></div><div class="record-main"><div class="record-name"><strong>${safe(record.song)}</strong>${repeated ? '<span class="repeat-dot" title="重複歌曲"></span>' : ''}</div><div class="record-artist">${safe(record.artist || '歌手未填')}</div><div class="record-meta"><span>${formatDate(record.date)}</span><i></i><span>${repeated ? '重複挑戰' : '每日一曲'}</span></div></div>${play}</article>`;
-        }).join('');
-      }
-
-      function render() {
-        updateSummary();
-        renderRecords();
-      }
-
-      function setFilter(filter, shouldScroll = false) {
-        state.filter = filter;
-        $$('.segment').forEach(button => button.classList.toggle('active', button.dataset.filter === filter));
-        $('#repeatButton').classList.toggle('active', filter === 'repeat');
-        $('#homeButton').classList.toggle('active', filter === 'all');
-        renderRecords();
-        if (shouldScroll) $('#records').scrollIntoView({ behavior: 'smooth' });
-      }
-
-      function showDuplicateNotice(record, matches) {
-        $('#noticeTitle').textContent = '呢首歌彈過喇';
-        $('#noticeText').textContent = `Day ${pad(record.day)} 嘅《${record.song}》同之前紀錄相同。`;
-        $('#noticeOrb').classList.add('danger');
-        $('#matchCard').innerHTML = matches.map(item => `<div class="match-row"><span class="match-day">DAY ${pad(item.day)}</span><strong>${safe(item.artist || '歌手未填')} · ${safe(item.song)}</strong></div>`).join('');
-        $('#noticeActions').innerHTML = '<button class="action-button single" id="noticeBack" type="button">知道了</button>';
-        openOverlay($('#noticeOverlay'));
-        $('#noticeBack').addEventListener('click', () => closeOverlay($('#noticeOverlay')), { once: true });
-      }
-
-      async function youtubeJson(path, key) {
-        const response = await fetch(`https://www.googleapis.com/youtube/v3/${path}${path.includes('?') ? '&' : '?'}key=${encodeURIComponent(key)}`);
-        const data = await response.json();
-        if (!response.ok) {
-          const reason = data?.error?.errors?.[0]?.reason;
-          if (reason === 'quotaExceeded') throw new Error('YouTube API 今日配額已用完，聽日會自動再試。');
-          if (reason === 'keyInvalid' || reason === 'forbidden') throw new Error('API Key 無效或限制未設定好。');
-          throw new Error(data?.error?.message || '暫時未能讀取 YouTube。');
-        }
-        return data;
-      }
-
-      async function getChannelVideos(key) {
-        const playlistItems = [];
-        let pageToken = '';
-        do {
-          const params = new URLSearchParams({ part: 'contentDetails', playlistId: UPLOADS_PLAYLIST, maxResults: '50' });
-          if (pageToken) params.set('pageToken', pageToken);
-          const page = await youtubeJson(`playlistItems?${params}`, key);
-          playlistItems.push(...(page.items || []));
-          pageToken = page.nextPageToken || '';
-        } while (pageToken && playlistItems.length < 150);
-
-        const ids = playlistItems.map(item => item.contentDetails?.videoId).filter(Boolean);
-        const videos = [];
-        for (let index = 0; index < ids.length; index += 50) {
-          const params = new URLSearchParams({ part: 'snippet', id: ids.slice(index, index + 50).join(','), maxResults: '50' });
-          const page = await youtubeJson(`videos?${params}`, key);
-          videos.push(...(page.items || []));
-        }
-        return videos;
-      }
-
-      async function syncYouTube(announce = false) {
-        if (state.syncing) return;
-        const key = localStorage.getItem(API_KEY) || '';
-        if (!key) {
-          setSyncStatus('waiting', '需要一次設定');
-          if (announce) openOverlay($('#settingsOverlay'));
-          return;
-        }
-        state.syncing = true;
-        setSyncStatus('syncing', '同步緊 YouTube');
-        $('#settingsStatus').classList.remove('error');
-        $('#settingsStatus').textContent = '正在檢查頻道影片同最新標題…';
-        try {
-          const videos = await getChannelVideos(key);
-          const byVideo = new Map(state.records.map(record => [videoIdOf(record), record]).filter(([id]) => id));
-          const byDay = new Map(state.records.map(record => [Number(record.day), record]));
-          const added = [];
-          const updated = [];
-          const duplicateAlerts = [];
-
-          videos.forEach(video => {
-            const videoId = video.id;
-            const existing = byVideo.get(videoId);
-            const parsed = parseTitle(video.snippet?.title, existing?.day);
-            if (!parsed) return;
-            const date = String(video.snippet?.publishedAt || '').slice(0, 10);
-            const record = existing || byDay.get(parsed.day);
-            if (record) {
-              const changed = record.song !== parsed.song || record.artist !== parsed.artist || videoIdOf(record) !== videoId || Number(record.day) !== parsed.day;
-              Object.assign(record, { id: videoId, videoId, day: parsed.day, song: parsed.song, artist: parsed.artist, date, url: `https://www.youtube.com/shorts/${videoId}` });
-              byVideo.set(videoId, record);
-              byDay.set(parsed.day, record);
-              if (changed) updated.push(record);
-            } else {
-              const matches = state.records.filter(item => normalize(item.song) === normalize(parsed.song));
-              const created = { id: videoId, videoId, day: parsed.day, song: parsed.song, artist: parsed.artist, date, url: `https://www.youtube.com/shorts/${videoId}` };
-              state.records.push(created);
-              byVideo.set(videoId, created);
-              byDay.set(parsed.day, created);
-              added.push(created);
-              if (matches.length) duplicateAlerts.push({ record: created, matches });
-            }
-          });
-
-          state.records = [...new Map(state.records.sort((a, b) => a.day - b.day).map(record => [Number(record.day), record])).values()];
-          saveRecords();
-          localStorage.setItem(LAST_SYNC_KEY, new Date().toISOString());
-          render();
-          setSyncStatus('', `已同步 ${new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' })}`);
-          $('#settingsStatus').textContent = `完成：${added.length} 個新挑戰，${updated.length} 個標題更新。`;
-          if (added.length || updated.length) showToast(`已加入 ${added.length} 個新挑戰，更新 ${updated.length} 個標題`);
-          else if (announce) showToast('已經係最新紀錄');
-          if (duplicateAlerts.length) showDuplicateNotice(duplicateAlerts[0].record, duplicateAlerts[0].matches);
-          else if ($('#settingsOverlay').classList.contains('open')) setTimeout(() => closeOverlay($('#settingsOverlay')), 650);
-        } catch (error) {
-          const message = error instanceof Error ? error.message : '暫時未能同步 YouTube。';
-          setSyncStatus('error', '同步失敗・撳我查看');
-          $('#settingsStatus').textContent = message;
-          $('#settingsStatus').classList.add('error');
-          if (announce) openOverlay($('#settingsOverlay'));
-        } finally {
-          state.syncing = false;
-        }
-      }
-
-      $('#settingsButton').addEventListener('click', () => {
-        $('#apiKeyInput').value = localStorage.getItem(API_KEY) || '';
-        openOverlay($('#settingsOverlay'));
-      });
-      $('#closeSettings').addEventListener('click', () => closeOverlay($('#settingsOverlay')));
-      $('#saveKeyButton').addEventListener('click', () => {
-        const key = $('#apiKeyInput').value.trim();
-        if (!key) {
-          $('#settingsStatus').textContent = '請先貼上 API Key。';
-          $('#settingsStatus').classList.add('error');
-          return;
-        }
-        localStorage.setItem(API_KEY, key);
-        $('#settingsStatus').classList.remove('error');
-        void syncYouTube(true);
-      });
-      $('#clearKeyButton').addEventListener('click', () => {
-        localStorage.removeItem(API_KEY);
-        $('#apiKeyInput').value = '';
-        $('#settingsStatus').textContent = '已經由呢部裝置清除 API Key。';
-        $('#settingsStatus').classList.remove('error');
-        setSyncStatus('waiting', '需要一次設定');
-      });
-      $('#syncButton').addEventListener('click', () => void syncYouTube(true));
-      $('#homeButton').addEventListener('click', () => { setFilter('all'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
-      $('#repeatButton').addEventListener('click', () => setFilter('repeat', true));
-      $('#repeatCallout').addEventListener('click', () => setFilter('repeat', true));
-      $$('.segment').forEach(button => button.addEventListener('click', () => setFilter(button.dataset.filter)));
-      $('#searchInput').addEventListener('input', event => {
-        state.query = event.target.value;
-        $('#searchClear').classList.toggle('show', Boolean(state.query));
-        renderRecords();
-      });
-      $('#searchClear').addEventListener('click', () => {
-        state.query = '';
-        $('#searchInput').value = '';
-        $('#searchClear').classList.remove('show');
-        renderRecords();
-        $('#searchInput').focus();
-      });
-      [$('#settingsOverlay'), $('#noticeOverlay')].forEach(overlay => overlay.addEventListener('mousedown', event => {
+      [$('#composerOverlay'), $('#generatorOverlay'), $('#settingsOverlay'), $('#noticeOverlay')].forEach(overlay => overlay.addEventListener('mousedown', event => {
         if (event.target === overlay) closeOverlay(overlay);
       }));
       document.addEventListener('keydown', event => {
         if (event.key !== 'Escape') return;
         if ($('#noticeOverlay').classList.contains('open')) closeOverlay($('#noticeOverlay'));
         else if ($('#settingsOverlay').classList.contains('open')) closeOverlay($('#settingsOverlay'));
+        else if ($('#generatorOverlay').classList.contains('open')) closeOverlay($('#generatorOverlay'));
+        else if ($('#composerOverlay').classList.contains('open')) closeOverlay($('#composerOverlay'));
       });
+
+      render();
+      const lastSync = localStorage.getItem(LAST_SYNC_STORAGE);
+      if (localStorage.getItem(API_KEY_STORAGE)) {
+        setSyncStatus('', lastSync ? `上次 ${new Date(lastSync).toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' })}` : '自動同步已開啟');
+        void syncYouTube(false);
+      } else {
+        setSyncStatus('waiting', '設定同步');
+      }
       window.addEventListener('online', () => void syncYouTube(false));
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible' && navigator.onLine) void syncYouTube(false);
       });
-
-      render();
-      const lastSync = localStorage.getItem(LAST_SYNC_KEY);
-      if (localStorage.getItem(API_KEY)) {
-        setSyncStatus('', lastSync ? `上次 ${new Date(lastSync).toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' })}` : '自動同步已開啟');
-        void syncYouTube(false);
-      } else {
-        setSyncStatus('waiting', '需要一次設定');
-      }
       setInterval(() => {
         if (navigator.onLine && document.visibilityState === 'visible') void syncYouTube(false);
       }, 5 * 60 * 1000);
