@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v2.0 Night Sky：手機優先、iPad 雙欄、保留原有 Firebase 功能 -->
+    <!-- 電子手冊 Pro v3.0 Focus Stack：手機優先、iPad 雙欄、霧白/夜幕雙主題、自訂主色 -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -13,15 +13,15 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#090b22">
+    <meta name="theme-color" content="#f2eff8">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
     
-    <title>電子手冊 Pro · Night Sky</title>
-    <meta name="ehandbook-version" content="v2.0.0-night-sky">
-    <script>window.__EHANDBOOK_VERSION__ = "v2.0.0-night-sky"; console.log("電子手冊 Pro v2.0.0-night-sky loaded");</script>
+    <title>電子手冊 Pro · Focus Stack</title>
+    <meta name="ehandbook-version" content="v3.0.0-focus-stack">
+    <script>window.__EHANDBOOK_VERSION__ = "v3.0.0-focus-stack"; console.log("電子手冊 Pro v3.0.0-focus-stack loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -403,6 +403,355 @@
         @media (prefers-reduced-motion: reduce) {
             .night-hero, .night-hero-content { animation: none !important; }
         }
+
+        /* v3 Focus Stack — calm pearl / graphite workspace */
+        :root {
+            --accent: #7658D6;
+            --accent-rgb: 118, 88, 214;
+            --focus-ink: #262333;
+            --focus-muted: #827d90;
+            --focus-surface: rgba(255,255,255,.76);
+            --focus-line: rgba(76,66,104,.10);
+            --focus-shadow: 0 24px 65px -38px rgba(57,42,86,.34);
+        }
+        .app-shell.is-modern-home {
+            padding: 0 0 calc(112px + env(safe-area-inset-bottom)) !important;
+            overflow: visible;
+            background:
+                radial-gradient(circle at 18% -2%, rgba(var(--accent-rgb), .11), transparent 26rem),
+                radial-gradient(circle at 92% 11%, rgba(216, 199, 231, .28), transparent 24rem),
+                linear-gradient(145deg, #f7f4f8 0%, #efedf4 48%, #f6f3f6 100%) !important;
+            color: var(--focus-ink);
+        }
+        .dark .app-shell.is-modern-home {
+            --focus-ink: #f3f0f8;
+            --focus-muted: #938da1;
+            --focus-surface: rgba(27,25,31,.82);
+            --focus-line: rgba(255,255,255,.08);
+            --focus-shadow: 0 28px 80px -40px rgba(0,0,0,.88);
+            background:
+                radial-gradient(circle at 14% -4%, rgba(var(--accent-rgb), .16), transparent 28rem),
+                radial-gradient(circle at 92% 13%, rgba(110, 88, 131, .12), transparent 24rem),
+                linear-gradient(145deg, #111014 0%, #17151a 48%, #0e0d10 100%) !important;
+        }
+        .is-modern-home .app-atmosphere { display: none; }
+        .modern-home {
+            width: min(100%, 1180px);
+            min-height: 100svh;
+            margin: 0 auto;
+            padding: max(18px, env(safe-area-inset-top)) clamp(16px, 3vw, 34px) 34px;
+            color: var(--focus-ink);
+        }
+        .is-modern-home.has-announcement .modern-home { padding-top: calc(max(18px, env(safe-area-inset-top)) + 48px); }
+        .modern-home button, .modern-home input { font: inherit; }
+        .modern-home button:focus-visible, .modern-home input:focus-visible {
+            outline: 3px solid rgba(var(--accent-rgb), .23);
+            outline-offset: 3px;
+        }
+        .focus-topbar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-rows: auto auto;
+            align-items: center;
+            gap: 10px 18px;
+            min-height: 98px;
+        }
+        .focus-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        .focus-brand-mark {
+            display: none; width: 43px; height: 43px; flex: 0 0 auto; border-radius: 16px;
+            place-items: center; color: white;
+            background: linear-gradient(145deg, var(--accent), rgba(var(--accent-rgb), .78));
+            border: 1px solid rgba(255,255,255,.38);
+            box-shadow: 0 13px 25px -15px rgba(var(--accent-rgb), .9), inset 0 1px rgba(255,255,255,.35);
+        }
+        .focus-brand-title { font-size: 23px; line-height: 1; font-weight: 850; letter-spacing: -.035em; white-space: nowrap; }
+        .focus-brand-title span { font-size: 12px; letter-spacing: 0; }
+        .focus-brand-date { margin-top: 8px; color: var(--focus-muted); font-size: 13px; font-weight: 750; white-space: nowrap; }
+        .focus-mode-switch {
+            grid-column: 1; grid-row: 2; justify-self: start;
+            display: flex; align-items: center; gap: 4px; padding: 4px;
+            border: 1px solid var(--focus-line); border-radius: 999px;
+            background: rgba(255,255,255,.44); box-shadow: inset 0 1px rgba(255,255,255,.6);
+        }
+        .dark .focus-mode-switch { background: rgba(255,255,255,.035); box-shadow: inset 0 1px rgba(255,255,255,.04); }
+        .focus-mode-switch button {
+            min-width: 88px; min-height: 38px; padding: 0 17px; border-radius: 999px;
+            color: var(--focus-muted); font-size: 12px; font-weight: 900; transition: .25s ease;
+        }
+        .focus-mode-switch button.is-active {
+            color: white; background: var(--accent);
+            box-shadow: 0 10px 20px -13px rgba(var(--accent-rgb), .95), inset 0 1px rgba(255,255,255,.28);
+        }
+        .focus-actions { grid-column: 2; grid-row: 1; justify-self: end; display: flex; align-items: center; gap: 8px; }
+        .focus-icon-button {
+            position: relative; width: 42px; height: 42px; display: grid; place-items: center;
+            border-radius: 15px; color: var(--focus-muted); background: rgba(255,255,255,.52);
+            border: 1px solid var(--focus-line); box-shadow: 0 10px 24px -21px rgba(40,32,58,.7);
+            transition: transform .22s ease, color .22s ease, border-color .22s ease;
+        }
+        .dark .focus-icon-button { background: rgba(255,255,255,.045); }
+        .focus-icon-button:hover { transform: translateY(-2px); color: var(--accent); border-color: rgba(var(--accent-rgb), .25); }
+        .focus-notification-dot { position: absolute; right: 8px; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: #d86578; box-shadow: 0 0 0 3px rgba(216,101,120,.14); }
+
+        .focus-date-orbit { position: relative; margin: -83px auto 26px; max-width: 730px; padding: 0 10px 14px; }
+        .focus-date-orbit::after {
+            content: ''; position: absolute; left: 6%; right: 6%; bottom: 0; height: 30px;
+            border-top: 1px solid rgba(var(--accent-rgb), .17); border-radius: 50% 50% 0 0;
+            pointer-events: none;
+        }
+        .focus-date-list { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; align-items: end; }
+        .focus-date-button {
+            position: relative;
+            min-width: 0; height: 61px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 1px; border-radius: 21px; color: var(--focus-muted); transition: .24s cubic-bezier(.16,1,.3,1);
+        }
+        .focus-date-button:nth-child(1), .focus-date-button:nth-child(7) { transform: translateY(10px); }
+        .focus-date-button:nth-child(2), .focus-date-button:nth-child(6) { transform: translateY(5px); }
+        .focus-date-button:hover { color: var(--accent); background: rgba(var(--accent-rgb), .06); }
+        .focus-date-button.is-active {
+            color: var(--accent); background: transparent; transform: translateY(-3px);
+            box-shadow: none;
+        }
+        .focus-date-button.is-active::after { content: ''; position: absolute; left: 50%; bottom: 2px; width: 24px; height: 3px; border-radius: 999px; background: var(--accent); transform: translateX(-50%); box-shadow: 0 5px 12px rgba(var(--accent-rgb), .35); }
+        .focus-date-day { font-size: 9px; font-weight: 900; letter-spacing: .06em; }
+        .focus-date-number { font-size: 17px; line-height: 1; font-weight: 950; }
+        .focus-date-count { min-height: 12px; font-size: 8px; font-weight: 900; opacity: .75; }
+
+        .focus-overview-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin: 20px 2px 16px; }
+        .focus-overview-kicker { color: var(--accent); font-size: 10px; font-weight: 950; letter-spacing: .13em; text-transform: uppercase; }
+        .focus-overview-title { margin-top: 5px; font-size: clamp(27px, 3.3vw, 35px); line-height: 1.04; font-weight: 900; letter-spacing: -.04em; }
+        .focus-overview-subtitle { margin-top: 7px; color: var(--focus-muted); font-size: 12px; font-weight: 750; }
+        .focus-progress-compact { display: flex; align-items: center; gap: 11px; flex: 0 0 auto; }
+        .focus-progress-ring {
+            --progress: 0deg; width: 54px; height: 54px; padding: 5px; border-radius: 50%;
+            display: grid; place-items: center; background: conic-gradient(var(--accent) var(--progress), rgba(var(--accent-rgb), .12) 0);
+        }
+        .focus-progress-ring span {
+            width: 100%; height: 100%; display: grid; place-items: center; border-radius: 50%;
+            background: #f4f1f6; color: var(--focus-ink); font-size: 10px; font-weight: 950;
+        }
+        .dark .focus-progress-ring span { background: #17151a; }
+        .focus-progress-copy strong { display: block; font-size: 13px; font-weight: 950; }
+        .focus-progress-copy span { display: block; margin-top: 2px; color: var(--focus-muted); font-size: 10px; font-weight: 800; }
+
+        .focus-overview-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; align-items: start; }
+        .focus-main-column, .focus-side-column { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+        .focus-task-tray {
+            position: relative; padding: 11px; border-radius: 31px;
+            background: var(--focus-surface); border: 1px solid rgba(255,255,255,.64);
+            box-shadow: var(--focus-shadow), inset 0 1px rgba(255,255,255,.72);
+        }
+        .dark .focus-task-tray { background: rgba(255,255,255,.025); border-color: rgba(255,255,255,.07); box-shadow: var(--focus-shadow), inset 0 1px rgba(255,255,255,.04); }
+        .focus-task-tray::before, .focus-task-tray::after {
+            content: ''; position: absolute; z-index: -1; left: 4%; right: 4%; height: 22px; bottom: -7px;
+            border-radius: 0 0 27px 27px; background: rgba(var(--accent-rgb), .07); border: 1px solid rgba(var(--accent-rgb), .07);
+        }
+        .focus-task-tray::after { left: 8%; right: 8%; bottom: -13px; opacity: .6; }
+        .focus-task-row {
+            position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center;
+            gap: 13px; min-height: 76px; padding: 12px 14px; border-radius: 18px;
+            background: transparent; border: 0;
+            box-shadow: none; transition: .24s cubic-bezier(.16,1,.3,1);
+        }
+        .focus-task-row + .focus-task-row { margin-top: 0; border-top: 1px solid var(--focus-line); border-radius: 0 0 18px 18px; }
+        .focus-task-row:hover { transform: translateY(-1px); background: rgba(var(--accent-rgb), .035); }
+        .focus-task-row.is-completed { opacity: .58; }
+        .focus-task-check {
+            width: 31px; height: 31px; border-radius: 50%; display: grid; place-items: center; flex: 0 0 auto;
+            color: transparent; border: 1.8px solid rgba(var(--accent-rgb), .28); background: rgba(var(--accent-rgb), .045);
+            transition: .22s ease;
+        }
+        .focus-task-check:hover { border-color: var(--accent); transform: scale(1.06); }
+        .focus-task-check.is-checked { color: white; background: var(--accent); border-color: var(--accent); box-shadow: 0 8px 18px -11px rgba(var(--accent-rgb), .9); }
+        .focus-task-copy { min-width: 0; }
+        .focus-task-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; }
+        .focus-subject-pill { display: inline-flex; align-items: center; min-height: 21px; padding: 0 8px; border-radius: 999px; color: var(--accent); background: rgba(var(--accent-rgb), .09); font-size: 9px; font-weight: 950; }
+        .focus-task-type { color: var(--focus-muted); font-size: 9px; font-weight: 850; }
+        .focus-task-description { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 900; letter-spacing: -.01em; }
+        .focus-task-row.is-completed .focus-task-description { text-decoration: line-through; }
+        .focus-task-due { margin-top: 4px; color: var(--focus-muted); font-size: 9px; font-weight: 800; }
+        .focus-task-actions { display: flex; align-items: center; gap: 2px; }
+        .focus-task-action { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 12px; color: var(--focus-muted); transition: .2s ease; }
+        .focus-task-action:hover { color: var(--accent); background: rgba(var(--accent-rgb), .08); }
+        .focus-empty {
+            min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+            border-radius: 25px; background: var(--focus-surface); border: 1px dashed rgba(var(--accent-rgb), .2); color: var(--focus-muted);
+        }
+        .focus-empty-icon { width: 60px; height: 60px; display: grid; place-items: center; border-radius: 22px; margin-bottom: 13px; color: var(--accent); background: rgba(var(--accent-rgb), .09); }
+        .focus-empty strong { color: var(--focus-ink); font-size: 16px; font-weight: 950; }
+        .focus-empty span { margin-top: 5px; font-size: 11px; font-weight: 750; }
+
+        .focus-card {
+            border-radius: 28px; background: var(--focus-surface); border: 1px solid rgba(255,255,255,.58);
+            box-shadow: var(--focus-shadow), inset 0 1px rgba(255,255,255,.65);
+        }
+        .dark .focus-card { border-color: rgba(255,255,255,.07); box-shadow: var(--focus-shadow), inset 0 1px rgba(255,255,255,.04); }
+        .focus-quick-add { padding: 17px; }
+        .focus-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+        .focus-card-heading-main { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 950; }
+        .focus-card-heading-icon { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 12px; color: white; background: var(--accent); box-shadow: 0 9px 18px -12px rgba(var(--accent-rgb), .9); }
+        .focus-card-hint { color: var(--focus-muted); font-size: 9px; font-weight: 850; }
+        .focus-type-switch { display: flex; gap: 4px; padding: 4px; margin-bottom: 10px; border-radius: 14px; background: rgba(89,77,109,.055); }
+        .dark .focus-type-switch { background: rgba(255,255,255,.035); }
+        .focus-type-switch button { flex: 1; min-height: 32px; border-radius: 11px; color: var(--focus-muted); font-size: 10px; font-weight: 900; }
+        .focus-type-switch button.is-active { color: var(--accent); background: rgba(255,255,255,.84); box-shadow: 0 7px 20px -17px rgba(45,35,65,.8); }
+        .dark .focus-type-switch button.is-active { color: #f4f1f8; background: rgba(var(--accent-rgb), .22); }
+        .focus-subject-scroll { display: flex; gap: 7px; overflow-x: auto; padding: 2px 1px 9px; scrollbar-width: none; }
+        .focus-subject-scroll::-webkit-scrollbar { display: none; }
+        .focus-subject-button { flex: 0 0 auto; min-height: 29px; padding: 0 11px; border-radius: 999px; color: var(--focus-muted); background: rgba(89,77,109,.045); border: 1px solid transparent; font-size: 9px; font-weight: 900; }
+        .focus-subject-button.is-active { color: white; background: var(--accent); border-color: rgba(255,255,255,.2); }
+        .focus-composer-shell { padding: 4px; border-radius: 19px; background: rgba(87,74,105,.045); border: 1px solid var(--focus-line); transition: .2s ease; }
+        .focus-composer-shell:focus-within { background: rgba(255,255,255,.7); border-color: rgba(var(--accent-rgb), .28); box-shadow: 0 0 0 4px rgba(var(--accent-rgb), .05); }
+        .dark .focus-composer-shell:focus-within { background: rgba(255,255,255,.035); }
+        .focus-composer-input { width: 100%; min-height: 52px; padding: 10px 12px; color: var(--focus-ink); background: transparent; border: 0; outline: 0; font-size: 13px; font-weight: 850; }
+        .focus-composer-input::placeholder { color: var(--focus-muted); font-weight: 700; }
+        .focus-composer-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 6px 6px; border-top: 1px solid var(--focus-line); }
+        .focus-date-chip { min-height: 34px; display: inline-flex; align-items: center; gap: 6px; padding: 0 10px; border-radius: 12px; color: var(--focus-muted); background: rgba(255,255,255,.44); font-size: 9px; font-weight: 900; }
+        .dark .focus-date-chip { background: rgba(255,255,255,.045); }
+        .focus-submit-button { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 14px; color: white; background: var(--accent); box-shadow: 0 11px 22px -14px rgba(var(--accent-rgb), .95); transition: .2s ease; }
+        .focus-submit-button:disabled { opacity: .28; box-shadow: none; cursor: not-allowed; }
+        .focus-submit-button:not(:disabled):hover { transform: translateY(-2px) rotate(-2deg); }
+
+        .focus-lesson-strip { padding: 14px 15px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, .8fr); align-items: center; gap: 10px; text-align: left; }
+        .focus-lesson-label { display: flex; align-items: center; gap: 6px; color: var(--focus-muted); font-size: 8px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+        .focus-lesson-dot { width: 6px; height: 6px; border-radius: 50%; background: #63a985; box-shadow: 0 0 0 3px rgba(99,169,133,.11); }
+        .focus-lesson-name { margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 950; }
+        .focus-lesson-time { color: var(--accent); font-size: 18px; line-height: 1; font-weight: 950; font-variant-numeric: tabular-nums; }
+        .focus-lesson-next { min-width: 0; text-align: right; }
+        .focus-lesson-next span { display: block; color: var(--focus-muted); font-size: 8px; font-weight: 900; }
+        .focus-lesson-next strong { display: block; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 900; }
+
+        .focus-stack-stage { max-width: 720px; margin: 24px auto 0; }
+        .focus-session-head { text-align: center; margin-bottom: 23px; }
+        .focus-session-head .focus-overview-kicker { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .focus-session-head h1 { margin-top: 7px; font-size: clamp(28px, 5vw, 45px); font-weight: 950; letter-spacing: -.05em; }
+        .focus-session-head p { margin-top: 7px; color: var(--focus-muted); font-size: 12px; font-weight: 750; }
+        .focus-stack-wrap { position: relative; padding: 0 12px 22px; }
+        .focus-stack-ghost { position: absolute; left: 7%; right: 7%; height: 100%; border-radius: 35px; background: rgba(var(--accent-rgb), .08); border: 1px solid rgba(var(--accent-rgb), .08); }
+        .focus-stack-ghost.one { top: 12px; transform: scale(.97); }
+        .focus-stack-ghost.two { top: 23px; transform: scale(.92); opacity: .55; }
+        .focus-active-card {
+            position: relative; z-index: 2; min-height: 330px; padding: clamp(24px, 5vw, 42px); border-radius: 35px;
+            display: flex; flex-direction: column; justify-content: space-between; background: var(--focus-surface);
+            border: 1px solid rgba(255,255,255,.62); box-shadow: 0 35px 90px -48px rgba(46,32,74,.5), inset 0 1px rgba(255,255,255,.72);
+        }
+        .dark .focus-active-card { border-color: rgba(255,255,255,.08); box-shadow: 0 38px 90px -48px rgba(0,0,0,.95), inset 0 1px rgba(255,255,255,.04); }
+        .focus-active-count { color: var(--focus-muted); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+        .focus-active-subject { display: inline-flex; align-items: center; width: fit-content; margin-top: 18px; padding: 6px 11px; border-radius: 999px; color: var(--accent); background: rgba(var(--accent-rgb), .09); font-size: 10px; font-weight: 950; }
+        .focus-active-description { margin-top: 17px; max-width: 560px; font-size: clamp(25px, 5vw, 40px); line-height: 1.2; font-weight: 950; letter-spacing: -.04em; text-wrap: balance; }
+        .focus-active-meta { margin-top: 13px; display: flex; align-items: center; flex-wrap: wrap; gap: 9px; color: var(--focus-muted); font-size: 10px; font-weight: 850; }
+        .focus-active-controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 25px; }
+        .focus-nav-button { width: 43px; height: 43px; display: grid; place-items: center; border-radius: 15px; color: var(--focus-muted); background: rgba(88,76,105,.055); }
+        .focus-nav-button:disabled { opacity: .25; }
+        .focus-complete-button { min-height: 47px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 22px; border-radius: 17px; color: white; background: var(--accent); font-size: 12px; font-weight: 950; box-shadow: 0 14px 25px -15px rgba(var(--accent-rgb), .95); }
+
+        .focus-manage-backdrop { position: fixed; inset: 0; z-index: 205; background: rgba(20,17,25,.32); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .focus-manage-sheet {
+            position: fixed; z-index: 210; left: 50%; bottom: max(12px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+            width: min(94vw, 720px); max-height: min(82svh, 760px); overflow: hidden; display: flex; flex-direction: column;
+            border-radius: 32px; background: rgba(247,244,248,.96); border: 1px solid rgba(255,255,255,.8);
+            box-shadow: 0 35px 100px -30px rgba(25,20,35,.5); animation: focusSheetIn .32s cubic-bezier(.16,1,.3,1) both;
+        }
+        .dark .focus-manage-sheet { background: rgba(24,22,27,.97); border-color: rgba(255,255,255,.09); }
+        @keyframes focusSheetIn { from { opacity: 0; transform: translate(-50%, 24px) scale(.97); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+        .focus-manage-head { padding: 18px 20px 13px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .focus-manage-head h2 { font-size: 18px; font-weight: 950; }
+        .focus-manage-head p { margin-top: 2px; color: var(--focus-muted); font-size: 10px; font-weight: 800; }
+        .focus-manage-search { margin: 0 20px; min-height: 44px; display: flex; align-items: center; gap: 9px; padding: 0 13px; border-radius: 15px; color: var(--focus-muted); background: rgba(87,74,105,.055); border: 1px solid var(--focus-line); }
+        .focus-manage-search input { min-width: 0; flex: 1; color: var(--focus-ink); background: transparent; border: 0; outline: 0; font-size: 12px; font-weight: 800; }
+        .focus-manage-filters { display: flex; gap: 7px; overflow-x: auto; padding: 12px 20px; scrollbar-width: none; }
+        .focus-manage-filter { flex: 0 0 auto; min-height: 30px; padding: 0 11px; border-radius: 999px; color: var(--focus-muted); background: rgba(87,74,105,.045); font-size: 9px; font-weight: 900; }
+        .focus-manage-filter.is-active { color: white; background: var(--accent); }
+        .focus-manage-list { overflow-y: auto; padding: 0 14px 16px; }
+        .focus-manage-list .focus-task-row { min-height: 66px; }
+
+        .focus-accent-editor { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; align-items: center; }
+        .focus-color-input { width: 52px; height: 52px; padding: 4px; border-radius: 17px; background: rgba(255,255,255,.55); border: 1px solid var(--focus-line); cursor: pointer; }
+        .focus-hex-input { width: 100%; min-height: 44px; padding: 0 13px; border-radius: 14px; color: var(--focus-ink); background: rgba(89,77,109,.05); border: 1px solid var(--focus-line); outline: 0; font-size: 13px; font-weight: 900; text-transform: uppercase; }
+
+        .is-modern-home .mobile-add-fab { background: var(--accent) !important; box-shadow: 0 16px 32px -13px rgba(var(--accent-rgb), .9), inset 0 1px rgba(255,255,255,.28) !important; }
+        .is-modern-home .app-dynamic-nav { background: rgba(248,245,249,.88) !important; border-color: rgba(255,255,255,.82) !important; box-shadow: 0 20px 55px -26px rgba(43,34,57,.45), inset 0 1px rgba(255,255,255,.8) !important; }
+        .dark .is-modern-home .app-dynamic-nav { background: rgba(24,22,27,.9) !important; border-color: rgba(255,255,255,.09) !important; }
+        .is-modern-home .app-dynamic-nav button[aria-current="page"] { background: var(--accent) !important; box-shadow: 0 10px 22px -12px rgba(var(--accent-rgb), .95), inset 0 1px rgba(255,255,255,.26) !important; }
+        .is-modern-home .app-dynamic-nav button:hover { color: var(--accent) !important; background: rgba(var(--accent-rgb), .07) !important; }
+
+        @media (min-width: 720px) {
+            .focus-overview-grid { grid-template-columns: minmax(0, 1.42fr) minmax(230px, .78fr); gap: 14px; }
+            .focus-side-column { position: sticky; top: 18px; }
+            .focus-task-row { min-height: 76px; padding: 12px 16px; }
+            .focus-task-description { font-size: 15px; }
+        }
+        @media (min-width: 1024px) {
+            .focus-overview-grid { grid-template-columns: minmax(0, 1.56fr) minmax(280px, .78fr); grid-template-rows: auto auto; gap: 18px 20px; }
+            .focus-overview-grid > .focus-main-column { grid-column: 1; grid-row: 1; }
+            .focus-overview-grid > .focus-side-column { display: contents; }
+            .focus-side-column > .focus-quick-add {
+                grid-column: 1; grid-row: 2; align-self: start;
+                display: grid; grid-template-columns: 128px 128px 150px minmax(220px, 1fr); grid-template-rows: auto;
+                align-items: center; gap: 10px; padding: 10px 14px;
+            }
+            .focus-side-column > .focus-quick-add > .focus-card-heading { grid-column: 1; grid-row: 1; margin: 0; }
+            .focus-side-column > .focus-quick-add > .focus-card-heading .focus-card-hint { display: none; }
+            .focus-side-column > .focus-quick-add > .focus-type-switch:nth-child(2) { grid-column: 2; grid-row: 1; margin: 0; }
+            .focus-side-column > .focus-quick-add > .focus-subject-scroll { grid-column: 3; grid-row: 1; padding-bottom: 0; }
+            .focus-side-column > .focus-quick-add > .focus-composer-shell { grid-column: 4; grid-row: 1; }
+            .focus-side-column > .focus-quick-add > .focus-card-hint { grid-column: 4; }
+            .focus-side-column > .focus-quick-add .focus-composer-input { min-height: 40px; padding-block: 7px; }
+            .focus-side-column > .focus-lesson-strip {
+                grid-column: 2; grid-row: 1; align-self: stretch;
+                min-height: 230px; padding: 22px; display: flex; flex-direction: column; align-items: stretch; justify-content: center;
+                text-align: left;
+            }
+            .focus-side-column > .focus-lesson-strip .focus-lesson-name { margin-top: 9px; font-size: 20px; white-space: normal; }
+            .focus-side-column > .focus-lesson-strip .focus-lesson-time { margin-top: 17px; font-size: 31px; }
+            .focus-side-column > .focus-lesson-strip .focus-lesson-next { display: block; margin-top: 22px; padding-top: 17px; text-align: left; border-top: 1px solid var(--focus-line); }
+            .focus-side-column > .focus-lesson-strip .focus-lesson-next strong { margin-top: 7px; font-size: 14px; white-space: normal; }
+        }
+        @media (max-width: 899px) {
+            .focus-topbar { grid-template-columns: minmax(0, 1fr) auto; gap: 12px 9px; min-height: auto; }
+            .focus-mode-switch { grid-column: 1 / -1; grid-row: 2; justify-self: start; width: min(270px, 100%); }
+            .focus-mode-switch button { min-width: 0; flex: 1; }
+            .focus-actions { grid-column: 2; grid-row: 1; }
+            .focus-date-orbit { margin-top: 15px; margin-bottom: 12px; padding-inline: 0; }
+        }
+        @media (max-width: 680px) {
+            .modern-home { padding-inline: 13px; }
+            .focus-mode-switch { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; order: 3; }
+            .focus-mode-switch button { min-width: 0; flex: 1; }
+            .focus-brand-title { font-size: 20px; }
+            .focus-brand-date { margin-top: 6px; font-size: 11px; }
+            .focus-date-list { gap: 2px; }
+            .focus-date-button { height: 53px; border-radius: 18px; }
+            .focus-date-number { font-size: 15px; }
+            .focus-date-day { font-size: 8px; }
+            .focus-overview-head { align-items: center; margin-top: 18px; }
+            .focus-overview-title { font-size: 29px; }
+            .focus-overview-subtitle { max-width: 220px; }
+            .focus-progress-copy { display: none; }
+            .focus-progress-ring { width: 49px; height: 49px; }
+            .focus-task-tray { padding: 8px; border-radius: 27px; }
+            .focus-task-row { min-height: 66px; padding: 9px 10px; gap: 10px; border-radius: 17px; }
+            .focus-task-check { width: 29px; height: 29px; }
+            .focus-task-description { font-size: 13px; }
+            .focus-task-actions .focus-task-action:first-child { display: none; }
+            .focus-quick-add { padding: 14px; }
+            .focus-lesson-strip { grid-template-columns: minmax(0, 1fr) auto; }
+            .focus-lesson-next { display: none; }
+            .focus-active-card { min-height: 315px; padding: 25px 21px; border-radius: 30px; }
+            .focus-active-description { font-size: 27px; }
+            .focus-stack-wrap { padding-inline: 3px; }
+            .focus-complete-button { flex: 1; }
+        }
+        @media (max-width: 390px) {
+            .focus-icon-button { width: 39px; height: 39px; border-radius: 14px; }
+            .focus-actions .focus-icon-button:first-child { display: none; }
+            .focus-mode-switch button { min-width: 96px; }
+            .focus-date-count { display: none; }
+            .focus-overview-title { font-size: 26px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .focus-manage-sheet, .focus-date-button, .focus-task-row, .focus-icon-button, .focus-submit-button { animation: none !important; transition: none !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -490,7 +839,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v2.0.0-night-sky',
+                version: 'v3.0.0-focus-stack',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -589,17 +938,18 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v2.0.0-night-sky',
-            title: '電子手冊 Night Sky 已更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v3.0.0-focus-stack',
+            title: '電子手冊 Focus Stack 已更新',
             summary: [
-                '全新手機優先主頁，以夜空進度環集中顯示今日要完成的功課。',
-                'iPad 會自動切換左右雙欄，一邊睇清單、一邊快速加入及查看課堂。',
-                '保留原有登入、功課、測驗、時間表、班級廣播、設定及後台功能。'
+                '全新今日總覽會顯示所選日期全部功課，包括已完成項目。',
+                '新增專注模式、霧白／夜幕雙主題、跟隨系統模式同自訂主色。',
+                'iPad 自動雙欄，手機保持單手操作；完整管理功能收納到次要面板。',
+                '登入、功課、測驗、時間表、班級廣播、通知、設定及後台功能全部保留。'
             ].join('\n'),
             guide: [
-                '按任務左邊圓圈即可完成，進度環會即時更新。',
-                '手機可按右下角紫色加號，直接跳到快速加入。',
-                '底部導覽可切換班級、時間表、歷史及更多設定。'
+                '主頁上方可切換「總覽」同「專注」，日期弧線可選擇前後日子。',
+                '按調色盤可揀霧白、夜幕、自動模式，亦可輸入任何 HEX 主色。',
+                '按左上管理按鈕可搜尋、篩選、編輯、刪除同清理過期紀錄。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
@@ -720,6 +1070,29 @@
             violet: { name: '紫羅蘭', text: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-600 hover:bg-violet-700', ring: 'ring-violet-100 dark:ring-violet-900', gradient: 'from-violet-600 to-purple-600', lightBg: 'bg-violet-50 dark:bg-violet-900/20', border: 'border-violet-200 dark:border-violet-800', shadow: 'shadow-violet-200/50 dark:shadow-violet-900/20' },
             sky: { name: '天空', text: 'text-sky-600 dark:text-sky-400', bg: 'bg-sky-500 hover:bg-sky-600', ring: 'ring-sky-100 dark:ring-sky-900', gradient: 'from-sky-500 to-blue-500', lightBg: 'bg-sky-50 dark:bg-sky-900/20', border: 'border-sky-200 dark:border-sky-800', shadow: 'shadow-sky-200/50 dark:shadow-sky-900/20' },
             zinc: { name: '鋅灰', text: 'text-zinc-600 dark:text-zinc-300', bg: 'bg-zinc-700 hover:bg-zinc-800', ring: 'ring-zinc-100 dark:ring-zinc-800', gradient: 'from-zinc-600 to-slate-800', lightBg: 'bg-zinc-100 dark:bg-zinc-800/50', border: 'border-zinc-200 dark:border-zinc-700', shadow: 'shadow-zinc-200/50 dark:shadow-zinc-900/20' }
+        };
+
+        const THEME_ACCENTS = {
+            indigo: '#5F63D8',
+            rose: '#D95D82',
+            emerald: '#3D9A79',
+            amber: '#C78636',
+            violet: '#7658D6',
+            sky: '#3E8FBC',
+            zinc: '#667085'
+        };
+
+        const normalizeHexColor = (value, fallback = '#7658D6') => {
+            const raw = String(value || '').trim();
+            const expanded = /^#[0-9a-fA-F]{3}$/.test(raw)
+                ? `#${raw.slice(1).split('').map(char => char + char).join('')}`
+                : raw;
+            return /^#[0-9a-fA-F]{6}$/.test(expanded) ? expanded.toUpperCase() : fallback;
+        };
+
+        const hexToRgbString = (value) => {
+            const hex = normalizeHexColor(value).slice(1);
+            return `${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}`;
         };
 
         const DEFAULT_TIME_SLOTS = [
@@ -1245,7 +1618,7 @@
             );
         }
 
-        function AppearanceModal({ isOpen, onClose, t, themeColor, setThemeColor, isDarkMode, setIsDarkMode, layoutMode, setLayoutMode, customLayout, setCustomLayout }) {
+        function AppearanceModal({ isOpen, onClose, t, themeColor, setThemeColor, themeMode, setThemeMode, customAccent, setCustomAccent, layoutMode, setLayoutMode, customLayout, setCustomLayout }) {
             if (!isOpen) return null;
             const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout[key] });
             return (
@@ -1291,12 +1664,25 @@
                                         </button>
                                     ))}
                                 </div>
+                                <div className="mt-4 p-3 rounded-2xl bg-slate-50/70 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700">
+                                    <div className="text-xs font-black text-slate-600 dark:text-slate-300 mb-2">自訂主色</div>
+                                    <div className="focus-accent-editor">
+                                        <input type="color" className="focus-color-input" value={normalizeHexColor(customAccent)} onChange={event => setCustomAccent(event.target.value)} aria-label="選擇自訂主色" />
+                                        <input className="focus-hex-input" value={customAccent} onChange={event => setCustomAccent(event.target.value)} onBlur={event => setCustomAccent(normalizeHexColor(event.target.value))} aria-label="輸入十六進制主色" maxLength={7} />
+                                    </div>
+                                    <p className="mt-2 text-[10px] font-bold text-slate-400">同一隻主色會同步套用喺霧白同夜幕主題。</p>
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-bold text-slate-500 dark:text-slate-400 mb-3">介面模式</label>
-                                <div className="flex bg-slate-100/50 dark:bg-slate-900/50 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
-                                    <button onClick={() => setIsDarkMode(false)} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${!isDarkMode ? 'bg-white dark:bg-slate-700 shadow-sm dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'}`}><Icon name="sun" className="w-4 h-4 text-orange-500" /> 淺色</button>
-                                    <button onClick={() => setIsDarkMode(true)} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${isDarkMode ? 'bg-white dark:bg-slate-700 shadow-sm dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'}`}><Icon name="moon" className="w-4 h-4 text-indigo-400" /> 深色</button>
+                                <div className="grid grid-cols-3 gap-1 bg-slate-100/50 dark:bg-slate-900/50 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                                    {[
+                                        { mode: 'system', label: '自動', icon: 'monitor-cog' },
+                                        { mode: 'light', label: '霧白', icon: 'sun' },
+                                        { mode: 'dark', label: '夜幕', icon: 'moon' }
+                                    ].map(option => (
+                                        <button key={option.mode} onClick={() => setThemeMode(option.mode)} className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all ${themeMode === option.mode ? 'bg-white dark:bg-slate-700 shadow-sm dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'}`}><Icon name={option.icon} className="w-3.5 h-3.5" />{option.label}</button>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -2982,9 +3368,12 @@
             t,
             unreadNotificationCount,
             isDarkMode,
-            setIsDarkMode,
+            themeMode,
+            setThemeMode,
             themeColor,
             setThemeColor,
+            customAccent,
+            setCustomAccent,
             layoutMode,
             setLayoutMode,
             customLayout,
@@ -3055,7 +3444,7 @@
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0 pt-1">
                                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v1.8.23
+                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v3.0
                                     </div>
                                     <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
@@ -3087,9 +3476,21 @@
                                     ))}
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <button type="button" onClick={() => setIsDarkMode(false)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${!isDarkMode ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="sun" className="w-5 h-5" /><div><div className="font-black text-sm">淺色模式</div><div className="text-[11px] font-bold opacity-75">乾淨清爽</div></div></button>
-                                <button type="button" onClick={() => setIsDarkMode(true)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${isDarkMode ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name="moon" className="w-5 h-5" /><div><div className="font-black text-sm">深色模式</div><div className="text-[11px] font-bold opacity-75">夜晚護眼</div></div></button>
+                            <div className="rounded-[1.6rem] border border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/50 p-4">
+                                <div className="text-xs font-black text-slate-400 uppercase mb-3">自訂主色</div>
+                                <div className="focus-accent-editor">
+                                    <input type="color" className="focus-color-input" value={normalizeHexColor(customAccent)} onChange={event => setCustomAccent(event.target.value)} aria-label="選擇自訂主色" />
+                                    <div><input className="focus-hex-input" value={customAccent} onChange={event => setCustomAccent(event.target.value)} onBlur={event => setCustomAccent(normalizeHexColor(event.target.value))} aria-label="輸入十六進制主色" maxLength={7} /><div className="text-[10px] font-bold text-slate-400 mt-1.5">兩套主題同步使用</div></div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                {[
+                                    { mode: 'system', icon: 'monitor-cog', label: '跟隨系統', desc: '自動切換' },
+                                    { mode: 'light', icon: 'sun', label: '霧白模式', desc: '晨霧珠光' },
+                                    { mode: 'dark', icon: 'moon', label: '夜幕模式', desc: '低光護眼' }
+                                ].map(option => (
+                                    <button key={option.mode} type="button" onClick={() => setThemeMode(option.mode)} className={`p-4 rounded-[1.5rem] border flex items-center gap-3 text-left transition-all ${themeMode === option.mode ? 'text-white border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`} style={themeMode === option.mode ? { background: 'var(--accent)' } : undefined}><Icon name={option.icon} className="w-5 h-5" /><div><div className="font-black text-sm">{option.label}</div><div className="text-[11px] font-bold opacity-75">{option.desc}</div></div></button>
+                                ))}
                             </div>
                         </div>
                     </SettingSection>
@@ -3222,6 +3623,338 @@
             }
         };
 
+        function ModernTodayHome({
+            user,
+            userProfile,
+            items,
+            subjects,
+            globalNow,
+            timetableConfig,
+            inputType,
+            setInputType,
+            subject,
+            onSubjectSelect,
+            description,
+            setDescription,
+            dueDate,
+            onOpenDatePicker,
+            onSubmit,
+            onToggle,
+            onEdit,
+            onDelete,
+            onOpenNotifications,
+            unreadNotificationCount,
+            onOpenAppearance,
+            onOpenTimetable,
+            onClearExpired,
+            onGoHistory,
+            isAdmin,
+            isBroadcast,
+            setIsBroadcast,
+            targetClassInput,
+            setTargetClassInput,
+            systemClasses,
+            advancedPrefs,
+            predictedSubject,
+            subjectPredictionApplied
+        }) {
+            const now = PREVIEW_MODE ? buildDemoLessonTime() : globalNow;
+            const todayKey = toDateKey(globalNow);
+            const [selectedDate, setSelectedDate] = useState(todayKey);
+            const [homeMode, setHomeMode] = useState(() => advancedPrefs?.focusFirst ? 'focus' : 'overview');
+            const [focusIndex, setFocusIndex] = useState(0);
+            const [isManagerOpen, setIsManagerOpen] = useState(false);
+            const [managerQuery, setManagerQuery] = useState('');
+            const [managerSubject, setManagerSubject] = useState('全部');
+
+            useEffect(() => {
+                if (!selectedDate) setSelectedDate(todayKey);
+            }, [todayKey, selectedDate]);
+
+            const weekDates = useMemo(() => Array.from({ length: 7 }, (_, index) => {
+                const date = new Date(globalNow);
+                date.setHours(0, 0, 0, 0);
+                date.setDate(date.getDate() + index - 3);
+                return date;
+            }), [todayKey]);
+
+            const visibleItems = useMemo(() => items.filter(item => !item.isHidden), [items]);
+            const selectedItems = useMemo(() => visibleItems
+                .filter(item => item.dueDate === selectedDate)
+                .sort((a, b) => Number(a.completed) - Number(b.completed) || String(a.createdAt || '').localeCompare(String(b.createdAt || ''))), [visibleItems, selectedDate]);
+            const pendingSelectedItems = useMemo(() => selectedItems.filter(item => !item.completed && !item.forceExpired), [selectedItems]);
+            const selectedCompleted = selectedItems.filter(item => item.completed).length;
+            const selectedProgress = selectedItems.length ? Math.round((selectedCompleted / selectedItems.length) * 100) : 100;
+
+            useEffect(() => {
+                if (focusIndex > Math.max(0, pendingSelectedItems.length - 1)) setFocusIndex(Math.max(0, pendingSelectedItems.length - 1));
+            }, [pendingSelectedItems.length, focusIndex]);
+
+            const managedItems = useMemo(() => visibleItems
+                .filter(item => managerSubject === '全部' || (item.subject || '其他') === managerSubject)
+                .filter(item => !managerQuery.trim() || `${item.subject || ''} ${item.description || ''}`.toLowerCase().includes(managerQuery.trim().toLowerCase()))
+                .sort((a, b) => Number(a.completed) - Number(b.completed) || parseDateValue(a.dueDate) - parseDateValue(b.dueDate)), [visibleItems, managerSubject, managerQuery]);
+
+            const scheduleState = useMemo(() => {
+                const schedule = generateFullSchedule(timetableConfig, now);
+                const nowMs = now.getTime();
+                let currentSlot = null;
+                let nextSlot = null;
+                let status = 'ended';
+                for (let index = 0; index < schedule.length; index++) {
+                    const slot = schedule[index];
+                    if (nowMs >= slot.start.getTime() && nowMs < slot.end.getTime()) {
+                        currentSlot = slot;
+                        nextSlot = schedule[index + 1] || null;
+                        status = slot.type === 'lesson' ? 'current' : 'break';
+                        break;
+                    }
+                    if (nowMs < slot.start.getTime()) {
+                        nextSlot = slot;
+                        status = 'not-started';
+                        break;
+                    }
+                }
+                const diff = currentSlot ? currentSlot.end.getTime() - nowMs : nextSlot ? nextSlot.start.getTime() - nowMs : 0;
+                return { currentSlot, nextSlot, status, diff };
+            }, [timetableConfig, now]);
+
+            const selectedDateValue = parseDateValue(selectedDate);
+            const selectedDateTitle = selectedDate === todayKey
+                ? '今日功課'
+                : selectedDateValue.toLocaleDateString('zh-HK', { month: 'numeric', day: 'numeric', weekday: 'long' });
+            const selectedDateSummary = selectedItems.length
+                ? `全部 ${selectedItems.length} 項 · ${pendingSelectedItems.length} 項未完成`
+                : '呢日未有功課，隨時可以快速記低。';
+            const dueDateLabel = dueDate
+                ? parseDateValue(dueDate).toLocaleDateString('zh-HK', { month: 'numeric', day: 'numeric', weekday: 'short' })
+                : '選擇交期';
+
+            const TaskRow = ({ item, compact = false }) => {
+                const isDone = !!item.completed;
+                const isUnavailable = !!item.forceExpired;
+                return (
+                    <article className={`focus-task-row ${isDone ? 'is-completed' : ''} ${compact ? 'is-compact' : ''}`}>
+                        <button
+                            type="button"
+                            className={`focus-task-check ${isDone ? 'is-checked' : ''}`}
+                            onClick={() => onToggle(item.id, item.completed)}
+                            aria-label={isDone ? `恢復：${item.description}` : `完成：${item.description}`}
+                        >
+                            <Icon name="check" className="w-4 h-4" />
+                        </button>
+                        <div className="focus-task-copy">
+                            <div className="focus-task-meta">
+                                <span className="focus-subject-pill">{item.subject || '其他'}</span>
+                                <span className="focus-task-type">{item.type === 'homework' ? '功課' : '測驗／考試'}</span>
+                                {item.publicRefId && <span className="focus-task-type">· 班級廣播</span>}
+                                {isUnavailable && <span className="focus-task-type">· 已失效</span>}
+                            </div>
+                            <div className="focus-task-description" title={item.description}>{item.description}</div>
+                            <div className="focus-task-due">{formatDueDate(item.dueDate)}</div>
+                        </div>
+                        <div className="focus-task-actions">
+                            {!isUnavailable && (
+                                <button type="button" className="focus-task-action" onClick={() => onEdit(item)} aria-label={`編輯：${item.description}`}>
+                                    <Icon name="square-pen" className="w-4 h-4" />
+                                </button>
+                            )}
+                            <button type="button" className="focus-task-action" onClick={() => onDelete(item.id)} aria-label={`刪除：${item.description}`}>
+                                <Icon name="trash-2" className="w-4 h-4" />
+                            </button>
+                        </div>
+                    </article>
+                );
+            };
+
+            const renderOverview = () => (
+                <>
+                    <div className="focus-overview-head">
+                        <div>
+                            <div className="focus-overview-kicker">Daily overview</div>
+                            <h1 className="focus-overview-title">{selectedDateTitle}</h1>
+                            <p className="focus-overview-subtitle">{selectedDateSummary}</p>
+                        </div>
+                        <button type="button" className="focus-progress-compact" onClick={() => setHomeMode('focus')} aria-label={`完成進度 ${selectedProgress}%`}> 
+                            <span className="focus-progress-ring" style={{ '--progress': `${selectedProgress * 3.6}deg` }}><span>{selectedProgress}%</span></span>
+                            <span className="focus-progress-copy"><strong>{selectedCompleted}/{selectedItems.length}</strong><span>已完成</span></span>
+                        </button>
+                    </div>
+
+                    <div className="focus-overview-grid">
+                        <div className="focus-main-column">
+                            <section className="focus-task-tray" aria-label={`${selectedDateTitle}列表`}>
+                                {selectedItems.length ? selectedItems.map(item => <TaskRow key={item.id} item={item} />) : (
+                                    <div className="focus-empty">
+                                        <span className="focus-empty-icon"><Icon name="check-check" className="w-7 h-7" /></span>
+                                        <strong>暫時清空晒</strong>
+                                        <span>可以休息，或者喺右邊快速記低新功課。</span>
+                                    </div>
+                                )}
+                            </section>
+                        </div>
+
+                        <aside className="focus-side-column">
+                            <form id="quick-add" className="focus-card focus-quick-add" onSubmit={onSubmit}>
+                                <div className="focus-card-heading">
+                                    <div className="focus-card-heading-main"><span className="focus-card-heading-icon"><Icon name="plus" className="w-4 h-4" /></span>快速記錄</div>
+                                    <span className="focus-card-hint">幾秒完成</span>
+                                </div>
+                                <div className="focus-type-switch">
+                                    <button type="button" className={inputType === 'homework' ? 'is-active' : ''} onClick={() => setInputType('homework')}>功課</button>
+                                    <button type="button" className={inputType === 'assessment' ? 'is-active' : ''} onClick={() => setInputType('assessment')}>測驗／考試</button>
+                                </div>
+                                <div className="focus-subject-scroll" aria-label="選擇科目">
+                                    {subjects.map(item => (
+                                        <button key={item.name} type="button" className={`focus-subject-button ${subject === item.name ? 'is-active' : ''}`} onClick={() => onSubjectSelect(item.name)}>{item.name}</button>
+                                    ))}
+                                </div>
+                                {subjectPredictionApplied && predictedSubject && !isBroadcast && (
+                                    <div className="focus-card-hint mb-2 flex items-center gap-1"><Icon name="sparkles" className="w-3 h-3" /> 已按時間表揀選 {predictedSubject}</div>
+                                )}
+                                {isAdmin && (
+                                    <div className="focus-type-switch">
+                                        <button type="button" className={!isBroadcast ? 'is-active' : ''} onClick={() => setIsBroadcast(false)}>個人記錄</button>
+                                        <button type="button" className={isBroadcast ? 'is-active' : ''} onClick={() => setIsBroadcast(true)}>廣播派發</button>
+                                    </div>
+                                )}
+                                {isAdmin && isBroadcast && (
+                                    <select value={targetClassInput} onChange={event => setTargetClassInput(event.target.value)} className="focus-hex-input mb-2" aria-label="選擇廣播班級">
+                                        <option value="全校">全校</option>
+                                        {systemClasses.map(item => <option key={item.code} value={item.code}>{item.name} ({item.code})</option>)}
+                                    </select>
+                                )}
+                                <div className="focus-composer-shell">
+                                    <input
+                                        className="focus-composer-input"
+                                        value={description}
+                                        onChange={event => setDescription(event.target.value)}
+                                        placeholder={inputType === 'homework' ? '例如：作業簿 P.34–35' : '例如：英文 Unit 4 小測'}
+                                        autoComplete="off"
+                                    />
+                                    <div className="focus-composer-footer">
+                                        <button type="button" className="focus-date-chip" onClick={onOpenDatePicker}><Icon name="calendar-days" className="w-3.5 h-3.5" />{dueDateLabel}</button>
+                                        <button type="submit" className="focus-submit-button" disabled={!description.trim() || !dueDate} aria-label="新增紀錄"><Icon name="arrow-up" className="w-4 h-4" /></button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <button type="button" className="focus-card focus-lesson-strip" onClick={onOpenTimetable}>
+                                <div className="min-w-0">
+                                    <div className="focus-lesson-label"><span className="focus-lesson-dot"></span>{scheduleState.status === 'current' ? '正在上課' : scheduleState.status === 'break' ? '小息時間' : scheduleState.status === 'not-started' ? '準備上課' : '是日課堂'}</div>
+                                    <div className="focus-lesson-name">{scheduleState.status === 'ended' ? '今日已完結' : (scheduleState.currentSlot?.subjectName || scheduleState.nextSlot?.subjectName || '未設定')}</div>
+                                </div>
+                                <div className="focus-lesson-time">{scheduleState.status === 'ended' ? '—' : formatCountdown(scheduleState.diff).slice(0, 5)}</div>
+                                <div className="focus-lesson-next"><span>下一節</span><strong>{scheduleState.nextSlot?.subjectName || '放學'}</strong></div>
+                            </button>
+                        </aside>
+                    </div>
+                </>
+            );
+
+            const activeFocusItem = pendingSelectedItems[focusIndex] || null;
+            const renderFocus = () => (
+                <section className="focus-stack-stage" aria-label="專注模式">
+                    <div className="focus-session-head">
+                        <div className="focus-overview-kicker"><Icon name="circle-dot" className="w-3 h-3" /> Focus one thing</div>
+                        <h1>而家只做一樣</h1>
+                        <p>{pendingSelectedItems.length ? `仲有 ${pendingSelectedItems.length} 項，慢慢逐樣完成。` : '今日已經完成晒，做得好。'}</p>
+                    </div>
+                    {activeFocusItem ? (
+                        <div className="focus-stack-wrap">
+                            <div className="focus-stack-ghost two"></div>
+                            <div className="focus-stack-ghost one"></div>
+                            <article className="focus-active-card">
+                                <div>
+                                    <div className="focus-active-count">{String(focusIndex + 1).padStart(2, '0')} / {String(pendingSelectedItems.length).padStart(2, '0')}</div>
+                                    <span className="focus-active-subject">{activeFocusItem.subject || '其他'} · {activeFocusItem.type === 'homework' ? '功課' : '測驗／考試'}</span>
+                                    <h2 className="focus-active-description">{activeFocusItem.description}</h2>
+                                    <div className="focus-active-meta"><Icon name="calendar-days" className="w-3.5 h-3.5" />{formatDueDate(activeFocusItem.dueDate)}{activeFocusItem.publicRefId && <><span>·</span><Icon name="school" className="w-3.5 h-3.5" />班級廣播</>}</div>
+                                </div>
+                                <div className="focus-active-controls">
+                                    <button type="button" className="focus-nav-button" disabled={focusIndex === 0} onClick={() => setFocusIndex(index => Math.max(0, index - 1))} aria-label="上一項"><Icon name="arrow-left" className="w-4 h-4" /></button>
+                                    <button type="button" className="focus-complete-button" onClick={() => onToggle(activeFocusItem.id, activeFocusItem.completed)}><Icon name="check" className="w-4 h-4" />完成呢一項</button>
+                                    <button type="button" className="focus-nav-button" disabled={focusIndex >= pendingSelectedItems.length - 1} onClick={() => setFocusIndex(index => Math.min(pendingSelectedItems.length - 1, index + 1))} aria-label="下一項"><Icon name="arrow-right" className="w-4 h-4" /></button>
+                                </div>
+                            </article>
+                        </div>
+                    ) : (
+                        <div className="focus-empty focus-card">
+                            <span className="focus-empty-icon"><Icon name="party-popper" className="w-7 h-7" /></span>
+                            <strong>今日任務完成晒</strong>
+                            <span>返去總覽可以新增功課，或者揀另一日。</span>
+                            <button type="button" className="focus-complete-button mt-5" onClick={() => setHomeMode('overview')}>返回總覽</button>
+                        </div>
+                    )}
+                </section>
+            );
+
+            return (
+                <main className="modern-home">
+                    <header className="focus-topbar">
+                        <div className="focus-brand">
+                            <span className="focus-brand-mark"><Icon name="notebook-tabs" className="w-5 h-5" /></span>
+                            <div className="min-w-0">
+                                <div className="focus-brand-title">電子手冊 <span style={{ color: 'var(--accent)' }}>Pro</span></div>
+                                <div className="focus-brand-date">{globalNow.toLocaleDateString('zh-HK', { month: 'numeric', day: 'numeric', weekday: 'short' })} · {userProfile?.displayName || user?.displayName || '同學'}</div>
+                            </div>
+                        </div>
+                        <nav className="focus-mode-switch" aria-label="主頁模式">
+                            <button type="button" className={homeMode === 'overview' ? 'is-active' : ''} onClick={() => setHomeMode('overview')}>總覽</button>
+                            <button type="button" className={homeMode === 'focus' ? 'is-active' : ''} onClick={() => setHomeMode('focus')}>專注</button>
+                        </nav>
+                        <div className="focus-actions">
+                            <button type="button" className="focus-icon-button" onClick={() => setIsManagerOpen(true)} aria-label="管理及搜尋功課"><Icon name="sliders-horizontal" className="w-4 h-4" /></button>
+                            <button type="button" className="focus-icon-button" onClick={onOpenAppearance} aria-label="外觀及主色設定"><Icon name="palette" className="w-4 h-4" /></button>
+                            <button type="button" className="focus-icon-button" onClick={onOpenNotifications} aria-label="通知中心"><Icon name="bell" className="w-4 h-4" />{unreadNotificationCount > 0 && <span className="focus-notification-dot"></span>}</button>
+                        </div>
+                    </header>
+
+                    <div className="focus-date-orbit" aria-label="選擇日期">
+                        <div className="focus-date-list">
+                            {weekDates.map(date => {
+                                const key = toDateKey(date);
+                                const count = visibleItems.filter(item => item.dueDate === key).length;
+                                const isActive = key === selectedDate;
+                                return (
+                                    <button key={key} type="button" className={`focus-date-button ${isActive ? 'is-active' : ''}`} onClick={() => { setSelectedDate(key); setFocusIndex(0); }} aria-pressed={isActive}>
+                                        <span className="focus-date-day">{date.toLocaleDateString('zh-HK', { weekday: 'short' }).replace('週', '')}</span>
+                                        <span className="focus-date-number">{date.getDate()}</span>
+                                        <span className="focus-date-count">{count ? `${count}項` : ''}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {homeMode === 'overview' ? renderOverview() : renderFocus()}
+
+                    {isManagerOpen && (
+                        <>
+                            <button type="button" className="focus-manage-backdrop" onClick={() => setIsManagerOpen(false)} aria-label="關閉管理面板"></button>
+                            <section className="focus-manage-sheet" role="dialog" aria-modal="true" aria-label="功課管理">
+                                <div className="focus-manage-head">
+                                    <div><h2>功課管理</h2><p>搜尋、編輯、清理，同埋查看全部日期。</p></div>
+                                    <div className="focus-actions">
+                                        <button type="button" className="focus-icon-button" onClick={onClearExpired} aria-label="清理過期功課"><Icon name="eraser" className="w-4 h-4" /></button>
+                                        <button type="button" className="focus-icon-button" onClick={onGoHistory} aria-label="前往歷史紀錄"><Icon name="history" className="w-4 h-4" /></button>
+                                        <button type="button" className="focus-icon-button" onClick={() => setIsManagerOpen(false)} aria-label="關閉"><Icon name="x" className="w-4 h-4" /></button>
+                                    </div>
+                                </div>
+                                <label className="focus-manage-search"><Icon name="search" className="w-4 h-4" /><input value={managerQuery} onChange={event => setManagerQuery(event.target.value)} placeholder="搜尋科目或內容…" /></label>
+                                <div className="focus-manage-filters">
+                                    {['全部', ...subjects.map(item => item.name)].map(name => <button key={name} type="button" className={`focus-manage-filter ${managerSubject === name ? 'is-active' : ''}`} onClick={() => setManagerSubject(name)}>{name}</button>)}
+                                </div>
+                                <div className="focus-manage-list">
+                                    {managedItems.length ? managedItems.map(item => <TaskRow key={item.id} item={item} compact />) : <div className="focus-empty"><span className="focus-empty-icon"><Icon name="search-x" className="w-6 h-6" /></span><strong>搵唔到相關紀錄</strong><span>試下改用其他關鍵字或者科目。</span></div>}
+                                </div>
+                            </section>
+                        </>
+                    )}
+                </main>
+            );
+        }
+
 function App() {
             const [user, setUser] = useState(() => PREVIEW_MODE ? DEMO_USER : null);
             const [authLoading, setAuthLoading] = useState(!PREVIEW_MODE);
@@ -3245,8 +3978,22 @@ function App() {
             const [viewMode, setViewMode] = useState('current');
             const [appMode, setAppMode] = useState('personal'); 
 
-            const [isDarkMode, setIsDarkMode] = useState(() => safeStorageGet('isDarkMode') === 'true');
-            const [themeColor, setThemeColor] = useState(() => safeStorageGet('themeColor', 'indigo') || 'indigo');
+            const [themeMode, setThemeMode] = useState(() => {
+                const savedMode = safeStorageGet('themeMode');
+                if (['system', 'light', 'dark'].includes(savedMode)) return savedMode;
+                const legacyDark = safeStorageGet('isDarkMode');
+                return legacyDark === '' ? 'system' : (legacyDark === 'true' ? 'dark' : 'light');
+            });
+            const [isDarkMode, setIsDarkMode] = useState(() => {
+                const savedMode = safeStorageGet('themeMode');
+                if (savedMode === 'dark') return true;
+                if (savedMode === 'light') return false;
+                const legacyDark = safeStorageGet('isDarkMode');
+                if (legacyDark !== '') return legacyDark === 'true';
+                return !!window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+            });
+            const [themeColor, setThemeColor] = useState(() => safeStorageGet('themeColor', 'violet') || 'violet');
+            const [customAccent, setCustomAccent] = useState(() => normalizeHexColor(safeStorageGet('customAccent', '#7658D6')));
             const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
             const [layoutMode, setLayoutMode] = useState(() => safeStorageGet('layoutMode', 'normal') || 'normal');
             const [customLayout, setCustomLayout] = useState(() => safeStorageJSON('customLayout', { cards: true, timetable: true, input: true, list: true }));
@@ -3264,6 +4011,10 @@ function App() {
             }));
             
             const t = THEME_CONFIG[themeColor] || THEME_CONFIG.indigo;
+            const handleThemePresetChange = (key) => {
+                setThemeColor(key);
+                if (THEME_ACCENTS[key]) setCustomAccent(THEME_ACCENTS[key]);
+            };
             const [exitingIds, setExitingIds] = useState([]);
             const [isSubjectManagerOpen, setIsSubjectManagerOpen] = useState(false);
             
@@ -3368,7 +4119,27 @@ function App() {
                 return () => clearInterval(timer);
             }, [viewMode]);
 
-            useEffect(() => { safeStorageSet('isDarkMode', String(isDarkMode)); if (isDarkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark'); }, [isDarkMode]);
+            useEffect(() => {
+                const media = window.matchMedia?.('(prefers-color-scheme: dark)');
+                const applyMode = () => setIsDarkMode(themeMode === 'system' ? !!media?.matches : themeMode === 'dark');
+                applyMode();
+                safeStorageSet('themeMode', themeMode);
+                if (themeMode === 'system') media?.addEventListener?.('change', applyMode);
+                return () => media?.removeEventListener?.('change', applyMode);
+            }, [themeMode]);
+            useEffect(() => {
+                safeStorageSet('isDarkMode', String(isDarkMode));
+                document.documentElement.classList.toggle('dark', isDarkMode);
+                const themeMeta = document.querySelector('meta[name="theme-color"]');
+                if (themeMeta) themeMeta.setAttribute('content', isDarkMode ? '#111014' : '#f2eff8');
+            }, [isDarkMode]);
+            useEffect(() => {
+                const accent = normalizeHexColor(customAccent);
+                const root = document.documentElement;
+                root.style.setProperty('--accent', accent);
+                root.style.setProperty('--accent-rgb', hexToRgbString(accent));
+                safeStorageSet('customAccent', accent);
+            }, [customAccent]);
             useEffect(() => { safeStorageSet('themeColor', themeColor); safeStorageSet('layoutMode', layoutMode); safeStorageSet('customLayout', JSON.stringify(customLayout)); }, [themeColor, layoutMode, customLayout]);
             useEffect(() => {
                 safeStorageSet('advancedPrefs', JSON.stringify(advancedPrefs));
@@ -4227,7 +4998,7 @@ function App() {
             if (systemConfig?.blacklistEnabled && !isAdmin && systemConfig?.blacklistedEmails?.includes(user.email)) return <BlockScreen type="access_denied" customTitle="帳號停權" customMessage="您的帳號已被管理員列入黑名單，無法存取本系統。" user={user} />;
 
             return (
-                <div className={`app-shell min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-slate-900 font-sans relative overflow-hidden p-3 sm:p-5 md:p-7 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
+                <div className={`app-shell min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-slate-900 font-sans relative overflow-hidden p-3 sm:p-5 md:p-7 pb-32 ${viewMode === 'current' && appMode === 'personal' ? 'is-modern-home' : ''} ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20 has-announcement' : ''}`}>
                     
                     <div className={`fixed top-4 sm:top-8 left-1/2 transform -translate-x-1/2 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${toast.isVisible ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-full opacity-0 scale-95 pointer-events-none'}`}>
                         <div className={`px-5 py-3 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-xl flex items-center gap-3 font-bold text-sm tracking-wide border ${toast.type === 'error' ? 'bg-red-500/95 text-white border-red-400' : 'bg-slate-900/95 text-white border-slate-800 dark:bg-white/95 dark:text-slate-900 dark:border-white/50'}`}>
@@ -4236,7 +5007,7 @@ function App() {
                         </div>
                     </div>
 
-                    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                    <div className="app-atmosphere fixed inset-0 z-0 pointer-events-none overflow-hidden">
                         <div className={`absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 dark:opacity-10 animate-blob ${t.bg}`}></div>
                         <div className={`absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 dark:opacity-10 animate-blob animation-delay-2000 bg-purple-500`}></div>
                     </div>
@@ -4298,9 +5069,12 @@ function App() {
                                     t={t}
                                     unreadNotificationCount={unreadNotificationCount}
                                     isDarkMode={isDarkMode}
-                                    setIsDarkMode={setIsDarkMode}
+                                    themeMode={themeMode}
+                                    setThemeMode={setThemeMode}
                                     themeColor={themeColor}
-                                    setThemeColor={setThemeColor}
+                                    setThemeColor={handleThemePresetChange}
+                                    customAccent={customAccent}
+                                    setCustomAccent={setCustomAccent}
                                     layoutMode={layoutMode}
                                     setLayoutMode={setLayoutMode}
                                     customLayout={customLayout}
@@ -4312,7 +5086,43 @@ function App() {
                                     onOpenSubjects={() => setIsSubjectManagerOpen(true)}
                                     onGoClass={() => { setViewMode('current'); setAppMode('class'); }}
                                     onLogout={handleLogout}
-                                 /> ) : (
+                                 /> ) : viewMode === 'current' && appMode === 'personal' ? (
+                                    <ModernTodayHome
+                                        user={user}
+                                        userProfile={userProfile}
+                                        items={items}
+                                        subjects={subjects}
+                                        globalNow={globalNow}
+                                        timetableConfig={timetableConfig}
+                                        inputType={inputType}
+                                        setInputType={setInputType}
+                                        subject={subject}
+                                        onSubjectSelect={handleSubjectSelect}
+                                        description={description}
+                                        setDescription={setDescription}
+                                        dueDate={dueDate}
+                                        onOpenDatePicker={() => setIsDueDatePickerOpen(true)}
+                                        onSubmit={handleSubmit}
+                                        onToggle={handleToggle}
+                                        onEdit={setEditingItem}
+                                        onDelete={deleteItem}
+                                        onOpenNotifications={() => setIsNotificationCenterOpen(true)}
+                                        unreadNotificationCount={unreadNotificationCount}
+                                        onOpenAppearance={() => setIsPreferencesOpen(true)}
+                                        onOpenTimetable={() => setViewMode('timetable')}
+                                        onClearExpired={handleClearExpired}
+                                        onGoHistory={() => { setViewMode('history'); setAppMode('personal'); }}
+                                        isAdmin={isAdmin}
+                                        isBroadcast={isBroadcast}
+                                        setIsBroadcast={setIsBroadcast}
+                                        targetClassInput={targetClassInput}
+                                        setTargetClassInput={setTargetClassInput}
+                                        systemClasses={systemClasses}
+                                        advancedPrefs={advancedPrefs}
+                                        predictedSubject={predictedSubject}
+                                        subjectPredictionApplied={subjectPredictionApplied}
+                                    />
+                                 ) : (
                                 
                                 <div className={`personal-stage pt-2 ${viewMode === 'current' && appMode === 'personal' ? 'is-home' : ''}`}>
                                     {viewMode === 'current' && appMode === 'personal' && (
@@ -4600,6 +5410,21 @@ function App() {
 
                     {editingItem && <EditModal item={editingItem} onClose={() => setEditingItem(null)} onSave={handleUpdateItem} triggerAlert={triggerAlert} triggerConfirm={triggerConfirm} subjects={subjects} />}
                     <DatePickerModal isOpen={isDueDatePickerOpen} value={dueDate} onSelect={setDueDate} onClose={() => setIsDueDatePickerOpen(false)} title="選擇功課交期" />
+                    <AppearanceModal
+                        isOpen={isPreferencesOpen}
+                        onClose={() => setIsPreferencesOpen(false)}
+                        t={t}
+                        themeColor={themeColor}
+                        setThemeColor={handleThemePresetChange}
+                        themeMode={themeMode}
+                        setThemeMode={setThemeMode}
+                        customAccent={customAccent}
+                        setCustomAccent={setCustomAccent}
+                        layoutMode={layoutMode}
+                        setLayoutMode={setLayoutMode}
+                        customLayout={customLayout}
+                        setCustomLayout={setCustomLayout}
+                    />
                     {quickView.isOpen && <QuickViewModal isOpen={quickView.isOpen} onClose={() => setQuickView({ isOpen: false, title: '', items: [] })} title={quickView.title} items={quickView.items} subjects={subjects} onEdit={setEditingItem} onDelete={deleteItem} isAdmin={isAdmin} userUid={user?.uid} />}
                     {showUpdateIntro && activeUpdateNotice?.version && (
                         <div className="fixed inset-0 z-[270] flex items-center justify-center p-4 sm:p-6">
@@ -4736,7 +5561,7 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v2.0.0-night-sky | based-on-uploaded-v1.8.24 | original-functions-preserved -->
-    <!-- ehandbook-build: v2.0.0-night-sky -->
+<!-- VERSION_CHECK: v3.0.0-focus-stack | based-on-uploaded-v1.8.24 | original-functions-preserved -->
+    <!-- ehandbook-build: v3.0.0-focus-stack -->
 </body>
 </html>
