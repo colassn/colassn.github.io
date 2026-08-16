@@ -171,7 +171,38 @@ h1 { margin:10px 0 16px; font-size:clamp(46px, 6vw, 92px); line-height:.93; lett
 .analysis-detail span{display:inline-flex;align-items:center;gap:6px}
 .cancel-analysis{width:100%;margin-top:14px}
 
-  </style>
+  
+.youtube-direct-card{
+  border:1px solid rgba(199,255,120,.28);
+  background:
+    radial-gradient(circle at 85% 0%,rgba(199,255,120,.09),transparent 34%),
+    radial-gradient(circle at 10% 100%,rgba(75,155,255,.10),transparent 38%),
+    rgba(255,255,255,.035);
+  border-radius:20px;
+  padding:16px;
+}
+.youtube-direct-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.youtube-direct-title{font-size:15px;font-weight:760;margin:0}
+.youtube-direct-copy{color:var(--muted);font-size:12px;line-height:1.55;margin-top:6px}
+.youtube-direct-selected{display:flex;align-items:center;gap:11px;margin:14px 0;padding:10px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.16)}
+.youtube-direct-selected img{width:74px;aspect-ratio:16/9;object-fit:cover;border-radius:9px;background:#111}
+.youtube-direct-selected .meta{min-width:0}
+.youtube-direct-selected strong{font-size:12px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.youtube-direct-selected span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.direct-provider{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;margin-top:9px}
+.direct-provider .dot{width:7px;height:7px;border-radius:50%;background:#c7ff78;box-shadow:0 0 14px rgba(199,255,120,.55)}
+.direct-actions{display:grid;grid-template-columns:1fr;gap:9px;margin-top:12px}
+.direct-primary{min-height:52px;font-size:14px;font-weight:780}
+.backup-details{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.backup-details summary{cursor:pointer;color:var(--muted);font-size:12px;font-weight:700;list-style:none}
+.backup-details summary::-webkit-details-marker{display:none}
+.direct-modal-note{font-size:12px;line-height:1.6;color:var(--muted)}
+@media(max-width:640px){
+  .youtube-direct-card{padding:14px}
+  .youtube-direct-selected img{width:66px}
+}
+
+</style>
 </head>
 <body>
   <div id="app"></div>
@@ -1057,9 +1088,9 @@ function renderShell() {
           <div>
             <div class="eyebrow">旋律 + 和弦鋼琴編曲</div>
             <h1>把一首歌，變成你彈得到的鋼琴版本。</h1>
-            <p>先選擇正確的 YouTube 版本作參考，再加入你有權使用的音訊檔；Piano AI 會直接在瀏覽器內產生簡化鋼琴譜。</p>
+            <p>搜尋 YouTube、揀啱你要嘅版本，然後直接交畀音樂 AI 轉成琴譜。唔需要再另外搵一個可能唔同版本嘅 MP3。</p>
           </div>
-          <div class="hero-note"><strong>預設保護私隱。</strong><br>音訊留在你的裝置。Piano AI 不會下載 YouTube 音訊，標準版本亦不會把音訊上載到 Firebase。</div>
+          <div class="hero-note"><strong>YouTube Direct。</strong><br>所選影片會以原本 YouTube URL 交畀支援 YouTube 輸入嘅轉譜服務；Piano AI 本身唔會下載或抽取 YouTube 音訊。</div>
         </section>
 
         <div id="configMessage"></div>
@@ -1067,7 +1098,7 @@ function renderShell() {
         <section class="grid">
           <article class="panel">
             <div class="panel-title-row">
-              <div><h2>選擇歌曲版本</h2><p class="panel-subtitle">YouTube 只用來辨認及預覽你想要的版本。</p></div>
+              <div><h2>① 搜尋並揀版本</h2><p class="panel-subtitle">你揀邊一條 YouTube 影片，就會用嗰條影片做轉譜來源。</p></div>
               <div class="step-badge">01</div>
             </div>
             <form class="search-row" id="searchForm">
@@ -1081,39 +1112,71 @@ function renderShell() {
 
           <article class="panel">
             <div class="panel-title-row">
-              <div><h2>建立鋼琴編曲</h2><p class="panel-subtitle">右手 = 旋律；左手 = 根據和弦自動生成伴奏。</p></div>
+              <div><h2>② 直接 AI 轉譜</h2><p class="panel-subtitle">唔需要另外上傳同一首歌。直接使用你上面揀中嘅 YouTube 版本。</p></div>
               <div class="step-badge">02</div>
             </div>
-            <div class="controls-stack">
-              <label class="upload-zone">
-                <input type="file" id="audioInput" accept="audio/*,.mp3,.wav,.ogg,.oga,.flac,.m4a,.aac,.mp4,.webm" />
-                <strong id="fileTitle">選擇你有權使用的音訊</strong>
-                <small id="fileSubtitle">MP3, WAV, OGG, FLAC, M4A and other formats your browser can decode.</small>
-              </label>
 
-              <div>
-                <span class="control-label">難度</span>
-                <div class="segmented" id="difficultyControl">
-                  <button data-value="easy" class="active">Easy 簡單</button>
-                  <button data-value="normal">Normal 正常</button>
+            <div class="youtube-direct-card">
+              <div class="youtube-direct-top">
+                <div>
+                  <div class="eyebrow">YOUTUBE DIRECT</div>
+                  <p class="youtube-direct-title">由同一條 YouTube 片生成琴譜</p>
+                  <p class="youtube-direct-copy">
+                    目前使用 Klangio Melody Scanner 作直接 YouTube 轉譜入口。
+                    佢專門提供 Piano Arrangement 同 Lead Sheet（旋律 + Chord）。
+                  </p>
                 </div>
               </div>
 
-              <div>
-                <span class="control-label">左手伴奏</span>
-                <div class="segmented five" id="accompanimentControl">
-                  <button data-value="root">Root</button>
-                  <button data-value="root5" class="active">根音 + 五度</button>
-                  <button data-value="octave">Octave</button>
-                  <button data-value="broken">分解和弦</button>
-                  <button data-value="full">完整和弦</button>
+              <div id="directSelectedVideo" class="youtube-direct-selected">
+                <div class="meta">
+                  <strong>未選擇影片</strong>
+                  <span>請先喺左邊搜尋並揀一條 YouTube 影片</span>
                 </div>
               </div>
 
-              <button class="btn primary generate" id="generateButton">生成鋼琴譜</button>
-              <div class="privacy-note"><span>🔒</span><span>音訊分析在瀏覽器內進行。iPad 會使用 WASM 相容模式，避免 iOS WebGL 卡住。只有你按「儲存」後，生成的琴譜資料才會存到 Firestore。</span></div>
-              <div id="progressArea"></div>
+              <div class="direct-actions">
+                <button class="btn primary direct-primary" id="directYouTubeButton" type="button" disabled>
+                  直接用呢條 YouTube 片轉譜
+                </button>
+              </div>
+
+              <div class="direct-provider"><span class="dot"></span><span>會複製同一條 YouTube URL，然後開啟 Melody Scanner；唔需要 MP3。</span></div>
             </div>
+
+            <details class="backup-details">
+              <summary>▸ 本機 Basic Pitch 備用模式（需要音訊檔）</summary>
+              <div class="controls-stack" style="margin-top:13px">
+                <label class="upload-zone">
+                  <input type="file" id="audioInput" accept="audio/*,.mp3,.wav,.ogg,.oga,.flac,.m4a,.aac,.mp4,.webm" />
+                  <strong id="fileTitle">選擇音訊檔</strong>
+                  <small id="fileSubtitle">只有當你想用 iPad 本機 Basic Pitch 分析時先需要。</small>
+                </label>
+
+                <div>
+                  <span class="control-label">難度</span>
+                  <div class="segmented" id="difficultyControl">
+                    <button data-value="easy" class="active">Easy 簡單</button>
+                    <button data-value="normal">Normal 正常</button>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="control-label">左手伴奏</span>
+                  <div class="segmented five" id="accompanimentControl">
+                    <button data-value="root">Root</button>
+                    <button data-value="root5" class="active">根音 + 五度</button>
+                    <button data-value="octave">Octave</button>
+                    <button data-value="broken">分解和弦</button>
+                    <button data-value="full">完整和弦</button>
+                  </div>
+                </div>
+
+                <button class="btn secondary generate" id="generateButton" type="button">用上傳音訊本機生成</button>
+                <div class="privacy-note"><span>🔒</span><span>呢個只係備用模式；音訊仍然只喺你部 iPad 本機分析。</span></div>
+                <div id="progressArea"></div>
+              </div>
+            </details>
           </article>
         </section>
 
@@ -1125,6 +1188,7 @@ function renderShell() {
   renderAuth();
   renderConfigurationMessage();
   renderResults();
+  renderDirectSelectedVideo();
   renderLibrary();
 }
 
@@ -1161,6 +1225,7 @@ function bindStaticEvents() {
   document.querySelector('#searchForm').addEventListener('submit', handle搜尋);
   document.querySelector('#audioInput').addEventListener('change', handleFile);
   document.querySelector('#generateButton').addEventListener('click', handleGenerate);
+  document.querySelector('#directYouTubeButton')?.addEventListener('click', handleYouTubeDirect);
   bindSegmented('#difficultyControl', (value) => state.difficulty = value);
   bindSegmented('#accompanimentControl', (value) => {
     state.accompanimentStyle = value;
@@ -1321,11 +1386,88 @@ function renderProgress(activeStage = stages[0], overall = 0, transcription = nu
   });
 }
 
+
+function selectedYouTubeUrl() {
+  if (!state.selectedVideo?.videoId) return '';
+  return `https://www.youtube.com/watch?v=${encodeURIComponent(state.selectedVideo.videoId)}`;
+}
+
+function renderDirectSelectedVideo() {
+  const box = document.querySelector('#directSelectedVideo');
+  const button = document.querySelector('#directYouTubeButton');
+  if (!box || !button) return;
+
+  if (!state.selectedVideo) {
+    box.innerHTML = `<div class="meta"><strong>未選擇影片</strong><span>請先喺左邊搜尋並揀一條 YouTube 影片</span></div>`;
+    button.disabled = true;
+    return;
+  }
+
+  const video = state.selectedVideo;
+  box.innerHTML = `
+    <img src="${escapeHtml(video.thumbnail || '')}" alt="">
+    <div class="meta">
+      <strong>${escapeHtml(decodeEntities(video.title || 'YouTube video'))}</strong>
+      <span>${escapeHtml(decodeEntities(video.channelTitle || ''))}</span>
+    </div>`;
+  button.disabled = false;
+}
+
+async function copyTextBestEffort(text) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {}
+  try {
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    const ok = document.execCommand('copy');
+    area.remove();
+    return Boolean(ok);
+  } catch {
+    return false;
+  }
+}
+
+async function handleYouTubeDirect() {
+  if (!state.selectedVideo) {
+    toast('請先揀一條 YouTube 影片。', 'error');
+    return;
+  }
+
+  const youtubeUrl = selectedYouTubeUrl();
+
+  // Open immediately on the user's tap so iPad Safari does not treat it as a blocked popup.
+  const serviceWindow = window.open('https://melodyscanner.com/App', '_blank', 'noopener');
+
+  const copied = await copyTextBestEffort(youtubeUrl);
+  localStorage.setItem('pianoAiLastYouTubeDirectUrl', youtubeUrl);
+
+  const title = decodeEntities(state.selectedVideo.title || '所選影片');
+  toast(
+    copied
+      ? `已複製「${title}」嘅 YouTube 連結。喺 Melody Scanner 貼上後揀 Arrangement 或 Lead Sheet。`
+      : `已開啟 Melody Scanner。請貼上呢條 YouTube URL：${youtubeUrl}`
+  );
+
+  if (!serviceWindow) {
+    // Safari can still block a new tab under some settings. In that case navigate in this tab.
+    window.location.href = 'https://melodyscanner.com/App';
+  }
+}
+
 async function handleGenerate() {
   if (state.processing) return;
   if (!state.user) return toast('Sign in with Google before generating a score.', 'error');
-  if (!state.selectedVideo) return toast('Choose the YouTube version you want to use as reference.', 'error');
-  if (!state.file) return toast('Choose an authorised audio file first.', 'error');
+  if (!state.selectedVideo) return toast('請先揀一條 YouTube 影片。', 'error');
+  if (!state.file) return toast('本機備用模式需要先選擇音訊檔；如果唔想上傳，請用上面「直接用呢條 YouTube 片轉譜」。', 'error');
 
   setProcessing(true);
   state.cancelRequested = false;
