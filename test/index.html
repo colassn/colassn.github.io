@@ -1275,9 +1275,11 @@ async function handle搜尋(event) {
   button.textContent = '搜尋ing…';
   message.innerHTML = '';
   try {
+    state.selectedVideo = null;
     state.results = await searchYouTube(queryText);
-    if (!state.results.length) message.innerHTML = `<div class="inline-message">No matching YouTube videos were found. Try adding the artist name.</div>`;
+    if (!state.results.length) message.innerHTML = `<div class="inline-message">搵唔到相符嘅 YouTube 影片，可以試下加歌手名。</div>`;
     renderResults();
+    renderDirectSelectedVideo();
   } catch (error) {
     message.innerHTML = `<div class="inline-message error">${escapeHtml(readableFirebaseError(error))}</div>`;
   } finally {
@@ -1295,11 +1297,21 @@ function renderResults() {
       <div class="video-meta"><div class="video-title">${escapeHtml(decodeEntities(item.title))}</div><div class="video-channel">${escapeHtml(decodeEntities(item.channelTitle))}</div></div>
     </button>`).join('');
   grid.querySelectorAll('.video-card').forEach((card) => card.addEventListener('click', () => {
-    state.selectedVideo = state.results.find((v) => v.videoId === card.dataset.videoId);
+    const selected = state.results.find((v) => v.videoId === card.dataset.videoId);
+    if (!selected) return;
+
+    state.selectedVideo = selected;
+
+    // 同步刷新所有依賴「已選影片」的 UI。
     renderResults();
     renderVideoPreview();
+    renderDirectSelectedVideo();
+
+    toast(`已選擇：${decodeEntities(selected.title || 'YouTube 影片')}`);
   }));
+
   renderVideoPreview();
+  renderDirectSelectedVideo();
 }
 
 function renderVideoPreview() {
@@ -1407,10 +1419,11 @@ function renderDirectSelectedVideo() {
   box.innerHTML = `
     <img src="${escapeHtml(video.thumbnail || '')}" alt="">
     <div class="meta">
-      <strong>${escapeHtml(decodeEntities(video.title || 'YouTube video'))}</strong>
+      <strong>✓ 已選擇：${escapeHtml(decodeEntities(video.title || 'YouTube video'))}</strong>
       <span>${escapeHtml(decodeEntities(video.channelTitle || ''))}</span>
     </div>`;
   button.disabled = false;
+  button.textContent = '直接用呢條 YouTube 片轉譜';
 }
 
 async function copyTextBestEffort(text) {
