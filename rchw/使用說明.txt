@@ -1,0 +1,26 @@
+電子手冊 Pro · StudyOS v2.0.0
+
+檔案內容
+1. index.html：網站最終版。
+2. manifest.webmanifest、icon.svg、sw.js：手機安裝及離線外殼支援，須與 index.html 放在同一層。
+3. firestore.rules：建議的 Firebase 資料庫權限規則。
+
+部署前檢查
+1. 將壓縮檔內全部檔案上傳至 GitHub Pages 或 Firebase Hosting 的同一目錄。
+2. 到 Firebase Authentication 開啟 Google 及 Email/Password 登入。
+3. 在 Authentication > Settings > Authorized domains 加入網站網域。
+4. 到 Firestore Database > Rules，貼上 firestore.rules 內容並發佈。
+5. 管理員帳戶為 chimhinhin@gmail.com。
+
+重要說明
+- Firebase 前端 API Key 會出現在網頁原始碼，這是正常做法；資料安全由登入、Firestore Rules 及授權網域控制。
+- 套用新規則前，建議先用 Firebase Rules Playground 測試管理員及學生帳戶。
+- 新版保留原有 users、users_public、public_assignments、system_settings 資料結構。
+- 舊功課不會因為升級而刪除，新版亦已取消「到期兩日後自動刪除」。
+
+主要操作
+- 主頁右下角「＋」：新增功課或測驗。
+- 任務工具列「歷史」：切換已完成紀錄。
+- 月曆：按日期查看及修改當日紀錄。
+- 班級：使用六位班級代碼加入；班級分頁旁的離開按鈕可退出班級。
+- 設定 > 匯出備份：下載個人 JSON 備份。
