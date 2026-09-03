@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v2.1.1 StudyOS Verified -->
+    <!-- 電子手冊 Pro v2.2.0 StudyOS Motion -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -19,12 +19,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest?v=2.1.1">
-    <link rel="icon" href="./icon.svg?v=2.1.1" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=2.2.0">
+    <link rel="icon" href="./icon.svg?v=2.2.0" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v2.1.1-studyos-verified">
-    <script>window.__EHANDBOOK_VERSION__ = "v2.1.1-studyos-verified"; console.log("電子手冊 Pro v2.1.1 StudyOS verified build loaded");</script>
+    <meta name="ehandbook-version" content="v2.2.0-studyos-motion">
+    <script>window.__EHANDBOOK_VERSION__ = "v2.2.0-studyos-motion"; console.log("電子手冊 Pro v2.2.0 StudyOS motion build loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -88,15 +88,15 @@
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
         .dialog-animate { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
-        .animate-blob { animation: blob 7s infinite; }
+        @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(24px, -34px) scale(1.08); } 66% { transform: translate(-18px, 18px) scale(0.94); } 100% { transform: translate(0px, 0px) scale(1); } }
+        .animate-blob { animation: blob 13s ease-in-out infinite; }
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
         
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUpFade { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
         .animate-item { animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
 
         @keyframes marquee { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
@@ -169,10 +169,55 @@
         .priority-high { border-left: 4px solid #f43f5e !important; }
         .priority-low { border-left: 4px solid #38bdf8 !important; }
         .timetable-editor-panel, .notification-center-panel, .settings-section, .admin-console { box-shadow: 0 24px 70px -34px rgba(15,23,42,.52) !important; }
-        .settings-section { border-color: var(--app-border) !important; }
-        .settings-section-content { animation: settingsReveal .2s ease-out; }
+        .settings-section { border-color: var(--app-border) !important; transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease; }
+        .settings-section-content { animation: settingsReveal .3s cubic-bezier(.16,1,.3,1); transform-origin: top; }
         .admin-content { scrollbar-gutter: stable; }
-        @keyframes settingsReveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes settingsReveal { from { opacity: 0; transform: translateY(-9px) scaleY(.98); } to { opacity: 1; transform: translateY(0) scaleY(1); } }
+
+        /* StudyOS motion system */
+        @keyframes headerArrival { from { opacity: 0; transform: translateY(-12px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes heroArrival { 0% { opacity: 0; transform: translateY(20px) scale(.975); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes heroGlow { 0%,100% { transform: translateX(-140%) rotate(16deg); } 48%,52% { transform: translateX(160%) rotate(16deg); } }
+        @keyframes orbDrift { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(-16px,18px,0) scale(1.08); } }
+        @keyframes cardArrival { from { opacity: 0; translate: 0 18px; scale: .97; } to { opacity: 1; translate: 0 0; scale: 1; } }
+        @keyframes numberPop { 0% { opacity: 0; transform: translateY(8px) scale(.82); } 70% { transform: translateY(-1px) scale(1.06); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes ringArrival { from { opacity: 0; transform: rotate(-55deg) scale(.75); } to { opacity: 1; transform: rotate(0) scale(1); } }
+        @keyframes progressSweep { from { transform: translateX(-160%) skewX(-18deg); } to { transform: translateX(280%) skewX(-18deg); } }
+        @keyframes viewArrival { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes panelArrival { from { opacity: 0; transform: translateX(10px) scale(.99); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes noticeArrival { from { opacity: 0; translate: 22px 0; scale: .98; } to { opacity: 1; translate: 0 0; scale: 1; } }
+        @keyframes scrimFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes iconSettle { 0% { transform: rotate(-10deg) scale(.78); } 65% { transform: rotate(4deg) scale(1.08); } 100% { transform: rotate(0) scale(1); } }
+        @keyframes navPill { 0% { transform: scale(.86); } 70% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes fabBreathe { 0%,100% { box-shadow: 0 18px 36px -12px rgba(79,70,229,.7); } 50% { box-shadow: 0 24px 46px -10px rgba(79,70,229,.88); } }
+
+        .app-header { animation: headerArrival .48s cubic-bezier(.16,1,.3,1) both; }
+        .app-header-icon { animation: iconSettle .55s .08s cubic-bezier(.16,1,.3,1) both; }
+        .study-hero.motion-hero { animation: heroArrival .58s cubic-bezier(.16,1,.3,1) both; }
+        .study-hero.motion-hero::before { content: ''; position: absolute; inset: -65% auto -65% -20%; width: 28%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.17), transparent); filter: blur(1px); animation: heroGlow 7s 1.4s ease-in-out infinite; pointer-events: none; }
+        .study-hero.motion-hero::after { animation: orbDrift 6s ease-in-out infinite; }
+        .metric-card.motion-card { opacity: 0; animation: cardArrival .52s cubic-bezier(.16,1,.3,1) forwards; will-change: transform, opacity; }
+        .motion-delay-1 { animation-delay: .08s !important; }
+        .motion-delay-2 { animation-delay: .16s !important; }
+        .motion-delay-3 { animation-delay: .24s !important; }
+        .motion-number { display: inline-block; animation: numberPop .58s .2s cubic-bezier(.16,1,.3,1) both; }
+        .progress-ring { animation: ringArrival .75s .18s cubic-bezier(.16,1,.3,1) both; }
+        .motion-progress { position: relative; overflow: hidden; }
+        .motion-progress::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 34%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.8), transparent); animation: progressSweep 2.8s 1s ease-in-out infinite; }
+        .view-stage { animation: viewArrival .36s cubic-bezier(.16,1,.3,1); }
+        .tab-panel-motion, .admin-panel-motion { animation: panelArrival .32s cubic-bezier(.16,1,.3,1) both; }
+        .motion-list-item { opacity: 0; animation: cardArrival .4s cubic-bezier(.16,1,.3,1) forwards; }
+        .notification-entry { opacity: 0; animation: noticeArrival .38s cubic-bezier(.16,1,.3,1) forwards; }
+        .motion-scrim { animation: scrimFade .24s ease-out both; }
+        .nav-active { animation: navPill .32s cubic-bezier(.16,1,.3,1); }
+        .nav-active svg { animation: iconSettle .4s cubic-bezier(.16,1,.3,1); }
+        .fab-motion { animation: fabBreathe 3.2s ease-in-out infinite; }
+        .fab-motion svg { transition: transform .35s cubic-bezier(.16,1,.3,1); }
+        .fab-motion:hover svg { transform: rotate(90deg) scale(1.08); }
+        .task-card, .metric-card, .timetable-slot-card { transition: transform .28s cubic-bezier(.16,1,.3,1), box-shadow .28s ease, border-color .28s ease; }
+        @media (hover: hover) {
+            .metric-card:hover, .task-card:hover, .timetable-slot-card:hover, .settings-section:hover { transform: translateY(-4px); box-shadow: 0 24px 48px -28px rgba(15,23,42,.5) !important; }
+        }
         @media (max-width: 639px) {
             .app-shell { padding: calc(.75rem + var(--safe-top)) .85rem calc(8.5rem + var(--safe-bottom)) !important; }
             .app-header { margin-bottom: 1rem !important; padding: .8rem .9rem !important; border-radius: 1.4rem !important; }
@@ -204,9 +249,10 @@
             .quick-add-fab { right: max(1.5rem, calc((100vw - 52rem) / 2)); bottom: 6.5rem; }
         }
         @keyframes sheetUp { from { opacity: 0; transform: translateY(40px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .view-stage { animation: viewFade .24s ease-out; }
-        @keyframes viewFade { from { opacity: 0; } to { opacity: 1; } }
-        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-indigo-200 dark:selection:bg-indigo-900">
@@ -216,7 +262,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.1.1 已啟用登入穩定保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.2.0 已啟用登入穩定保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -234,7 +280,7 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.1.1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.2.0', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
@@ -300,7 +346,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v2.1.1-studyos-verified',
+                version: 'v2.2.0-studyos-motion',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -399,17 +445,19 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v2.1.1-studyos-verified',
-            title: 'StudyOS 2.1.1 已核對更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v2.2.0-studyos-motion',
+            title: 'StudyOS 2.2 動態介面更新',
             summary: [
                 '主頁改為優先顯示明天要交的功課，日期和數量更清楚。',
                 '重新設計時間表編輯、通知中心及應用程式設定。',
-                '管理中心在手機和 iPad 上更精簡，重要操作更容易找到。'
+                '管理中心在手機和 iPad 上更精簡，重要操作更容易找到。',
+                '加入卡片進場、頁面切換、通知、進度與按鈕動態效果。'
             ].join('\n'),
             guide: [
                 '主頁大卡會直接顯示明天尚未完成的功課數量。',
                 '通知中心可切換「全部」與「未讀」。',
-                '設定頁按分類展開內容，畫面會更乾淨。'
+                '設定頁按分類展開內容，畫面會更乾淨。',
+                '如想停用動態，可在設定開啟「減少動畫」。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
@@ -914,7 +962,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.1.1</div>
+                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.2.0 Motion</div>
                             </div> 
                         </div> 
                     </div> 
@@ -1531,9 +1579,9 @@
 
                     <div className="flex-1 overflow-y-auto p-4 sm:p-5 bg-slate-50/70 dark:bg-slate-950/30 scrollbar-hide">
                         {activeTab === 'slots' ? (
-                            <div className="space-y-3">
+                            <div key="slots" className="tab-panel-motion space-y-3">
                                 {timeSlots.map((slot, index) => (
-                                    <div key={slot.id || index} className="timetable-slot-card flex flex-wrap items-center gap-2 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                                    <div key={slot.id || index} style={{ animationDelay: `${Math.min(index, 10) * 0.045}s` }} className="timetable-slot-card motion-list-item flex flex-wrap items-center gap-2 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                                         <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 grid place-items-center text-xs font-black shrink-0">{index + 1}</div>
                                         <div className="flex flex-col gap-1 mr-2">
                                             <button onClick={() => moveSlot(index, 'up')} disabled={index === 0} className="p-1 text-slate-400 hover:text-indigo-600 disabled:opacity-20 active:scale-90"><Icon name="chevron-up" className="w-4 h-4"/></button>
@@ -1551,7 +1599,7 @@
                                 <button type="button" onClick={addSlot} className="w-full min-h-12 py-3 border-2 border-dashed border-indigo-200 dark:border-indigo-800 text-indigo-500 rounded-2xl font-black hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center justify-center gap-2"><Icon name="plus" className="w-4 h-4" /> 新增時間段</button>
                             </div>
                         ) : (
-                            <div className="space-y-4">
+                            <div key={`schedule-${editDay}`} className="tab-panel-motion space-y-4">
                                 <div className="grid grid-cols-5 gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800">
                                     {['一','二','三','四','五'].map((d, i) => (
                                         <button type="button" key={i} onClick={() => setEditDay(i + 1)} className={`min-w-0 py-2.5 rounded-xl font-black text-xs sm:text-sm whitespace-nowrap transition-all ${editDay === i + 1 ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-900'}`}><span className="hidden sm:inline">星期</span>{d}</button>
@@ -1565,7 +1613,7 @@
                                         const subObj = subjects.find(s => s.name === currentSubjectName);
                                         const colorClass = subObj ? subObj.color : 'bg-slate-100 text-slate-400 border-slate-200 dark:bg-slate-700 dark:border-slate-600';
                                         return (
-                                            <div key={lessonIdx} className="flex items-center gap-3">
+                                            <div key={lessonIdx} style={{ animationDelay: `${lessonIdx * 0.045}s` }} className="motion-list-item flex items-center gap-3">
                                                 <div className="w-20 text-xs font-bold text-slate-500 text-right">{slot.label}</div>
                                                 <div className="flex-1">
                                                     <button onClick={() => setEditingCell({ day: editDay, lessonIndex: lessonIdx })} className={`w-full p-3 rounded-xl border-2 text-left font-bold transition-all hover:brightness-95 flex justify-between items-center ${currentSubjectName ? colorClass : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
@@ -2341,7 +2389,7 @@
                         </div>
                     </div>
 
-                    <div className="admin-content flex-1 p-5 md:p-8 overflow-y-auto bg-slate-50/70 dark:bg-slate-900/50 text-slate-800 relative">
+                    <div key={activeTab} className="admin-content admin-panel-motion flex-1 p-5 md:p-8 overflow-y-auto bg-slate-50/70 dark:bg-slate-900/50 text-slate-800 relative">
                         {editingAdminItem && ( <EditModal item={editingAdminItem} onClose={() => setEditingAdminItem(null)} onSave={handleAdminUpdateItem} triggerAlert={triggerAlert} triggerConfirm={triggerConfirm} subjects={subjects} /> )}
 
                         {activeTab === 'overview' && (
@@ -2938,7 +2986,7 @@
 
         function NavItem({ id, icon, label, active, onClick, t }) {
             return (
-                <button type="button" onClick={onClick} aria-label={label} aria-current={active ? 'page' : undefined} className={`relative flex items-center justify-center h-12 rounded-full transition-all duration-300 ease-out overflow-hidden ${active ? `${t.lightBg} ${t.text} px-4 shadow-sm` : 'w-12 px-0 text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
+                <button type="button" onClick={onClick} aria-label={label} aria-current={active ? 'page' : undefined} className={`relative flex items-center justify-center h-12 rounded-full transition-all duration-300 ease-out overflow-hidden ${active ? `nav-active ${t.lightBg} ${t.text} px-4 shadow-sm` : 'w-12 px-0 text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
                     <Icon name={icon} className={`w-5 h-5 shrink-0 transition-transform duration-300 ${active ? 'scale-110' : ''}`} />
                     <span className={`font-bold text-sm whitespace-nowrap transition-all duration-300 ease-out overflow-hidden ${active ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>
                         {label}
@@ -3035,7 +3083,7 @@
                                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-2xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0">
                                     <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-400/15 border border-emerald-300/20 text-xs font-black text-emerald-200 mb-2">
-                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.1.1 已核對
+                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.2.0 動態版
                                     </div>
                                     <h2 className="text-xl sm:text-2xl font-black tracking-tight truncate">應用程式設定</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-0.5 truncate">{displayName} · {email || '個人帳戶'}</p>
@@ -4207,8 +4255,8 @@ function App() {
                     </div>
 
                     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-                        <div className={`absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 dark:opacity-10 animate-blob ${t.bg}`}></div>
-                        <div className={`absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 dark:opacity-10 animate-blob animation-delay-2000 bg-purple-500`}></div>
+                        <div className={`ambient-orb absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 dark:opacity-10 animate-blob ${t.bg}`}></div>
+                        <div className="ambient-orb absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 dark:opacity-10 animate-blob animation-delay-2000 bg-purple-500"></div>
                     </div>
 
                     {systemConfig?.announcementText && (
@@ -4228,14 +4276,14 @@ function App() {
                         {viewMode !== 'admin' && (
                         <header className="app-header flex items-center justify-between mb-8 max-w-3xl mx-auto glass-card bg-white/90 dark:bg-slate-900/90 px-5 py-4 rounded-[2rem]">
                             <div className="flex items-center gap-3">
-                                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center bg-gradient-to-br ${t.gradient} text-white shadow-lg`}>
+                                <div className={`app-header-icon w-11 h-11 rounded-2xl flex items-center justify-center bg-gradient-to-br ${t.gradient} text-white shadow-lg`}>
                                     <Icon name={viewMode === 'settings' ? "sliders-horizontal" : viewMode === 'calendar' ? "calendar-days" : viewMode === 'timetable' || viewMode === 'timetable_edit' ? "calendar-clock" : viewMode === 'history' ? "timer" : appMode === 'class' ? "school" : "book-open"} className="w-6 h-6" />
                                 </div>
                                 <div>
                                     <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight">
                                         {viewMode === 'settings' ? '應用程式設定' : viewMode === 'calendar' ? '功課月曆' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '歷史紀錄' : appMode === 'class' ? '我的班級' : '今日工作台'}
                                     </h1>
-                                    <p className="text-xs font-bold text-slate-500 mt-0.5">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.1.1</p>
+                                    <p className="text-xs font-bold text-slate-500 mt-0.5">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.2.0</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
@@ -4296,7 +4344,7 @@ function App() {
                                     {/* Cards */}
                                     {viewMode === 'current' && isVisible('cards') && (
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6 animate-fadeIn">
-                                            <div className="study-hero col-span-2 sm:col-span-3">
+                                            <div className="study-hero motion-hero col-span-2 sm:col-span-3">
                                                 <div className="relative z-10 flex items-center justify-between gap-5">
                                                     <div className="min-w-0">
                                                         <div className="text-sm font-black text-indigo-200">{greetingText}，{displayName} · 明日重點</div>
@@ -4310,10 +4358,10 @@ function App() {
                                                     <div className="progress-ring" style={{ '--progress': `${counts.weekProgressPercent}%` }} aria-label={`本週完成進度 ${counts.weekProgressPercent}%`}><span>{counts.weekProgressPercent}%</span></div>
                                                 </div>
                                             </div>
-                                            <button onClick={() => openQuickView('tomorrow')} className="metric-card col-span-2 sm:col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex justify-between items-center hover:-translate-y-0.5 transition-all group border border-white/40">
+                                            <button onClick={() => openQuickView('tomorrow')} className="metric-card motion-card motion-delay-1 col-span-2 sm:col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex justify-between items-center hover:-translate-y-0.5 transition-all group border border-white/40">
                                                 <div className="flex flex-col items-start gap-1 z-10 w-full">
                                                     <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-indigo-500 shadow-sm"></div>明天要交</div>
-                                                    <div className="text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-blue-600 font-black text-3xl sm:text-4xl tracking-tight">{counts.tomorrow}</div>
+                                                    <div className="motion-number text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-blue-600 font-black text-3xl sm:text-4xl tracking-tight">{counts.tomorrow}</div>
                                                     
                                                     {/* NEW: Progress Bar inside card */}
                                                     <div className="w-full mt-1 sm:mt-2">
@@ -4321,19 +4369,19 @@ function App() {
                                                             <span>明日功課進度</span><span>{counts.tomorrowProgressPercent}%</span>
                                                         </div>
                                                         <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-gradient-to-r from-indigo-500 to-sky-500 transition-all duration-1000 ease-out" style={{ width: `${counts.tomorrowProgressPercent}%` }}></div>
+                                                            <div className="motion-progress h-full bg-gradient-to-r from-indigo-500 to-sky-500 transition-all duration-1000 ease-out" style={{ width: `${counts.tomorrowProgressPercent}%` }}></div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <Icon name="calendar-clock" className="absolute -bottom-4 -right-4 w-16 h-16 sm:w-20 sm:h-20 text-indigo-500/10 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 z-0 pointer-events-none" />
                                             </button>
-                                            <button onClick={() => openQuickView('today')} className="metric-card col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex flex-col justify-center items-start hover:-translate-y-0.5 transition-all group border border-white/40">
+                                            <button onClick={() => openQuickView('today')} className="metric-card motion-card motion-delay-2 col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex flex-col justify-center items-start hover:-translate-y-0.5 transition-all group border border-white/40">
                                                 <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5 mb-1 z-10"><div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>今日尚餘</div>
-                                                <div className="text-orange-500 font-black text-2xl sm:text-3xl z-10">{counts.today}</div>
+                                                <div className="motion-number text-orange-500 font-black text-2xl sm:text-3xl z-10">{counts.today}</div>
                                             </button>
-                                            <button onClick={() => openQuickView('test')} className="metric-card col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex flex-col justify-center items-start hover:-translate-y-0.5 transition-all group border border-white/40">
+                                            <button onClick={() => openQuickView('test')} className="metric-card motion-card motion-delay-3 col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex flex-col justify-center items-start hover:-translate-y-0.5 transition-all group border border-white/40">
                                                 <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5 mb-1 z-10"><div className="w-1.5 h-1.5 rounded-full bg-violet-500"></div>測驗考試</div>
-                                                <div className="text-violet-500 font-black text-2xl sm:text-3xl z-10">{counts.test}</div>
+                                                <div className="motion-number text-violet-500 font-black text-2xl sm:text-3xl z-10">{counts.test}</div>
                                             </button>
                                         </div>
                                     )}
@@ -4570,7 +4618,7 @@ function App() {
                     </div>
 
                     {viewMode === 'current' && appMode === 'personal' && (
-                        <button type="button" onClick={() => setIsComposerOpen(true)} aria-label="新增功課或測驗" className={`quick-add-fab bg-gradient-to-br ${t.gradient} active:scale-90 transition-transform`}><Icon name="plus" className="w-7 h-7" /></button>
+                        <button type="button" onClick={() => setIsComposerOpen(true)} aria-label="新增功課或測驗" className={`quick-add-fab fab-motion bg-gradient-to-br ${t.gradient} active:scale-90 transition-transform`}><Icon name="plus" className="w-7 h-7" /></button>
                     )}
 
                     <div className="bottom-nav fixed bottom-6 left-1/2 -translate-x-1/2 glass-card bg-white/95 dark:bg-slate-800/95 rounded-full p-2 shadow-lg border border-white/50 dark:border-slate-700/50 z-[100] flex items-center justify-between gap-1 sm:gap-2 max-w-[95%] overflow-x-auto dynamic-island-scroll">
@@ -4630,7 +4678,7 @@ function App() {
 
                     {isNotificationCenterOpen && (
                         <div className="fixed inset-0 z-[260] flex items-end sm:items-center justify-center p-0 sm:p-6">
-                            <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-sm" onClick={() => setIsNotificationCenterOpen(false)}></div>
+                            <div className="motion-scrim absolute inset-0 bg-slate-950/45 backdrop-blur-sm" onClick={() => setIsNotificationCenterOpen(false)}></div>
                             <div className="notification-center-panel relative w-full max-w-[480px] max-h-[86vh] overflow-hidden rounded-[2rem] glass-card bg-white/95 dark:bg-slate-900/95 border border-white/60 dark:border-slate-700 shadow-2xl flex flex-col animate-pop-in">
                                 <div className="px-5 pt-5 pb-4 shrink-0 bg-gradient-to-br from-slate-950 via-indigo-950 to-indigo-800 text-white">
                                     <div className="flex items-center justify-between gap-3">
@@ -4651,14 +4699,14 @@ function App() {
                                     </div>
                                 </div>
 
-                                <div className="overflow-y-auto p-4 space-y-3 min-h-[220px] max-h-[70vh] scrollbar-hide">
+                                <div key={notificationFilter} className="overflow-y-auto p-4 space-y-3 min-h-[220px] max-h-[70vh] scrollbar-hide">
                                     {filteredUserNotifications.length === 0 ? (
                                         <div className="h-[220px] flex flex-col items-center justify-center text-center text-slate-400">
                                             <div className="w-16 h-16 rounded-3xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3"><Icon name="bell-off" className="w-7 h-7" /></div>
                                             <div className="font-black text-sm">{notificationFilter === 'unread' ? '沒有未讀通知' : '暫時未有通知'}</div>
                                             <div className="text-xs mt-1">{notificationFilter === 'unread' ? '新提醒會集中顯示在這裡' : '有新公告或廣播功課時會出現在這裡'}</div>
                                         </div>
-                                    ) : filteredUserNotifications.map(note => {
+                                    ) : filteredUserNotifications.map((note, noteIndex) => {
                                         const accentMap = {
                                             amber: 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800 text-amber-600 dark:text-amber-300',
                                             orange: 'bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-800 text-orange-600 dark:text-orange-300',
@@ -4669,7 +4717,7 @@ function App() {
                                         };
                                         const accentClass = accentMap[note.accent] || accentMap.slate;
                                         return (
-                                            <button key={note.id} type="button" onClick={() => handleOpenUserNotification(note)} className={`w-full text-left rounded-3xl border p-4 transition-all hover:-translate-y-0.5 hover:shadow-md ${note.unread ? accentClass : 'bg-white/70 dark:bg-slate-800/70 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}>
+                                            <button key={note.id} type="button" style={{ animationDelay: `${Math.min(noteIndex, 8) * 0.055}s` }} onClick={() => handleOpenUserNotification(note)} className={`notification-entry w-full text-left rounded-3xl border p-4 transition-all hover:-translate-y-0.5 hover:shadow-md ${note.unread ? accentClass : 'bg-white/70 dark:bg-slate-800/70 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}>
                                                 <div className="flex items-start gap-3">
                                                     <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${note.unread ? 'bg-white/80 dark:bg-slate-950/40' : 'bg-slate-100 dark:bg-slate-900/60'}`}>
                                                         <Icon name={note.icon} className="w-5 h-5" />
@@ -4726,11 +4774,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v2.1.1-studyos-verified | original Firebase data structure preserved -->
-    <!-- ehandbook-build: v2.1.1-studyos-verified -->
+<!-- VERSION_CHECK: v2.2.0-studyos-motion | original Firebase data structure preserved -->
+    <!-- ehandbook-build: v2.2.0-studyos-motion -->
 </body>
 </html>
 
-<!-- ehandbook_v2.1.1_studyos_verified: mobile-first private and class planner. -->
+<!-- ehandbook_v2.2.0_studyos_motion: mobile-first private and class planner. -->
 
-<!-- v2.1.1-studyos-verified: tomorrow-first dashboard; refined timetable, notifications, settings and admin. -->
+<!-- v2.2.0-studyos-motion: tomorrow-first dashboard with refined, accessible motion across core views. -->
