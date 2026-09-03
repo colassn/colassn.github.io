@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v2.2.0 StudyOS Motion -->
+    <!-- 電子手冊 Pro v2.2.1 StudyOS Centered Add -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -19,12 +19,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest?v=2.2.0">
-    <link rel="icon" href="./icon.svg?v=2.2.0" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=2.2.1">
+    <link rel="icon" href="./icon.svg?v=2.2.1" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v2.2.0-studyos-motion">
-    <script>window.__EHANDBOOK_VERSION__ = "v2.2.0-studyos-motion"; console.log("電子手冊 Pro v2.2.0 StudyOS motion build loaded");</script>
+    <meta name="ehandbook-version" content="v2.2.1-studyos-centered-add">
+    <script>window.__EHANDBOOK_VERSION__ = "v2.2.1-studyos-centered-add"; console.log("電子手冊 Pro v2.2.1 centered add build loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -157,8 +157,23 @@
         .task-toolbar { position: sticky; top: calc(.5rem + var(--safe-top)); z-index: 35; padding: .65rem; margin-inline: -.35rem; border-radius: 1.25rem; background: rgba(244,247,251,.86); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
         .dark .task-toolbar { background: rgba(7,11,22,.86); }
         .bottom-nav { padding-bottom: calc(.5rem + var(--safe-bottom)) !important; bottom: max(.75rem, var(--safe-bottom)) !important; border: 1px solid rgba(148,163,184,.22) !important; box-shadow: 0 22px 65px -28px rgba(15,23,42,.8) !important; }
-        .composer-scrim { position: fixed; inset: 0; z-index: 105; background: rgba(2,6,23,.58); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-        .task-composer { z-index: 110 !important; }
+        .composer-scrim {
+            position: fixed; inset: 0; z-index: 105; background: rgba(2,6,23,.62);
+            backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+            animation: scrimFade .24s ease-out both;
+        }
+        .task-composer {
+            position: fixed !important; left: 50%; top: 50%;
+            width: min(calc(100vw - 1.5rem), 48rem);
+            max-height: min(86vh, 760px); max-height: min(86dvh, 760px);
+            overflow-y: auto; overscroll-behavior: contain; margin: 0 !important;
+            transform: translate(-50%, -50%); z-index: 110 !important;
+            border-radius: 2rem !important;
+            box-shadow: 0 34px 100px -26px rgba(2, 6, 23, .72) !important;
+            animation: composerFloatIn .34s cubic-bezier(.16,1,.3,1) both;
+        }
+        .task-composer-open { display: flex !important; }
+        .task-composer-closed { display: none !important; }
         .quick-add-fab { position: fixed; right: 1rem; bottom: calc(6.7rem + var(--safe-bottom)); z-index: 90; width: 3.5rem; height: 3.5rem; border-radius: 1.1rem; color: white; display: grid; place-items: center; box-shadow: 0 18px 36px -12px rgba(79,70,229,.7); }
         .calendar-board { border: 1px solid var(--app-border); box-shadow: var(--app-shadow); }
         .calendar-day { min-height: 3.4rem; border: 1px solid transparent; transition: .18s ease; }
@@ -187,6 +202,10 @@
         @keyframes panelArrival { from { opacity: 0; transform: translateX(10px) scale(.99); } to { opacity: 1; transform: translateX(0) scale(1); } }
         @keyframes noticeArrival { from { opacity: 0; translate: 22px 0; scale: .98; } to { opacity: 1; translate: 0 0; scale: 1; } }
         @keyframes scrimFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes composerFloatIn {
+            from { opacity: 0; transform: translate(-50%, calc(-50% + 24px)) scale(.96); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
         @keyframes iconSettle { 0% { transform: rotate(-10deg) scale(.78); } 65% { transform: rotate(4deg) scale(1.08); } 100% { transform: rotate(0) scale(1); } }
         @keyframes navPill { 0% { transform: scale(.86); } 70% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes fabBreathe { 0%,100% { box-shadow: 0 18px 36px -12px rgba(79,70,229,.7); } 50% { box-shadow: 0 24px 46px -10px rgba(79,70,229,.88); } }
@@ -222,8 +241,7 @@
             .app-shell { padding: calc(.75rem + var(--safe-top)) .85rem calc(8.5rem + var(--safe-bottom)) !important; }
             .app-header { margin-bottom: 1rem !important; padding: .8rem .9rem !important; border-radius: 1.4rem !important; }
             .study-hero { padding: 1.2rem; border-radius: 1.65rem; }
-            .task-composer { position: fixed !important; left: .65rem; right: .65rem; bottom: calc(.65rem + var(--safe-bottom)); max-height: min(86vh, 720px); overflow-y: auto; margin: 0 !important; border-radius: 1.8rem !important; animation: sheetUp .32s cubic-bezier(.16,1,.3,1); }
-            .task-composer-closed { display: none !important; }
+            .task-composer { width: calc(100vw - 1.25rem); max-height: min(88vh, 720px); max-height: min(88dvh, 720px); border-radius: 1.65rem !important; }
             .task-toolbar { top: calc(.35rem + var(--safe-top)); }
             .bottom-nav { width: calc(100% - 1rem); max-width: 31rem !important; border-radius: 1.65rem !important; gap: 0 !important; justify-content: space-around !important; }
             .bottom-nav > button { min-width: 3.4rem; }
@@ -244,8 +262,6 @@
             .admin-content { padding: 1rem !important; overflow: visible !important; }
         }
         @media (min-width: 640px) {
-            .task-composer-closed { display: none !important; }
-            .task-composer { max-width: 48rem; margin-inline: auto; }
             .quick-add-fab { right: max(1.5rem, calc((100vw - 52rem) / 2)); bottom: 6.5rem; }
         }
         @keyframes sheetUp { from { opacity: 0; transform: translateY(40px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -262,7 +278,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.2.0 已啟用登入穩定保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.2.1 已啟用登入穩定保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -280,7 +296,7 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.2.0', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.2.1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
@@ -346,7 +362,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v2.2.0-studyos-motion',
+                version: 'v2.2.1-studyos-centered-add',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -445,13 +461,14 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v2.2.0-studyos-motion',
-            title: 'StudyOS 2.2 動態介面更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v2.2.1-studyos-centered-add',
+            title: 'StudyOS 2.2.1 中央新增視窗',
             summary: [
                 '主頁改為優先顯示明天要交的功課，日期和數量更清楚。',
                 '重新設計時間表編輯、通知中心及應用程式設定。',
                 '管理中心在手機和 iPad 上更精簡，重要操作更容易找到。',
-                '加入卡片進場、頁面切換、通知、進度與按鈕動態效果。'
+                '加入卡片進場、頁面切換、通知、進度與按鈕動態效果。',
+                '右下角＋號改為在螢幕中央開啟新增視窗，所有裝置操作一致。'
             ].join('\n'),
             guide: [
                 '主頁大卡會直接顯示明天尚未完成的功課數量。',
@@ -962,7 +979,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.2.0 Motion</div>
+                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.2.1 Centered Add</div>
                             </div> 
                         </div> 
                     </div> 
@@ -3083,7 +3100,7 @@
                                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-2xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0">
                                     <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-400/15 border border-emerald-300/20 text-xs font-black text-emerald-200 mb-2">
-                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.2.0 動態版
+                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.2.1 中央新增版
                                     </div>
                                     <h2 className="text-xl sm:text-2xl font-black tracking-tight truncate">應用程式設定</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-0.5 truncate">{displayName} · {email || '個人帳戶'}</p>
@@ -3329,6 +3346,20 @@ function App() {
                 window.addEventListener('offline', handleOffline);
                 return () => { window.removeEventListener('online', handleOnline); window.removeEventListener('offline', handleOffline); };
             }, []);
+
+            useEffect(() => {
+                if (!isComposerOpen) return;
+                const previousOverflow = document.body.style.overflow;
+                const closeOnEscape = (event) => {
+                    if (event.key === 'Escape') setIsComposerOpen(false);
+                };
+                document.body.style.overflow = 'hidden';
+                window.addEventListener('keydown', closeOnEscape);
+                return () => {
+                    document.body.style.overflow = previousOverflow;
+                    window.removeEventListener('keydown', closeOnEscape);
+                };
+            }, [isComposerOpen]);
 
             useEffect(() => {
                 if (window.__EHANDBOOK_FIREBASE_READY__ && window.firebaseServices?.auth) {
@@ -4283,7 +4314,7 @@ function App() {
                                     <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight">
                                         {viewMode === 'settings' ? '應用程式設定' : viewMode === 'calendar' ? '功課月曆' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '歷史紀錄' : appMode === 'class' ? '我的班級' : '今日工作台'}
                                     </h1>
-                                    <p className="text-xs font-bold text-slate-500 mt-0.5">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.2.0</p>
+                                    <p className="text-xs font-bold text-slate-500 mt-0.5">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.2.1</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
@@ -4392,12 +4423,12 @@ function App() {
                                         <>
                                             {isVisible('input') && (
                                                 <>
-                                                {isComposerOpen && <div className="composer-scrim sm:hidden" onClick={() => setIsComposerOpen(false)}></div>}
-                                                <form onSubmit={handleSubmit} className={`task-composer ${isComposerOpen ? 'task-composer-open' : 'task-composer-closed'} relative mb-8 flex flex-col gap-4 p-5 sm:p-6 glass-card bg-white/95 dark:bg-slate-900/95 rounded-[2.5rem] shadow-2xl transition-all border border-white/60 dark:border-slate-700`}>
+                                                {isComposerOpen && <div className="composer-scrim" aria-hidden="true" onClick={() => setIsComposerOpen(false)}></div>}
+                                                <form onSubmit={handleSubmit} role="dialog" aria-modal="true" aria-labelledby="task-composer-title" className={`task-composer ${isComposerOpen ? 'task-composer-open' : 'task-composer-closed'} relative flex flex-col gap-4 p-5 sm:p-6 glass-card bg-white/95 dark:bg-slate-900/95 border border-white/60 dark:border-slate-700`}>
                                                     <div className="flex items-center justify-between gap-3">
                                                         <div>
                                                             <div className="text-xs font-black tracking-widest text-indigo-500 uppercase">Quick add</div>
-                                                            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">新增紀錄</h3>
+                                                            <h3 id="task-composer-title" className="text-xl font-black text-slate-900 dark:text-white mt-1">新增紀錄</h3>
                                                         </div>
                                                         <button type="button" onClick={() => setIsComposerOpen(false)} aria-label="關閉新增紀錄" className="w-11 h-11 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 grid place-items-center active:scale-95"><Icon name="x" className="w-5 h-5" /></button>
                                                     </div>
@@ -4774,11 +4805,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v2.2.0-studyos-motion | original Firebase data structure preserved -->
-    <!-- ehandbook-build: v2.2.0-studyos-motion -->
+<!-- VERSION_CHECK: v2.2.1-studyos-centered-add | original Firebase data structure preserved -->
+    <!-- ehandbook-build: v2.2.1-studyos-centered-add -->
 </body>
 </html>
 
-<!-- ehandbook_v2.2.0_studyos_motion: mobile-first private and class planner. -->
+<!-- ehandbook_v2.2.1_studyos_centered_add: mobile-first private and class planner. -->
 
-<!-- v2.2.0-studyos-motion: tomorrow-first dashboard with refined, accessible motion across core views. -->
+<!-- v2.2.1-studyos-centered-add: tomorrow-first dashboard, refined motion, and a centered quick-add dialog. -->

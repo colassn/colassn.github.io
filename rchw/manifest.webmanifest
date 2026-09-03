@@ -1,9 +1,9 @@
 {
-  "name": "電子手冊 Pro · StudyOS 2.2",
+  "name": "電子手冊 Pro · StudyOS 2.2.1",
   "short_name": "電子手冊",
   "description": "私人及班內使用的功課、測驗、時間表與班級廣播工具。",
   "lang": "zh-HK",
-  "start_url": "./?v=2.2.0",
+  "start_url": "./?v=2.2.1",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
@@ -11,7 +11,7 @@
   "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "./icon.svg?v=2.2.0",
+      "src": "./icon.svg?v=2.2.1",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
