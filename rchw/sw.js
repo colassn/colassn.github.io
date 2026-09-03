@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ehandbook-studyos-v2';
+const CACHE_NAME = 'ehandbook-studyos-v2-1-1-verified';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', event => {

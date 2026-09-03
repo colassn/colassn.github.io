@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v2.0.0 StudyOS Final -->
+    <!-- 電子手冊 Pro v2.1.1 StudyOS Verified -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -19,12 +19,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest">
-    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=2.1.1">
+    <link rel="icon" href="./icon.svg?v=2.1.1" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v2.0.0-studyos-final">
-    <script>window.__EHANDBOOK_VERSION__ = "v2.0.0-studyos-final"; console.log("電子手冊 Pro v2.0.0 StudyOS loaded");</script>
+    <meta name="ehandbook-version" content="v2.1.1-studyos-verified">
+    <script>window.__EHANDBOOK_VERSION__ = "v2.1.1-studyos-verified"; console.log("電子手冊 Pro v2.1.1 StudyOS verified build loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -168,6 +168,11 @@
         .dark .calendar-day.is-today:not(.is-selected) { color: #a5b4fc; }
         .priority-high { border-left: 4px solid #f43f5e !important; }
         .priority-low { border-left: 4px solid #38bdf8 !important; }
+        .timetable-editor-panel, .notification-center-panel, .settings-section, .admin-console { box-shadow: 0 24px 70px -34px rgba(15,23,42,.52) !important; }
+        .settings-section { border-color: var(--app-border) !important; }
+        .settings-section-content { animation: settingsReveal .2s ease-out; }
+        .admin-content { scrollbar-gutter: stable; }
+        @keyframes settingsReveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 639px) {
             .app-shell { padding: calc(.75rem + var(--safe-top)) .85rem calc(8.5rem + var(--safe-bottom)) !important; }
             .app-header { margin-bottom: 1rem !important; padding: .8rem .9rem !important; border-radius: 1.4rem !important; }
@@ -178,6 +183,20 @@
             .bottom-nav { width: calc(100% - 1rem); max-width: 31rem !important; border-radius: 1.65rem !important; gap: 0 !important; justify-content: space-around !important; }
             .bottom-nav > button { min-width: 3.4rem; }
             .calendar-day { min-height: 3rem; }
+            .timetable-editor-panel { margin-top: 0 !important; min-height: calc(100vh - 8.75rem) !important; max-height: calc(100vh - 8.75rem) !important; border-radius: 1.5rem !important; }
+            .timetable-slot-card { display: grid !important; grid-template-columns: auto auto minmax(0, 1fr) auto; }
+            .timetable-slot-card > :nth-child(4) { grid-column: 1 / 3; grid-row: 2; }
+            .timetable-slot-card > :nth-child(5) { grid-column: 3 / 5; grid-row: 2; width: 100%; min-width: 0; }
+            .timetable-slot-card > :nth-child(6) { grid-column: 1 / -1; grid-row: 3; width: 100%; min-width: 0; }
+            .timetable-slot-card > :last-child { grid-column: 4; grid-row: 1; }
+            .notification-center-panel { border-radius: 2rem 2rem 0 0 !important; max-height: min(88vh, 760px) !important; padding-bottom: var(--safe-bottom); animation: sheetUp .32s cubic-bezier(.16,1,.3,1) !important; }
+            .settings-shell { gap: .9rem !important; }
+            .settings-section { border-radius: 1.5rem !important; }
+            .admin-console { border-radius: 1.5rem !important; min-height: auto !important; }
+            .admin-sidebar { padding: 1rem !important; }
+            .admin-sidebar-header { margin-bottom: .75rem !important; }
+            .admin-tabs button { padding: .7rem .85rem !important; border-radius: .9rem !important; }
+            .admin-content { padding: 1rem !important; overflow: visible !important; }
         }
         @media (min-width: 640px) {
             .task-composer-closed { display: none !important; }
@@ -197,7 +216,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。系統已加入 v1.8.18 Google 登入穩定版啟動保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.1.1 已啟用登入穩定保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -215,7 +234,7 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.1.1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
@@ -281,7 +300,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v2.0.0-studyos-final',
+                version: 'v2.1.1-studyos-verified',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -380,21 +399,21 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v2.0.0-studyos-final',
-            title: 'StudyOS 2.0 已準備好',
+            version: window.__EHANDBOOK_VERSION__ || 'v2.1.1-studyos-verified',
+            title: 'StudyOS 2.1.1 已核對更新',
             summary: [
-                '全新手機優先介面，今日任務、進度與上課資訊更集中。',
-                '新增月曆檢視、任務重要程度、快速新增與刪除復原。',
-                '重新整理班級、通知、時間表及管理畫面，並完整保留原有資料。'
+                '主頁改為優先顯示明天要交的功課，日期和數量更清楚。',
+                '重新設計時間表編輯、通知中心及應用程式設定。',
+                '管理中心在手機和 iPad 上更精簡，重要操作更容易找到。'
             ].join('\n'),
             guide: [
-                '按右下角「＋」即可快速新增功課或測驗。',
-                '月曆會按日期整理所有未隱藏紀錄，點日期即可查看。',
-                '班級廣播仍會自動加入學生個人手冊，原有操作方式不變。'
+                '主頁大卡會直接顯示明天尚未完成的功課數量。',
+                '通知中心可切換「全部」與「未讀」。',
+                '設定頁按分類展開內容，畫面會更乾淨。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-09-03T09:00:00+08:00',
+            publishedAt: '2026-09-03T10:30:00+08:00',
             source: 'built-in'
         };
 
@@ -895,7 +914,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.0.0</div>
+                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.1.1</div>
                             </div> 
                         </div> 
                     </div> 
@@ -1422,7 +1441,7 @@
             );
         }
 
-        function TimetableEditor({ initialConfig, onSave, onCancel, subjects, triggerConfirm }) {
+        function TimetableEditor({ initialConfig, onSave, onCancel, subjects, triggerConfirm, triggerAlert }) {
             const [activeTab, setActiveTab] = useState('slots');
             const [timeSlots, setTimeSlots] = useState(initialConfig?.timeSlots || [...DEFAULT_TIME_SLOTS]);
             const [schedule, setSchedule] = useState(initialConfig?.schedule || { ...DEFAULT_SCHEDULE });
@@ -1430,14 +1449,53 @@
             const [editingCell, setEditingCell] = useState(null);
             const [editingTimeIndex, setEditingTimeIndex] = useState(null);
 
-            const handleSlotChange = (index, field, value) => { const newSlots = [...timeSlots]; newSlots[index] = { ...newSlots[index], [field]: value }; setTimeSlots(newSlots); };
+            const initialSnapshot = useMemo(() => JSON.stringify({ timeSlots: initialConfig?.timeSlots || DEFAULT_TIME_SLOTS, schedule: initialConfig?.schedule || DEFAULT_SCHEDULE }), []);
+            const isDirty = useMemo(() => JSON.stringify({ timeSlots, schedule }) !== initialSnapshot, [timeSlots, schedule, initialSnapshot]);
+            const remapScheduleForSlots = (oldSlots, newSlots, currentSchedule) => {
+                const oldLessonIds = oldSlots.filter(slot => slot.type === 'lesson').map(slot => slot.id);
+                const newLessonIds = newSlots.filter(slot => slot.type === 'lesson').map(slot => slot.id);
+                const nextSchedule = {};
+                [1, 2, 3, 4, 5].forEach(day => {
+                    const subjectsBySlot = {};
+                    oldLessonIds.forEach((slotId, lessonIndex) => { subjectsBySlot[slotId] = currentSchedule?.[day]?.[lessonIndex] || ''; });
+                    nextSchedule[day] = newLessonIds.map(slotId => subjectsBySlot[slotId] || '');
+                });
+                return nextSchedule;
+            };
+            const handleSlotChange = (index, field, value) => {
+                const newSlots = [...timeSlots];
+                newSlots[index] = { ...newSlots[index], [field]: value };
+                if (field === 'type') setSchedule(remapScheduleForSlots(timeSlots, newSlots, schedule));
+                setTimeSlots(newSlots);
+            };
             const addSlot = () => setTimeSlots([...timeSlots, { id: 's' + Date.now(), label: '新課節', type: 'lesson', startTime: '08:00', duration: 35 }]);
-            const removeSlot = (index) => setTimeSlots(timeSlots.filter((_, i) => i !== index));
+            const removeSlot = (index) => {
+                const newSlots = timeSlots.filter((_, i) => i !== index);
+                setSchedule(remapScheduleForSlots(timeSlots, newSlots, schedule));
+                setTimeSlots(newSlots);
+            };
             const moveSlot = (index, direction) => {
                 const newSlots = [...timeSlots];
                 if (direction === 'up' && index > 0) { [newSlots[index], newSlots[index - 1]] = [newSlots[index - 1], newSlots[index]]; } 
                 else if (direction === 'down' && index < newSlots.length - 1) { [newSlots[index], newSlots[index + 1]] = [newSlots[index + 1], newSlots[index]]; }
+                else return;
+                setSchedule(remapScheduleForSlots(timeSlots, newSlots, schedule));
                 setTimeSlots(newSlots);
+            };
+            const resetTimetable = () => {
+                setTimeSlots(JSON.parse(JSON.stringify(DEFAULT_TIME_SLOTS)));
+                setSchedule(JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)));
+            };
+            const requestCancel = () => {
+                if (!isDirty) { onCancel(); return; }
+                triggerConfirm('你有尚未儲存的時間表修改，確定要離開嗎？', onCancel);
+            };
+            const requestSave = () => {
+                if (!timeSlots.length) { triggerAlert('請至少保留一個時間段', 'error'); return; }
+                if (timeSlots.some(slot => !slot.startTime || !slot.label?.trim() || Number(slot.duration) <= 0)) { triggerAlert('請檢查每個時間段的時間、名稱及分鐘數', 'error'); return; }
+                const uniqueTimes = new Set(timeSlots.map(slot => slot.startTime));
+                if (uniqueTimes.size !== timeSlots.length) { triggerAlert('開始時間不可重複', 'error'); return; }
+                triggerConfirm('確定要儲存時間表設定嗎？', () => onSave({ timeSlots, schedule }));
             };
 
             const handleSubjectSelect = (subjectName) => {
@@ -1454,25 +1512,29 @@
             const lessonSlots = timeSlots.map((s, i) => ({ ...s, originalIndex: i })).filter(s => s.type === 'lesson');
 
             return (
-                <div className="glass-card bg-white/95 dark:bg-slate-800/95 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col h-[80vh] max-w-4xl mx-auto relative z-10 mt-6">
-                    <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
-                        <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><Icon name="edit" className="w-5 h-5 text-indigo-500"/> 編輯時間表</h2>
+                <div className="timetable-editor-panel glass-card bg-white/95 dark:bg-slate-900/95 rounded-[2rem] shadow-xl border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col min-h-[68vh] max-h-[calc(100vh-10rem)] max-w-4xl mx-auto relative z-10 mt-3 sm:mt-6">
+                    <div className="p-5 sm:p-6 flex justify-between items-center gap-4 bg-gradient-to-br from-slate-950 via-indigo-950 to-indigo-800 text-white">
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-2"><div className="w-10 h-10 rounded-2xl bg-white/10 border border-white/15 grid place-items-center"><Icon name="calendar-cog" className="w-5 h-5 text-indigo-200"/></div><div><h2 className="text-xl font-black">編輯時間表</h2><p className="text-xs sm:text-sm font-bold text-indigo-200 mt-0.5">先設定時間，再編排星期一至五課程</p></div></div>
+                            {isDirty && <div className="inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full bg-amber-400/15 border border-amber-300/20 text-amber-200 text-xs font-black"><span className="w-1.5 h-1.5 rounded-full bg-amber-300"></span>尚未儲存</div>}
+                        </div>
                         <div className="flex gap-2">
-                            <button onClick={() => { triggerConfirm("確定要重置為預設時間表嗎？", () => { setTimeSlots([...DEFAULT_TIME_SLOTS]); setSchedule({ ...DEFAULT_SCHEDULE }); }); }} className="px-3 py-1.5 text-xs font-bold text-slate-500 hover:bg-slate-100 rounded-lg">重置預設</button>
-                            <button onClick={onCancel} className="p-2 hover:bg-slate-100 rounded-full text-slate-400"><Icon name="x" className="w-5 h-5"/></button>
+                            <button type="button" onClick={() => triggerConfirm("確定要重置為預設時間表嗎？", resetTimetable)} className="h-10 px-3 rounded-xl text-xs font-black text-white bg-white/10 border border-white/15 hover:bg-white/20">重置</button>
+                            <button type="button" onClick={requestCancel} aria-label="關閉編輯時間表" className="w-10 h-10 grid place-items-center rounded-xl text-white bg-white/10 border border-white/15 hover:bg-white/20"><Icon name="x" className="w-5 h-5"/></button>
                         </div>
                     </div>
 
-                    <div className="flex border-b border-slate-100 dark:border-slate-700">
-                        <button onClick={() => setActiveTab('slots')} className={`flex-1 py-3 text-sm font-bold ${activeTab === 'slots' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/50' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>時間設定</button>
-                        <button onClick={() => setActiveTab('schedule')} className={`flex-1 py-3 text-sm font-bold ${activeTab === 'schedule' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/50' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>課程編排</button>
+                    <div className="grid grid-cols-2 gap-2 m-4 mb-0 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800">
+                        <button type="button" onClick={() => setActiveTab('slots')} className={`h-11 rounded-xl text-sm font-black transition-all flex items-center justify-center gap-2 ${activeTab === 'slots' ? 'text-indigo-600 dark:text-indigo-300 bg-white dark:bg-slate-900 shadow-sm' : 'text-slate-500 dark:text-slate-400'}`}><span className="w-6 h-6 rounded-lg bg-current/10 grid place-items-center text-xs">1</span>時間設定</button>
+                        <button type="button" onClick={() => setActiveTab('schedule')} className={`h-11 rounded-xl text-sm font-black transition-all flex items-center justify-center gap-2 ${activeTab === 'schedule' ? 'text-indigo-600 dark:text-indigo-300 bg-white dark:bg-slate-900 shadow-sm' : 'text-slate-500 dark:text-slate-400'}`}><span className="w-6 h-6 rounded-lg bg-current/10 grid place-items-center text-xs">2</span>課程編排</button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-4 bg-slate-50/50 dark:bg-slate-900/30">
+                    <div className="flex-1 overflow-y-auto p-4 sm:p-5 bg-slate-50/70 dark:bg-slate-950/30 scrollbar-hide">
                         {activeTab === 'slots' ? (
                             <div className="space-y-3">
                                 {timeSlots.map((slot, index) => (
-                                    <div key={index} className="flex flex-wrap items-center gap-2 bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                                    <div key={slot.id || index} className="timetable-slot-card flex flex-wrap items-center gap-2 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                                        <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 grid place-items-center text-xs font-black shrink-0">{index + 1}</div>
                                         <div className="flex flex-col gap-1 mr-2">
                                             <button onClick={() => moveSlot(index, 'up')} disabled={index === 0} className="p-1 text-slate-400 hover:text-indigo-600 disabled:opacity-20 active:scale-90"><Icon name="chevron-up" className="w-4 h-4"/></button>
                                             <button onClick={() => moveSlot(index, 'down')} disabled={index === timeSlots.length - 1} className="p-1 text-slate-400 hover:text-indigo-600 disabled:opacity-20 active:scale-90"><Icon name="chevron-down" className="w-4 h-4"/></button>
@@ -1483,19 +1545,19 @@
                                         </div>
                                         <div className="min-w-[180px]"><SlotTypeSelector value={slot.type} onChange={(val) => handleSlotChange(index, 'type', val)} /></div>
                                         <input type="text" value={slot.label} onChange={(e) => handleSlotChange(index, 'label', e.target.value)} className="flex-1 min-w-[100px] p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm outline-none focus:ring-2 focus:ring-indigo-500" placeholder="標籤" />
-                                        <button onClick={() => removeSlot(index)} className="p-2 text-slate-400 hover:text-red-500 rounded-lg"><Icon name="trash-2" className="w-4 h-4"/></button>
+                                        <button type="button" onClick={() => removeSlot(index)} aria-label={`刪除${slot.label || '時間段'}`} className="w-10 h-10 grid place-items-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl"><Icon name="trash-2" className="w-4 h-4"/></button>
                                     </div>
                                 ))}
-                                <button onClick={addSlot} className="w-full py-3 border-2 border-dashed border-indigo-200 dark:border-indigo-800 text-indigo-500 rounded-xl font-bold hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center justify-center gap-2"><Icon name="plus" className="w-4 h-4" /> 新增時間段</button>
+                                <button type="button" onClick={addSlot} className="w-full min-h-12 py-3 border-2 border-dashed border-indigo-200 dark:border-indigo-800 text-indigo-500 rounded-2xl font-black hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center justify-center gap-2"><Icon name="plus" className="w-4 h-4" /> 新增時間段</button>
                             </div>
                         ) : (
                             <div className="space-y-4">
-                                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                                <div className="grid grid-cols-5 gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800">
                                     {['一','二','三','四','五'].map((d, i) => (
-                                        <button key={i} onClick={() => setEditDay(i + 1)} className={`px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap ${editDay === i + 1 ? 'bg-indigo-600 text-white shadow-lg' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50'}`}>星期{d}</button>
+                                        <button type="button" key={i} onClick={() => setEditDay(i + 1)} className={`min-w-0 py-2.5 rounded-xl font-black text-xs sm:text-sm whitespace-nowrap transition-all ${editDay === i + 1 ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-900'}`}><span className="hidden sm:inline">星期</span>{d}</button>
                                     ))}
                                 </div>
-                                <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
+                                <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
                                     <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2"><span className="w-2 h-6 bg-indigo-500 rounded-full"></span>星期{['日','一','二','三','四','五','六'][editDay]} 課程</h3>
                                     {lessonSlots.length === 0 ? <p className="text-slate-400 text-center py-4">請先在「時間設定」新增課堂類型的時間段</p> : 
                                     lessonSlots.map((slot, lessonIdx) => {
@@ -1517,8 +1579,8 @@
                             </div>
                         )}
                     </div>
-                    <div className="p-4 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
-                        <button onClick={() => triggerConfirm("確定要儲存時間表設定嗎？", () => onSave({ timeSlots, schedule }))} className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 active:scale-95 flex items-center justify-center gap-2"><Icon name="save" className="w-4 h-4" /> 儲存設定</button>
+                    <div className="p-4 border-t border-slate-100 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+                        <button type="button" onClick={requestSave} className="w-full min-h-12 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-2xl font-black hover:opacity-95 active:scale-[0.99] flex items-center justify-center gap-2 shadow-lg shadow-indigo-200/50 dark:shadow-indigo-950/30"><Icon name="save" className="w-4 h-4" /> 儲存時間表</button>
                     </div>
                     {editingCell && <SubjectSelectionModal onClose={() => setEditingCell(null)} onSelect={handleSubjectSelect} subjects={subjects} />}
                     {editingTimeIndex !== null && <TimePickerModal isOpen={editingTimeIndex !== null} value={timeSlots[editingTimeIndex]?.startTime} onSelect={(val) => handleSlotChange(editingTimeIndex, 'startTime', val)} onClose={() => setEditingTimeIndex(null)} title="選擇課節開始時間" />}
@@ -2264,14 +2326,14 @@
             const filteredUsers = users.filter(u => (u.displayName || '').toLowerCase().includes(searchQuery.toLowerCase()) || (u.email || '').toLowerCase().includes(searchQuery.toLowerCase()));
 
             return (
-                <div className="glass-card bg-white/95 dark:bg-slate-900/95 rounded-[2.5rem] shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row min-h-[700px] relative z-20 mt-4">
-                    <div className="w-full md:w-64 bg-slate-900 dark:bg-[#151515] text-slate-300 p-6 flex flex-col gap-2 shrink-0 border-r border-slate-800">
-                        <div className="flex items-center gap-3 mb-8 text-white px-2">
+                <div className="admin-console glass-card bg-white/95 dark:bg-slate-900/95 rounded-[2rem] shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row min-h-[680px] relative z-20 mt-4">
+                    <div className="admin-sidebar w-full md:w-64 bg-slate-950 dark:bg-[#111827] text-slate-300 p-5 md:p-6 flex flex-col gap-2 shrink-0 border-r border-slate-800">
+                        <div className="admin-sidebar-header flex items-center gap-3 mb-6 text-white px-2">
                             <button onClick={onBack} className="p-2 -ml-2 hover:bg-slate-800 rounded-full transition-colors"><Icon name="arrow-left" className="w-5 h-5" /></button>
                             <h2 className="text-xl font-black tracking-wide">超級管理中心</h2>
                         </div>
-                        <div className="flex flex-row md:flex-col gap-2 overflow-x-auto scrollbar-hide pb-2 md:pb-0">
-                            {[ { id: 'overview', icon: 'layout-dashboard', label: '專業總覽' }, { id: 'users', icon: 'users', label: '用戶數據管理' }, { id: 'classes', icon: 'school', label: '班級代碼管理' }, { id: 'tasks', icon: 'bell', label: '廣播任務中心' }, { id: 'syncMonitor', icon: 'activity', label: '派發狀態' }, { id: 'settings', icon: 'settings', label: '核心系統設定' } ].map(tab => (
+                        <div className="admin-tabs flex flex-row md:flex-col gap-2 overflow-x-auto scrollbar-hide pb-2 md:pb-0">
+                            {[ { id: 'overview', icon: 'layout-dashboard', label: '總覽' }, { id: 'users', icon: 'users', label: '用戶' }, { id: 'classes', icon: 'school', label: '班級' }, { id: 'tasks', icon: 'bell', label: '廣播' }, { id: 'syncMonitor', icon: 'activity', label: '派發' }, { id: 'settings', icon: 'settings', label: '系統' } ].map(tab => (
                                 <button key={tab.id} onClick={() => { setActiveTab(tab.id); setSelectedUser(null); setViewingClass(null); }} className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all whitespace-nowrap md:whitespace-normal ${activeTab === tab.id ? 'bg-indigo-600 text-white shadow-lg' : 'hover:bg-slate-800 hover:text-white'}`}>
                                     <Icon name={tab.icon} className={`w-5 h-5 ${activeTab === tab.id ? 'text-indigo-200' : 'text-slate-500'}`} /> {tab.label}
                                 </button>
@@ -2279,7 +2341,7 @@
                         </div>
                     </div>
 
-                    <div className="flex-1 p-6 md:p-8 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 text-slate-800 relative">
+                    <div className="admin-content flex-1 p-5 md:p-8 overflow-y-auto bg-slate-50/70 dark:bg-slate-900/50 text-slate-800 relative">
                         {editingAdminItem && ( <EditModal item={editingAdminItem} onClose={() => setEditingAdminItem(null)} onSave={handleAdminUpdateItem} triggerAlert={triggerAlert} triggerConfirm={triggerConfirm} subjects={subjects} /> )}
 
                         {activeTab === 'overview' && (
@@ -2938,53 +3000,55 @@
             const handleCustomToggle = (key) => setCustomLayout({ ...customLayout, [key]: !customLayout[key] });
             const handleAdvancedToggle = (key) => setAdvancedPrefs({ ...advancedPrefs, [key]: !advancedPrefs?.[key] });
             const themeEntries = Object.entries(THEME_CONFIG);
+            const [openSettingsSections, setOpenSettingsSections] = useState({ appearance: true });
+            const toggleSettingsSection = (id) => setOpenSettingsSections(prev => ({ ...prev, [id]: !prev[id] }));
 
-            const SettingSection = ({ title, desc, icon, children, right }) => (
-                <section className="rounded-[2rem] bg-white/85 dark:bg-slate-900/85 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
-                    <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
-                        <div className="flex items-start gap-3 min-w-0">
-                            <div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name={icon} className="w-5 h-5" /></div>
-                            <div className="min-w-0">
-                                <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white">{title}</h3>
-                                <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{desc}</p>
+            const SettingSection = ({ id, title, desc, icon, children, right, collapsible = true }) => {
+                const isOpen = collapsible ? !!openSettingsSections[id] : true;
+                return (
+                    <section className="settings-section rounded-[2rem] bg-white/90 dark:bg-slate-900/90 border border-white/70 dark:border-slate-700 shadow-sm overflow-hidden">
+                        <div className={`p-4 sm:p-5 flex items-start justify-between gap-3 ${isOpen ? 'border-b border-slate-100 dark:border-slate-800' : ''}`}>
+                            <button type="button" onClick={() => collapsible && toggleSettingsSection(id)} className="flex-1 flex items-start gap-3 min-w-0 text-left" aria-expanded={isOpen}>
+                                <div className={`w-11 h-11 rounded-2xl ${t.lightBg} ${t.text} flex items-center justify-center shrink-0`}><Icon name={icon} className="w-5 h-5" /></div>
+                                <div className="min-w-0">
+                                    <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white">{title}</h3>
+                                    <p className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{desc}</p>
+                                </div>
+                            </button>
+                            <div className="flex items-center gap-2 shrink-0">
+                                {right}
+                                {collapsible && <button type="button" onClick={() => toggleSettingsSection(id)} aria-label={`${isOpen ? '收合' : '展開'}${title}`} className="w-10 h-10 rounded-xl grid place-items-center bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300"><Icon name="chevron-down" className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} /></button>}
                             </div>
                         </div>
-                        {right}
-                    </div>
-                    <div className="p-5 sm:p-6">{children}</div>
-                </section>
-            );
+                        {isOpen && <div className="settings-section-content p-4 sm:p-5">{children}</div>}
+                    </section>
+                );
+            };
 
             return (
-                <div className="settings-page-stable max-w-3xl mx-auto pb-10 space-y-5 sm:space-y-6">
-                    <div className="relative overflow-hidden rounded-[2.25rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
+                <div className="settings-page-stable settings-shell max-w-3xl mx-auto pb-10 space-y-5 sm:space-y-6">
+                    <div className="relative overflow-hidden rounded-[1.75rem] p-5 sm:p-6 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.8)]">
                         <div className="absolute -top-20 -right-16 w-56 h-56 rounded-full bg-cyan-300/20 blur-3xl"></div>
                         <div className="absolute bottom-0 left-16 w-60 h-32 rounded-full bg-violet-300/20 blur-3xl"></div>
-                        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.618fr_1fr] gap-6 items-end">
-                            <div className="flex items-start gap-4 min-w-0">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.7rem] bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-3xl font-black shadow-lg shrink-0">{initial}</div>
-                                <div className="min-w-0 pt-1">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-black mb-3">
-                                        <Icon name="settings-2" className="w-3.5 h-3.5" /> 應用程式設定 · v2.0.0
+                        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                            <div className="flex items-center gap-4 min-w-0">
+                                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-2xl font-black shadow-lg shrink-0">{initial}</div>
+                                <div className="min-w-0">
+                                    <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-400/15 border border-emerald-300/20 text-xs font-black text-emerald-200 mb-2">
+                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.1.1 已核對
                                     </div>
-                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight truncate">{displayName}</h2>
-                                    <p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人化你的電子手冊'}</p>
+                                    <h2 className="text-xl sm:text-2xl font-black tracking-tight truncate">應用程式設定</h2>
+                                    <p className="text-sm text-indigo-100 font-bold mt-0.5 truncate">{displayName} · {email || '個人帳戶'}</p>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">廣播功課</div>
-                                    <div className="text-sm font-black mt-1">登入補領功課</div>
-                                </div>
-                                <div className="rounded-[1.6rem] bg-white/10 border border-white/15 p-4 backdrop-blur-xl">
-                                    <div className="text-[10px] font-black text-indigo-100 uppercase">通知</div>
-                                    <div className="text-sm font-black mt-1">{unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '全部已讀'}</div>
-                                </div>
+                            <div className="grid grid-cols-2 gap-2 shrink-0">
+                                <button type="button" onClick={onOpenNotifications} className="min-w-0 px-4 py-3 rounded-2xl bg-white/10 border border-white/15 text-left hover:bg-white/20 active:scale-[0.98] transition-all"><div className="flex items-center gap-2 text-xs font-black text-indigo-100"><Icon name="bell" className="w-4 h-4" />通知</div><div className="text-sm font-black mt-1">{unreadNotificationCount > 0 ? `${unreadNotificationCount} 則未讀` : '全部已讀'}</div></button>
+                                <button type="button" onClick={onExport} className="min-w-0 px-4 py-3 rounded-2xl bg-white/10 border border-white/15 text-left hover:bg-white/20 active:scale-[0.98] transition-all"><div className="flex items-center gap-2 text-xs font-black text-indigo-100"><Icon name="download" className="w-4 h-4" />備份</div><div className="text-sm font-black mt-1">立即匯出</div></button>
                             </div>
                         </div>
                     </div>
 
-                    <SettingSection title="外觀個人化" desc="調整主題色、深色模式同整體介面密度，令電子手冊更貼合你嘅使用習慣。" icon="palette" right={<button type="button" onClick={onOpenAppearance} className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-700">進階外觀</button>}>
+                    <SettingSection id="appearance" title="外觀個人化" desc="主題色、深色模式與顯示細節。" icon="palette" right={<button type="button" onClick={onOpenAppearance} className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-xs font-black hover:bg-slate-200 dark:hover:bg-slate-700">進階</button>}>
                         <div className="space-y-5">
                             <div>
                                 <div className="text-xs font-black text-slate-400 uppercase mb-3">主題顏色</div>
@@ -3004,7 +3068,7 @@
                         </div>
                     </SettingSection>
 
-                    <SettingSection title="主頁排版設計" desc="像真正 App 設定一樣，自行決定主頁要完整、極簡，還是逐項開關。" icon="layout-template">
+                    <SettingSection id="layout" title="主頁排版" desc="選擇完整、極簡或自定義顯示。" icon="layout-template">
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 {layoutOptions.map(opt => (
@@ -3037,7 +3101,7 @@
                         </div>
                     </SettingSection>
 
-                    <SettingSection title="高級體驗自定義" desc="微調動畫、文字、玻璃效果同快捷入口，令 iPad / 手機使用更貼近你習慣。" icon="sliders-horizontal">
+                    <SettingSection id="experience" title="使用體驗" desc="調整文字、動畫、玻璃效果及快捷入口。" icon="sliders-horizontal">
                         <div className="space-y-5">
                             <div>
                                 <div className="text-xs font-black text-slate-400 uppercase mb-3">體驗開關</div>
@@ -3077,13 +3141,13 @@
                     </SettingSection>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <SettingSection title="通知與提醒" desc="管理通知中心、未讀提醒同版本更新資訊。" icon="bell-ring" right={unreadNotificationCount > 0 ? <span className="px-2.5 py-1 rounded-full bg-red-500 text-white text-[10px] font-black">{unreadNotificationCount}</span> : null}>
+                        <SettingSection id="notifications" title="通知與提醒" desc="查看未讀、廣播與更新。" icon="bell-ring" collapsible={false} right={unreadNotificationCount > 0 ? <span className="px-2.5 py-1 rounded-full bg-red-500 text-white text-[10px] font-black">{unreadNotificationCount}</span> : null}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {advancedPrefs?.showNotificationShortcut !== false && <button type="button" onClick={onOpenNotifications} className="p-4 rounded-2xl bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="bell" className="w-5 h-5 text-orange-500 mb-2" /><div className="font-black text-sm text-orange-700 dark:text-orange-300">打開通知中心</div><div className="text-[11px] font-bold text-orange-600/70 dark:text-orange-200/70 mt-1">查看廣播、更新、過期功課</div></button>}
                                 {advancedPrefs?.showClassShortcut !== false && <button type="button" onClick={onGoClass} className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school-2" className="w-5 h-5 text-emerald-500 mb-2" /><div className="font-black text-sm text-emerald-700 dark:text-emerald-300">查看班級廣播</div><div className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-200/70 mt-1">查看老師發放的功課</div></button>}
                             </div>
                         </SettingSection>
-                        <SettingSection title="科目與帳號" desc="管理科目顏色、帳戶操作及登出。" icon="user-cog">
+                        <SettingSection id="account" title="科目與帳號" desc="管理科目、備份及帳戶。" icon="user-cog" collapsible={false}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {advancedPrefs?.showSubjectShortcut !== false && <button type="button" onClick={onOpenSubjects} className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school" className="w-5 h-5 text-indigo-500 mb-2" /><div className="font-black text-sm text-indigo-700 dark:text-indigo-300">科目管理</div><div className="text-[11px] font-bold text-indigo-600/70 dark:text-indigo-200/70 mt-1">自訂科目、排序、顏色</div></button>}
                                 <button type="button" onClick={onExport} className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="download" className="w-5 h-5 text-emerald-500 mb-2" /><div className="font-black text-sm text-emerald-700 dark:text-emerald-300">匯出備份</div><div className="text-xs font-bold text-emerald-600/70 dark:text-emerald-200/70 mt-1">下載功課、科目及時間表</div></button>
@@ -3189,6 +3253,7 @@ function App() {
             const [itemsLoaded, setItemsLoaded] = useState(false);
             const [publicTasksLoaded, setPublicTasksLoaded] = useState(false);
             const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
+            const [notificationFilter, setNotificationFilter] = useState('all');
             const [showUpdateIntro, setShowUpdateIntro] = useState(false);
             const [readNotificationIds, setReadNotificationIds] = useState([]);
             const [predictedSubject, setPredictedSubject] = useState('');
@@ -3753,6 +3818,7 @@ function App() {
             }, [systemConfig?.announcementText, systemConfig?.adminReminders, activeUpdateNotice?.popupEnabled, activeUpdateNotice?.version, activeUpdateNotice?.title, activeUpdateNotice?.summary, activeUpdateNotice?.audience, activeUpdateNotice?.publishedAt, activeUpdateNotice?.source, isAdmin, visiblePublicTasks, joinedClassesStr, systemClasses, syncedPublicIds, readNotificationIds, items, timetableConfig?.updatedAt, timetableConfig?.updatedBy]);
 
             const unreadNotificationCount = useMemo(() => userNotifications.filter(n => n.unread).length, [userNotifications]);
+            const filteredUserNotifications = useMemo(() => notificationFilter === 'unread' ? userNotifications.filter(n => n.unread) : userNotifications, [userNotifications, notificationFilter]);
 
             const markNotificationsRead = (ids) => {
                 if (!user?.uid) return;
@@ -4070,6 +4136,10 @@ function App() {
                 const todayCompletedCount = items.filter(i => i.completed && i.dueDate === todayStr && i.type === 'homework').length;
                 const totalToday = todayActive.length + todayCompletedCount;
                 const progressPercent = totalToday === 0 ? 100 : Math.round((todayCompletedCount / totalToday) * 100);
+                const tomorrowActive = activeItems.filter(i => i.dueDate === tomorrowStr && i.type === 'homework');
+                const tomorrowCompletedCount = items.filter(i => i.completed && !i.isHidden && i.dueDate === tomorrowStr && i.type === 'homework').length;
+                const totalTomorrow = tomorrowActive.length + tomorrowCompletedCount;
+                const tomorrowProgressPercent = totalTomorrow === 0 ? 100 : Math.round((tomorrowCompletedCount / totalTomorrow) * 100);
                 const weekStart = new Date(today);
                 weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7));
                 const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6); weekEnd.setHours(23,59,59,999);
@@ -4079,7 +4149,10 @@ function App() {
 
                 return {
                     today: todayActive.length,
-                    tomorrow: activeItems.filter(i => i.dueDate === tomorrowStr && i.type === 'homework').length,
+                    tomorrow: tomorrowActive.length,
+                    tomorrowCompleted: tomorrowCompletedCount,
+                    tomorrowTotal: totalTomorrow,
+                    tomorrowProgressPercent,
                     future: activeItems.filter(i => i.dueDate > tomorrowStr && i.type === 'homework').length,
                     test: activeItems.filter(i => i.type !== 'homework').length,
                     overdue: items.filter(i => !i.completed && !i.isHidden && (i.forceExpired || (i.dueDate && i.dueDate < todayStr))).length,
@@ -4162,7 +4235,7 @@ function App() {
                                     <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight">
                                         {viewMode === 'settings' ? '應用程式設定' : viewMode === 'calendar' ? '功課月曆' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '歷史紀錄' : appMode === 'class' ? '我的班級' : '今日工作台'}
                                     </h1>
-                                    <p className="text-xs font-bold text-slate-500 mt-0.5">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })}</p>
+                                    <p className="text-xs font-bold text-slate-500 mt-0.5">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.1.1</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
@@ -4195,7 +4268,7 @@ function App() {
                             <div key={`${viewMode}-${appMode}`} className="view-stage">
                                 {viewMode === 'calendar' ? ( <TaskCalendar items={items} subjects={subjects} onEdit={setEditingItem} onToggle={handleToggle} /> ) :
                                  viewMode === 'timetable' ? ( <div className="max-w-3xl mx-auto"><Timetable currentDay={currentTimetableDay} config={timetableConfig} onDayChange={setCurrentTimetableDay} subjects={subjects} globalNow={globalNow} /></div> ) : 
-                                 viewMode === 'timetable_edit' ? ( <TimetableEditor initialConfig={timetableConfig} onSave={saveTimetableConfig} onCancel={() => setViewMode('timetable')} subjects={subjects} triggerConfirm={triggerConfirm} /> ) :
+                                 viewMode === 'timetable_edit' ? ( <TimetableEditor initialConfig={timetableConfig} onSave={saveTimetableConfig} onCancel={() => setViewMode('timetable')} subjects={subjects} triggerConfirm={triggerConfirm} triggerAlert={triggerAlert} /> ) :
                                  viewMode === 'settings' ? ( <UserSettingsPage
                                     user={user}
                                     userProfile={userProfile}
@@ -4226,9 +4299,10 @@ function App() {
                                             <div className="study-hero col-span-2 sm:col-span-3">
                                                 <div className="relative z-10 flex items-center justify-between gap-5">
                                                     <div className="min-w-0">
-                                                        <div className="text-sm font-black text-indigo-200">{greetingText}，{displayName}</div>
-                                                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">{counts.today > 0 ? `今日仲有 ${counts.today} 項功課` : counts.overdue > 0 ? `有 ${counts.overdue} 項需要跟進` : '今日任務已經處理好'}</h2>
+                                                        <div className="text-sm font-black text-indigo-200">{greetingText}，{displayName} · 明日重點</div>
+                                                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">{counts.tomorrow > 0 ? `明天有 ${counts.tomorrow} 項功課要交` : '明天暫時沒有功課要交'}</h2>
                                                         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm font-bold text-slate-300">
+                                                            <span>{counts.today > 0 ? `今日尚餘 ${counts.today} 份功課` : '今日功課已完成'}</span>
                                                             <span>本週完成 {counts.weekCompleted}/{counts.weekTotal}</span>
                                                             <span className={counts.overdue > 0 ? 'text-rose-300' : 'text-emerald-300'}>{counts.overdue > 0 ? `${counts.overdue} 項逾期` : '沒有逾期'}</span>
                                                         </div>
@@ -4236,26 +4310,26 @@ function App() {
                                                     <div className="progress-ring" style={{ '--progress': `${counts.weekProgressPercent}%` }} aria-label={`本週完成進度 ${counts.weekProgressPercent}%`}><span>{counts.weekProgressPercent}%</span></div>
                                                 </div>
                                             </div>
-                                            <button onClick={() => openQuickView('today')} className="metric-card col-span-2 sm:col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex justify-between items-center hover:-translate-y-0.5 transition-all group border border-white/40">
+                                            <button onClick={() => openQuickView('tomorrow')} className="metric-card col-span-2 sm:col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex justify-between items-center hover:-translate-y-0.5 transition-all group border border-white/40">
                                                 <div className="flex flex-col items-start gap-1 z-10 w-full">
-                                                    <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-sm"></div>今日急件</div>
-                                                    <div className="text-transparent bg-clip-text bg-gradient-to-br from-red-500 to-rose-600 font-black text-3xl sm:text-4xl tracking-tight">{counts.today}</div>
+                                                    <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-indigo-500 shadow-sm"></div>明天要交</div>
+                                                    <div className="text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-blue-600 font-black text-3xl sm:text-4xl tracking-tight">{counts.tomorrow}</div>
                                                     
                                                     {/* NEW: Progress Bar inside card */}
                                                     <div className="w-full mt-1 sm:mt-2">
                                                         <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
-                                                            <span>完成進度</span><span>{counts.progressPercent}%</span>
+                                                            <span>明日功課進度</span><span>{counts.tomorrowProgressPercent}%</span>
                                                         </div>
                                                         <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-gradient-to-r from-red-500 to-rose-500 transition-all duration-1000 ease-out" style={{ width: `${counts.progressPercent}%` }}></div>
+                                                            <div className="h-full bg-gradient-to-r from-indigo-500 to-sky-500 transition-all duration-1000 ease-out" style={{ width: `${counts.tomorrowProgressPercent}%` }}></div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <Icon name="calendar-clock" className="absolute -bottom-4 -right-4 w-16 h-16 sm:w-20 sm:h-20 text-red-500/10 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 z-0 pointer-events-none" />
+                                                <Icon name="calendar-clock" className="absolute -bottom-4 -right-4 w-16 h-16 sm:w-20 sm:h-20 text-indigo-500/10 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 z-0 pointer-events-none" />
                                             </button>
-                                            <button onClick={() => openQuickView('tomorrow')} className="metric-card col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex flex-col justify-center items-start hover:-translate-y-0.5 transition-all group border border-white/40">
-                                                <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5 mb-1 z-10"><div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>明日預告</div>
-                                                <div className="text-orange-500 font-black text-2xl sm:text-3xl z-10">{counts.tomorrow}</div>
+                                            <button onClick={() => openQuickView('today')} className="metric-card col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex flex-col justify-center items-start hover:-translate-y-0.5 transition-all group border border-white/40">
+                                                <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5 mb-1 z-10"><div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>今日尚餘</div>
+                                                <div className="text-orange-500 font-black text-2xl sm:text-3xl z-10">{counts.today}</div>
                                             </button>
                                             <button onClick={() => openQuickView('test')} className="metric-card col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex flex-col justify-center items-start hover:-translate-y-0.5 transition-all group border border-white/40">
                                                 <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5 mb-1 z-10"><div className="w-1.5 h-1.5 rounded-full bg-violet-500"></div>測驗考試</div>
@@ -4555,30 +4629,36 @@ function App() {
 
 
                     {isNotificationCenterOpen && (
-                        <div className="fixed inset-0 z-[260] flex items-center justify-center p-4 sm:p-6">
+                        <div className="fixed inset-0 z-[260] flex items-end sm:items-center justify-center p-0 sm:p-6">
                             <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-sm" onClick={() => setIsNotificationCenterOpen(false)}></div>
-                            <div className="relative w-full max-w-[440px] max-h-[84vh] overflow-hidden rounded-[2rem] glass-card bg-white/95 dark:bg-slate-900/95 border border-white/60 dark:border-slate-700 shadow-2xl flex flex-col animate-pop-in">
-                                <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 shrink-0 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl">
+                            <div className="notification-center-panel relative w-full max-w-[480px] max-h-[86vh] overflow-hidden rounded-[2rem] glass-card bg-white/95 dark:bg-slate-900/95 border border-white/60 dark:border-slate-700 shadow-2xl flex flex-col animate-pop-in">
+                                <div className="px-5 pt-5 pb-4 shrink-0 bg-gradient-to-br from-slate-950 via-indigo-950 to-indigo-800 text-white">
+                                    <div className="flex items-center justify-between gap-3">
                                     <div className="min-w-0">
-                                        <div className="flex items-center gap-2 font-black text-slate-800 dark:text-white"><Icon name="bell-ring" className="w-5 h-5 text-orange-500" /> 通知中心</div>
-                                        <div className="text-[11px] font-bold text-slate-400 mt-0.5">直接顯示最新功課、時間表更改與清理提醒</div>
+                                        <div className="flex items-center gap-2 font-black text-lg"><span className="w-10 h-10 rounded-2xl bg-white/10 border border-white/15 grid place-items-center"><Icon name="bell-ring" className="w-5 h-5 text-amber-300" /></span> 通知中心</div>
+                                        <div className="text-xs font-bold text-indigo-200 mt-1">功課、時間表與系統提醒</div>
                                     </div>
                                     <div className="flex items-center gap-2 shrink-0">
-                                        {userNotifications.length > 0 && (
-                                            <button type="button" onClick={() => markNotificationsRead(userNotifications.map(n => n.id))} className="px-3 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-[11px] font-black border border-indigo-100 dark:border-indigo-800">全部已讀</button>
+                                        {unreadNotificationCount > 0 && (
+                                            <button type="button" onClick={() => markNotificationsRead(userNotifications.map(n => n.id))} className="px-3 py-2 rounded-xl bg-white/10 text-white text-xs font-black border border-white/15 hover:bg-white/20">全部已讀</button>
                                         )}
-                                        <button type="button" onClick={() => setIsNotificationCenterOpen(false)} className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"><Icon name="x" className="w-4 h-4" /></button>
+                                        <button type="button" onClick={() => setIsNotificationCenterOpen(false)} className="w-10 h-10 grid place-items-center rounded-xl bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-colors"><Icon name="x" className="w-4 h-4" /></button>
+                                    </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 mt-4 p-1 rounded-2xl bg-white/10 border border-white/10">
+                                        <button type="button" onClick={() => setNotificationFilter('all')} className={`h-10 rounded-xl text-xs font-black transition-all ${notificationFilter === 'all' ? 'bg-white text-indigo-700 shadow-sm' : 'text-indigo-100'}`}>全部 · {userNotifications.length}</button>
+                                        <button type="button" onClick={() => setNotificationFilter('unread')} className={`h-10 rounded-xl text-xs font-black transition-all ${notificationFilter === 'unread' ? 'bg-white text-indigo-700 shadow-sm' : 'text-indigo-100'}`}>未讀 · {unreadNotificationCount}</button>
                                     </div>
                                 </div>
 
                                 <div className="overflow-y-auto p-4 space-y-3 min-h-[220px] max-h-[70vh] scrollbar-hide">
-                                    {userNotifications.length === 0 ? (
+                                    {filteredUserNotifications.length === 0 ? (
                                         <div className="h-[220px] flex flex-col items-center justify-center text-center text-slate-400">
                                             <div className="w-16 h-16 rounded-3xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3"><Icon name="bell-off" className="w-7 h-7" /></div>
-                                            <div className="font-black text-sm">暫時未有通知</div>
-                                            <div className="text-xs mt-1">有新公告或廣播功課時會出現在這裡</div>
+                                            <div className="font-black text-sm">{notificationFilter === 'unread' ? '沒有未讀通知' : '暫時未有通知'}</div>
+                                            <div className="text-xs mt-1">{notificationFilter === 'unread' ? '新提醒會集中顯示在這裡' : '有新公告或廣播功課時會出現在這裡'}</div>
                                         </div>
-                                    ) : userNotifications.map(note => {
+                                    ) : filteredUserNotifications.map(note => {
                                         const accentMap = {
                                             amber: 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800 text-amber-600 dark:text-amber-300',
                                             orange: 'bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-800 text-orange-600 dark:text-orange-300',
@@ -4646,11 +4726,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v2.0.0-studyos-final | original Firebase data structure preserved -->
-    <!-- ehandbook-build: v2.0.0-studyos-final -->
+<!-- VERSION_CHECK: v2.1.1-studyos-verified | original Firebase data structure preserved -->
+    <!-- ehandbook-build: v2.1.1-studyos-verified -->
 </body>
 </html>
 
-<!-- ehandbook_v2.0.0_studyos_final: mobile-first private and class planner. -->
+<!-- ehandbook_v2.1.1_studyos_verified: mobile-first private and class planner. -->
 
-<!-- v2.0.0-studyos-final: students auto-claim broadcast assignments; task calendar and priority enabled. -->
+<!-- v2.1.1-studyos-verified: tomorrow-first dashboard; refined timetable, notifications, settings and admin. -->
