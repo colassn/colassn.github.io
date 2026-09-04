@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v2.3.1 StudyOS iPad PWA Auth -->
+    <!-- 電子手冊 Pro v2.4.0 StudyOS Settings Workspace -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -19,12 +19,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest?v=2.3.1">
-    <link rel="icon" href="./icon.svg?v=2.3.1" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=2.4.0">
+    <link rel="icon" href="./icon.svg?v=2.4.0" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v2.3.1-studyos-ipad-auth">
-    <script>window.__EHANDBOOK_VERSION__ = "v2.3.1-studyos-ipad-auth"; console.log("電子手冊 Pro v2.3.1 iPad PWA auth build loaded");</script>
+    <meta name="ehandbook-version" content="v2.4.0-studyos-settings">
+    <script>window.__EHANDBOOK_VERSION__ = "v2.4.0-studyos-settings"; console.log("電子手冊 Pro v2.4.0 settings workspace loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -186,6 +186,16 @@
         .timetable-editor-panel, .notification-center-panel, .settings-section, .admin-console { box-shadow: 0 24px 70px -34px rgba(15,23,42,.52) !important; }
         .settings-section { border-color: var(--app-border) !important; transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease; }
         .settings-section-content { animation: settingsReveal .3s cubic-bezier(.16,1,.3,1); transform-origin: top; }
+        .settings-workspace { display: grid; grid-template-columns: 15.5rem minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+        .settings-sidebar { position: sticky; top: calc(1rem + var(--safe-top)); }
+        .settings-category-button { transition: transform .24s cubic-bezier(.16,1,.3,1), background-color .24s ease, color .24s ease, box-shadow .24s ease; }
+        .settings-category-button.is-active { transform: translateX(4px); }
+        .settings-panel-enter { animation: settingsPanelIn .34s cubic-bezier(.16,1,.3,1) both; }
+        .settings-control-row { transition: background-color .2s ease, transform .2s ease, border-color .2s ease; }
+        .settings-control-row:active { transform: scale(.992); }
+        @keyframes settingsPanelIn { from { opacity: 0; transform: translateX(12px) scale(.992); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        .simple-motion-mode .motion-hero::before, .simple-motion-mode .motion-hero::after, .simple-motion-mode .fab-motion { animation: none !important; }
+        .simple-motion-mode .metric-card, .simple-motion-mode .motion-list-item, .simple-motion-mode .notification-entry { animation-duration: .18s !important; animation-delay: 0s !important; }
         .admin-content { scrollbar-gutter: stable; }
         @keyframes settingsReveal { from { opacity: 0; transform: translateY(-9px) scaleY(.98); } to { opacity: 1; transform: translateY(0) scaleY(1); } }
 
@@ -261,6 +271,13 @@
             .admin-tabs button { padding: .7rem .85rem !important; border-radius: .9rem !important; }
             .admin-content { padding: 1rem !important; overflow: visible !important; }
         }
+        @media (max-width: 767px) {
+            .settings-workspace { grid-template-columns: minmax(0, 1fr); gap: .85rem; }
+            .settings-sidebar { position: static; }
+            .settings-category-list { display: flex; overflow-x: auto; gap: .55rem; padding: .2rem .1rem .55rem; scroll-snap-type: x proximity; }
+            .settings-category-button { min-width: max-content; scroll-snap-align: start; }
+            .settings-category-button.is-active { transform: none; }
+        }
         @media (min-width: 640px) {
             .quick-add-fab { right: max(1.5rem, calc((100vw - 52rem) / 2)); bottom: 6.5rem; }
         }
@@ -278,7 +295,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.3.1 已啟用 iPad 登入穩定保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.4.0 已啟用 iPad 登入穩定保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -296,7 +313,7 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.3.1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.4.0', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
@@ -362,7 +379,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v2.3.1-studyos-ipad-auth',
+                version: 'v2.4.0-studyos-settings',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -482,9 +499,13 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v2.3.1-studyos-ipad-auth',
-            title: 'StudyOS 2.3.1 iPad 登入修正版',
+            version: window.__EHANDBOOK_VERSION__ || 'v2.4.0-studyos-settings',
+            title: 'StudyOS 2.4.0 設定工作區',
             summary: [
+                '設定頁全面改為分類式工作區，iPad 使用左側分類，手機使用頂部分類列。',
+                '新增淺色、深色及跟隨系統模式，動態效果可選完整、簡約或關閉。',
+                '通知分類開關會即時控制通知中心顯示內容。',
+                '新增同步狀態、登入保存方式、完整備份、重設密碼及 PWA 更新工具。',
                 '主頁改為優先顯示明天要交的功課，日期和數量更清楚。',
                 '重新設計時間表編輯、通知中心及應用程式設定。',
                 '管理中心在手機和 iPad 上更精簡，重要操作更容易找到。',
@@ -496,14 +517,14 @@
                 '修正 iPad 加入主畫面後 Google 及 Email 登入停留在登入頁的問題。'
             ].join('\n'),
             guide: [
-                '主頁大卡會直接顯示明天尚未完成的功課數量。',
-                '通知中心可切換「全部」與「未讀」。',
-                '設定頁按分類展開內容，畫面會更乾淨。',
-                '如想停用動態，可在設定開啟「減少動畫」。'
+                '在設定頁左側或頂部分類列選擇要調整的內容。',
+                '外觀與體驗可即時切換顯示模式、主題色和動態程度。',
+                '通知與提醒可按類別開關通知中心內容。',
+                '應用程式分類可清除程式快取並重新載入最新版本。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
-            publishedAt: '2026-09-03T10:30:00+08:00',
+            publishedAt: '2026-09-04T16:00:00+08:00',
             source: 'built-in'
         };
 
@@ -1034,7 +1055,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.3.1 iPad Auth Fix</div>
+                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.4.0 Settings</div>
                             </div> 
                         </div> 
                     </div> 
@@ -3154,7 +3175,7 @@
             );
         }
 
-        function UserSettingsPage({
+        function LegacyUserSettingsPage({
             user,
             userProfile,
             t,
@@ -3243,7 +3264,7 @@
                                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-2xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0">
                                     <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-400/15 border border-emerald-300/20 text-xs font-black text-emerald-200 mb-2">
-                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.3.1 iPad 登入修正版
+                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.4.0 設定工作區
                                     </div>
                                     <h2 className="text-xl sm:text-2xl font-black tracking-tight truncate">應用程式設定</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-0.5 truncate">{displayName} · {email || '個人帳戶'}</p>
@@ -3367,7 +3388,132 @@
             );
         }
 
-        
+        function UserSettingsPage({
+            user, userProfile, t, unreadNotificationCount, subjectCount, itemCount, isOnline,
+            appearanceMode, setAppearanceMode, themeColor, setThemeColor,
+            layoutMode, setLayoutMode, customLayout, setCustomLayout,
+            advancedPrefs, setAdvancedPrefs, onOpenNotifications, onOpenSubjects,
+            onGoClass, onExport, onResetPassword, onRefreshApp, onLogout
+        }) {
+            const [activeCategory, setActiveCategory] = useState('account');
+            const displayName = userProfile?.displayName || user?.displayName || '學生';
+            const email = user?.email || userProfile?.email || '';
+            const initial = String(displayName || email || 'E').trim().charAt(0).toUpperCase();
+            const persistenceMode = window.__EHANDBOOK_AUTH_DEBUG__?.persistenceMode || 'checking';
+            const standaloneMode = isStandaloneMode();
+            const themeEntries = Object.entries(THEME_CONFIG);
+            const updatePref = (key, value) => setAdvancedPrefs({ ...advancedPrefs, [key]: value });
+            const togglePref = (key, defaultValue = false) => updatePref(key, !(advancedPrefs?.[key] ?? defaultValue));
+            const updateCustomBlock = (key) => {
+                setLayoutMode('custom');
+                setCustomLayout({ ...customLayout, [key]: !customLayout?.[key] });
+            };
+
+            const categories = [
+                { id: 'account', label: '帳戶', desc: '個人資料與班級', icon: 'user-cog' },
+                { id: 'appearance', label: '外觀與體驗', desc: '主題、字體與動畫', icon: 'palette' },
+                { id: 'homepage', label: '首頁與功課', desc: '版面及顯示內容', icon: 'layout-template' },
+                { id: 'reminders', label: '通知與提醒', desc: '控制通知分類', icon: 'bell-ring', badge: unreadNotificationCount },
+                { id: 'data', label: '資料與同步', desc: '備份及連線狀態', icon: 'database' },
+                { id: 'app', label: '應用程式', desc: 'PWA、版本及更新', icon: 'smartphone' }
+            ];
+            const layoutOptions = [
+                { value: 'normal', label: '完整', desc: '顯示全部學習資訊', icon: 'layout-dashboard' },
+                { value: 'minimal', label: '極簡', desc: '只留下重要工作', icon: 'minimize-2' },
+                { value: 'custom', label: '自訂', desc: '逐項選擇首頁內容', icon: 'sliders-horizontal' }
+            ];
+            const customBlocks = [
+                { key: 'cards', label: '明日功課與進度', desc: '首頁摘要、完成率及逾期數量', icon: 'columns-3' },
+                { key: 'timetable', label: '即時課堂', desc: '目前課節及下一節課', icon: 'calendar-clock' },
+                { key: 'input', label: '快速新增', desc: '直接新增功課或測驗', icon: 'square-pen' },
+                { key: 'list', label: '功課列表', desc: '個人待辦及完成狀態', icon: 'list-checks' }
+            ];
+
+            const SettingToggle = ({ enabled, onChange, icon, title, desc }) => (
+                <button type="button" role="switch" aria-checked={enabled} onClick={onChange} className="settings-control-row w-full flex items-center gap-3 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/70 text-left hover:border-indigo-200 dark:hover:border-indigo-700">
+                    <span className={`w-10 h-10 rounded-xl grid place-items-center shrink-0 ${enabled ? `bg-gradient-to-br ${t.gradient} text-white shadow-md` : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name={icon} className="w-4 h-4" /></span>
+                    <span className="min-w-0 flex-1"><span className="block text-sm font-black text-slate-800 dark:text-white">{title}</span><span className="block text-xs font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{desc}</span></span>
+                    <span className={`w-12 h-7 rounded-full relative shrink-0 transition-colors ${enabled ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-600'}`}><span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow transition-all ${enabled ? 'left-[25px]' : 'left-[3px]'}`}></span></span>
+                </button>
+            );
+
+            const ActionRow = ({ icon, title, desc, onClick, tone = 'slate', trailing = 'chevron' }) => {
+                const toneMap = {
+                    slate: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300',
+                    indigo: 'bg-indigo-100 dark:bg-indigo-900/35 text-indigo-600 dark:text-indigo-300',
+                    emerald: 'bg-emerald-100 dark:bg-emerald-900/35 text-emerald-600 dark:text-emerald-300',
+                    orange: 'bg-orange-100 dark:bg-orange-900/35 text-orange-600 dark:text-orange-300',
+                    red: 'bg-red-100 dark:bg-red-900/35 text-red-600 dark:text-red-300'
+                };
+                return <button type="button" onClick={onClick} className="settings-control-row w-full flex items-center gap-3 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-left hover:bg-slate-50 dark:hover:bg-slate-800">
+                    <span className={`w-11 h-11 rounded-2xl grid place-items-center shrink-0 ${toneMap[tone] || toneMap.slate}`}><Icon name={icon} className="w-5 h-5" /></span>
+                    <span className="min-w-0 flex-1"><span className="block text-sm font-black text-slate-800 dark:text-white">{title}</span><span className="block text-xs font-bold text-slate-400 dark:text-slate-500 mt-1 leading-relaxed">{desc}</span></span>
+                    {trailing === 'chevron' ? <Icon name="chevron-right" className="w-5 h-5 text-slate-300 dark:text-slate-600 shrink-0" /> : <span className="text-xs font-black text-slate-500 dark:text-slate-300 shrink-0">{trailing}</span>}
+                </button>;
+            };
+
+            const Panel = ({ title, desc, icon, children }) => <section className="settings-panel-enter rounded-[2rem] bg-white/92 dark:bg-slate-900/92 border border-white/70 dark:border-slate-700 shadow-[0_24px_70px_-38px_rgba(15,23,42,.55)] overflow-hidden">
+                <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-4"><div className={`w-12 h-12 rounded-2xl ${t.lightBg} ${t.text} grid place-items-center shrink-0`}><Icon name={icon} className="w-5 h-5" /></div><div><h3 className="text-xl font-black text-slate-900 dark:text-white">{title}</h3><p className="text-sm font-bold text-slate-400 dark:text-slate-500 mt-1">{desc}</p></div></div>
+                <div className="p-4 sm:p-6">{children}</div>
+            </section>;
+
+            return <div className="settings-shell max-w-5xl mx-auto pb-12 space-y-5">
+                <div className="relative overflow-hidden rounded-[2rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,.8)]">
+                    <div className="absolute -top-24 -right-12 w-64 h-64 rounded-full bg-cyan-300/20 blur-3xl"></div><div className="absolute -bottom-24 left-1/3 w-72 h-64 rounded-full bg-violet-400/20 blur-3xl"></div>
+                    <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5"><div className="flex items-center gap-4 min-w-0"><div className="w-16 h-16 rounded-[1.35rem] bg-white/15 border border-white/20 backdrop-blur-xl grid place-items-center text-2xl font-black shadow-xl shrink-0">{initial}</div><div className="min-w-0"><div className="text-xs font-black tracking-[.18em] text-indigo-200">STUDYOS SETTINGS</div><h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1 truncate">{displayName}</h2><p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人帳戶'}</p></div></div><div className="flex items-center gap-2"><span className={`px-3 py-2 rounded-xl border text-xs font-black ${isOnline ? 'bg-emerald-400/15 border-emerald-300/20 text-emerald-200' : 'bg-orange-400/15 border-orange-300/20 text-orange-200'}`}><span className={`inline-block w-2 h-2 rounded-full mr-2 ${isOnline ? 'bg-emerald-300 animate-pulse' : 'bg-orange-300'}`}></span>{isOnline ? '同步正常' : '離線模式'}</span><span className="px-3 py-2 rounded-xl bg-white/10 border border-white/15 text-xs font-black text-indigo-100">v2.4.0</span></div></div>
+                </div>
+
+                <div className="settings-workspace">
+                    <aside className="settings-sidebar rounded-[1.75rem] bg-white/88 dark:bg-slate-900/88 border border-white/70 dark:border-slate-700 shadow-sm p-2.5"><div className="settings-category-list">{categories.map(category => { const active = activeCategory === category.id; return <button key={category.id} type="button" onClick={() => setActiveCategory(category.id)} className={`settings-category-button ${active ? 'is-active' : ''} w-full rounded-2xl px-3.5 py-3 flex items-center gap-3 text-left ${active ? `${t.lightBg} ${t.text} shadow-sm` : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}><span className={`w-9 h-9 rounded-xl grid place-items-center shrink-0 ${active ? `bg-gradient-to-br ${t.gradient} text-white shadow-md` : 'bg-slate-100 dark:bg-slate-800'}`}><Icon name={category.icon} className="w-4 h-4" /></span><span className="min-w-0 flex-1"><span className="block text-sm font-black whitespace-nowrap">{category.label}</span><span className="hidden lg:block text-[11px] font-bold opacity-60 mt-0.5 truncate">{category.desc}</span></span>{!!category.badge && <span className="min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-black grid place-items-center">{category.badge > 9 ? '9+' : category.badge}</span>}</button>; })}</div></aside>
+
+                    <main className="min-w-0">
+                        {activeCategory === 'account' && <Panel title="帳戶" desc="個人資料、班級及登入安全。" icon="user-cog"><div className="space-y-3">
+                            <div className="rounded-[1.5rem] p-4 bg-gradient-to-r from-indigo-50 to-sky-50 dark:from-indigo-900/25 dark:to-sky-900/20 border border-indigo-100 dark:border-indigo-800 flex items-center gap-4"><div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white grid place-items-center text-lg font-black shrink-0">{initial}</div><div className="min-w-0 flex-1"><div className="font-black text-slate-900 dark:text-white truncate">{displayName}</div><div className="text-xs font-bold text-slate-500 dark:text-slate-400 mt-1 truncate">{email}</div></div><span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[11px] font-black">已登入</span></div>
+                            <ActionRow icon="book-marked" title="科目管理" desc={`已設定 ${subjectCount} 個科目 · 改名、顏色及排序`} onClick={onOpenSubjects} tone="indigo" />
+                            <ActionRow icon="school-2" title="我的班級" desc="查看班級廣播及已加入的班別" onClick={onGoClass} tone="emerald" />
+                            <ActionRow icon="key-round" title="重設密碼" desc="發送密碼重設連結到帳戶 Email" onClick={onResetPassword} tone="orange" />
+                            <ActionRow icon="log-out" title="登出帳號" desc="離開目前帳戶，返回登入畫面" onClick={onLogout} tone="red" />
+                        </div></Panel>}
+
+                        {activeCategory === 'appearance' && <Panel title="外觀與體驗" desc="所有變更都會即時套用並自動保存。" icon="palette"><div className="space-y-6">
+                            <div><div className="text-xs font-black text-slate-400 uppercase tracking-wider mb-3">顯示模式</div><div className="grid grid-cols-3 gap-2">{[{ value: 'light', label: '淺色', icon: 'sun' }, { value: 'dark', label: '深色', icon: 'moon' }, { value: 'system', label: '跟隨系統', icon: 'monitor' }].map(mode => <button key={mode.value} type="button" onClick={() => setAppearanceMode(mode.value)} className={`h-20 rounded-2xl border flex flex-col items-center justify-center gap-2 transition-all active:scale-95 ${appearanceMode === mode.value ? `${t.lightBg} ${t.border} ${t.text} shadow-sm` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name={mode.icon} className="w-5 h-5" /><span className="text-xs font-black">{mode.label}</span></button>)}</div></div>
+                            <div><div className="text-xs font-black text-slate-400 uppercase tracking-wider mb-3">主題顏色</div><div className="grid grid-cols-4 sm:grid-cols-7 gap-2">{themeEntries.map(([key, config]) => <button key={key} type="button" aria-label={config.name} onClick={() => setThemeColor(key)} className={`rounded-2xl p-2 border transition-all active:scale-95 ${themeColor === key ? `${config.lightBg} ${config.border} shadow-md` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}><span className={`block h-9 rounded-xl bg-gradient-to-br ${config.gradient}`}></span><span className={`block text-[11px] font-black mt-1.5 ${themeColor === key ? config.text : 'text-slate-400'}`}>{config.name}</span></button>)}</div></div>
+                            <div><div className="text-xs font-black text-slate-400 uppercase tracking-wider mb-3">動態效果</div><div className="grid grid-cols-3 gap-2">{[{ value: 'full', label: '完整' }, { value: 'simple', label: '簡約' }, { value: 'none', label: '關閉' }].map(level => <button key={level.value} type="button" onClick={() => updatePref('animationLevel', level.value)} className={`h-11 rounded-xl border text-xs font-black transition-all ${((advancedPrefs?.animationLevel || (advancedPrefs?.reduceMotion ? 'none' : 'full')) === level.value) ? `${t.lightBg} ${t.border} ${t.text}` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}>{level.label}</button>)}</div></div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3"><SettingToggle enabled={!!advancedPrefs?.largeText} onChange={() => togglePref('largeText')} icon="text" title="大字體模式" desc="手機及 iPad 閱讀更輕鬆" /><SettingToggle enabled={!!advancedPrefs?.cleanGlass} onChange={() => togglePref('cleanGlass')} icon="glass-water" title="清晰玻璃效果" desc="提高卡片背景及文字對比" /><SettingToggle enabled={advancedPrefs?.comfortSpacing !== false} onChange={() => togglePref('comfortSpacing', true)} icon="move-horizontal" title="舒適間距" desc="增加卡片與文字之間空間" /></div>
+                        </div></Panel>}
+
+                        {activeCategory === 'homepage' && <Panel title="首頁與功課" desc="決定首頁顯示方式及優先內容。" icon="layout-template"><div className="space-y-5">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">{layoutOptions.map(option => <button key={option.value} type="button" onClick={() => setLayoutMode(option.value)} className={`p-4 rounded-2xl border text-left transition-all active:scale-[.98] ${layoutMode === option.value ? `${t.lightBg} ${t.border} ${t.text} shadow-sm` : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name={option.icon} className="w-5 h-5 mb-3" /><div className="text-sm font-black">{option.label}</div><div className="text-xs font-bold opacity-65 mt-1">{option.desc}</div></button>)}</div>
+                            <div className="space-y-3"><div className="text-xs font-black text-slate-400 uppercase tracking-wider">首頁區塊</div>{customBlocks.map(block => <SettingToggle key={block.key} enabled={customLayout?.[block.key] !== false} onChange={() => updateCustomBlock(block.key)} icon={block.icon} title={block.label} desc={block.desc} />)}</div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3"><SettingToggle enabled={advancedPrefs?.smartHints !== false} onChange={() => togglePref('smartHints', true)} icon="sparkles" title="智能提示" desc="顯示逾期、時間表及操作建議" /><SettingToggle enabled={!!advancedPrefs?.focusFirst} onChange={() => togglePref('focusFirst')} icon="target" title="專注優先" desc="將最重要功課排列在最前" /></div>
+                        </div></Panel>}
+
+                        {activeCategory === 'reminders' && <Panel title="通知與提醒" desc="選擇會出現在通知中心的內容。" icon="bell-ring"><div className="space-y-3">
+                            <div className="rounded-2xl bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 p-4 flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-orange-500 text-white grid place-items-center"><Icon name="bell" className="w-4 h-4" /></div><div className="flex-1"><div className="text-sm font-black text-orange-800 dark:text-orange-200">{unreadNotificationCount ? `${unreadNotificationCount} 則未讀通知` : '通知已全部讀取'}</div><div className="text-xs font-bold text-orange-600/70 dark:text-orange-300/70 mt-1">廣播、更新及功課提醒集中顯示</div></div><button type="button" onClick={onOpenNotifications} className="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 text-orange-600 text-xs font-black shadow-sm">查看</button></div>
+                            <SettingToggle enabled={advancedPrefs?.homeworkReminder !== false} onChange={() => togglePref('homeworkReminder', true)} icon="list-checks" title="功課及逾期提醒" desc="顯示快到期及已逾期功課" />
+                            <SettingToggle enabled={advancedPrefs?.broadcastReminder !== false} onChange={() => togglePref('broadcastReminder', true)} icon="school-2" title="班級廣播" desc="顯示老師或管理員派發的功課" />
+                            <SettingToggle enabled={advancedPrefs?.timetableReminder !== false} onChange={() => togglePref('timetableReminder', true)} icon="calendar-clock" title="時間表更新" desc="時間表有更改時顯示通知" />
+                            <SettingToggle enabled={advancedPrefs?.updateReminder !== false} onChange={() => togglePref('updateReminder', true)} icon="sparkles" title="程式更新" desc="顯示新版本內容及重要公告" />
+                        </div></Panel>}
+
+                        {activeCategory === 'data' && <Panel title="資料與同步" desc="檢查雲端連線、備份及科目資料。" icon="database"><div className="space-y-3">
+                            <div className="grid grid-cols-2 gap-3"><div className="rounded-2xl p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700"><div className="text-xs font-black text-slate-400">同步狀態</div><div className={`text-base font-black mt-2 ${isOnline ? 'text-emerald-600 dark:text-emerald-300' : 'text-orange-600 dark:text-orange-300'}`}>{isOnline ? '雲端已連線' : '等待網絡'}</div></div><div className="rounded-2xl p-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700"><div className="text-xs font-black text-slate-400">目前資料</div><div className="text-base font-black text-slate-800 dark:text-white mt-2">{itemCount} 項功課</div></div></div>
+                            <ActionRow icon="download" title="匯出完整備份" desc="下載功課、科目及時間表 JSON 備份" onClick={onExport} tone="emerald" />
+                            <ActionRow icon="book-marked" title="管理科目資料" desc={`${subjectCount} 個科目 · 同步更新功課與時間表`} onClick={onOpenSubjects} tone="indigo" />
+                            <div className="rounded-2xl p-4 border border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/70 flex items-center justify-between gap-3"><div><div className="text-sm font-black text-slate-800 dark:text-white">登入保存方式</div><div className="text-xs font-bold text-slate-400 mt-1">iPad 會優先使用最穩定的本機保存方式</div></div><span className="px-2.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 text-xs font-black text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-700">{persistenceMode}</span></div>
+                        </div></Panel>}
+
+                        {activeCategory === 'app' && <Panel title="應用程式" desc="PWA 安裝狀態、版本及更新工具。" icon="smartphone"><div className="space-y-3">
+                            <div className="rounded-[1.5rem] p-5 bg-slate-950 text-white relative overflow-hidden"><div className="absolute -right-12 -top-12 w-36 h-36 rounded-full bg-indigo-500/30 blur-2xl"></div><div className="relative"><div className="flex items-center justify-between"><div><div className="text-xs font-black text-indigo-300 tracking-wider">E-HANDBOOK PRO</div><div className="text-xl font-black mt-1">StudyOS 2.4.0</div></div><div className="w-11 h-11 rounded-2xl bg-white/10 grid place-items-center"><Icon name="book-open" className="w-5 h-5" /></div></div><div className="grid grid-cols-2 gap-2 mt-5"><div className="rounded-xl bg-white/10 p-3"><div className="text-[11px] text-slate-400 font-bold">顯示模式</div><div className="text-sm font-black mt-1">{standaloneMode ? '主畫面 PWA' : '瀏覽器'}</div></div><div className="rounded-xl bg-white/10 p-3"><div className="text-[11px] text-slate-400 font-bold">網絡</div><div className="text-sm font-black mt-1">{isOnline ? '正常連線' : '離線'}</div></div></div></div></div>
+                            <ActionRow icon="refresh-cw" title="重新載入最新版本" desc="清除程式快取後重新載入，不會刪除功課資料" onClick={onRefreshApp} tone="indigo" />
+                            <ActionRow icon="bell" title="開啟通知中心" desc="查看版本更新、公告及廣播" onClick={onOpenNotifications} tone="orange" trailing={unreadNotificationCount ? `${unreadNotificationCount} 未讀` : '全部已讀'} />
+                            <div className="text-center text-xs font-bold text-slate-400 pt-2">私人及班內使用 · 設定會自動儲存在此裝置</div>
+                        </div></Panel>}
+                    </main>
+                </div>
+            </div>;
+        }
+
 function App() {
             const [user, setUser] = useState(null);
             const [authLoading, setAuthLoading] = useState(true);
@@ -3375,7 +3521,7 @@ function App() {
             const [items, setItems] = useState([]);
             const [timetableConfig, setTimetableConfig] = useState({ timeSlots: DEFAULT_TIME_SLOTS, schedule: DEFAULT_SCHEDULE });
             const [subjects, setSubjects] = useState(DEFAULT_SUBJECTS);
-            const { auth, db, signOut, onAuthStateChanged, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, getDocs, setDoc, updateProfile, arrayUnion, arrayRemove, writeBatch, where } = window.firebaseServices || {};
+            const { auth, db, signOut, sendPasswordResetEmail, onAuthStateChanged, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, getDocs, setDoc, updateProfile, arrayUnion, arrayRemove, writeBatch, where } = window.firebaseServices || {};
 
             const [inputType, setInputType] = useState('homework');
             const [subject, setSubject] = useState('中文');
@@ -3392,6 +3538,7 @@ function App() {
             const [appMode, setAppMode] = useState('personal'); 
 
             const [isDarkMode, setIsDarkMode] = useState(() => safeStorageGet('isDarkMode') === 'true');
+            const [appearanceMode, setAppearanceMode] = useState(() => safeStorageGet('appearanceMode', safeStorageGet('isDarkMode') === 'true' ? 'dark' : 'light') || 'light');
             const [themeColor, setThemeColor] = useState(() => safeStorageGet('themeColor', 'indigo') || 'indigo');
             const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
             const [layoutMode, setLayoutMode] = useState(() => safeStorageGet('layoutMode', 'normal') || 'normal');
@@ -3406,7 +3553,12 @@ function App() {
                 showClassShortcut: true,
                 showNotificationShortcut: true,
                 showSubjectShortcut: true,
-                showAccountShortcut: true
+                showAccountShortcut: true,
+                animationLevel: 'full',
+                homeworkReminder: true,
+                broadcastReminder: true,
+                timetableReminder: true,
+                updateReminder: true
             }));
             
             const t = THEME_CONFIG[themeColor] || THEME_CONFIG.indigo;
@@ -3536,12 +3688,26 @@ function App() {
                 return () => clearInterval(timer);
             }, [viewMode]);
 
+            useEffect(() => {
+                safeStorageSet('appearanceMode', appearanceMode);
+                if (appearanceMode !== 'system') {
+                    setIsDarkMode(appearanceMode === 'dark');
+                    return;
+                }
+                const media = window.matchMedia?.('(prefers-color-scheme: dark)');
+                const applySystemMode = () => setIsDarkMode(!!media?.matches);
+                applySystemMode();
+                media?.addEventListener?.('change', applySystemMode);
+                return () => media?.removeEventListener?.('change', applySystemMode);
+            }, [appearanceMode]);
             useEffect(() => { safeStorageSet('isDarkMode', String(isDarkMode)); if (isDarkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark'); }, [isDarkMode]);
             useEffect(() => { safeStorageSet('themeColor', themeColor); safeStorageSet('layoutMode', layoutMode); safeStorageSet('customLayout', JSON.stringify(customLayout)); }, [themeColor, layoutMode, customLayout]);
             useEffect(() => {
                 safeStorageSet('advancedPrefs', JSON.stringify(advancedPrefs));
                 const root = document.documentElement;
-                root.classList.toggle('reduce-motion-mode', !!advancedPrefs.reduceMotion);
+                const animationLevel = advancedPrefs.animationLevel || (advancedPrefs.reduceMotion ? 'none' : 'full');
+                root.classList.toggle('reduce-motion-mode', animationLevel === 'none');
+                root.classList.toggle('simple-motion-mode', animationLevel === 'simple');
                 root.classList.toggle('large-text-mode', !!advancedPrefs.largeText);
                 root.classList.toggle('clean-glass-mode', !!advancedPrefs.cleanGlass);
                 root.classList.toggle('comfort-spacing-mode', advancedPrefs.comfortSpacing !== false);
@@ -4035,9 +4201,16 @@ function App() {
                 });
 
                 return notices
+                    .filter(notice => {
+                        if (notice.type === 'broadcast' && advancedPrefs?.broadcastReminder === false) return false;
+                        if (notice.type === 'timetable' && advancedPrefs?.timetableReminder === false) return false;
+                        if ((notice.type === 'overdue' || notice.type === 'reminder' || notice.type === 'cleanup') && advancedPrefs?.homeworkReminder === false) return false;
+                        if ((notice.type === 'release' || notice.type === 'update') && advancedPrefs?.updateReminder === false) return false;
+                        return true;
+                    })
                     .sort((a, b) => (b.sortTime || 0) - (a.sortTime || 0))
                     .map(n => ({ ...n, unread: !readNotificationIds.includes(n.id) }));
-            }, [systemConfig?.announcementText, systemConfig?.adminReminders, activeUpdateNotice?.popupEnabled, activeUpdateNotice?.version, activeUpdateNotice?.title, activeUpdateNotice?.summary, activeUpdateNotice?.audience, activeUpdateNotice?.publishedAt, activeUpdateNotice?.source, isAdmin, visiblePublicTasks, joinedClassesStr, systemClasses, syncedPublicIds, readNotificationIds, items, timetableConfig?.updatedAt, timetableConfig?.updatedBy]);
+            }, [systemConfig?.announcementText, systemConfig?.adminReminders, activeUpdateNotice?.popupEnabled, activeUpdateNotice?.version, activeUpdateNotice?.title, activeUpdateNotice?.summary, activeUpdateNotice?.audience, activeUpdateNotice?.publishedAt, activeUpdateNotice?.source, isAdmin, visiblePublicTasks, joinedClassesStr, systemClasses, syncedPublicIds, readNotificationIds, items, timetableConfig?.updatedAt, timetableConfig?.updatedBy, advancedPrefs?.broadcastReminder, advancedPrefs?.timetableReminder, advancedPrefs?.homeworkReminder, advancedPrefs?.updateReminder]);
 
             const unreadNotificationCount = useMemo(() => userNotifications.filter(n => n.unread).length, [userNotifications]);
             const filteredUserNotifications = useMemo(() => notificationFilter === 'unread' ? userNotifications.filter(n => n.unread) : userNotifications, [userNotifications, notificationFilter]);
@@ -4370,6 +4543,34 @@ function App() {
                 } catch (e) { triggerAlert('未能匯出備份', 'error'); }
             };
 
+            const handleSettingsPasswordReset = async () => {
+                if (!user?.email || !sendPasswordResetEmail || !auth) {
+                    triggerAlert('目前帳戶未能使用電郵重設密碼。', 'error');
+                    return;
+                }
+                try {
+                    await sendPasswordResetEmail(auth, user.email);
+                    triggerAlert(`密碼重設連結已發送到 ${user.email}`);
+                } catch (error) {
+                    triggerAlert(getFriendlyAuthError(error, 'reset'), 'error');
+                }
+            };
+
+            const handleRefreshApp = async () => {
+                try {
+                    if ('caches' in window) {
+                        const cacheKeys = await caches.keys();
+                        await Promise.all(cacheKeys.filter(key => key.startsWith('ehandbook-')).map(key => caches.delete(key)));
+                    }
+                    const registration = await navigator.serviceWorker?.getRegistration?.();
+                    await registration?.update?.();
+                    triggerAlert('已準備最新版本，正在重新載入…');
+                    setTimeout(() => window.location.reload(), 650);
+                } catch (error) {
+                    triggerAlert('未能重新載入更新，請完全關閉程式後再開。', 'error');
+                }
+            };
+
             const handleLogout = () => { triggerConfirm("確定要登出系統嗎？", () => window.firebaseServices.signOut(auth)); };
 
             const activeItems = items.filter(i => !i.completed && !i.forceExpired && !i.isHidden);
@@ -4535,7 +4736,7 @@ function App() {
                                     <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight truncate">
                                         {viewMode === 'settings' ? '應用程式設定' : viewMode === 'calendar' ? '功課月曆' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '完成紀錄' : appMode === 'class' ? '我的班級' : '今日工作台'}
                                     </h1>
-                                    <p className="text-xs font-bold text-slate-500 mt-0.5 truncate">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.3.1</p>
+                                    <p className="text-xs font-bold text-slate-500 mt-0.5 truncate">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.4.0</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
@@ -4578,8 +4779,10 @@ function App() {
                                     t={t}
                                     unreadNotificationCount={unreadNotificationCount}
                                     subjectCount={subjects.length}
-                                    isDarkMode={isDarkMode}
-                                    setIsDarkMode={setIsDarkMode}
+                                    itemCount={items.length}
+                                    isOnline={isOnline}
+                                    appearanceMode={appearanceMode}
+                                    setAppearanceMode={setAppearanceMode}
                                     themeColor={themeColor}
                                     setThemeColor={setThemeColor}
                                     layoutMode={layoutMode}
@@ -4593,6 +4796,8 @@ function App() {
                                     onOpenSubjects={() => setIsSubjectManagerOpen(true)}
                                     onGoClass={() => { setViewMode('current'); setAppMode('class'); }}
                                     onExport={handleExportData}
+                                    onResetPassword={handleSettingsPasswordReset}
+                                    onRefreshApp={handleRefreshApp}
                                     onLogout={handleLogout}
                                  /> ) : (
                                 
@@ -5036,11 +5241,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v2.3.1-studyos-ipad-auth | original Firebase data structure preserved -->
-    <!-- ehandbook-build: v2.3.1-studyos-ipad-auth -->
+<!-- VERSION_CHECK: v2.4.0-studyos-settings | original Firebase data structure preserved -->
+    <!-- ehandbook-build: v2.4.0-studyos-settings -->
 </body>
 </html>
 
-<!-- ehandbook_v2.3.1_studyos_ipad_auth: mobile-first private and class planner. -->
+<!-- ehandbook_v2.4.0_studyos_settings: mobile-first private and class planner. -->
 
-<!-- v2.3.1-studyos-ipad-auth: reliable iPad PWA authentication with popup-first Google sign-in and persistent sessions. -->
+<!-- v2.4.0-studyos-settings: responsive settings workspace with reliable iPad PWA authentication. -->

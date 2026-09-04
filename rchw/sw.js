@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ehandbook-studyos-v2-3-0-subjects-records';
+const CACHE_NAME = 'ehandbook-studyos-v2-4-0-settings';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', event => {
@@ -13,7 +13,7 @@ self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-  const isSensitive = /googleapis\.com|firebaseio\.com|identitytoolkit|securetoken/.test(url.hostname + url.pathname);
+  const isSensitive = /googleapis\.com|firebaseio\.com|identitytoolkit|securetoken|accounts\.google\.com|firebaseapp\.com\/__\/auth|web\.app\/__\/auth/.test(url.hostname + url.pathname);
   if (isSensitive) return;
 
   if (request.mode === 'navigate') {
