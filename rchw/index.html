@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v2.2.1 StudyOS Centered Add -->
+    <!-- 電子手冊 Pro v2.3.0 StudyOS Subjects & Records -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -19,12 +19,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest?v=2.2.1">
-    <link rel="icon" href="./icon.svg?v=2.2.1" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=2.3.0">
+    <link rel="icon" href="./icon.svg?v=2.3.0" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v2.2.1-studyos-centered-add">
-    <script>window.__EHANDBOOK_VERSION__ = "v2.2.1-studyos-centered-add"; console.log("電子手冊 Pro v2.2.1 centered add build loaded");</script>
+    <meta name="ehandbook-version" content="v2.3.0-studyos-subjects-records">
+    <script>window.__EHANDBOOK_VERSION__ = "v2.3.0-studyos-subjects-records"; console.log("電子手冊 Pro v2.3.0 subjects and records build loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -278,7 +278,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.2.1 已啟用登入穩定保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.3.0 已啟用登入穩定保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -296,7 +296,7 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.2.1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.3.0', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
@@ -362,7 +362,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v2.2.1-studyos-centered-add',
+                version: 'v2.3.0-studyos-subjects-records',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -461,14 +461,17 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v2.2.1-studyos-centered-add',
-            title: 'StudyOS 2.2.1 中央新增視窗',
+            version: window.__EHANDBOOK_VERSION__ || 'v2.3.0-studyos-subjects-records',
+            title: 'StudyOS 2.3 科目與完成紀錄更新',
             summary: [
                 '主頁改為優先顯示明天要交的功課，日期和數量更清楚。',
                 '重新設計時間表編輯、通知中心及應用程式設定。',
                 '管理中心在手機和 iPad 上更精簡，重要操作更容易找到。',
                 '加入卡片進場、頁面切換、通知、進度與按鈕動態效果。',
-                '右下角＋號改為在螢幕中央開啟新增視窗，所有裝置操作一致。'
+                '右下角＋號改為在螢幕中央開啟新增視窗，所有裝置操作一致。',
+                '科目管理加入改名、改色、排序及相關功課與時間表同步。',
+                '主頁準確區分明日功課、今日無功課及今日全部完成。',
+                '完成紀錄入口更清楚，最新完成項目會排在最上方。'
             ].join('\n'),
             guide: [
                 '主頁大卡會直接顯示明天尚未完成的功課數量。',
@@ -686,6 +689,16 @@
                 const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
                 return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} (星期${weekDays[d.getDay()]})`;
             } catch (e) { return String(dateStr); }
+        };
+
+        const toLocalDateKey = (dateValue) => {
+            if (!dateValue) return '';
+            if (typeof dateValue === 'string') return dateValue.slice(0, 10);
+            try {
+                const date = typeof dateValue?.toDate === 'function' ? dateValue.toDate() : new Date(dateValue);
+                if (isNaN(date.getTime())) return '';
+                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            } catch (error) { return ''; }
         };
 
         const generateFullSchedule = (config, now, dayOverride = null) => {
@@ -979,7 +992,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.2.1 Centered Add</div>
+                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.3.0 Subjects & Records</div>
                             </div> 
                         </div> 
                     </div> 
@@ -1417,78 +1430,165 @@
             );
         }
 
-        function SubjectManagerModal({ isOpen, onClose, currentSubjects, onSave, triggerConfirm, triggerAlert }) {
+        function SubjectManagerModal({ isOpen, onClose, currentSubjects, onSave, triggerConfirm, triggerAlert, usageCounts = {} }) {
             const [newSubjectName, setNewSubjectName] = useState('');
             const [newSubjectColor, setNewSubjectColor] = useState(COLOR_PALETTE[0].value);
-            const [tempSubjects, setTempSubjects] = useState([]);
+            const [tempSubjects, setTempSubjects] = useState(() => currentSubjects.map(subject => ({ ...subject, originalName: subject.name })));
+            const [editingColorIndex, setEditingColorIndex] = useState(null);
+            const cleanSubjects = tempSubjects.map(({ originalName, ...subject }) => ({ ...subject, name: subject.name.trim() }));
+            const hasChanges = JSON.stringify(cleanSubjects) !== JSON.stringify(currentSubjects);
+            const requestClose = () => {
+                if (!hasChanges) { onClose(); return; }
+                triggerConfirm('你有未儲存的科目變更，確定離開嗎？', onClose);
+            };
 
-            useEffect(() => { if (isOpen) setTempSubjects(currentSubjects); }, [isOpen, currentSubjects]);
+            useEffect(() => {
+                if (!isOpen) return;
+                setTempSubjects(currentSubjects.map(subject => ({ ...subject, originalName: subject.name })));
+                setNewSubjectName('');
+                setNewSubjectColor(COLOR_PALETTE[0].value);
+                setEditingColorIndex(null);
+            }, [isOpen, currentSubjects]);
+
+            useEffect(() => {
+                if (!isOpen) return;
+                const previousOverflow = document.body.style.overflow;
+                const closeOnEscape = event => { if (event.key === 'Escape') requestClose(); };
+                document.body.style.overflow = 'hidden';
+                window.addEventListener('keydown', closeOnEscape);
+                return () => {
+                    document.body.style.overflow = previousOverflow;
+                    window.removeEventListener('keydown', closeOnEscape);
+                };
+            }, [isOpen, tempSubjects, currentSubjects]);
+
             if (!isOpen) return null;
-
-            const handleAdd = (e) => {
-                e.preventDefault();
-                if (!newSubjectName.trim()) return;
-                if (tempSubjects.some(s => s.name === newSubjectName.trim())) { triggerAlert ? triggerAlert("科目名稱重複", "error") : console.warn("科目名稱重複"); return; }
-                setTempSubjects([...tempSubjects, { name: newSubjectName.trim(), color: newSubjectColor }]);
+            const updateSubject = (index, patch) => setTempSubjects(previous => previous.map((subject, subjectIndex) => subjectIndex === index ? { ...subject, ...patch } : subject));
+            const handleAdd = (event) => {
+                event.preventDefault();
+                const name = newSubjectName.trim();
+                if (!name) return;
+                if (tempSubjects.some(subject => subject.name.trim().toLowerCase() === name.toLowerCase())) {
+                    triggerAlert('科目名稱重複', 'error');
+                    return;
+                }
+                setTempSubjects(previous => [...previous, { name, color: newSubjectColor, originalName: null }]);
                 setNewSubjectName('');
             };
-            const handleDelete = (name) => { triggerConfirm(`確定要刪除「${name}」嗎？`, () => setTempSubjects(tempSubjects.filter(s => s.name !== name))); };
-            const moveSubject = (index, direction) => {
-                const newSubjects = [...tempSubjects];
-                if (direction === 'up' && index > 0) { [newSubjects[index], newSubjects[index - 1]] = [newSubjects[index - 1], newSubjects[index]]; } 
-                else if (direction === 'down' && index < newSubjects.length - 1) { [newSubjects[index], newSubjects[index + 1]] = [newSubjects[index + 1], newSubjects[index]]; }
-                setTempSubjects(newSubjects);
+            const handleDelete = (index) => {
+                if (tempSubjects.length <= 1) { triggerAlert('最少要保留一個科目', 'error'); return; }
+                const target = tempSubjects[index];
+                const count = usageCounts[target.originalName || target.name] || 0;
+                const extra = count > 0 ? `，現有 ${count} 份紀錄仍會保留原有科目名稱` : '';
+                triggerConfirm(`確定要移除「${target.name || '未命名科目'}」${extra}嗎？`, () => setTempSubjects(previous => previous.filter((_, subjectIndex) => subjectIndex !== index)));
             };
-            const handleAISort = () => {
-                const priority = ['中文', '英文', '數學', '常識', '通識', '公社', '物理', '化學', '生物'];
-                const sorted = [...tempSubjects].sort((a, b) => {
-                    const idxA = priority.indexOf(a.name); const idxB = priority.indexOf(b.name);
-                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-                    if (idxA !== -1) return -1;
-                    if (idxB !== -1) return 1;
-                    return a.name.localeCompare(b.name);
+            const moveSubject = (index, direction) => {
+                const nextIndex = direction === 'up' ? index - 1 : index + 1;
+                if (nextIndex < 0 || nextIndex >= tempSubjects.length) return;
+                setTempSubjects(previous => {
+                    const next = [...previous];
+                    [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
+                    return next;
                 });
-                setTempSubjects(sorted);
+            };
+            const handleCommonSort = () => {
+                const priority = ['中文', '英文', '數學', '常識', '公社', '通識', '物理', '化學', '生物', '歷史', '地理', '電腦', '其他'];
+                setTempSubjects(previous => [...previous].sort((a, b) => {
+                    const indexA = priority.indexOf(a.name.trim());
+                    const indexB = priority.indexOf(b.name.trim());
+                    if (indexA !== -1 || indexB !== -1) return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+                    return a.name.localeCompare(b.name, 'zh-HK');
+                }));
+            };
+            const handleSave = () => {
+                const normalized = cleanSubjects.filter(subject => subject.name);
+                if (normalized.length !== cleanSubjects.length) { triggerAlert('科目名稱不可留空', 'error'); return; }
+                const normalizedNames = normalized.map(subject => subject.name.toLowerCase());
+                if (new Set(normalizedNames).size !== normalizedNames.length) { triggerAlert('科目名稱不可重複', 'error'); return; }
+                const renameMap = {};
+                tempSubjects.forEach(subject => {
+                    const newName = subject.name.trim();
+                    if (subject.originalName && subject.originalName !== newName) renameMap[subject.originalName] = newName;
+                });
+                triggerConfirm('確定儲存科目名稱、顏色及次序嗎？', async () => {
+                    const saved = await onSave(normalized, renameMap);
+                    if (saved !== false) onClose();
+                });
             };
 
             return (
-                <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}></div>
-                    <div className="modal-animate glass-card bg-white/95 dark:bg-slate-800/95 rounded-3xl shadow-2xl w-full max-w-xl p-6 relative z-10 flex flex-col max-h-[85vh]">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-bold text-slate-800 dark:text-white">科目設定</h3>
-                            <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"><Icon name="x" className="w-5 h-5 text-slate-500" /></button>
-                        </div>
-                        <div className="flex-1 overflow-y-auto pr-1">
-                            <div className="flex justify-between items-center mb-3">
-                                <span className="text-xs font-bold text-slate-500">科目列表</span>
-                                <button onClick={handleAISort} className="text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1.5 rounded-lg shadow-md active:scale-95 flex items-center gap-1"><Icon name="sparkles" className="w-3 h-3" /> AI 智能排序</button>
-                            </div>
-                            <form onSubmit={handleAdd} className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 mb-4">
-                                <label className="block text-xs font-bold text-slate-500 mb-2">新增科目</label>
-                                <div className="flex gap-2 mb-2"><input type="text" value={newSubjectName} onChange={e => setNewSubjectName(e.target.value)} className="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-indigo-500" placeholder="科目名稱 (例如: 數學)" required /></div>
-                                <div className="grid grid-cols-5 gap-2 max-h-32 overflow-y-auto pr-1 pb-1">
-                                    {COLOR_PALETTE.map((c, i) => (<button key={i} type="button" onClick={() => setNewSubjectColor(c.value)} className={`h-8 rounded-lg border-2 ${c.value} ${newSubjectColor === c.value ? 'ring-2 ring-offset-1 ring-slate-400 border-transparent' : 'border-transparent opacity-60 hover:opacity-100'}`} />))}
-                                </div>
-                                <button type="submit" className="w-full mt-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700">新增</button>
-                            </form>
-                            <div className="space-y-2">
-                                {tempSubjects.map((sub, index) => (
-                                    <div key={sub.name + index} className="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm group">
-                                        <span className={`px-2 py-1 rounded text-xs font-bold border ${sub.color}`}>{sub.name}</span>
-                                        <div className="flex items-center gap-1">
-                                            <button type="button" onClick={() => moveSubject(index, 'up')} disabled={index === 0} className="p-1.5 text-slate-400 hover:text-indigo-600 disabled:opacity-20 hover:bg-slate-100 rounded-lg"><Icon name="arrow-up" className="w-3.5 h-3.5" /></button>
-                                            <button type="button" onClick={() => moveSubject(index, 'down')} disabled={index === tempSubjects.length - 1} className="p-1.5 text-slate-400 hover:text-indigo-600 disabled:opacity-20 hover:bg-slate-100 rounded-lg"><Icon name="arrow-down" className="w-3.5 h-3.5" /></button>
-                                            <div className="w-px h-4 bg-slate-200 mx-1"></div>
-                                            <button onClick={() => handleDelete(sub.name)} className="text-slate-400 hover:text-red-500 p-1"><Icon name="trash-2" className="w-4 h-4" /></button>
-                                        </div>
+                <div className="fixed inset-0 z-[180] flex items-center justify-center p-2 sm:p-5" role="dialog" aria-modal="true" aria-labelledby="subject-manager-title">
+                    <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-md motion-scrim" onClick={requestClose}></div>
+                    <div className="modal-animate relative z-10 w-full max-w-4xl max-h-[92dvh] overflow-hidden rounded-[1.75rem] sm:rounded-[2.25rem] bg-slate-50/98 dark:bg-slate-950/98 border border-white/60 dark:border-slate-700 shadow-[0_35px_110px_-30px_rgba(2,6,23,.9)] flex flex-col">
+                        <div className="relative overflow-hidden shrink-0 px-5 py-5 sm:px-7 sm:py-6 bg-gradient-to-br from-slate-950 via-indigo-950 to-indigo-700 text-white">
+                            <div className="absolute -right-12 -top-20 w-52 h-52 rounded-full bg-cyan-300/15 blur-3xl"></div>
+                            <div className="relative flex items-start justify-between gap-4">
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/20 grid place-items-center shrink-0"><Icon name="book-marked" className="w-6 h-6" /></div>
+                                    <div className="min-w-0">
+                                        <div className="text-xs font-black tracking-widest text-indigo-200 uppercase">Subjects</div>
+                                        <h3 id="subject-manager-title" className="text-xl sm:text-2xl font-black mt-0.5">科目管理</h3>
+                                        <p className="text-xs sm:text-sm font-bold text-indigo-100 mt-1">新增、改名、改色及安排顯示次序</p>
                                     </div>
-                                ))}
+                                </div>
+                                <button type="button" onClick={requestClose} aria-label="關閉科目管理" className="w-11 h-11 rounded-2xl bg-white/10 border border-white/15 grid place-items-center hover:bg-white/20 active:scale-95 transition-all"><Icon name="x" className="w-5 h-5" /></button>
                             </div>
                         </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex gap-3">
-                            <button onClick={() => { triggerConfirm("確定重置為預設科目？", () => { onSave(DEFAULT_SUBJECTS); onClose(); }); }} className="px-4 py-2 text-slate-500 hover:text-slate-700 font-bold text-sm">重置預設</button>
-                            <button onClick={() => { triggerConfirm("確定要儲存科目變更嗎？", () => { onSave(tempSubjects); onClose(); }); }} className="flex-1 py-2 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">儲存變更</button>
+
+                        <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-[18rem_minmax(0,1fr)] gap-4 sm:gap-5 items-start">
+                                <form onSubmit={handleAdd} className="md:sticky md:top-0 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 p-4 shadow-sm">
+                                    <div className="flex items-center gap-2 mb-3"><div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 grid place-items-center"><Icon name="plus" className="w-4 h-4" /></div><div><h4 className="text-sm font-black text-slate-800 dark:text-white">新增科目</h4><p className="text-xs font-bold text-slate-400">先輸入名稱，再揀顏色</p></div></div>
+                                    <label className="block text-xs font-black text-slate-500 dark:text-slate-400 mb-1.5">科目名稱</label>
+                                    <input type="text" maxLength="16" value={newSubjectName} onChange={event => setNewSubjectName(event.target.value)} className="w-full h-11 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white text-sm font-bold outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400" placeholder="例如：音樂" />
+                                    <div className="mt-4 text-xs font-black text-slate-500 dark:text-slate-400">科目顏色</div>
+                                    <div className="grid grid-cols-6 gap-2 mt-2">
+                                        {COLOR_PALETTE.map(color => (
+                                            <button key={color.label} type="button" title={color.label} aria-label={`選擇${color.label}色`} onClick={() => setNewSubjectColor(color.value)} className={`h-8 rounded-xl border-2 ${color.value} ${newSubjectColor === color.value ? 'ring-2 ring-indigo-400 ring-offset-2 dark:ring-offset-slate-900 opacity-100' : 'border-transparent opacity-55 hover:opacity-100'}`}></button>
+                                        ))}
+                                    </div>
+                                    <button type="submit" disabled={!newSubjectName.trim()} className="w-full mt-4 h-11 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-black flex items-center justify-center gap-2 shadow-lg shadow-indigo-200/50 dark:shadow-none disabled:opacity-40 disabled:shadow-none active:scale-[.98] transition-all"><Icon name="plus" className="w-4 h-4" />加入科目</button>
+                                    <button type="button" onClick={() => { setTempSubjects(DEFAULT_SUBJECTS.map(subject => ({ ...subject, originalName: currentSubjects.find(item => item.name === subject.name)?.name || null }))); setEditingColorIndex(null); }} className="w-full mt-2 h-10 rounded-xl text-xs font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">回復預設科目</button>
+                                </form>
+
+                                <section className="min-w-0 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 p-4 shadow-sm">
+                                    <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                                        <div><h4 className="text-sm font-black text-slate-800 dark:text-white">現有科目 <span className="text-indigo-500">{tempSubjects.length}</span></h4><p className="text-xs font-bold text-slate-400 mt-0.5">直接修改名稱；按色點可更換顏色</p></div>
+                                        <button type="button" onClick={handleCommonSort} className="h-9 px-3 rounded-xl bg-indigo-50 dark:bg-indigo-900/25 text-indigo-600 dark:text-indigo-300 text-xs font-black flex items-center gap-1.5 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 active:scale-95 transition-all"><Icon name="list-restart" className="w-4 h-4" />常用次序</button>
+                                    </div>
+                                    <div className="space-y-2.5">
+                                        {tempSubjects.map((subject, index) => (
+                                            <div key={`${subject.originalName || 'new'}-${index}`} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-950/45 p-3 transition-all hover:border-indigo-200 dark:hover:border-indigo-800">
+                                                <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-2.5 items-center">
+                                                    <button type="button" onClick={() => setEditingColorIndex(editingColorIndex === index ? null : index)} aria-label={`更改${subject.name || '未命名科目'}顏色`} className={`w-10 h-10 rounded-xl border-2 grid place-items-center font-black text-sm ${subject.color}`}><Icon name="palette" className="w-4 h-4" /></button>
+                                                    <div className="min-w-0">
+                                                        <input type="text" maxLength="16" value={subject.name} onChange={event => updateSubject(index, { name: event.target.value })} className="w-full h-10 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-black text-slate-800 dark:text-white outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10" aria-label={`第 ${index + 1} 個科目名稱`} />
+                                                        <div className="text-[11px] font-bold text-slate-400 mt-1 px-1">{usageCounts[subject.originalName || subject.name] || 0} 份紀錄</div>
+                                                    </div>
+                                                    <div className="flex items-center gap-0.5">
+                                                        <button type="button" onClick={() => moveSubject(index, 'up')} disabled={index === 0} aria-label="向上移" className="w-8 h-8 rounded-lg text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-indigo-600 disabled:opacity-20"><Icon name="chevron-up" className="w-4 h-4 mx-auto" /></button>
+                                                        <button type="button" onClick={() => moveSubject(index, 'down')} disabled={index === tempSubjects.length - 1} aria-label="向下移" className="w-8 h-8 rounded-lg text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-indigo-600 disabled:opacity-20"><Icon name="chevron-down" className="w-4 h-4 mx-auto" /></button>
+                                                        <button type="button" onClick={() => handleDelete(index)} aria-label="移除科目" className="w-8 h-8 rounded-lg text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-500"><Icon name="trash-2" className="w-4 h-4 mx-auto" /></button>
+                                                    </div>
+                                                </div>
+                                                {editingColorIndex === index && (
+                                                    <div className="grid grid-cols-6 sm:grid-cols-9 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                                                        {COLOR_PALETTE.map(color => <button key={color.label} type="button" title={color.label} aria-label={`改為${color.label}色`} onClick={() => { updateSubject(index, { color: color.value }); setEditingColorIndex(null); }} className={`h-8 rounded-xl border-2 ${color.value} ${subject.color === color.value ? 'ring-2 ring-indigo-400 ring-offset-1 dark:ring-offset-slate-950' : 'border-transparent opacity-60 hover:opacity-100'}`}></button>)}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div className="shrink-0 px-4 py-4 sm:px-6 border-t border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl flex items-center justify-between gap-3">
+                            <div className={`hidden sm:flex items-center gap-2 text-xs font-black ${hasChanges ? 'text-amber-600 dark:text-amber-300' : 'text-emerald-600 dark:text-emerald-300'}`}><span className={`w-2 h-2 rounded-full ${hasChanges ? 'bg-amber-500' : 'bg-emerald-500'}`}></span>{hasChanges ? '有未儲存變更' : '全部變更已儲存'}</div>
+                            <div className="flex gap-2 w-full sm:w-auto">
+                                <button type="button" onClick={requestClose} className="flex-1 sm:flex-none h-11 px-5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-black">取消</button>
+                                <button type="button" onClick={handleSave} disabled={!hasChanges} className="flex-[1.5] sm:flex-none h-11 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-black flex items-center justify-center gap-2 shadow-lg shadow-indigo-200/60 dark:shadow-none disabled:opacity-40 disabled:shadow-none active:scale-[.98] transition-all"><Icon name="save" className="w-4 h-4" />儲存變更</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3017,6 +3117,7 @@
             userProfile,
             t,
             unreadNotificationCount,
+            subjectCount,
             isDarkMode,
             setIsDarkMode,
             themeColor,
@@ -3100,7 +3201,7 @@
                                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-2xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0">
                                     <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-400/15 border border-emerald-300/20 text-xs font-black text-emerald-200 mb-2">
-                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.2.1 中央新增版
+                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.3.0 完善版
                                     </div>
                                     <h2 className="text-xl sm:text-2xl font-black tracking-tight truncate">應用程式設定</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-0.5 truncate">{displayName} · {email || '個人帳戶'}</p>
@@ -3214,7 +3315,7 @@
                         </SettingSection>
                         <SettingSection id="account" title="科目與帳號" desc="管理科目、備份及帳戶。" icon="user-cog" collapsible={false}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {advancedPrefs?.showSubjectShortcut !== false && <button type="button" onClick={onOpenSubjects} className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="school" className="w-5 h-5 text-indigo-500 mb-2" /><div className="font-black text-sm text-indigo-700 dark:text-indigo-300">科目管理</div><div className="text-[11px] font-bold text-indigo-600/70 dark:text-indigo-200/70 mt-1">自訂科目、排序、顏色</div></button>}
+                                {advancedPrefs?.showSubjectShortcut !== false && <button type="button" onClick={onOpenSubjects} className="sm:col-span-2 p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-sky-50 dark:from-indigo-900/25 dark:to-sky-900/20 border border-indigo-100 dark:border-indigo-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center justify-between gap-4"><div className="flex items-center gap-3 min-w-0"><div className="w-11 h-11 rounded-2xl bg-indigo-600 text-white grid place-items-center shrink-0 shadow-md"><Icon name="book-marked" className="w-5 h-5" /></div><div><div className="font-black text-sm text-indigo-700 dark:text-indigo-300">科目管理</div><div className="text-xs font-bold text-indigo-600/70 dark:text-indigo-200/70 mt-1">已設定 {subjectCount} 個科目 · 改名、排序及顏色</div></div></div><Icon name="chevron-right" className="w-5 h-5 text-indigo-400 shrink-0" /></button>}
                                 <button type="button" onClick={onExport} className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="download" className="w-5 h-5 text-emerald-500 mb-2" /><div className="font-black text-sm text-emerald-700 dark:text-emerald-300">匯出備份</div><div className="text-xs font-bold text-emerald-600/70 dark:text-emerald-200/70 mt-1">下載功課、科目及時間表</div></button>
                                 {advancedPrefs?.showAccountShortcut !== false && <button type="button" onClick={onLogout} className="p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-left hover:scale-[1.01] active:scale-[0.98] transition-all"><Icon name="log-out" className="w-5 h-5 text-red-500 mb-2" /><div className="font-black text-sm text-red-700 dark:text-red-300">登出帳號</div><div className="text-[11px] font-bold text-red-600/70 dark:text-red-200/70 mt-1">切換或重新登入</div></button>}
                             </div>
@@ -4023,6 +4124,8 @@ function App() {
                 if (!description.trim() || !dueDate) { triggerAlert("請輸入功課內容！", "error"); return; }
                 const performSubmit = async () => {
                     const newItem = { type: inputType, subject, description: description.trim(), dueDate, priority, completed: false, createdAt: new Date().toISOString() };
+                    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+                    const isTomorrowHomework = inputType === 'homework' && toLocalDateKey(dueDate) === toLocalDateKey(tomorrow);
                     try { 
                         if (isBroadcast && isAdmin) { 
                             newItem.senderName = user.displayName || '老師';
@@ -4032,7 +4135,7 @@ function App() {
                             const deliveredCount = await deliverBroadcastTaskToTargets(publicRef.id, newItem);
                             const className = targetClassInput === '全校' ? '全校' : (systemClasses.find(c => c.code === targetClassInput)?.name || targetClassInput);
                             triggerAlert(`已發送廣播功課給 ${className}，並已自動加入 ${deliveredCount} 位學生個人手冊！`); 
-                        } else { await addDoc(collection(db, "users", user.uid, "items"), newItem); triggerAlert("已新增紀錄"); } 
+                        } else { await addDoc(collection(db, "users", user.uid, "items"), newItem); triggerAlert(isTomorrowHomework ? '已新增，明天功課數量已更新' : '已新增紀錄'); } 
                         setDescription(''); setPriority('normal'); setIsComposerOpen(false); setAppMode('personal'); setIsBroadcast(false); setTargetClassInput('全校'); setSubjectManuallySelected(false); setSubjectPredictionApplied(false);
                     } catch (error) { console.warn("新增或派發失敗", error); triggerAlert("新增或派發失敗：" + (error?.message || '請稍後再試'), "error"); } 
                 };
@@ -4044,14 +4147,26 @@ function App() {
 
             const handleToggle = (id, currentCompletedStatus) => { 
                 if (!user) return;
+                const targetItem = items.find(item => item.id === id);
                 if (!currentCompletedStatus) { 
                     setExitingIds(prev => [...prev, id]); 
                     setTimeout(async () => { 
-                        try { await updateDoc(doc(db, "users", user.uid, "items", id), { completed: true }); } catch (e) {} 
-                        setExitingIds(prev => prev.filter(eid => eid !== id)); 
+                        try {
+                            await updateDoc(doc(db, "users", user.uid, "items", id), { completed: true, completedAt: new Date().toISOString() });
+                            triggerAlert(`已完成「${targetItem?.description || '功課'}」`, 'success', {
+                                label: '查看紀錄',
+                                onClick: () => { setViewMode('history'); setAppMode('personal'); setSearchQuery(''); setFilterSubject('全部'); setSortOption('date_desc'); }
+                            });
+                        } catch (error) {
+                            triggerAlert('未能更新完成狀態，請再試一次', 'error');
+                        } finally {
+                            setExitingIds(prev => prev.filter(eid => eid !== id));
+                        }
                     }, 400); 
                 } else { 
-                    updateDoc(doc(db, "users", user.uid, "items", id), { completed: false }).catch(()=>{}); 
+                    updateDoc(doc(db, "users", user.uid, "items", id), { completed: false, completedAt: null })
+                        .then(() => triggerAlert('已放回待辦清單', 'success', { label: '查看待辦', onClick: () => { setViewMode('current'); setAppMode('personal'); setSearchQuery(''); } }))
+                        .catch(() => triggerAlert('未能還原功課，請再試一次', 'error')); 
                 } 
             };
 
@@ -4143,9 +4258,51 @@ function App() {
                 } catch (e) { triggerAlert("儲存失敗", "error"); } 
             };
             
-            const saveSubjects = async (newSubjects) => { 
+            const saveSubjects = async (newSubjects, renameMap = {}) => {
                 if (!user) return;
-                try { await setDoc(doc(db, 'users', user.uid, 'settings', 'subjects'), { list: JSON.parse(JSON.stringify(newSubjects)) }); triggerAlert("科目已更新"); } catch (e) { triggerAlert("儲存失敗", "error"); } 
+                try {
+                    const cleanSubjects = JSON.parse(JSON.stringify(newSubjects));
+                    const hasRenames = Object.keys(renameMap).length > 0;
+                    const nextTimetable = hasRenames ? {
+                        ...timetableConfig,
+                        schedule: Object.fromEntries(Object.entries(timetableConfig.schedule || {}).map(([day, daySubjects]) => [day, (daySubjects || []).map(name => renameMap[name] || name)]))
+                    } : timetableConfig;
+                    let batch = writeBatch(db);
+                    let writeCount = 0;
+                    const commitBatch = async () => {
+                        if (!writeCount) return;
+                        await batch.commit();
+                        batch = writeBatch(db);
+                        writeCount = 0;
+                    };
+                    batch.set(doc(db, 'users', user.uid, 'settings', 'subjects'), { list: cleanSubjects });
+                    writeCount++;
+                    if (hasRenames) {
+                        batch.set(doc(db, 'users', user.uid, 'settings', 'timetable'), JSON.parse(JSON.stringify(nextTimetable)));
+                        writeCount++;
+                        for (const item of items.filter(entry => renameMap[entry.subject])) {
+                            batch.update(doc(db, 'users', user.uid, 'items', item.id), { subject: renameMap[item.subject] });
+                            writeCount++;
+                            if (writeCount >= 400) await commitBatch();
+                        }
+                    }
+                    await commitBatch();
+                    setSubjects(cleanSubjects);
+                    if (hasRenames) setTimetableConfig(nextTimetable);
+                    const nextSelectedSubject = renameMap[subject] || subject;
+                    const availableNames = cleanSubjects.map(item => item.name);
+                    setSubject(availableNames.includes(nextSelectedSubject) ? nextSelectedSubject : (availableNames[0] || '其他'));
+                    if (filterSubject !== '全部') {
+                        const nextFilter = renameMap[filterSubject] || filterSubject;
+                        setFilterSubject(availableNames.includes(nextFilter) ? nextFilter : '全部');
+                    }
+                    triggerAlert(hasRenames ? '科目及相關功課已同步更新' : '科目設定已更新');
+                    return true;
+                } catch (error) {
+                    console.warn('儲存科目失敗', error);
+                    triggerAlert('儲存科目失敗，請稍後再試', 'error');
+                    return false;
+                }
             };
 
             const handleExportData = () => {
@@ -4174,7 +4331,20 @@ function App() {
             const handleLogout = () => { triggerConfirm("確定要登出系統嗎？", () => window.firebaseServices.signOut(auth)); };
 
             const activeItems = items.filter(i => !i.completed && !i.forceExpired && !i.isHidden);
-            const getDaysRemaining = (dString) => { const today = new Date(); today.setHours(0,0,0,0); const due = new Date(dString); due.setHours(0,0,0,0); return Math.ceil((due - today) / 86400000); };
+            const completedVisibleCount = items.filter(item => item.completed && !item.isHidden).length;
+            const subjectUsageCounts = useMemo(() => items.reduce((countsBySubject, item) => {
+                const subjectName = item.subject || '其他';
+                countsBySubject[subjectName] = (countsBySubject[subjectName] || 0) + 1;
+                return countsBySubject;
+            }, {}), [items]);
+            const getDaysRemaining = (dateValue) => {
+                const today = new Date(); today.setHours(0,0,0,0);
+                const dueKey = toLocalDateKey(dateValue);
+                if (!dueKey) return 0;
+                const [year, month, day] = dueKey.split('-').map(Number);
+                const due = new Date(year, month - 1, day);
+                return Math.round((due - today) / 86400000);
+            };
 
             const displayedItems = items.filter(item => {
                 if (item.isHidden) return false;
@@ -4186,6 +4356,11 @@ function App() {
             }).sort((a, b) => {
                 const dateA = new Date(a.dueDate); const dateB = new Date(b.dueDate);
                 if (a.forceExpired !== b.forceExpired) return a.forceExpired ? 1 : -1;
+                if (viewMode === 'history') {
+                    const completedTimeA = new Date(a.completedAt || a.dueDate || a.createdAt || 0).getTime() || 0;
+                    const completedTimeB = new Date(b.completedAt || b.dueDate || b.createdAt || 0).getTime() || 0;
+                    return sortOption === 'date_asc' ? completedTimeA - completedTimeB : completedTimeB - completedTimeA;
+                }
                 if (advancedPrefs?.focusFirst && viewMode === 'current') {
                     const priorityWeight = { high: 0, normal: 1, low: 2 };
                     const priorityDiff = (priorityWeight[a.priority || 'normal'] ?? 1) - (priorityWeight[b.priority || 'normal'] ?? 1);
@@ -4199,9 +4374,9 @@ function App() {
                 const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
                 const tomorrowStr = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
                 let title = ''; let filteredItems = [];
-                if (type === 'today') { title = '今天到期的功課'; filteredItems = activeItems.filter(i => i.dueDate === todayStr && i.type === 'homework'); } 
-                else if (type === 'tomorrow') { title = '明天到期的功課'; filteredItems = activeItems.filter(i => i.dueDate === tomorrowStr && i.type === 'homework'); } 
-                else if (type === 'future') { title = '日後要交的功課'; filteredItems = activeItems.filter(i => i.dueDate > tomorrowStr && i.type === 'homework'); } 
+                if (type === 'today') { title = '今天到期的功課'; filteredItems = activeItems.filter(i => toLocalDateKey(i.dueDate) === todayStr && i.type === 'homework'); } 
+                else if (type === 'tomorrow') { title = '明天到期的功課'; filteredItems = activeItems.filter(i => toLocalDateKey(i.dueDate) === tomorrowStr && i.type === 'homework'); } 
+                else if (type === 'future') { title = '日後要交的功課'; filteredItems = activeItems.filter(i => toLocalDateKey(i.dueDate) > tomorrowStr && i.type === 'homework'); } 
                 else if (type === 'test') { title = '默書測驗考試'; filteredItems = activeItems.filter(i => i.type !== 'homework'); }
                 setQuickView({ isOpen: true, title, items: filteredItems });
             };
@@ -4211,14 +4386,14 @@ function App() {
                 const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
                 const tomorrowStr = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
                 
-                const todayActive = activeItems.filter(i => i.dueDate === todayStr && i.type === 'homework');
-                const todayCompletedCount = items.filter(i => i.completed && i.dueDate === todayStr && i.type === 'homework').length;
+                const todayActive = activeItems.filter(i => toLocalDateKey(i.dueDate) === todayStr && i.type === 'homework');
+                const todayCompletedCount = items.filter(i => i.completed && !i.isHidden && toLocalDateKey(i.dueDate) === todayStr && i.type === 'homework').length;
                 const totalToday = todayActive.length + todayCompletedCount;
                 const progressPercent = totalToday === 0 ? 100 : Math.round((todayCompletedCount / totalToday) * 100);
-                const tomorrowActive = activeItems.filter(i => i.dueDate === tomorrowStr && i.type === 'homework');
-                const tomorrowCompletedCount = items.filter(i => i.completed && !i.isHidden && i.dueDate === tomorrowStr && i.type === 'homework').length;
+                const tomorrowActive = activeItems.filter(i => toLocalDateKey(i.dueDate) === tomorrowStr && i.type === 'homework');
+                const tomorrowCompletedCount = items.filter(i => i.completed && !i.isHidden && toLocalDateKey(i.dueDate) === tomorrowStr && i.type === 'homework').length;
                 const totalTomorrow = tomorrowActive.length + tomorrowCompletedCount;
-                const tomorrowProgressPercent = totalTomorrow === 0 ? 100 : Math.round((tomorrowCompletedCount / totalTomorrow) * 100);
+                const tomorrowProgressPercent = totalTomorrow === 0 ? 0 : Math.round((tomorrowCompletedCount / totalTomorrow) * 100);
                 const weekStart = new Date(today);
                 weekStart.setDate(today.getDate() - ((today.getDay() + 6) % 7));
                 const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6); weekEnd.setHours(23,59,59,999);
@@ -4228,11 +4403,13 @@ function App() {
 
                 return {
                     today: todayActive.length,
+                    todayCompleted: todayCompletedCount,
+                    todayTotal: totalToday,
                     tomorrow: tomorrowActive.length,
                     tomorrowCompleted: tomorrowCompletedCount,
                     tomorrowTotal: totalTomorrow,
                     tomorrowProgressPercent,
-                    future: activeItems.filter(i => i.dueDate > tomorrowStr && i.type === 'homework').length,
+                    future: activeItems.filter(i => toLocalDateKey(i.dueDate) > tomorrowStr && i.type === 'homework').length,
                     test: activeItems.filter(i => i.type !== 'homework').length,
                     overdue: items.filter(i => !i.completed && !i.isHidden && (i.forceExpired || (i.dueDate && i.dueDate < todayStr))).length,
                     progressPercent,
@@ -4244,6 +4421,8 @@ function App() {
             const counts = getCounts();
             const displayName = userProfile?.displayName || user?.displayName || String(user?.email || '').split('@')[0] || '同學';
             const greetingText = globalNow.getHours() < 12 ? '早晨' : globalNow.getHours() < 18 ? '下午好' : '晚上好';
+            const tomorrowHeadline = counts.tomorrow > 0 ? `明天有 ${counts.tomorrow} 份功課要交` : counts.tomorrowTotal > 0 ? '明天功課已全部完成' : '明天暫時沒有功課要交';
+            const todaySummary = counts.today > 0 ? `今日尚餘 ${counts.today} 份功課` : counts.todayTotal > 0 ? '今日功課已全部完成' : '今日沒有功課要交';
 
             const isVisible = (componentName) => {
                 if (viewMode === 'history') return componentName === 'list';
@@ -4305,19 +4484,22 @@ function App() {
 
                     <div className="max-w-[1200px] mx-auto relative z-10 transition-all duration-500">
                         {viewMode !== 'admin' && (
-                        <header className="app-header flex items-center justify-between mb-8 max-w-3xl mx-auto glass-card bg-white/90 dark:bg-slate-900/90 px-5 py-4 rounded-[2rem]">
-                            <div className="flex items-center gap-3">
+                        <header className="app-header flex items-center justify-between gap-2 mb-8 max-w-3xl mx-auto glass-card bg-white/90 dark:bg-slate-900/90 px-5 py-4 rounded-[2rem]">
+                            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                                 <div className={`app-header-icon w-11 h-11 rounded-2xl flex items-center justify-center bg-gradient-to-br ${t.gradient} text-white shadow-lg`}>
                                     <Icon name={viewMode === 'settings' ? "sliders-horizontal" : viewMode === 'calendar' ? "calendar-days" : viewMode === 'timetable' || viewMode === 'timetable_edit' ? "calendar-clock" : viewMode === 'history' ? "timer" : appMode === 'class' ? "school" : "book-open"} className="w-6 h-6" />
                                 </div>
-                                <div>
-                                    <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight">
-                                        {viewMode === 'settings' ? '應用程式設定' : viewMode === 'calendar' ? '功課月曆' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '歷史紀錄' : appMode === 'class' ? '我的班級' : '今日工作台'}
+                                <div className="min-w-0">
+                                    <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight truncate">
+                                        {viewMode === 'settings' ? '應用程式設定' : viewMode === 'calendar' ? '功課月曆' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '完成紀錄' : appMode === 'class' ? '我的班級' : '今日工作台'}
                                     </h1>
-                                    <p className="text-xs font-bold text-slate-500 mt-0.5">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.2.1</p>
+                                    <p className="text-xs font-bold text-slate-500 mt-0.5 truncate">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.3.0</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                                {viewMode === 'current' && appMode === 'personal' && (
+                                    <button type="button" onClick={() => setIsSubjectManagerOpen(true)} aria-label="開啟科目管理" className="flex p-2.5 sm:px-3 sm:py-2.5 rounded-2xl font-black text-xs bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all items-center gap-2" title="科目管理"><Icon name="book-marked" className="w-4 h-4" /><span className="hidden sm:inline">科目</span></button>
+                                )}
                                 {viewMode === 'timetable' && (
                                     <button onClick={() => setViewMode('timetable_edit')} className="px-3 py-2 rounded-xl font-bold text-xs bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 shadow-sm transition-all flex items-center gap-2"><Icon name="book-open" className="w-4 h-4" /><span className="hidden sm:inline">編輯時間表</span></button>
                                 )}
@@ -4353,6 +4535,7 @@ function App() {
                                     userProfile={userProfile}
                                     t={t}
                                     unreadNotificationCount={unreadNotificationCount}
+                                    subjectCount={subjects.length}
                                     isDarkMode={isDarkMode}
                                     setIsDarkMode={setIsDarkMode}
                                     themeColor={themeColor}
@@ -4378,10 +4561,10 @@ function App() {
                                             <div className="study-hero motion-hero col-span-2 sm:col-span-3">
                                                 <div className="relative z-10 flex items-center justify-between gap-5">
                                                     <div className="min-w-0">
-                                                        <div className="text-sm font-black text-indigo-200">{greetingText}，{displayName} · 明日重點</div>
-                                                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">{counts.tomorrow > 0 ? `明天有 ${counts.tomorrow} 項功課要交` : '明天暫時沒有功課要交'}</h2>
+                                                        <div className="text-sm font-black text-indigo-200">{greetingText}，{displayName} · 明天功課</div>
+                                                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1">{tomorrowHeadline}</h2>
                                                         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm font-bold text-slate-300">
-                                                            <span>{counts.today > 0 ? `今日尚餘 ${counts.today} 份功課` : '今日功課已完成'}</span>
+                                                            <span>{todaySummary}</span>
                                                             <span>本週完成 {counts.weekCompleted}/{counts.weekTotal}</span>
                                                             <span className={counts.overdue > 0 ? 'text-rose-300' : 'text-emerald-300'}>{counts.overdue > 0 ? `${counts.overdue} 項逾期` : '沒有逾期'}</span>
                                                         </div>
@@ -4391,7 +4574,7 @@ function App() {
                                             </div>
                                             <button onClick={() => openQuickView('tomorrow')} className="metric-card motion-card motion-delay-1 col-span-2 sm:col-span-1 relative overflow-hidden glass-card bg-white/95 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl flex justify-between items-center hover:-translate-y-0.5 transition-all group border border-white/40">
                                                 <div className="flex flex-col items-start gap-1 z-10 w-full">
-                                                    <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-indigo-500 shadow-sm"></div>明天要交</div>
+                                                    <div className="text-slate-500 text-xs font-bold flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-indigo-500 shadow-sm"></div>明天功課</div>
                                                     <div className="motion-number text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-blue-600 font-black text-3xl sm:text-4xl tracking-tight">{counts.tomorrow}</div>
                                                     
                                                     {/* NEW: Progress Bar inside card */}
@@ -4498,22 +4681,26 @@ function App() {
 
                                             {isVisible('list') && (
                                                 <>
+                                                    <div className="mb-3 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700 p-1.5 shadow-sm flex items-center gap-1.5">
+                                                        <button type="button" onClick={() => { setViewMode('current'); setAppMode('personal'); setSearchQuery(''); setSortOption('date_asc'); }} className={`flex-1 min-w-0 h-11 px-3 rounded-xl text-sm font-black flex items-center justify-center gap-2 transition-all ${viewMode !== 'history' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}><Icon name="list-todo" className="w-4 h-4" />待辦項目 <span className={`min-w-6 h-6 px-1.5 rounded-lg grid place-items-center text-xs ${viewMode !== 'history' ? 'bg-white/15 dark:bg-slate-900/10' : 'bg-slate-100 dark:bg-slate-800'}`}>{activeItems.length}</span></button>
+                                                        <button type="button" onClick={() => { setViewMode('history'); setAppMode('personal'); setSearchQuery(''); setSortOption('date_desc'); }} className={`flex-1 min-w-0 h-11 px-3 rounded-xl text-sm font-black flex items-center justify-center gap-2 transition-all ${viewMode === 'history' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-200/50 dark:shadow-none' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}><Icon name="archive-restore" className="w-4 h-4" />完成紀錄 <span className={`min-w-6 h-6 px-1.5 rounded-lg grid place-items-center text-xs ${viewMode === 'history' ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-800'}`}>{completedVisibleCount}</span></button>
+                                                    </div>
+                                                    {viewMode === 'history' && <div className="mb-4 px-3 py-2.5 rounded-xl bg-emerald-50/80 dark:bg-emerald-900/15 border border-emerald-100 dark:border-emerald-800 text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-2"><Icon name="info" className="w-4 h-4 shrink-0" />按左邊綠色剔號，可將功課放回待辦清單。</div>}
                                                     <div className="task-toolbar flex flex-col sm:flex-row justify-between items-center gap-3 mb-6 relative">
                                                         <div className={`flex items-center gap-2 w-full sm:w-auto overflow-x-auto scrollbar-hide pb-1 transition-opacity ${!isListVisible ? 'opacity-50' : 'opacity-100'}`}>
                                                             <span className="text-slate-400 text-xs font-bold whitespace-nowrap">篩選:</span>
                                                             <button onClick={() => handleFilterChange('全部')} className={`flex-shrink-0 px-2.5 py-1 rounded text-[10px] font-bold border transition-all ${filterSubject === '全部' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'}`}>全部</button>
                                                             {subjects.map(sub => ( <button key={sub.name} onClick={() => handleFilterChange(sub.name)} className={`flex-shrink-0 px-2.5 py-1 rounded text-[10px] font-bold border transition-all ${filterSubject === sub.name ? `${t.border} ${t.lightBg} ${t.text}` : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'}`}>{sub.name}</button> ))}
                                                         </div>
-                                                        <div className="flex items-center gap-2 w-full sm:w-auto z-30">
-                                                            <button type="button" onClick={() => { setViewMode(viewMode === 'history' ? 'current' : 'history'); setAppMode('personal'); }} className={`h-9 px-3 rounded-xl text-xs font-black flex items-center gap-1.5 shrink-0 border ${viewMode === 'history' ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300'}`}><Icon name={viewMode === 'history' ? 'list-todo' : 'history'} className="w-4 h-4" />{viewMode === 'history' ? '待辦' : '歷史'}</button>
+                                                        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto z-30">
                                                             {/* NEW: Global Search Bar for Tasks */}
                                                             <div className="relative w-full sm:w-auto flex-1 max-w-[150px] sm:max-w-[200px]">
                                                                 <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400"><Icon name="search" className="w-3.5 h-3.5"/></div>
                                                                 <input type="text" placeholder="搜尋..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-8 pr-3 py-1.5 glass-card bg-white/70 dark:bg-slate-800/70 border border-white/50 dark:border-slate-700 rounded-lg text-xs font-bold focus:ring-2 focus:ring-indigo-400 outline-none transition-all dark:text-white placeholder:text-slate-400"/>
                                                             </div>
-                                                            {viewMode !== 'history' ? ( <button onClick={handleClearExpired} className="flex-shrink-0 text-xs font-bold bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 flex items-center gap-1"><Icon name="trash-2" className="w-3 h-3" /> 清理過期</button> ) : ( <button onClick={handleClearHistory} className="flex-shrink-0 text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 flex items-center gap-1"><Icon name="trash-2" className="w-3 h-3" /> 清理歷史</button> )}
+                                                            {viewMode !== 'history' ? ( <button onClick={handleClearExpired} className="flex-shrink-0 text-xs font-bold bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 flex items-center gap-1"><Icon name="trash-2" className="w-3 h-3" /> 清理過期</button> ) : ( <button onClick={handleClearHistory} className="flex-shrink-0 text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center gap-1"><Icon name="trash-2" className="w-3 h-3" /> 清理完成紀錄</button> )}
                                                             <span className="text-slate-400 text-xs font-bold whitespace-nowrap ml-1">排序:</span>
-                                                            <CustomDropdown value={sortOption} onChange={handleSortChange} options={[{ value: 'date_asc', label: '趕急先' }, { value: 'date_desc', label: '長遠先' }]} />
+                                                            <CustomDropdown value={sortOption} onChange={handleSortChange} options={viewMode === 'history' ? [{ value: 'date_desc', label: '最近完成' }, { value: 'date_asc', label: '較早完成' }] : [{ value: 'date_asc', label: '趕急先' }, { value: 'date_desc', label: '長遠先' }]} />
                                                         </div>
                                                     </div>
 
@@ -4776,6 +4963,8 @@ function App() {
                         </div>
                     )}
 
+                    <SubjectManagerModal isOpen={isSubjectManagerOpen} onClose={() => setIsSubjectManagerOpen(false)} currentSubjects={subjects} onSave={saveSubjects} triggerConfirm={triggerConfirm} triggerAlert={triggerAlert} usageCounts={subjectUsageCounts} />
+
                     {notification.isOpen && (
                         <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
                             <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={closeNotification}></div>
@@ -4805,11 +4994,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v2.2.1-studyos-centered-add | original Firebase data structure preserved -->
-    <!-- ehandbook-build: v2.2.1-studyos-centered-add -->
+<!-- VERSION_CHECK: v2.3.0-studyos-subjects-records | original Firebase data structure preserved -->
+    <!-- ehandbook-build: v2.3.0-studyos-subjects-records -->
 </body>
 </html>
 
-<!-- ehandbook_v2.2.1_studyos_centered_add: mobile-first private and class planner. -->
+<!-- ehandbook_v2.3.0_studyos_subjects_records: mobile-first private and class planner. -->
 
-<!-- v2.2.1-studyos-centered-add: tomorrow-first dashboard, refined motion, and a centered quick-add dialog. -->
+<!-- v2.3.0-studyos-subjects-records: accurate tomorrow dashboard, complete subject management, and recoverable completion history. -->
