@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v2.4.0 StudyOS Settings Workspace -->
+    <!-- 電子手冊 Pro v2.5.0 StudyOS Unified Workspace -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -19,12 +19,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest?v=2.4.0">
-    <link rel="icon" href="./icon.svg?v=2.4.0" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=2.5.0">
+    <link rel="icon" href="./icon.svg?v=2.5.0" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v2.4.0-studyos-settings">
-    <script>window.__EHANDBOOK_VERSION__ = "v2.4.0-studyos-settings"; console.log("電子手冊 Pro v2.4.0 settings workspace loaded");</script>
+    <meta name="ehandbook-version" content="v2.5.0-studyos-unified-ui">
+    <script>window.__EHANDBOOK_VERSION__ = "v2.5.0-studyos-unified-ui"; console.log("電子手冊 Pro v2.5.0 unified workspace loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -295,7 +295,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.4.0 已啟用 iPad 登入穩定保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.5.0 已啟用 iPad 登入穩定保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -313,7 +313,7 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.4.0', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.5.0', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
@@ -379,7 +379,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v2.4.0-studyos-settings',
+                version: 'v2.5.0-studyos-unified-ui',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -499,9 +499,14 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v2.4.0-studyos-settings',
-            title: 'StudyOS 2.4.0 設定工作區',
+            version: window.__EHANDBOOK_VERSION__ || 'v2.5.0-studyos-unified-ui',
+            title: 'StudyOS 2.5.0 全頁工作區',
             summary: [
+                '全站頁面使用一致資訊層級、卡片、狀態摘要、空白畫面及快捷操作。',
+                '頂部列會按頁面顯示相關狀態，底部導航改為圖示連文字，任何頁面都更容易辨認。',
+                '月曆加入月份待辦與完成摘要，iPad 可同時查看月曆及選定日期詳情。',
+                '時間表加入即時課堂主卡、星期側欄及更清楚的課堂時間線。',
+                '完成紀錄及班級頁加入專屬總覽，主要操作和目前狀態更突出。',
                 '設定頁全面改為分類式工作區，iPad 使用左側分類，手機使用頂部分類列。',
                 '新增淺色、深色及跟隨系統模式，動態效果可選完整、簡約或關閉。',
                 '通知分類開關會即時控制通知中心顯示內容。',
@@ -517,10 +522,10 @@
                 '修正 iPad 加入主畫面後 Google 及 Email 登入停留在登入頁的問題。'
             ].join('\n'),
             guide: [
-                '在設定頁左側或頂部分類列選擇要調整的內容。',
-                '外觀與體驗可即時切換顯示模式、主題色和動態程度。',
-                '通知與提醒可按類別開關通知中心內容。',
-                '應用程式分類可清除程式快取並重新載入最新版本。'
+                '底部導航會固定顯示圖示與名稱，直接前往主頁、月曆、班級、時間表及設定。',
+                '月曆在 iPad 會左右並排顯示月份和當日詳情。',
+                '時間表可從星期側欄切換，頂部會顯示目前課堂及尚餘時間。',
+                '完成紀錄按綠色剔號即可放回待辦。'
             ].join('\n'),
             audience: 'all',
             popupEnabled: true,
@@ -1055,7 +1060,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.4.0 Settings</div>
+                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.5.0</div>
                             </div> 
                         </div> 
                     </div> 
@@ -1820,24 +1825,31 @@
             const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
             const now = globalNow || new Date();
             const scheduleData = generateFullSchedule(config, now, currentDay);
+            const currentSlot = scheduleData.find(slot => now.getTime() >= slot.start.getTime() && now.getTime() <= slot.end.getTime());
+            const lessonCount = scheduleData.filter(slot => slot.type === 'lesson').length;
             
             return ( 
-                <div className="space-y-4"> 
-                    <div className="flex glass-card bg-white/70 dark:bg-slate-800/70 rounded-xl p-1 shadow-sm overflow-x-auto">
-                        {[1, 2, 3, 4, 5].map(day => (
-                            <button key={day} onClick={() => onDayChange(day)} className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold whitespace-nowrap transition-all ${currentDay === day ? 'bg-indigo-600 text-white shadow' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700'}`}>星期{weekDays[day]}</button>
-                        ))}
-                    </div> 
-                    <div className="glass-card bg-white/80 dark:bg-slate-800/80 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-4 sm:p-6">
+                <div className="max-w-5xl mx-auto space-y-5 pb-12">
+                    <div className="relative overflow-hidden rounded-[2rem] p-5 sm:p-6 bg-gradient-to-br from-slate-950 via-indigo-950 to-violet-800 text-white shadow-[0_30px_80px_-38px_rgba(15,23,42,.9)]">
+                        <div className="absolute -right-16 -top-20 w-60 h-60 rounded-full bg-cyan-400/15 blur-3xl"></div>
+                        <div className="relative flex items-center justify-between gap-5"><div><div className="text-xs font-black tracking-[.18em] text-indigo-300">星期{weekDays[currentDay]} · {lessonCount} 節課</div><h2 className="text-2xl sm:text-3xl font-black mt-2">{currentSlot ? `而家係 ${currentSlot.subjectName}` : scheduleData.length ? '今日課堂一目了然' : '今日未有課堂'}</h2><p className="text-sm font-bold text-slate-300 mt-2">{currentSlot ? `${formatTimeStr(currentSlot.start)}–${formatTimeStr(currentSlot.end)} · 尚餘 ${formatCountdown(currentSlot.end.getTime() - now.getTime())}` : '揀選星期即可查看完整時間表'}</p></div><div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/10 border border-white/15 grid place-items-center shrink-0"><Icon name="calendar-clock" className="w-7 h-7 text-indigo-200" /></div></div>
+                    </div>
+                    <div className="grid md:grid-cols-[12rem_minmax(0,1fr)] gap-4 items-start">
+                        <div className="flex md:flex-col glass-card bg-white/85 dark:bg-slate-900/85 rounded-[1.6rem] p-2 shadow-sm overflow-x-auto md:sticky md:top-4">
+                            {[1, 2, 3, 4, 5].map(day => (
+                                <button key={day} onClick={() => onDayChange(day)} className={`flex-1 md:w-full min-w-[5.3rem] py-3 px-3 rounded-2xl text-sm font-black whitespace-nowrap transition-all flex md:justify-between items-center justify-center gap-2 ${currentDay === day ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200/50 dark:shadow-none' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'}`}><span>星期{weekDays[day]}</span>{day === now.getDay() && <span className={`w-2 h-2 rounded-full ${currentDay === day ? 'bg-white' : 'bg-emerald-400'}`}></span>}</button>
+                            ))}
+                        </div> 
+                        <div className="glass-card bg-white/90 dark:bg-slate-900/88 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700 p-4 sm:p-6 min-h-[22rem]">
                         {scheduleData.length > 0 ? scheduleData.map((slot, idx) => { 
                             const nowTime = now.getTime(); const startTime = slot.start.getTime(); const endTime = slot.end.getTime();
                             let status = 'future'; let diff = 0;
                             if (nowTime > endTime) { status = 'past'; } else if (nowTime >= startTime && nowTime <= endTime) { status = 'current'; diff = endTime - nowTime; }
                             
                             return (
-                                <div key={idx} className={`relative pl-6 pb-6 last:pb-0 border-l-2 ${status === 'current' ? 'border-purple-500' : (status === 'past' ? 'border-slate-200 dark:border-slate-700' : 'border-green-300 dark:border-green-800')}`}>
+                                <div key={idx} className={`timetable-slot-card relative pl-6 pb-5 last:pb-0 border-l-2 ${status === 'current' ? 'border-purple-500' : (status === 'past' ? 'border-slate-200 dark:border-slate-700' : 'border-indigo-200 dark:border-indigo-900')}`}>
                                     <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 ${status === 'current' ? 'bg-purple-500 border-purple-100 animate-pulse scale-110' : (status === 'past' ? 'bg-slate-200 dark:bg-slate-700 border-slate-100 dark:border-slate-600' : 'bg-white dark:bg-slate-900 border-green-400')}`}></div>
-                                    <div className={`rounded-xl p-3 sm:p-4 transition-all ${status === 'current' ? 'bg-purple-50 dark:bg-purple-900/20 shadow-md border border-purple-100 dark:border-purple-800 transform scale-[1.02]' : (status === 'past' ? 'opacity-60 grayscale' : 'bg-green-50/50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30')}`}>
+                                    <div className={`rounded-2xl p-4 transition-all ${status === 'current' ? 'bg-purple-50 dark:bg-purple-900/20 shadow-md border border-purple-100 dark:border-purple-800 transform scale-[1.01]' : (status === 'past' ? 'opacity-55 bg-slate-50 dark:bg-slate-800/50' : 'bg-indigo-50/45 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-900/30')}`}>
                                         <div className="flex justify-between items-start">
                                             <div>
                                                 <div className={`text-xs font-mono mb-1 ${status === 'current' ? 'text-purple-600 dark:text-purple-400 font-bold' : 'text-slate-400'}`}>{formatTimeStr(slot.start)} - {formatTimeStr(slot.end)}</div>
@@ -1849,8 +1861,9 @@
                                     </div>
                                 </div>
                             ); 
-                        }) : (<div className="text-center py-10 text-slate-400 font-medium">是日休息或未設定課程</div>)}
-                    </div> 
+                        }) : (<div className="text-center py-16 text-slate-400"><div className="w-16 h-16 rounded-3xl bg-slate-100 dark:bg-slate-800 grid place-items-center mx-auto mb-4"><Icon name="coffee" className="w-7 h-7" /></div><div className="text-lg font-black text-slate-600 dark:text-slate-300">今日未設定課堂</div><div className="text-sm font-bold mt-2">可以休息，或者到右上角編輯時間表</div></div>)}
+                        </div>
+                    </div>
                 </div> 
             );
         }
@@ -1899,9 +1912,20 @@
                 const d = new Date(`${selectedDate}T00:00:00`);
                 return d.toLocaleDateString('zh-HK', { month: 'long', day: 'numeric', weekday: 'long' });
             })();
+            const monthItems = visibleItems.filter(item => {
+                const d = new Date(`${String(item.dueDate).slice(0, 10)}T00:00:00`);
+                return !isNaN(d.getTime()) && d.getFullYear() === cursor.getFullYear() && d.getMonth() === cursor.getMonth();
+            });
+            const monthPending = monthItems.filter(item => !item.completed).length;
+            const monthCompleted = monthItems.filter(item => item.completed).length;
 
             return (
-                <div className="max-w-3xl mx-auto space-y-5 pb-12">
+                <div className="max-w-5xl mx-auto space-y-5 pb-12">
+                    <div className="relative overflow-hidden rounded-[2rem] p-5 sm:p-6 bg-gradient-to-br from-indigo-950 via-blue-900 to-sky-700 text-white shadow-[0_30px_80px_-38px_rgba(15,23,42,.9)]">
+                        <div className="absolute -right-16 -top-20 w-64 h-64 rounded-full bg-cyan-300/20 blur-3xl"></div>
+                        <div className="relative flex items-center justify-between gap-4"><div><div className="text-xs font-black tracking-[.18em] text-sky-200">MONTH OVERVIEW</div><h2 className="text-2xl sm:text-3xl font-black mt-2">{cursor.getMonth() + 1}月學習月曆</h2><div className="flex flex-wrap gap-2 mt-3"><span className="px-3 py-1.5 rounded-xl bg-white/10 border border-white/10 text-xs font-black">{monthPending} 項待辦</span><span className="px-3 py-1.5 rounded-xl bg-emerald-400/15 border border-emerald-300/15 text-xs font-black text-emerald-200">{monthCompleted} 項完成</span></div></div><div className="w-14 h-14 rounded-2xl bg-white/10 border border-white/15 grid place-items-center"><Icon name="calendar-days" className="w-7 h-7 text-sky-200" /></div></div>
+                    </div>
+                    <div className="grid lg:grid-cols-[1.16fr_.84fr] gap-5 items-start">
                     <section className="calendar-board rounded-[2rem] bg-white/95 dark:bg-slate-900/90 p-4 sm:p-6">
                         <div className="flex items-center justify-between gap-3 mb-5">
                             <div>
@@ -1935,7 +1959,7 @@
                         </div>
                     </section>
 
-                    <section className="rounded-[2rem] bg-white/90 dark:bg-slate-900/85 border border-slate-200/60 dark:border-slate-800 p-4 sm:p-6">
+                    <section className="rounded-[2rem] bg-white/90 dark:bg-slate-900/85 border border-slate-200/60 dark:border-slate-800 p-4 sm:p-6 lg:sticky lg:top-4">
                         <div className="flex items-center justify-between gap-3 mb-4">
                             <div>
                                 <h3 className="text-lg font-black text-slate-900 dark:text-white">{selectedDateText}</h3>
@@ -1964,6 +1988,7 @@
                             })}
                         </div>
                     </section>
+                    </div>
                 </div>
             );
         }
@@ -3166,11 +3191,9 @@
 
         function NavItem({ id, icon, label, active, onClick, t }) {
             return (
-                <button type="button" onClick={onClick} aria-label={label} aria-current={active ? 'page' : undefined} className={`relative flex items-center justify-center h-12 rounded-full transition-all duration-300 ease-out overflow-hidden ${active ? `nav-active ${t.lightBg} ${t.text} px-4 shadow-sm` : 'w-12 px-0 text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
+                <button type="button" onClick={onClick} aria-label={label} aria-current={active ? 'page' : undefined} className={`relative flex flex-col items-center justify-center gap-1 w-14 h-14 rounded-2xl transition-all duration-300 ease-out ${active ? `nav-active ${t.lightBg} ${t.text} shadow-sm -translate-y-0.5` : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
                     <Icon name={icon} className={`w-5 h-5 shrink-0 transition-transform duration-300 ${active ? 'scale-110' : ''}`} />
-                    <span className={`font-bold text-sm whitespace-nowrap transition-all duration-300 ease-out overflow-hidden ${active ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>
-                        {label}
-                    </span>
+                    <span className="font-black text-[10px] leading-none whitespace-nowrap">{label}</span>
                 </button>
             );
         }
@@ -3264,7 +3287,7 @@
                                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-2xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0">
                                     <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-400/15 border border-emerald-300/20 text-xs font-black text-emerald-200 mb-2">
-                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.4.0 設定工作區
+                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.5.0 全頁工作區
                                     </div>
                                     <h2 className="text-xl sm:text-2xl font-black tracking-tight truncate">應用程式設定</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-0.5 truncate">{displayName} · {email || '個人帳戶'}</p>
@@ -3460,7 +3483,7 @@
             return <div className="settings-shell max-w-5xl mx-auto pb-12 space-y-5">
                 <div className="relative overflow-hidden rounded-[2rem] p-5 sm:p-7 bg-gradient-to-br from-slate-950 via-indigo-950 to-sky-800 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,.8)]">
                     <div className="absolute -top-24 -right-12 w-64 h-64 rounded-full bg-cyan-300/20 blur-3xl"></div><div className="absolute -bottom-24 left-1/3 w-72 h-64 rounded-full bg-violet-400/20 blur-3xl"></div>
-                    <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5"><div className="flex items-center gap-4 min-w-0"><div className="w-16 h-16 rounded-[1.35rem] bg-white/15 border border-white/20 backdrop-blur-xl grid place-items-center text-2xl font-black shadow-xl shrink-0">{initial}</div><div className="min-w-0"><div className="text-xs font-black tracking-[.18em] text-indigo-200">STUDYOS SETTINGS</div><h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1 truncate">{displayName}</h2><p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人帳戶'}</p></div></div><div className="flex items-center gap-2"><span className={`px-3 py-2 rounded-xl border text-xs font-black ${isOnline ? 'bg-emerald-400/15 border-emerald-300/20 text-emerald-200' : 'bg-orange-400/15 border-orange-300/20 text-orange-200'}`}><span className={`inline-block w-2 h-2 rounded-full mr-2 ${isOnline ? 'bg-emerald-300 animate-pulse' : 'bg-orange-300'}`}></span>{isOnline ? '同步正常' : '離線模式'}</span><span className="px-3 py-2 rounded-xl bg-white/10 border border-white/15 text-xs font-black text-indigo-100">v2.4.0</span></div></div>
+                    <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5"><div className="flex items-center gap-4 min-w-0"><div className="w-16 h-16 rounded-[1.35rem] bg-white/15 border border-white/20 backdrop-blur-xl grid place-items-center text-2xl font-black shadow-xl shrink-0">{initial}</div><div className="min-w-0"><div className="text-xs font-black tracking-[.18em] text-indigo-200">STUDYOS SETTINGS</div><h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-1 truncate">{displayName}</h2><p className="text-sm text-indigo-100 font-bold mt-1 truncate">{email || '個人帳戶'}</p></div></div><div className="flex items-center gap-2"><span className={`px-3 py-2 rounded-xl border text-xs font-black ${isOnline ? 'bg-emerald-400/15 border-emerald-300/20 text-emerald-200' : 'bg-orange-400/15 border-orange-300/20 text-orange-200'}`}><span className={`inline-block w-2 h-2 rounded-full mr-2 ${isOnline ? 'bg-emerald-300 animate-pulse' : 'bg-orange-300'}`}></span>{isOnline ? '同步正常' : '離線模式'}</span><span className="px-3 py-2 rounded-xl bg-white/10 border border-white/15 text-xs font-black text-indigo-100">v2.5.0</span></div></div>
                 </div>
 
                 <div className="settings-workspace">
@@ -3504,7 +3527,7 @@
                         </div></Panel>}
 
                         {activeCategory === 'app' && <Panel title="應用程式" desc="PWA 安裝狀態、版本及更新工具。" icon="smartphone"><div className="space-y-3">
-                            <div className="rounded-[1.5rem] p-5 bg-slate-950 text-white relative overflow-hidden"><div className="absolute -right-12 -top-12 w-36 h-36 rounded-full bg-indigo-500/30 blur-2xl"></div><div className="relative"><div className="flex items-center justify-between"><div><div className="text-xs font-black text-indigo-300 tracking-wider">E-HANDBOOK PRO</div><div className="text-xl font-black mt-1">StudyOS 2.4.0</div></div><div className="w-11 h-11 rounded-2xl bg-white/10 grid place-items-center"><Icon name="book-open" className="w-5 h-5" /></div></div><div className="grid grid-cols-2 gap-2 mt-5"><div className="rounded-xl bg-white/10 p-3"><div className="text-[11px] text-slate-400 font-bold">顯示模式</div><div className="text-sm font-black mt-1">{standaloneMode ? '主畫面 PWA' : '瀏覽器'}</div></div><div className="rounded-xl bg-white/10 p-3"><div className="text-[11px] text-slate-400 font-bold">網絡</div><div className="text-sm font-black mt-1">{isOnline ? '正常連線' : '離線'}</div></div></div></div></div>
+                            <div className="rounded-[1.5rem] p-5 bg-slate-950 text-white relative overflow-hidden"><div className="absolute -right-12 -top-12 w-36 h-36 rounded-full bg-indigo-500/30 blur-2xl"></div><div className="relative"><div className="flex items-center justify-between"><div><div className="text-xs font-black text-indigo-300 tracking-wider">E-HANDBOOK PRO</div><div className="text-xl font-black mt-1">StudyOS 2.5.0</div></div><div className="w-11 h-11 rounded-2xl bg-white/10 grid place-items-center"><Icon name="book-open" className="w-5 h-5" /></div></div><div className="grid grid-cols-2 gap-2 mt-5"><div className="rounded-xl bg-white/10 p-3"><div className="text-[11px] text-slate-400 font-bold">顯示模式</div><div className="text-sm font-black mt-1">{standaloneMode ? '主畫面 PWA' : '瀏覽器'}</div></div><div className="rounded-xl bg-white/10 p-3"><div className="text-[11px] text-slate-400 font-bold">網絡</div><div className="text-sm font-black mt-1">{isOnline ? '正常連線' : '離線'}</div></div></div></div></div>
                             <ActionRow icon="refresh-cw" title="重新載入最新版本" desc="清除程式快取後重新載入，不會刪除功課資料" onClick={onRefreshApp} tone="indigo" />
                             <ActionRow icon="bell" title="開啟通知中心" desc="查看版本更新、公告及廣播" onClick={onOpenNotifications} tone="orange" trailing={unreadNotificationCount ? `${unreadNotificationCount} 未讀` : '全部已讀'} />
                             <div className="text-center text-xs font-bold text-slate-400 pt-2">私人及班內使用 · 設定會自動儲存在此裝置</div>
@@ -4696,6 +4719,20 @@ function App() {
             if (systemConfig?.whitelistEnabled && !isAdmin && (!systemConfig?.allowedEmails?.includes(user.email))) return <BlockScreen type="whitelist_blocked" user={user} />;
             if (systemConfig?.blacklistEnabled && !isAdmin && systemConfig?.blacklistedEmails?.includes(user.email)) return <BlockScreen type="access_denied" customTitle="帳號停權" customMessage="您的帳號已被管理員列入黑名單，無法存取本系統。" user={user} />;
 
+            const pageMeta = viewMode === 'settings'
+                ? { title: '應用程式設定', subtitle: '按分類調整帳戶、外觀、提醒與資料', icon: 'sliders-horizontal' }
+                : viewMode === 'calendar'
+                    ? { title: '功課月曆', subtitle: '按日期檢視、完成或修改功課', icon: 'calendar-days' }
+                    : viewMode === 'timetable'
+                        ? { title: '上課時間表', subtitle: '即時查看課堂、轉堂及下一節', icon: 'calendar-clock' }
+                        : viewMode === 'timetable_edit'
+                            ? { title: '編輯時間表', subtitle: '先設定時間，再編排星期一至五課堂', icon: 'calendar-cog' }
+                            : viewMode === 'history'
+                                ? { title: '完成紀錄', subtitle: `${completedVisibleCount} 項已完成，可隨時放回待辦`, icon: 'archive-restore' }
+                                : appMode === 'class'
+                                    ? { title: '我的班級', subtitle: `${joinedClasses.length} 個班級，自動接收最新功課`, icon: 'school' }
+                                    : { title: '今日工作台', subtitle: `明天 ${counts.tomorrow} 份功課 · 今日尚餘 ${counts.today} 份`, icon: 'book-open' };
+
             return (
                 <div className={`app-shell min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-slate-900 font-sans relative overflow-hidden p-4 sm:p-6 md:p-8 pb-32 ${systemConfig?.announcementText ? 'pt-14 sm:pt-16 md:pt-20' : ''}`}>
                     
@@ -4727,19 +4764,18 @@ function App() {
 
                     <div className="max-w-[1200px] mx-auto relative z-10 transition-all duration-500">
                         {viewMode !== 'admin' && (
-                        <header className="app-header flex items-center justify-between gap-2 mb-8 max-w-3xl mx-auto glass-card bg-white/90 dark:bg-slate-900/90 px-5 py-4 rounded-[2rem]">
+                        <header className="app-header flex items-center justify-between gap-2 mb-6 max-w-5xl mx-auto glass-card bg-white/90 dark:bg-slate-900/90 px-4 sm:px-5 py-3.5 sm:py-4 rounded-[2rem]">
                             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                                 <div className={`app-header-icon w-11 h-11 rounded-2xl flex items-center justify-center bg-gradient-to-br ${t.gradient} text-white shadow-lg`}>
-                                    <Icon name={viewMode === 'settings' ? "sliders-horizontal" : viewMode === 'calendar' ? "calendar-days" : viewMode === 'timetable' || viewMode === 'timetable_edit' ? "calendar-clock" : viewMode === 'history' ? "timer" : appMode === 'class' ? "school" : "book-open"} className="w-6 h-6" />
+                                    <Icon name={pageMeta.icon} className="w-6 h-6" />
                                 </div>
                                 <div className="min-w-0">
-                                    <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight truncate">
-                                        {viewMode === 'settings' ? '應用程式設定' : viewMode === 'calendar' ? '功課月曆' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '完成紀錄' : appMode === 'class' ? '我的班級' : '今日工作台'}
-                                    </h1>
-                                    <p className="text-xs font-bold text-slate-500 mt-0.5 truncate">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.4.0</p>
+                                    <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight truncate">{pageMeta.title}</h1>
+                                    <p className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 mt-0.5 truncate">{pageMeta.subtitle}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                                <div className="hidden lg:block text-right mr-1"><div className="text-xs font-black text-slate-600 dark:text-slate-300">{globalNow.toLocaleDateString('zh-HK', { month: 'numeric', day: 'numeric', weekday: 'short' })}</div><div className="text-[10px] font-bold text-slate-400 mt-0.5">StudyOS v2.5.0</div></div>
                                 {viewMode === 'current' && appMode === 'personal' && (
                                     <button type="button" onClick={() => setIsSubjectManagerOpen(true)} aria-label="開啟科目管理" className="flex p-2.5 sm:px-3 sm:py-2.5 rounded-2xl font-black text-xs bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-300 hover:text-indigo-600 active:scale-95 transition-all items-center gap-2" title="科目管理"><Icon name="book-marked" className="w-4 h-4" /><span className="hidden sm:inline">科目</span></button>
                                 )}
@@ -4928,6 +4964,12 @@ function App() {
 
                                             {isVisible('list') && (
                                                 <>
+                                                    {viewMode === 'history' && (
+                                                        <div className="relative overflow-hidden mb-5 rounded-[2rem] p-5 sm:p-6 bg-gradient-to-br from-emerald-950 via-teal-900 to-emerald-700 text-white shadow-[0_28px_70px_-36px_rgba(6,78,59,.9)]">
+                                                            <div className="absolute -right-16 -top-20 w-56 h-56 rounded-full bg-emerald-300/20 blur-3xl"></div>
+                                                            <div className="relative flex items-center justify-between gap-5"><div><div className="text-xs font-black tracking-[.18em] text-emerald-200">COMPLETED</div><h2 className="text-2xl sm:text-3xl font-black mt-2">已完成 {completedVisibleCount} 項功課</h2><p className="text-sm font-bold text-emerald-100/80 mt-2">最新完成排最前；按綠色剔號即可放回待辦。</p></div><div className="w-16 h-16 rounded-2xl bg-white/10 border border-white/15 grid place-items-center shrink-0"><Icon name="archive-restore" className="w-8 h-8 text-emerald-200" /></div></div>
+                                                        </div>
+                                                    )}
                                                     <div className="mb-3 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700 p-1.5 shadow-sm flex items-center gap-1.5">
                                                         <button type="button" onClick={() => { setViewMode('current'); setAppMode('personal'); setSearchQuery(''); setSortOption('date_asc'); }} className={`flex-1 min-w-0 h-11 px-3 rounded-xl text-sm font-black flex items-center justify-center gap-2 transition-all ${viewMode !== 'history' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}><Icon name="list-todo" className="w-4 h-4" />待辦項目 <span className={`min-w-6 h-6 px-1.5 rounded-lg grid place-items-center text-xs ${viewMode !== 'history' ? 'bg-white/15 dark:bg-slate-900/10' : 'bg-slate-100 dark:bg-slate-800'}`}>{activeItems.length}</span></button>
                                                         <button type="button" onClick={() => { setViewMode('history'); setAppMode('personal'); setSearchQuery(''); setSortOption('date_desc'); }} className={`flex-1 min-w-0 h-11 px-3 rounded-xl text-sm font-black flex items-center justify-center gap-2 transition-all ${viewMode === 'history' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-200/50 dark:shadow-none' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}><Icon name="archive-restore" className="w-4 h-4" />完成紀錄 <span className={`min-w-6 h-6 px-1.5 rounded-lg grid place-items-center text-xs ${viewMode === 'history' ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-800'}`}>{completedVisibleCount}</span></button>
@@ -4993,14 +5035,16 @@ function App() {
 
                                     {viewMode === 'current' && appMode === 'class' && (
                                         <div className="space-y-6 animate-fadeIn pb-10">
-                                            <div className="glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl p-6 shadow-sm border border-white/40 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                                            <div className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-blue-800 text-white rounded-[2rem] p-5 sm:p-6 shadow-[0_30px_80px_-38px_rgba(15,23,42,.9)] flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5">
+                                                <div className="absolute -right-16 -top-20 w-64 h-64 rounded-full bg-cyan-300/20 blur-3xl"></div>
                                                 <div>
-                                                    <h3 className="text-xl font-bold flex items-center gap-2 dark:text-white"><Icon name="school" className={t.text} /> 班級廣播</h3>
-                                                    <p className="text-sm text-slate-500 mt-1">全校及已加入班級的廣播任務，會出現在你的個人手冊。</p>
+                                                    <div className="text-xs font-black tracking-[.18em] text-indigo-300 mb-2">CLASS BOARD</div>
+                                                    <h3 className="text-2xl sm:text-3xl font-black flex items-center gap-2"><Icon name="school" className="text-indigo-200" /> 班級廣播</h3>
+                                                    <p className="text-sm font-bold text-indigo-100/80 mt-2">全校及已加入班級的功課會自動加入個人手冊。</p>
                                                 </div>
-                                                <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-                                                    <div className="px-4 py-2.5 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 bg-emerald-500 text-white"><Icon name="check-circle-2" className="w-4 h-4" /> 自動收取已啟用</div>
-                                                    <button onClick={() => setIsJoinClassOpen(true)} className={`px-4 py-2.5 rounded-xl font-bold text-sm text-white shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 ${t.bg}`}><Icon name="plus" className="w-4 h-4" /> 加入班級</button>
+                                                <div className="relative flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+                                                    <div className="px-4 py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 bg-emerald-400/15 border border-emerald-300/20 text-emerald-200"><Icon name="check-circle-2" className="w-4 h-4" /> 自動收取</div>
+                                                    <button onClick={() => setIsJoinClassOpen(true)} className="px-4 py-3 rounded-2xl font-black text-sm bg-white text-indigo-700 shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"><Icon name="plus" className="w-4 h-4" /> 加入班級</button>
                                                 </div>
                                             </div>
 
@@ -5241,11 +5285,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v2.4.0-studyos-settings | original Firebase data structure preserved -->
-    <!-- ehandbook-build: v2.4.0-studyos-settings -->
+<!-- VERSION_CHECK: v2.5.0-studyos-unified-ui | original Firebase data structure preserved -->
+    <!-- ehandbook-build: v2.5.0-studyos-unified-ui -->
 </body>
 </html>
 
-<!-- ehandbook_v2.4.0_studyos_settings: mobile-first private and class planner. -->
+<!-- ehandbook_v2.5.0_studyos_unified_ui: mobile-first private and class planner. -->
 
-<!-- v2.4.0-studyos-settings: responsive settings workspace with reliable iPad PWA authentication. -->
+<!-- v2.5.0-studyos-unified-ui: unified responsive workspaces with reliable iPad PWA authentication. -->
