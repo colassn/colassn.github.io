@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v2.3.0 StudyOS Subjects & Records -->
+    <!-- 電子手冊 Pro v2.3.1 StudyOS iPad PWA Auth -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VCPLTE2QT"></script>
     <script>
@@ -19,12 +19,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest?v=2.3.0">
-    <link rel="icon" href="./icon.svg?v=2.3.0" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=2.3.1">
+    <link rel="icon" href="./icon.svg?v=2.3.1" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v2.3.0-studyos-subjects-records">
-    <script>window.__EHANDBOOK_VERSION__ = "v2.3.0-studyos-subjects-records"; console.log("電子手冊 Pro v2.3.0 subjects and records build loaded");</script>
+    <meta name="ehandbook-version" content="v2.3.1-studyos-ipad-auth">
+    <script>window.__EHANDBOOK_VERSION__ = "v2.3.1-studyos-ipad-auth"; console.log("電子手冊 Pro v2.3.1 iPad PWA auth build loaded");</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -278,7 +278,7 @@
             try {
                 var box = document.getElementById('loading-screen');
                 if (box && !window.__EHANDBOOK_RENDERED__) {
-                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.3.0 已啟用登入穩定保護。</p></div>";
+                    box.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>網站載入時發生錯誤</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請重新整理一次；如果仍然出現，請截圖 Console 錯誤。StudyOS v2.3.1 已啟用 iPad 登入穩定保護。</p></div>";
                 }
             } catch(e) {}
         });
@@ -296,7 +296,7 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.3.0', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2.3.1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
@@ -342,7 +342,7 @@
             let auth;
             try {
                 auth = initializeAuth(app, {
-                    persistence: [browserLocalPersistence, browserSessionPersistence, indexedDBLocalPersistence, inMemoryPersistence],
+                    persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence, inMemoryPersistence],
                     popupRedirectResolver: browserPopupRedirectResolver
                 });
             } catch (authInitError) {
@@ -362,12 +362,13 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v2.3.0-studyos-subjects-records',
+                version: 'v2.3.1-studyos-ipad-auth',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
                 redirectStartedAt: null,
                 redirectResultState: 'not-started',
+                persistenceMode: 'checking',
                 lastErrorCode: '',
                 lastErrorMessage: ''
             };
@@ -402,11 +403,28 @@
                 } catch(e) {}
             };
 
-            window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ = setPersistence(auth, browserLocalPersistence).catch((persistenceError) => {
-                rememberAuthError(persistenceError);
-                console.warn('Auth persistence fallback warning:', persistenceError);
+            window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ = (async () => {
+                const candidates = [
+                    ['indexedDB', indexedDBLocalPersistence],
+                    ['localStorage', browserLocalPersistence],
+                    ['sessionStorage', browserSessionPersistence],
+                    ['memory', inMemoryPersistence]
+                ];
+                let lastPersistenceError = null;
+                for (const [name, persistence] of candidates) {
+                    try {
+                        await setPersistence(auth, persistence);
+                        window.__EHANDBOOK_AUTH_DEBUG__.persistenceMode = name;
+                        return name;
+                    } catch (persistenceError) {
+                        lastPersistenceError = persistenceError;
+                        console.warn(`Auth persistence ${name} unavailable:`, persistenceError);
+                    }
+                }
+                if (lastPersistenceError) rememberAuthError(lastPersistenceError);
+                window.__EHANDBOOK_AUTH_DEBUG__.persistenceMode = 'unavailable';
                 return null;
-            });
+            })();
 
             window.__EHANDBOOK_REDIRECT_RESULT_PROMISE__ = (async () => {
                 try {
@@ -440,11 +458,14 @@
                 }
             })();
 
+            const redirectSignInSafe = !!window.location.hostname && window.location.hostname === firebaseConfig.authDomain;
             window.firebaseServices = { 
                 auth, db, googleProvider, createGoogleProvider,
+                redirectSignInSafe,
                 signInWithPopup, signInWithRedirect, getRedirectResult, browserPopupRedirectResolver, setPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, updateProfile, 
                 collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, where, getDocs, setDoc, arrayUnion, arrayRemove, getDoc, writeBatch, limit, startAfter
             };
+            await window.__EHANDBOOK_AUTH_PERSISTENCE_READY__;
             window.__EHANDBOOK_FIREBASE_READY__ = true;
             try { window.dispatchEvent(new Event('ehandbook:firebase-ready')); } catch(e) {}
         } catch (e) {
@@ -461,8 +482,8 @@
         const ADMIN_EMAIL = 'chimhinhin@gmail.com'; 
 
         const CURRENT_RELEASE_NOTICE = {
-            version: window.__EHANDBOOK_VERSION__ || 'v2.3.0-studyos-subjects-records',
-            title: 'StudyOS 2.3 科目與完成紀錄更新',
+            version: window.__EHANDBOOK_VERSION__ || 'v2.3.1-studyos-ipad-auth',
+            title: 'StudyOS 2.3.1 iPad 登入修正版',
             summary: [
                 '主頁改為優先顯示明天要交的功課，日期和數量更清楚。',
                 '重新設計時間表編輯、通知中心及應用程式設定。',
@@ -471,7 +492,8 @@
                 '右下角＋號改為在螢幕中央開啟新增視窗，所有裝置操作一致。',
                 '科目管理加入改名、改色、排序及相關功課與時間表同步。',
                 '主頁準確區分明日功課、今日無功課及今日全部完成。',
-                '完成紀錄入口更清楚，最新完成項目會排在最上方。'
+                '完成紀錄入口更清楚，最新完成項目會排在最上方。',
+                '修正 iPad 加入主畫面後 Google 及 Email 登入停留在登入頁的問題。'
             ].join('\n'),
             guide: [
                 '主頁大卡會直接顯示明天尚未完成的功課數量。',
@@ -515,8 +537,8 @@
         };
 
         const getBrowserLoginModeText = () => {
-            if (isInAppBrowser()) return '偵測到內置瀏覽器，會改用跳轉登入；如仍失敗，請用 Chrome / Safari 正常瀏覽器開啟。';
-            if (isStandaloneMode()) return '目前像是安裝版 / PWA，會使用跳轉登入；如返回後仍在登入頁，請用瀏覽器開啟網站。';
+            if (isInAppBrowser()) return '偵測到內置瀏覽器；為保障登入狀態，請用 Chrome / Safari 正常瀏覽器開啟。';
+            if (isStandaloneMode()) return '目前是 iPad／iPhone 主畫面版本，Google 登入會使用獨立安全視窗；Email 登入亦可直接使用。';
             if (isIPadLike() || isSafariLike()) return '此裝置會先用彈出式登入；如果瀏覽器阻擋，才會改用跳轉登入。';
             return '此瀏覽器會先使用彈出式 Google 登入，失敗時再自動改用跳轉登入。';
         };
@@ -533,6 +555,7 @@
             if (code === 'auth/popup-blocked') return '瀏覽器阻擋了登入視窗，請再按一次 Google 登入，系統會自動改用跳轉登入。';
             if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return '你已取消 Google 登入，請再按一次「使用 Google 繼續」。';
             if (code === 'auth/operation-not-supported-in-this-environment' || code === 'auth/web-storage-unsupported') return '這個瀏覽器不支援彈出式登入，請用 Chrome / Safari 開啟，或再按一次讓系統改用跳轉登入。';
+            if (code === 'auth/pwa-popup-unavailable') return 'iPad 主畫面版本未能開啟 Google 登入視窗。請先允許彈出式視窗，或暫時使用 Email 登入。';
             if (code === 'auth/unauthorized-domain') return '此網站網域未加入 Firebase 授權網域，請管理員到 Firebase Authentication > Settings > Authorized domains 加入目前網址。';
             if (code === 'auth/operation-not-allowed') return 'Firebase 尚未開啟 Google 或 Email 登入方式，請管理員到 Firebase Authentication 啟用。';
             if (code === 'auth/argument-error') return 'Google 登入參數錯誤。請重新整理頁面；如問題持續，請檢查 Firebase 授權網域設定。';
@@ -753,17 +776,18 @@
         };
 
 
-        function AuthPage({ triggerAlert }) { 
+        function AuthPage({ triggerAlert, onAuthenticated }) { 
             const [isLogin, setIsLogin] = useState(true);
             const [isResetMode, setIsResetMode] = useState(false);
             const [email, setEmail] = useState('');
             const [password, setPassword] = useState(''); 
             const [loading, setLoading] = useState(false);
             const services = window.firebaseServices || {};
-            const { auth, googleProvider, createGoogleProvider, signInWithPopup, signInWithRedirect, browserPopupRedirectResolver, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } = services;
+            const { auth, googleProvider, createGoogleProvider, signInWithPopup, signInWithRedirect, browserPopupRedirectResolver, redirectSignInSafe, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } = services;
             const inAppBrowser = isInAppBrowser();
+            const standaloneMode = isStandaloneMode();
 
-            const mustUseRedirectLogin = () => isStandaloneMode() || isInAppBrowser();
+            const mustUseRedirectLogin = () => isInAppBrowser() && redirectSignInSafe;
             const shouldFallbackToRedirect = (error) => {
                 const code = error?.code || '';
                 return ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/web-storage-unsupported', 'auth/argument-error', 'auth/cancelled-popup-request'].includes(code);
@@ -779,8 +803,10 @@
                 }
             };
             const startRedirectLogin = async () => {
+                if (!redirectSignInSafe) throw { code: 'auth/pwa-popup-unavailable', message: 'Cross-origin redirect sign-in is not safe in this browser.' };
                 const provider = getFreshGoogleProvider();
                 if (!provider) throw new Error('Google Provider 尚未準備好');
+                await (window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ || Promise.resolve());
                 window.__EHANDBOOK_MARK_REDIRECT_PENDING__?.();
                 try { window.__EHANDBOOK_AUTH_DEBUG__.redirectResultState = 'redirect-started'; } catch(e) {}
                 await signInWithRedirect(auth, provider, browserPopupRedirectResolver);
@@ -799,6 +825,7 @@
                     const signedInUser = result?.user || auth.currentUser;
                     if (signedInUser) {
                         window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
+                        onAuthenticated?.(signedInUser);
                         triggerAlert('Google 登入成功，正在進入主頁…');
                     } else if (wasRedirecting && window.__EHANDBOOK_REDIRECT_ERROR__) {
                         triggerAlert(getFriendlyAuthError(window.__EHANDBOOK_REDIRECT_ERROR__, 'login'), 'error');
@@ -815,7 +842,6 @@
                 if (!auth || !signInWithPopup || !signInWithRedirect) { triggerAlert('Firebase 尚未準備好，請重新整理後再試。', 'error'); return; }
                 try {
                     setLoading(true);
-                    await (window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ || Promise.resolve());
 
                     if (mustUseRedirectLogin()) {
                         await startRedirectLogin();
@@ -825,19 +851,22 @@
                     // 保留穩定登入流程，廣播功課由管理員發放後即時派發。
                     window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
                     const provider = getFreshGoogleProvider();
+                    // iPad / Safari 必須在使用者按鈕事件內立即開啟視窗；不可先 await，否則會失去 popup 權限。
                     const credential = await signInWithPopup(auth, provider, browserPopupRedirectResolver);
                     if (credential?.user) {
                         window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
+                        onAuthenticated?.(credential.user);
                         triggerAlert('Google 登入成功，正在進入主頁…');
                     } else if (auth.currentUser) {
                         window.__EHANDBOOK_CLEAR_REDIRECT_PENDING__?.();
+                        onAuthenticated?.(auth.currentUser);
                         triggerAlert('Google 登入成功，正在進入主頁…');
                     } else {
                         throw { code: 'auth/no-user-after-popup', message: 'Google 登入完成，但系統未取得使用者狀態。' };
                     }
                 } catch (error) {
                     console.warn('Google login failed:', error);
-                    if (shouldFallbackToRedirect(error) && signInWithRedirect) {
+                    if (shouldFallbackToRedirect(error) && signInWithRedirect && redirectSignInSafe) {
                         try {
                             await startRedirectLogin();
                             return;
@@ -847,7 +876,10 @@
                             triggerAlert(getFriendlyAuthError(redirectError, 'login'), 'error');
                         }
                     } else {
-                        triggerAlert(getFriendlyAuthError(error, 'login'), 'error');
+                        const finalError = standaloneMode && shouldFallbackToRedirect(error) && !redirectSignInSafe
+                            ? { code: 'auth/pwa-popup-unavailable', message: error?.message || '' }
+                            : error;
+                        triggerAlert(getFriendlyAuthError(finalError, 'login'), 'error');
                     }
                     setLoading(false);
                 } 
@@ -880,8 +912,11 @@
                 try {
                     setLoading(true);
                     await (window.__EHANDBOOK_AUTH_PERSISTENCE_READY__ || Promise.resolve());
-                    if (isLogin) await signInWithEmailAndPassword(auth, targetEmail, password);
-                    else await createUserWithEmailAndPassword(auth, targetEmail, password);
+                    const credential = isLogin
+                        ? await signInWithEmailAndPassword(auth, targetEmail, password)
+                        : await createUserWithEmailAndPassword(auth, targetEmail, password);
+                    if (!credential?.user) throw { code: 'auth/no-user-after-email', message: '登入完成但未取得使用者狀態。' };
+                    onAuthenticated?.(credential.user);
                     triggerAlert(isLogin ? '登入成功，正在進入主頁…' : '註冊成功，正在建立個人資料…');
                 } catch (error) {
                     triggerAlert(getFriendlyAuthError(error, isLogin ? 'login' : 'register'), 'error');
@@ -938,6 +973,13 @@
                                     </button>
                                 )}
 
+                                {standaloneMode && !isResetMode && (
+                                    <div className="mt-3 rounded-xl bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800 px-3 py-2.5 text-xs font-bold text-sky-700 dark:text-sky-300 flex gap-2 items-start">
+                                        <Icon name="tablet-smartphone" className="w-4 h-4 shrink-0 mt-0.5" />
+                                        <span>已啟用 iPad 主畫面登入模式；按 Google 後請完成獨立登入視窗，或直接使用下方 Email 登入。</span>
+                                    </div>
+                                )}
+
                                 {inAppBrowser && !isResetMode && (
                                     <div className="mt-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 px-3 py-2 text-xs font-bold text-amber-700 dark:text-amber-300 flex gap-2 items-center">
                                         <Icon name="alert-triangle" className="w-4 h-4 shrink-0" />
@@ -957,7 +999,7 @@
                                         <label className="text-xs font-black text-slate-500 dark:text-slate-400 ml-1">Email</label> 
                                         <div className="relative mt-1.5"> 
                                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400"><Icon name="mail" className="w-5 h-5" /></div> 
-                                            <input type="email" className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-semibold dark:text-white" placeholder="name@example.com" value={email} onChange={e => setEmail(e.target.value)} required /> 
+                                            <input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck="false" className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-semibold dark:text-white" placeholder="name@example.com" value={email} onChange={e => setEmail(e.target.value)} required /> 
                                         </div> 
                                     </div> 
                                     {!isResetMode && (
@@ -992,7 +1034,7 @@
                                     </div>
                                 )}
 
-                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.3.0 Subjects & Records</div>
+                                <div className="mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none">StudyOS · v2.3.1 iPad Auth Fix</div>
                             </div> 
                         </div> 
                     </div> 
@@ -3201,7 +3243,7 @@
                                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-xl flex items-center justify-center text-2xl font-black shadow-lg shrink-0">{initial}</div>
                                 <div className="min-w-0">
                                     <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-400/15 border border-emerald-300/20 text-xs font-black text-emerald-200 mb-2">
-                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.3.0 完善版
+                                        <Icon name="badge-check" className="w-3.5 h-3.5" /> v2.3.1 iPad 登入修正版
                                     </div>
                                     <h2 className="text-xl sm:text-2xl font-black tracking-tight truncate">應用程式設定</h2>
                                     <p className="text-sm text-indigo-100 font-bold mt-0.5 truncate">{displayName} · {email || '個人帳戶'}</p>
@@ -4436,7 +4478,7 @@ function App() {
             if (!user) {
                 return (
                     <>
-                        <AuthPage triggerAlert={triggerAlert} />
+                        <AuthPage triggerAlert={triggerAlert} onAuthenticated={(signedInUser) => { setUser(signedInUser); setAuthLoading(false); }} />
                         <div className={`fixed top-4 sm:top-8 left-1/2 transform -translate-x-1/2 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${toast.isVisible ? 'translate-y-0 opacity-100 scale-100' : '-translate-y-full opacity-0 scale-95 pointer-events-none'}`}>
                             <div className={`px-5 py-3 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-xl flex items-center gap-3 font-bold text-sm tracking-wide border ${toast.type === 'error' ? 'bg-red-500/95 text-white border-red-400' : 'bg-slate-900/95 text-white border-slate-800 dark:bg-white/95 dark:text-slate-900 dark:border-white/50'}`}>
                                 <Icon name={toast.type === 'error' ? 'alert-triangle' : 'check-circle-2'} className={`w-5 h-5 ${toast.type === 'error' ? 'text-white' : 'text-emerald-400'}`} />
@@ -4493,7 +4535,7 @@ function App() {
                                     <h1 className="text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight truncate">
                                         {viewMode === 'settings' ? '應用程式設定' : viewMode === 'calendar' ? '功課月曆' : viewMode === 'timetable' ? '上課時間表' : viewMode === 'timetable_edit' ? '編輯時間表' : viewMode === 'history' ? '完成紀錄' : appMode === 'class' ? '我的班級' : '今日工作台'}
                                     </h1>
-                                    <p className="text-xs font-bold text-slate-500 mt-0.5 truncate">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.3.0</p>
+                                    <p className="text-xs font-bold text-slate-500 mt-0.5 truncate">{globalNow.toLocaleDateString('zh-HK', { year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short' })} · v2.3.1</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
@@ -4994,11 +5036,11 @@ function App() {
             }
         }
     </script>
-<!-- VERSION_CHECK: v2.3.0-studyos-subjects-records | original Firebase data structure preserved -->
-    <!-- ehandbook-build: v2.3.0-studyos-subjects-records -->
+<!-- VERSION_CHECK: v2.3.1-studyos-ipad-auth | original Firebase data structure preserved -->
+    <!-- ehandbook-build: v2.3.1-studyos-ipad-auth -->
 </body>
 </html>
 
-<!-- ehandbook_v2.3.0_studyos_subjects_records: mobile-first private and class planner. -->
+<!-- ehandbook_v2.3.1_studyos_ipad_auth: mobile-first private and class planner. -->
 
-<!-- v2.3.0-studyos-subjects-records: accurate tomorrow dashboard, complete subject management, and recoverable completion history. -->
+<!-- v2.3.1-studyos-ipad-auth: reliable iPad PWA authentication with popup-first Google sign-in and persistent sessions. -->
