@@ -1,42 +1,28 @@
-const CACHE_NAME = 'ehandbook-studyos-v2-5-0-unified-ui';
-const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
-
+const CACHE_NAME = 'ehandbook-studyos-v3-1-0-flat';
+const APP_SHELL = ['./index.html','./app.js?v=3.1.0','./collaboration.js?v=3.1.0','./collaboration.css?v=3.1.0','./core.js?v=3.1.0','./tailwind.css?v=3.1.0','./react.js','./react-dom.js','./lucide.js','./qrcode.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
-
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('ehandbook-')&&key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
 });
-
 self.addEventListener('fetch', event => {
-  const request = event.request;
-  if (request.method !== 'GET') return;
-  const url = new URL(request.url);
-  const isSensitive = /googleapis\.com|firebaseio\.com|identitytoolkit|securetoken|accounts\.google\.com|firebaseapp\.com\/__\/auth|web\.app\/__\/auth/.test(url.hostname + url.pathname);
-  if (isSensitive) return;
-
-  if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy));
+  const request=event.request,url=new URL(request.url);
+  if(request.method!=='GET')return;
+  if(url.pathname.startsWith('/__/auth/')||url.pathname.startsWith('/__/firebase/'))return;
+  const firebaseModule=url.origin==='https://www.gstatic.com'&&url.pathname.startsWith('/firebasejs/11.6.1/');
+  if(url.origin!==self.location.origin&&!firebaseModule)return;
+  const allowed=url.origin===self.location.origin&&(request.mode==='navigate'||APP_SHELL.some(p=>new URL(p,self.location.href).pathname===url.pathname));
+  if(!allowed&&!firebaseModule)return;
+  event.respondWith((async()=>{
+    const cache=await caches.open(CACHE_NAME),key=request.mode==='navigate'?'./index.html':request;
+    try {
+      const response=await fetch(request);
+      if(response.ok)await cache.put(key,response.clone());
       return response;
-    }).catch(() => caches.match('./index.html')));
-    return;
-  }
-
-  if (url.origin === self.location.origin) {
-    event.respondWith(fetch(request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-      return response;
-    }).catch(() => caches.match(request)));
-    return;
-  }
-
-  event.respondWith(caches.match(request).then(cached => cached || fetch(request).then(response => {
-    const copy = response.clone();
-    caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-    return response;
-  })));
+    } catch(e) {
+      const cached=await cache.match(key,{ignoreSearch:true});
+      return cached||new Response('目前離線，請連線後重新開啟。',{status:503,headers:{'Content-Type':'text/plain;charset=utf-8'}});
+    }
+  })());
 });

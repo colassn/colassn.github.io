@@ -1,51 +1,36 @@
-電子手冊 Pro · StudyOS v2.5.0 全頁工作區
+StudyOS 3.1.0 — 所有檔案同一層
 
-檔案內容
-1. index.html：網站最終版。
-2. manifest.webmanifest、icon.svg、sw.js：手機安裝及離線外殼支援，須與 index.html 放在同一層。
-3. firestore.rules：建議的 Firebase 資料庫權限規則。
+ZIP 內沒有子資料夾，也沒有內藏 ZIP。全部檔案解壓到同一個資料夾即可。
+程式入口：index.html。其他檔案自動載入，不用逐個開啟。
 
-部署前檢查
-1. 將壓縮檔內全部檔案上傳至 GitHub Pages 或 Firebase Hosting 的同一目錄。
-2. 到 Firebase Authentication 開啟 Google 及 Email/Password 登入。
-3. 在 Authentication > Settings > Authorized domains 加入網站網域。
-4. 到 Firestore Database > Rules，貼上 firestore.rules 內容並發佈。
-5. 管理員帳戶為 chimhinhin@gmail.com。
+平時不用打開 app-source.html（開發原始碼）、server.js（後端入口）、
+service.js、測試檔或設定檔。它們與網站檔案放在同一層。
 
-重要說明
-- Firebase 前端 API Key 會出現在網頁原始碼，這是正常做法；資料安全由登入、Firestore Rules 及授權網域控制。
-- 套用新規則前，建議先用 Firebase Rules Playground 測試管理員及學生帳戶。
-- 新版保留原有 users、users_public、public_assignments、system_settings 資料結構。
-- 舊功課不會因為升級而刪除，新版亦已取消「到期兩日後自動刪除」。
-- iPad 加入主畫面後，Google 登入會直接開啟獨立安全視窗，不再強制使用容易受 Safari 限制的跨網域跳轉。
-- Email 登入成功後會立即進入主程式；登入狀態會依次使用 IndexedDB、localStorage、sessionStorage 或記憶體備援。
-- 更新網站檔案後，請完全關閉舊主畫面程式再重新開啟；如仍顯示舊版，可移除主畫面圖示後重新加入一次。
+首次設定及正式使用
+Google 登入、多人群組及 PWA 仍需要先部署網站和 Firebase 後端。
+本次只改檔案擺放，沒有取消 Functions，也沒有替你部署。
+部署後，平時只需開網站網址；直接雙擊本機 HTML 不能代替部署。
 
-主要操作
-- 全站頂部列會按目前頁面顯示相關狀態；底部導航固定顯示圖示及名稱，切換更直觀。
-- 主頁優先顯示「明天功課」；新增聽日到期的功課後，明天待交數量會自動增加。
-- 今日狀態會分開顯示「今日沒有功課要交」、「今日功課已全部完成」或「今日尚餘 X 份功課」。
-- 主頁右下角「＋」：在螢幕正中央浮空開啟新增功課／測驗視窗；可按右上角「×」、點擊背景或按 Esc 關閉。
-- 任務工具列「歷史」：切換已完成紀錄。
-- 月曆：按日期查看及修改當日紀錄。
-- 月曆：頂部顯示整月待辦／完成數量；iPad 橫向空間足夠時會同時顯示月曆及當日詳情。
-- 班級：使用六位班級代碼加入；班級分頁旁的離開按鈕可退出班級。
-- 時間表編輯：分為時間設定及課程編排，離開前會提醒未儲存修改。
-- 上課時間表：頂部顯示目前課堂及尚餘時間；iPad 可從左側星期欄快速切換。
-- 通知中心：可切換全部／未讀，亦可一鍵標示全部已讀。
-- 應用程式設定：iPad／桌面使用左側分類與右側內容，手機使用頂部橫向分類列。
-- 外觀與體驗：可選淺色、深色或跟隨系統，動態效果可選完整、簡約或關閉。
-- 通知與提醒：功課、班級廣播、時間表更新及程式更新可分別開關，並即時套用到通知中心。
-- 資料與同步：查看連線及登入保存狀態、匯出備份、管理科目。
-- 應用程式：查看 PWA 狀態，並可清除程式快取後重新載入最新版本。
-- 超級管理中心：手機採用橫向分頁，iPad 及桌面使用側欄。
-- 設定 > 匯出備份：下載個人 JSON 備份。
-- 動態效果：主頁卡片、數字、進度、頁面切換、通知、時間表與後台均加入流暢轉場。
-- 科目管理：可由主頁右上角或「設定 > 科目與帳號」進入，支援新增、改名、改色、排序及回復預設；改名會同步更新相關個人功課及時間表。
-- 完成紀錄：在任務列表上方切換「待辦項目／完成紀錄」；剔完功課後亦可按提示直接查看，最新完成項目會排最前。
-- 如不需要動畫，可在「設定 > 外觀與體驗 > 動態效果」選擇「關閉」。
+在此資料夾使用 Node.js 22 執行：
+  npm ci
+  npx firebase login
+  npx firebase deploy --project recordhwv2 --only functions:studyos-collaboration,firestore:rules,firestore:indexes
+  npx firebase deploy --project recordhwv2 --only hosting
 
-確認新版
-- 網站頂部或設定頁應顯示「v2.5.0」。
-- 月曆、時間表、完成紀錄及班級頁均應顯示專屬總覽卡片。
-- 如果仍看到舊版，請確保上傳壓縮檔內全部檔案，然後重新整理網站；已加到主畫面的版本可先關閉再重新開啟。
+Firebase 設定已指向同一個資料夾，並排除後端、測試及原始碼，避免上傳到公開網站。
+部署前保留原有資料和規則；已有其他索引時，請合併設定，不要刪除無關索引。
+Functions 仍需合適的 Firebase 方案。套件没有管理金鑰或登入憑證。
+npm ci 本身會由套件管理器建立 node_modules；它不在交付 ZIP 內，不用手動開啟。
+
+若用其他網站空間，只上傳以下網站檔案，不要整包全部公開：
+  index.html、app.js、collaboration.js、collaboration.css、core.js、
+  react.js、react-dom.js、lucide.js、qrcode.js、tailwind.css、
+  sw.js、manifest.webmanifest、icon.svg
+
+日後修改原始碼後：npm run build
+測試：npx firebase emulators:exec --only firestore --project demo-studyos 'npm test'
+
+本版保留 3.1.0 功能：五位帳戶編號、群組邀請、人人發放、個人同步、
+草稿、通知、私人筆記及總管理。同步關閉保留舊功課，更新保留完成狀態。
+來源相同的重複同步不會新增副本；多群組分別發放則是各組獨立來源。
+原有正式環境、真機 iPad 和 PWA 登入仍需要部署後驗收。
