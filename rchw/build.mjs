@@ -8,7 +8,7 @@ for(const file of ['__qa.html','__qa-app.html','__qa-app.js','__qa-fixture.js'])
 let html=await fs.readFile('app-source.html','utf8');
 const sourceHtml=html;
 const jsx=await fs.readFile('collaboration-source.jsx','utf8');
-const compile=source=>transformSync(source,{presets:[['@babel/preset-env',{targets:{safari:'14',chrome:'90'},modules:false}],['@babel/preset-react',{runtime:'classic'}]],comments:false,compact:false}).code;
+const compile=source=>'(function(){\n'+transformSync(source,{presets:[['@babel/preset-env',{targets:{safari:'14',chrome:'90'},modules:false}],['@babel/preset-react',{runtime:'classic'}]],comments:false,compact:false}).code+'\n})();';
 await fs.writeFile(path.join(output,'collaboration.js'),compile(jsx));
 const scripts=[...html.matchAll(/<script type="text\/babel">([\s\S]*?)<\/script>/g)];
 if(scripts.length!==1)throw new Error('Expected one main React script');
@@ -27,5 +27,6 @@ html=html.replace(/<script src="https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/babe
 html=html.replace(/https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/react\/18.2.0\/umd\/react.production.min.js/,'./vendor/react.js').replace(/https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/react-dom\/18.2.0\/umd\/react-dom.production.min.js/,'./vendor/react-dom.js').replace(/https:\/\/unpkg.com\/lucide@latest/,'./vendor/lucide.js');
 for(const [from,to] of [['node_modules/react/umd/react.production.min.js','react.js'],['node_modules/react-dom/umd/react-dom.production.min.js','react-dom.js'],['node_modules/lucide/dist/umd/lucide.min.js','lucide.js'],['node_modules/qrcode-generator/qrcode.js','qrcode.js']])await fs.copyFile(from,path.join(output,to));
 html=html.replaceAll('./vendor/','./').replaceAll('./functions/core.js','./core.js');
+html=html.replaceAll('v=3.1.0','v=3.1.0-hotfix1');
 await fs.writeFile(path.join(output,'index.html'),html);
 console.log('StudyOS 3.1.0 built: local React, icons, QR and compiled CSS/JS. Firebase SDK remains online.');

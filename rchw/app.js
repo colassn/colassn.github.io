@@ -1,3 +1,4 @@
+(function(){
 const _excluded = ["originalName"],
   _excluded2 = ["id"],
   _excluded3 = ["id"];
@@ -8748,3 +8749,4 @@ try {
     loadingScreen.innerHTML = "<div style='max-width:420px;padding:22px;text-align:center'><div style='font-size:42px;margin-bottom:10px'>⚠️</div><h2 style='font-size:1.2rem;font-weight:800;margin-bottom:8px;color:#ef4444'>主畫面啟動失敗</h2><p style='font-size:13px;color:#64748b;line-height:1.6'>請先使用上一個穩定版，或截圖 Console 錯誤。</p></div>";
   }
 }
+})();

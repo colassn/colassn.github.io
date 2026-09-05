@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ehandbook-studyos-v3-1-0-flat';
-const APP_SHELL = ['./index.html','./app.js?v=3.1.0','./collaboration.js?v=3.1.0','./collaboration.css?v=3.1.0','./core.js?v=3.1.0','./tailwind.css?v=3.1.0','./react.js','./react-dom.js','./lucide.js','./qrcode.js','./manifest.webmanifest','./icon.svg'];
+const CACHE_NAME = 'ehandbook-studyos-v3-1-0-flat-hotfix1';
+const APP_SHELL = ['./index.html','./app.js?v=3.1.0-hotfix1','./collaboration.js?v=3.1.0-hotfix1','./collaboration.css?v=3.1.0-hotfix1','./core.js?v=3.1.0-hotfix1','./tailwind.css?v=3.1.0-hotfix1','./react.js','./react-dom.js','./lucide.js','./qrcode.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });

@@ -11,8 +11,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest?v=3.1.0">
-    <link rel="icon" href="./icon.svg?v=3.1.0" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=3.1.0-hotfix1">
+    <link rel="icon" href="./icon.svg?v=3.1.0-hotfix1" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
     <meta name="ehandbook-version" content="v3.1.0-studyos-collaboration">
@@ -21,7 +21,7 @@
     <script src="./react.js" crossorigin></script>
     <script src="./react-dom.js" crossorigin></script>
     
-    <link rel="stylesheet" href="./tailwind.css?v=3.1.0">
+    <link rel="stylesheet" href="./tailwind.css?v=3.1.0-hotfix1">
     
     <script src="./lucide.js"></script>
 
@@ -276,12 +276,12 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=3.1.0', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=3.1.0-hotfix1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
-    <link rel="stylesheet" href="./collaboration.css?v=3.1.0">
-    <script src="./core.js?v=3.1.0"></script>
+    <link rel="stylesheet" href="./collaboration.css?v=3.1.0-hotfix1">
+    <script src="./core.js?v=3.1.0-hotfix1"></script>
     <script src="./qrcode.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -462,8 +462,8 @@
         }
     </script>
 
-    <script src="./collaboration.js?v=3.1.0"></script>
-    <script src="./app.js?v=3.1.0"></script>
+    <script src="./collaboration.js?v=3.1.0-hotfix1"></script>
+    <script src="./app.js?v=3.1.0-hotfix1"></script>
 <!-- VERSION_CHECK: v3.1.0-studyos-collaboration | original Firebase data structure preserved -->
     <!-- ehandbook-build: v3.1.0-studyos-collaboration -->
 </body>

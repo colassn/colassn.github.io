@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "node build.mjs",
-    "test": "node --test service.test.js rules.test.cjs ui.test.cjs"
+    "test": "node --test service.test.js rules.test.cjs ui.test.cjs startup.test.cjs"
   },
   "devDependencies": {
     "@babel/core": "7.26.0",
