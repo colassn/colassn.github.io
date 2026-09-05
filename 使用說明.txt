@@ -1,0 +1,26 @@
+StudyOS 3.2.0 Free — 免費版（所有網站檔案同一層）
+
+今次版本已移除 Cloud Functions 依賴，唔需要 Firebase Blaze、付款資料、Node.js 或電腦。
+網站由 GitHub Pages 顯示；資料及登入使用 Firebase Authentication／Firestore Spark 免費方案。
+
+第一次設定（只需做一次）
+1. 用 Safari 開 setup.html，按「開啟 Firebase Rules」。
+2. Firebase Console → Authentication → Sign-in method → 啟用 Google。
+3. Authentication → Settings → Authorized domains 加入 colassn.github.io。
+4. Firebase Console → Firestore Database → Rules；複製 setup.html 內的免費版規則，貼上並 Publish。
+5. 第一次開啟群組如提示建立索引，按畫面內「建立索引」連結等候完成；只需做一次，唔會啟用付款。
+6. 回到網站重新整理。舊 PWA 如仍顯示舊畫面，先關閉 PWA，再用 Safari 開網站一次。
+
+使用方式
+登入後到「設定／群組」查看五個英文字母帳戶編號。
+建立或加入群組；邀請同學時輸入對方帳戶編號。
+發放功課時可選群組，或者輸入最多 20 個帳戶編號。
+同學接受私人邀請後，才會加入個人手冊；群組的「同步到個人」可以獨立開關。
+完成、私人筆記、隱藏及撤回狀態會保留在各自帳戶。
+
+網站入口：index.html
+免費版設定：setup.html
+Firestore 規則：firestore.rules
+
+注意：GitHub Pages 只負責顯示網頁；只要 Firebase Rules 已 Publish，協作功能就不需要額外伺服器。
+Firebase Spark 有每日免費額度，額度由 Firebase 自動重設。本包不會自動升級或要求付款。
