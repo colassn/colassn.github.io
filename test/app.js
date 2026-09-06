@@ -22,8 +22,8 @@ const _window$StudyCollabUI = window.StudyCollabUI,
   CollaborationPersonalNote = _window$StudyCollabUI.PersonalNote;
 const ADMIN_EMAIL = 'chimhinhin@gmail.com';
 const CURRENT_RELEASE_NOTICE = {
-  version: window.__EHANDBOOK_VERSION__ || 'v3.4.0-studyos-collaboration',
-  title: 'StudyOS 3.4.0 簡潔新版',
+  version: window.__EHANDBOOK_VERSION__ || 'v3.5.0-studyos-collaboration',
+  title: 'StudyOS 3.5.0 簡潔新版',
   summary: ['五位帳戶編號、群組邀請及人人發放制度。', '同步到個人、群組通知分開控制；每人保留自己的完成狀態。', '收件匣、我發放的、雲端草稿、修改、撤回及個人筆記。', '總管理員可管理帳戶權限、凍結群組及處理檢舉。', '修正細畫面時間表、彈窗、導航及設定頁重複動畫。', '明日功課依實際交期計算；完成後可查看紀錄或還原。'].join('\n'),
   guide: ['底部只保留主頁、時間表及群組；右上角帳戶開啟設定。', '五位英文字母是個人帳戶編號；G- 開頭是群組編號。', '每個群組的設定可獨立開關同步及通知。', '主頁預設顯示明天要交的功課；按完成記錄可找回或還原。'].join('\n'),
   audience: 'all',
@@ -830,7 +830,7 @@ function AuthPage(_ref3) {
     className: "text-indigo-600 dark:text-indigo-400 font-black hover:opacity-80 ml-1.5"
   }, isLogin ? '建立帳戶' : '返回登入'))), React.createElement("div", {
     className: "mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none"
-  }, "StudyOS \xB7 v3.4.0")))));
+  }, "StudyOS \xB7 v3.5.0")))));
 }
 function CurrentLessonWidget(_ref4) {
   let config = _ref4.config,
@@ -4957,7 +4957,7 @@ function LegacyUserSettingsPage(_ref27) {
   }, React.createElement(Icon, {
     name: "badge-check",
     className: "w-3.5 h-3.5"
-  }), " v3.4.0 \u5168\u9801\u5DE5\u4F5C\u5340"), React.createElement("h2", {
+  }), " v3.5.0 \u5168\u9801\u5DE5\u4F5C\u5340"), React.createElement("h2", {
     className: "text-xl sm:text-2xl font-black tracking-tight truncate"
   }, "\u61C9\u7528\u7A0B\u5F0F\u8A2D\u5B9A"), React.createElement("p", {
     className: "text-sm text-indigo-100 font-bold mt-0.5 truncate"
@@ -5485,7 +5485,7 @@ function UserSettingsPage(_ref34) {
     className: `inline-block w-2 h-2 rounded-full mr-2 ${isOnline ? 'bg-emerald-300 animate-pulse' : 'bg-orange-300'}`
   }), isOnline ? '網絡已連線' : '離線模式'), React.createElement("span", {
     className: "px-3 py-2 rounded-xl bg-white/10 border border-white/15 text-xs font-black text-indigo-100"
-  }, "v3.4.0")))), React.createElement("div", {
+  }, "v3.5.0")))), React.createElement("div", {
     className: "settings-workspace"
   }, React.createElement("aside", {
     className: "settings-sidebar rounded-[1.75rem] bg-white/[0.88] dark:bg-slate-900/[0.88] border border-white/70 dark:border-slate-700 shadow-sm p-2.5"
@@ -5811,7 +5811,7 @@ function UserSettingsPage(_ref34) {
     className: "text-xs font-black text-indigo-300 tracking-wider"
   }, "E-HANDBOOK PRO"), React.createElement("div", {
     className: "text-xl font-black mt-1"
-  }, "StudyOS 3.4.0 Spark")), React.createElement("div", {
+  }, "StudyOS 3.5.0 Spark")), React.createElement("div", {
     className: "w-11 h-11 rounded-2xl bg-white/10 grid place-items-center"
   }, React.createElement(Icon, {
     name: "book-open",
@@ -5848,7 +5848,7 @@ function UserSettingsPage(_ref34) {
   }, "\u79C1\u4EBA\u53CA\u73ED\u5167\u4F7F\u7528 \xB7 \u8A2D\u5B9A\u6703\u81EA\u52D5\u5132\u5B58\u5728\u6B64\u88DD\u7F6E"))))));
 }
 function App() {
-  const [homeScope,setHomeScope] = useState('tomorrow');
+  const [homeScope,setHomeScope] = useState('all');
   var _systemConfig$allowed, _systemConfig$blackli;
   const _useState133 = useState(null),
     _useState134 = _slicedToArray(_useState133, 2),
@@ -7703,7 +7703,7 @@ function App() {
     className: "text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight truncate"
   }, pageMeta.title, " ", React.createElement("span", {
     className: "co-version"
-  }, "3.4.0")), React.createElement("p", {
+  }, "3.5.0")), React.createElement("p", {
     className: "text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 mt-0.5 truncate"
   }, pageMeta.subtitle))), React.createElement("div", {
     className: "flex items-center gap-1.5 sm:gap-3 shrink-0 su-header-actions"
@@ -7717,7 +7717,7 @@ function App() {
     weekday: 'short'
   })), React.createElement("div", {
     className: "text-[10px] font-bold text-slate-400 mt-0.5"
-  }, "StudyOS v3.4.0 Spark")), viewMode === 'timetable' && React.createElement("button", {
+  }, "StudyOS v3.5.0 Spark")), viewMode === 'timetable' && React.createElement("button", {
     type: "button",
     onClick: () => setIsSubjectManagerOpen(true),
     "aria-label": "\u958B\u555F\u79D1\u76EE\u7BA1\u7406",
@@ -7840,7 +7840,7 @@ function App() {
     onLogout: handleLogout
   }) : React.createElement("div", {
     className: "max-w-3xl mx-auto pt-2"
-  }, viewMode === 'current' && appMode === 'personal' && isVisible('cards') && React.createElement("div", {
+  }, viewMode === 'current' && React.createElement('button',{type:'button',className:'ledger-restore',onClick:()=>{setHomeScope('all');setFilterSubject('全部');setSearchQuery('');setIsListVisible(true);setLayoutMode('normal');}},'顯示全部功課／重設篩選'), viewMode === 'current' && appMode === 'personal' && isVisible('cards') && React.createElement("div", {
     className: "grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6 animate-fadeIn"
   }, React.createElement("div", {
     className: "study-hero motion-hero col-span-2 sm:col-span-3"
@@ -8022,7 +8022,7 @@ React.createElement("button",{type:"button",onClick:()=>openQuickView('test')},"
   }, React.createElement(Icon, {
     name: "check-circle",
     className: "w-5 h-5 sm:w-6 sm:h-6"
-  })))))), document.body), isVisible('list') && React.createElement(React.Fragment, null, viewMode === 'current' && React.createElement('div',{className:'su-schedule-tabs su-home-scope'},[['tomorrow','明天要交'],['all','全部待辦']].map(([v,label])=>React.createElement('button',{type:'button',key:v,'aria-pressed':homeScope===v,onClick:()=>setHomeScope(v)},label))), viewMode === 'history' && React.createElement("div", {
+  })))))), document.body), isVisible('list') && React.createElement(React.Fragment, null, viewMode === 'current' && React.createElement('div',{className:'su-schedule-tabs su-home-scope'},[['all','全部待辦'],['tomorrow','只看明天']].map(([v,label])=>React.createElement('button',{type:'button',key:v,'aria-pressed':homeScope===v,onClick:()=>setHomeScope(v)},label))), viewMode === 'history' && React.createElement("div", {
     className: "relative overflow-hidden mb-5 rounded-[2rem] p-5 sm:p-6 bg-gradient-to-br from-emerald-950 via-teal-900 to-emerald-700 text-white shadow-[0_28px_70px_-36px_rgba(6,78,59,.9)]"
   }, React.createElement("div", {
     className: "absolute -right-16 -top-20 w-56 h-56 rounded-full bg-emerald-300/20 blur-3xl"
@@ -8173,9 +8173,9 @@ React.createElement("button",{type:"button",onClick:()=>openQuickView('test')},"
       style: {
         animationDelay: `${index * 0.05}s`
       },
-      className: `task-card animate-item glass-card bg-white/95 dark:bg-slate-800/90 rounded-3xl p-5 transition-all hover:-translate-y-0.5 group ${item.priority === 'high' ? 'priority-high' : item.priority === 'low' ? 'priority-low' : ''} ${isExiting ? 'scale-95 opacity-0' : ''}`
+      className: `ledger-task task-card animate-item glass-card bg-white/95 dark:bg-slate-800/90 rounded-3xl p-5 transition-all hover:-translate-y-0.5 group ${item.priority === 'high' ? 'priority-high' : item.priority === 'low' ? 'priority-low' : ''} ${isExiting ? 'scale-95 opacity-0' : ''}`
     }, React.createElement("div", {
-      className: "flex items-start gap-4"
+      className: "ledger-task-body flex items-start gap-4"
     }, React.createElement("button", {
       "aria-label": item.completed ? "還原至待辦" : "標記完成",
       disabled: !!item.withdrawn || exitingIds.includes(item.id),
@@ -8185,9 +8185,9 @@ React.createElement("button",{type:"button",onClick:()=>openQuickView('test')},"
       name: "check",
       className: `w-4 h-4 transition-transform duration-200 ${isCompleted ? 'scale-100' : 'scale-0'}`
     })), React.createElement("div", {
-      className: "flex-1 min-w-0"
+      className: "ledger-task-content flex-1 min-w-0"
     }, React.createElement("div", {
-      className: "flex justify-between items-start mb-1.5"
+      className: "ledger-task-meta flex justify-between items-start mb-1.5"
     }, React.createElement("div", {
       className: "flex gap-2 items-center flex-wrap"
     }, React.createElement("span", {
@@ -8202,7 +8202,7 @@ React.createElement("button",{type:"button",onClick:()=>openQuickView('test')},"
     }, "\u73ED\u7D1A")), React.createElement("div", {
       className: `text-xs font-bold flex items-center px-2 py-0.5 rounded-lg gap-1 ${statusColor}`
     }, statusText)), React.createElement("div", {
-      className: `text-base sm:text-lg font-bold mb-2 break-words ${isCompleted ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-white'}`
+      className: `ledger-task-title text-base sm:text-lg font-bold mb-2 break-words ${isCompleted ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-white'}`
     }, item.description), item.collabRefId && React.createElement("div", {
       className: "co-source"
     }, React.createElement("strong", null, item.sourceGroupName, " \xB7 ", item.senderName), item.changedAfterCompletion && React.createElement("div", {
@@ -8210,11 +8210,11 @@ React.createElement("button",{type:"button",onClick:()=>openQuickView('test')},"
     }, "\u5B8C\u6210\u5F8C\u6709\u66F4\u65B0\uFF0C\u8ACB\u518D\u6838\u5C0D\u5167\u5BB9\u6216\u4EA4\u671F"), item.privateNote && React.createElement("div", {
       className: "whitespace-pre-wrap mt-1"
     }, "\u6211\u7684\u7B46\u8A18\uFF1A", item.privateNote)), React.createElement("div", {
-      className: "flex items-center justify-between mt-3 pt-3 border-t border-slate-50 dark:border-slate-700/50"
+      className: "ledger-task-footer flex items-center justify-between mt-3 pt-3 border-t border-slate-50 dark:border-slate-700/50"
     }, React.createElement("div", {
       className: "text-xs text-slate-400 flex items-center gap-1 font-medium"
     }, formatDueDate(item.dueDate)), React.createElement("div", {
-      className: "flex gap-2 opacity-100 sm:opacity-40 group-hover:opacity-100 transition-opacity duration-300"
+      className: "ledger-task-actions flex gap-2"
     }, !item.forceExpired && React.createElement("button", {
       "aria-label": item.collabRefId ? "查看及編輯個人筆記" : "編輯功課",
       onClick: () => setEditingItem(item),

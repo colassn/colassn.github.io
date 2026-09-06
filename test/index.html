@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <!-- 電子手冊 Pro v3.4.0 StudyOS Collaboration -->
+    <!-- 電子手冊 Pro v3.5.0 StudyOS Collaboration -->
 
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -11,17 +11,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="電子手冊">
-    <link rel="manifest" href="./manifest.webmanifest?v=3.4.0-ui1">
-    <link rel="icon" href="./icon.svg?v=3.4.0-ui1" type="image/svg+xml">
+    <link rel="manifest" href="./manifest.webmanifest?v=3.5.0-ui1">
+    <link rel="icon" href="./icon.svg?v=3.5.0-ui1" type="image/svg+xml">
     
     <title>電子手冊 Pro</title>
-    <meta name="ehandbook-version" content="v3.4.0-studyos-collaboration">
-    <script>window.__EHANDBOOK_VERSION__ = "v3.4.0-studyos-collaboration"; console.log("電子手冊 Pro v3.4.0 unified workspace loaded");</script>
+    <meta name="ehandbook-version" content="v3.5.0-studyos-collaboration">
+    <script>window.__EHANDBOOK_VERSION__ = "v3.5.0-studyos-collaboration"; console.log("電子手冊 Pro v3.5.0 unified workspace loaded");</script>
 
     <script src="./react.js" crossorigin></script>
     <script src="./react-dom.js" crossorigin></script>
     
-    <link rel="stylesheet" href="./tailwind.css?v=3.4.0-ui1">
+    <link rel="stylesheet" href="./tailwind.css?v=3.5.0-ui1">
     
     <script src="./lucide.js"></script>
 
@@ -285,15 +285,15 @@
 
     <script>
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=3.4.0-ui1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=3.5.0-ui1', { updateViaCache: 'none' }).then(registration => registration.update()).catch(error => console.warn('離線支援未啟用：', error)));
         }
     </script>
 
-    <link rel="stylesheet" href="./collaboration.css?v=3.4.0-ui1">
-    <script src="./core.js?v=3.4.0-ui1"></script>
-    <link rel="stylesheet" href="./ui.css?v=3.4.0-ui1">
-<script src="./ui.js?v=3.4.0-ui1"></script>
-    <script src="./spark.js?v=3.4.0-ui1"></script>
+    <link rel="stylesheet" href="./collaboration.css?v=3.5.0-ui1">
+    <script src="./core.js?v=3.5.0-ui1"></script>
+    <link rel="stylesheet" href="./ui.css?v=3.5.0-ui1">
+<script src="./ui.js?v=3.5.0-ui1"></script>
+    <script src="./spark.js?v=3.5.0-ui1"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, initializeAuth, indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence, inMemoryPersistence, browserPopupRedirectResolver, setPersistence, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -357,7 +357,7 @@
             try { auth.useDeviceLanguage && auth.useDeviceLanguage(); } catch(e) {}
 
             window.__EHANDBOOK_AUTH_DEBUG__ = {
-                version: 'v3.4.0-studyos-collaboration',
+                version: 'v3.5.0-studyos-collaboration',
                 host: window.location.hostname || '',
                 protocol: window.location.protocol || '',
                 authDomainUsed: firebaseConfig.authDomain,
@@ -474,13 +474,13 @@
         }
     </script>
 
-    <script src="./collaboration.js?v=3.4.0-ui1"></script>
-    <script src="./app.js?v=3.4.0-ui1"></script>
-<!-- VERSION_CHECK: v3.4.0-studyos-collaboration | original Firebase data structure preserved -->
-    <!-- ehandbook-build: v3.4.0-studyos-collaboration -->
+    <script src="./collaboration.js?v=3.5.0-ui1"></script>
+    <script src="./app.js?v=3.5.0-ui1"></script>
+<!-- VERSION_CHECK: v3.5.0-studyos-collaboration | original Firebase data structure preserved -->
+    <!-- ehandbook-build: v3.5.0-studyos-collaboration -->
 </body>
 </html>
 
-<!-- ehandbook_v3.4.0_studyos_unified_ui: mobile-first private and class planner. -->
+<!-- ehandbook_v3.5.0_studyos_unified_ui: mobile-first private and class planner. -->
 
-<!-- v3.4.0-studyos-collaboration: unified responsive workspaces with reliable iPad PWA authentication. -->
+<!-- v3.5.0-studyos-collaboration: unified responsive workspaces with reliable iPad PWA authentication. -->

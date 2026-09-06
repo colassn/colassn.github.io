@@ -1535,7 +1535,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       className: "co-header"
     }, React.createElement("div", null, React.createElement("div", {
       className: "co-kicker"
-    }, "StudyOS 3.4.0 Spark"), React.createElement("h2", null, "\u4E00\u8D77\u6574\u7406\uFF0C\u5404\u81EA\u5B8C\u6210\u3002"), React.createElement("p", {
+    }, "StudyOS 3.5.0 Spark"), React.createElement("h2", null, "\u4E00\u8D77\u6574\u7406\uFF0C\u5404\u81EA\u5B8C\u6210\u3002"), React.createElement("p", {
       className: "co-muted"
     }, "\u6BCF\u500B\u4EBA\u90FD\u53EF\u4EE5\u767C\u653E\uFF0C\u529F\u8AB2\u8207\u9032\u5EA6\u5404\u81EA\u7BA1\u7406\u3002")), React.createElement("div", {
       className: "co-actions"
