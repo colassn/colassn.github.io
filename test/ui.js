@@ -83,3 +83,49 @@ function StylePicker(){
 window.StudyUI.StylePicker=StylePicker;
 window.StudyDesign={read,save,valid,styles};
 })();
+
+(function(){
+'use strict';
+const h=React.createElement;
+function Form({children,onSubmit,onInput,...props}){
+ const [error,setError]=React.useState('');
+ const submit=e=>{
+  e.preventDefault();
+  const invalid=Array.from(e.currentTarget.elements).find(x=>x.willValidate&&!x.validity.valid);
+  if(invalid){
+   const label=invalid.labels?.[0]?.textContent?.trim()||invalid.getAttribute('aria-label')||invalid.placeholder||'此欄位';
+   const message=invalid.validity.valueMissing?`請填寫${label}。`:invalid.validity.typeMismatch?'請輸入有效的電郵地址。':invalid.validity.tooShort?'輸入內容太短，請補充後再試。':invalid.validity.rangeUnderflow||invalid.validity.rangeOverflow?'數值超出允許範圍。':'請檢查輸入內容及格式。';
+   setError(message);invalid.setAttribute('aria-invalid','true');invalid.focus();return;
+  }
+  setError('');if(onSubmit)onSubmit(e);
+ };
+ return h('form',{...props,noValidate:true,onSubmit:submit,onInput:e=>{e.target.removeAttribute('aria-invalid');setError('');if(onInput)onInput(e);}},error&&h('div',{className:'detail-field-error',role:'alert'},error),children);
+}
+function PasswordInput(props){
+ const [shown,setShown]=React.useState(false);
+ return h('div',{className:'detail-password'},h('input',{...props,type:shown?'text':'password',className:(props.className||'')+' detail-password-input'}),h('button',{type:'button',className:'detail-password-toggle','aria-label':shown?'隱藏密碼':'顯示密碼','aria-pressed':shown,onClick:()=>setShown(!shown)},shown?'隱藏':'顯示'));
+}
+const panels=[];
+function DialogPanel({children,onClose,...props}){
+ const ref=React.useRef(null),close=React.useRef(onClose);close.current=onClose;
+ React.useEffect(()=>{
+  const node=ref.current,previous=document.activeElement;panels.push(node);
+  const timer=setTimeout(()=>{if(panels[panels.length-1]===node)(node.querySelector('input:not(:disabled),textarea:not(:disabled),button:not(:disabled)')||node).focus();},40);
+  const key=e=>{
+   if(panels[panels.length-1]!==node||document.querySelector('.su-overlay'))return;
+   if(e.key==='Escape'&&close.current){e.preventDefault();e.stopPropagation();close.current();}
+   if(e.key==='Tab'){
+    const all=[...node.querySelectorAll('button:not(:disabled),input:not(:disabled),textarea:not(:disabled),a[href],[tabindex="0"]')].filter(x=>x.getClientRects().length);
+    if(!all.length){e.preventDefault();node.focus();return;}
+    const first=all[0],last=all[all.length-1];
+    if(e.shiftKey&&(document.activeElement===first||!node.contains(document.activeElement))){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&(document.activeElement===last||!node.contains(document.activeElement))){e.preventDefault();first.focus();}
+   }
+  };
+  document.addEventListener('keydown',key,true);
+  return()=>{clearTimeout(timer);document.removeEventListener('keydown',key,true);const i=panels.indexOf(node);if(i>=0)panels.splice(i,1);if(previous?.isConnected)previous.focus();};
+ },[]);
+ return h('div',{...props,ref,role:'dialog','aria-modal':true,'aria-label':props['aria-label']||'編輯資料',tabIndex:-1},children);
+}
+Object.assign(window.StudyUI,{Form,PasswordInput,DialogPanel});
+})();

@@ -22,8 +22,8 @@ const _window$StudyCollabUI = window.StudyCollabUI,
   CollaborationPersonalNote = _window$StudyCollabUI.PersonalNote;
 const ADMIN_EMAIL = 'chimhinhin@gmail.com';
 const CURRENT_RELEASE_NOTICE = {
-  version: window.__EHANDBOOK_VERSION__ || 'v3.5.0-studyos-collaboration',
-  title: 'StudyOS 3.5.0 簡潔新版',
+  version: window.__EHANDBOOK_VERSION__ || 'v3.6.0-studyos-collaboration',
+  title: 'StudyOS 3.6.0 簡潔新版',
   summary: ['五位帳戶編號、群組邀請及人人發放制度。', '同步到個人、群組通知分開控制；每人保留自己的完成狀態。', '收件匣、我發放的、雲端草稿、修改、撤回及個人筆記。', '總管理員可管理帳戶權限、凍結群組及處理檢舉。', '修正細畫面時間表、彈窗、導航及設定頁重複動畫。', '明日功課依實際交期計算；完成後可查看紀錄或還原。'].join('\n'),
   guide: ['底部只保留主頁、時間表及群組；右上角帳戶開啟設定。', '五位英文字母是個人帳戶編號；G- 開頭是群組編號。', '每個群組的設定可獨立開關同步及通知。', '主頁預設顯示明天要交的功課；按完成記錄可找回或還原。'].join('\n'),
   audience: 'all',
@@ -311,49 +311,8 @@ const Icon = _ref => {
     }
   });
 };
-function CustomDropdown(_ref2) {
-  let value = _ref2.value,
-    onChange = _ref2.onChange,
-    options = _ref2.options,
-    customClasses = _ref2.customClasses;
-  const _useState = useState(false),
-    _useState2 = _slicedToArray(_useState, 2),
-    isOpen = _useState2[0],
-    setIsOpen = _useState2[1];
-  const dropdownRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = event => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setIsOpen(false);
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-  const selectedOption = options.find(o => o.value === value);
-  return React.createElement("div", {
-    className: "relative z-50",
-    ref: dropdownRef
-  }, React.createElement("button", {
-    type: "button",
-    onClick: () => setIsOpen(!isOpen),
-    className: customClasses || "flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs rounded-lg px-3 py-1.5 focus:outline-none font-bold hover:bg-slate-50 transition-all shadow-sm active:scale-95"
-  }, (selectedOption === null || selectedOption === void 0 ? void 0 : selectedOption.icon) && React.createElement(Icon, {
-    name: selectedOption.icon,
-    className: "w-4 h-4"
-  }), React.createElement("span", {
-    className: "hidden sm:inline"
-  }, (selectedOption === null || selectedOption === void 0 ? void 0 : selectedOption.label) || '排序'), React.createElement(Icon, {
-    name: "chevron-down",
-    className: `w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`
-  })), isOpen && React.createElement("div", {
-    className: "absolute right-0 mt-2 min-w-[140px] glass-card bg-white/95 dark:bg-slate-800/95 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200 origin-top-right"
-  }, options.map(opt => React.createElement("button", {
-    key: opt.value,
-    onClick: () => {
-      onChange(opt.value);
-      setIsOpen(false);
-    },
-    className: `w-full text-left px-4 py-2 text-sm font-bold flex items-center gap-3 transition-colors ${value === opt.value ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700'}`
-  }, opt.label))));
+function CustomDropdown({value,onChange,options,customClasses}) {
+ return React.createElement(window.StudyUI.Select,{value,onChange:e=>onChange(e.target.value),className:customClasses||'detail-dropdown', 'aria-label':'選擇排序或篩選'},options.map(o=>React.createElement('option',{key:o.value,value:o.value},o.label)));
 }
 const formatCountdown = ms => {
   const totalSeconds = Math.floor(ms / 1000);
@@ -678,13 +637,13 @@ function AuthPage(_ref3) {
   const subtitleText = isResetMode ? '輸入 Email 收取重設連結' : isLogin ? '登入你的學習空間' : '開始使用電子手冊 Pro';
   const submitText = isResetMode ? '發送重設連結' : isLogin ? '登入' : '建立帳戶';
   return React.createElement("div", {
-    className: "min-h-screen bg-[radial-gradient(circle_at_top_left,#e0e7ff,transparent_35%),linear-gradient(135deg,#f8fafc_0%,#eef2ff_45%,#f8fafc_100%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(79,70,229,0.28),transparent_32%),linear-gradient(135deg,#020617_0%,#111827_48%,#020617_100%)] flex items-center justify-center px-4 py-8 relative overflow-hidden"
+    className: "detail-auth min-h-screen bg-[radial-gradient(circle_at_top_left,#e0e7ff,transparent_35%),linear-gradient(135deg,#f8fafc_0%,#eef2ff_45%,#f8fafc_100%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(79,70,229,0.28),transparent_32%),linear-gradient(135deg,#020617_0%,#111827_48%,#020617_100%)] flex items-center justify-center px-4 py-8 relative overflow-hidden"
   }, React.createElement("div", {
     className: "absolute inset-x-0 top-0 h-24 bg-white/40 dark:bg-white/5 backdrop-blur-3xl pointer-events-none"
   }), React.createElement("div", {
-    className: "w-full max-w-4xl grid md:grid-cols-[0.95fr_1.05fr] rounded-[2rem] overflow-hidden shadow-2xl shadow-indigo-200/40 dark:shadow-black/40 border border-white/70 dark:border-white/10 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl modal-animate relative z-10"
+    className: "detail-auth-shell w-full max-w-4xl grid md:grid-cols-[0.95fr_1.05fr] rounded-[2rem] overflow-hidden shadow-2xl shadow-indigo-200/40 dark:shadow-black/40 border border-white/70 dark:border-white/10 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl modal-animate relative z-10"
   }, React.createElement("div", {
-    className: "hidden md:flex flex-col justify-between p-10 bg-slate-950 text-white relative overflow-hidden"
+    className: "detail-auth-intro hidden md:flex flex-col justify-between p-10 bg-slate-950 text-white relative overflow-hidden"
   }, React.createElement("div", {
     className: "absolute -right-20 -top-20 w-64 h-64 rounded-full bg-indigo-500/30 blur-3xl"
   }), React.createElement("div", {
@@ -706,8 +665,8 @@ function AuthPage(_ref3) {
     className: "relative z-10 flex items-center gap-3 text-xs text-slate-400 font-bold"
   }, React.createElement("span", {
     className: "w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
-  }), "Google \u767B\u5165\u5DF2\u555F\u7528")), React.createElement("div", {
-    className: "p-6 sm:p-10 md:p-12 bg-white/[0.85] dark:bg-slate-900/[0.85]"
+  }), "個人功課 · 班級協作 · 每日課堂")), React.createElement("div", {
+    className: "detail-auth-form p-6 sm:p-10 md:p-12 bg-white/[0.85] dark:bg-slate-900/[0.85]"
   }, React.createElement("div", {
     className: "max-w-sm mx-auto"
   }, React.createElement("div", {
@@ -759,10 +718,11 @@ function AuthPage(_ref3) {
     className: "relative flex justify-center text-[11px] font-black text-slate-400"
   }, React.createElement("span", {
     className: "px-4 bg-white/90 dark:bg-slate-900/90"
-  }, "\u6216\u7528 Email"))), React.createElement("form", {
+  }, "\u6216\u7528 Email"))), React.createElement(window.StudyUI.Form, {
     onSubmit: handleEmailAuth,
     className: "space-y-4"
   }, React.createElement("div", null, React.createElement("label", {
+    htmlFor: "login-email",
     className: "text-xs font-black text-slate-500 dark:text-slate-400 ml-1"
   }, "Email"), React.createElement("div", {
     className: "relative mt-1.5"
@@ -773,6 +733,9 @@ function AuthPage(_ref3) {
     className: "w-5 h-5"
   })), React.createElement("input", {
     type: "email",
+    id: "login-email",
+    name: "email",
+    autoComplete: "username",
     inputMode: "email",
     autoCapitalize: "none",
     autoCorrect: "off",
@@ -785,6 +748,7 @@ function AuthPage(_ref3) {
   }))), !isResetMode && React.createElement("div", null, React.createElement("div", {
     className: "flex items-center justify-between ml-1 mb-1.5"
   }, React.createElement("label", {
+    htmlFor: "login-password",
     className: "text-xs font-black text-slate-500 dark:text-slate-400"
   }, "\u5BC6\u78BC"), React.createElement("button", {
     type: "button",
@@ -797,8 +761,11 @@ function AuthPage(_ref3) {
   }, React.createElement(Icon, {
     name: "lock",
     className: "w-5 h-5"
-  })), React.createElement("input", {
+  })), React.createElement(window.StudyUI.PasswordInput, {
     type: "password",
+    id: "login-password",
+    name: "password",
+    autoComplete: isLogin ? "current-password" : "new-password",
     className: "w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-semibold dark:text-white",
     placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
     value: password,
@@ -830,7 +797,7 @@ function AuthPage(_ref3) {
     className: "text-indigo-600 dark:text-indigo-400 font-black hover:opacity-80 ml-1.5"
   }, isLogin ? '建立帳戶' : '返回登入'))), React.createElement("div", {
     className: "mt-8 text-center text-xs font-bold text-slate-300 dark:text-slate-700 select-none"
-  }, "StudyOS \xB7 v3.5.0")))));
+  }, "StudyOS \xB7 v3.6.0")))));
 }
 function CurrentLessonWidget(_ref4) {
   let config = _ref4.config,
@@ -1031,7 +998,7 @@ function QuickViewModal(_ref6) {
     }, priorityMeta.label), React.createElement("span", {
       className: `text-xs font-bold px-2.5 py-0.5 rounded-md ${statusColor}`
     }, statusText)), React.createElement("div", {
-      className: "flex gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity"
+      className: "flex gap-1 opacity-100 transition-opacity"
     }, !item.forceExpired && React.createElement("button", {
       onClick: () => {
         onEdit(item);
@@ -1079,7 +1046,8 @@ function AppearanceModal(_ref7) {
   }, React.createElement("div", {
     className: "absolute inset-0 bg-slate-900/60 backdrop-blur-sm",
     onClick: onClose
-  }), React.createElement("div", {
+  }), React.createElement(window.StudyUI.DialogPanel, {
+    onClose: onClose,
     className: "modal-animate glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl shadow-2xl w-full max-w-sm p-6 relative z-10 max-h-[85vh] overflow-y-auto"
   }, React.createElement("div", {
     className: "flex justify-between items-center mb-6"
@@ -1194,7 +1162,7 @@ function NameSetupModal(_ref0) {
     className: "fixed inset-0 z-[150] flex items-center justify-center p-4"
   }, React.createElement("div", {
     className: "absolute inset-0 bg-slate-900/80 backdrop-blur-sm"
-  }), React.createElement("div", {
+  }), React.createElement(window.StudyUI.DialogPanel, {
     className: "modal-animate glass-card bg-white/90 dark:bg-slate-800/90 rounded-2xl shadow-2xl w-full max-w-sm p-8 relative z-10 text-center border border-slate-100 dark:border-slate-700"
   }, React.createElement("div", {
     className: `w-16 h-16 ${t.lightBg} rounded-full flex items-center justify-center mx-auto mb-4 ${t.text}`
@@ -1205,7 +1173,7 @@ function NameSetupModal(_ref0) {
     className: "text-2xl font-black text-slate-800 dark:text-white mb-2"
   }, "\u500B\u4EBA\u6A21\u5F0F\u8A2D\u5B9A"), React.createElement("p", {
     className: "text-slate-500 dark:text-slate-400 mb-6 text-sm"
-  }, "\u8ACB\u8F38\u5165\u4F60\u7684", React.createElement("strong", null, "\u82F1\u6587\u77ED\u540D"), "\uFF0C\u65B9\u4FBF\u8001\u5E2B\u8FA8\u8B58"), React.createElement("form", {
+  }, "\u8ACB\u8F38\u5165\u4F60\u7684", React.createElement("strong", null, "\u82F1\u6587\u77ED\u540D"), "\uFF0C\u65B9\u4FBF\u8001\u5E2B\u8FA8\u8B58"), React.createElement(window.StudyUI.Form, {
     onSubmit: handleSubmit
   }, React.createElement("input", {
     type: "text",
@@ -1268,7 +1236,8 @@ function JoinClassModal(_ref1) {
   }, React.createElement("div", {
     className: "absolute inset-0 bg-slate-900/60 backdrop-blur-sm",
     onClick: onClose
-  }), React.createElement("div", {
+  }), React.createElement(window.StudyUI.DialogPanel, {
+    onClose: onClose,
     className: "modal-animate glass-card bg-white/90 dark:bg-slate-800/90 rounded-3xl shadow-2xl w-full max-w-sm p-6 relative z-10 text-center border border-white/50"
   }, floatingError && React.createElement("div", {
     className: "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-5 py-3 rounded-2xl shadow-lg z-50 font-bold text-sm whitespace-nowrap pop-in-error flex items-center gap-2"
@@ -1290,7 +1259,7 @@ function JoinClassModal(_ref1) {
     className: "text-xl font-bold text-slate-800 dark:text-white mb-2"
   }, "\u52A0\u5165\u73ED\u7D1A"), React.createElement("p", {
     className: "text-slate-500 dark:text-slate-400 mb-6 text-sm"
-  }, "\u8ACB\u8F38\u5165\u7531\u8001\u5E2B\u63D0\u4F9B\u7684 6 \u4F4D\u6578\u73ED\u7D1A\u4EE3\u78BC"), React.createElement("form", {
+  }, "\u8ACB\u8F38\u5165\u7531\u8001\u5E2B\u63D0\u4F9B\u7684 6 \u4F4D\u6578\u73ED\u7D1A\u4EE3\u78BC"), React.createElement(window.StudyUI.Form, {
     onSubmit: handleJoin
   }, React.createElement("input", {
     type: "text",
@@ -1350,7 +1319,8 @@ function DatePickerModal(_ref10) {
   }, React.createElement("div", {
     className: "absolute inset-0 bg-slate-950/60 backdrop-blur-sm",
     onClick: onClose
-  }), React.createElement("div", {
+  }), React.createElement(window.StudyUI.DialogPanel, {
+    onClose: onClose,
     className: "relative z-10 w-full max-w-sm rounded-[2rem] bg-white/95 dark:bg-slate-900/95 border border-white/60 dark:border-slate-700 shadow-2xl p-5 modal-animate"
   }, React.createElement("div", {
     className: "flex items-center justify-between mb-4"
@@ -1459,7 +1429,8 @@ function TimePickerModal(_ref11) {
   }, React.createElement("div", {
     className: "absolute inset-0 bg-slate-950/60 backdrop-blur-sm",
     onClick: onClose
-  }), React.createElement("div", {
+  }), React.createElement(window.StudyUI.DialogPanel, {
+    onClose: onClose,
     className: "relative z-10 w-full max-w-md rounded-[2rem] bg-white/95 dark:bg-slate-900/95 border border-white/60 dark:border-slate-700 shadow-2xl p-5 modal-animate"
   }, React.createElement("div", {
     className: "flex items-center justify-between mb-4"
@@ -1558,7 +1529,8 @@ function EditModal(_ref12) {
   }, React.createElement("div", {
     className: "absolute inset-0 bg-slate-900/60 backdrop-blur-sm",
     onClick: onClose
-  }), React.createElement("div", {
+  }), React.createElement(window.StudyUI.DialogPanel, {
+    onClose: onClose,
     className: "modal-animate glass-card bg-white/95 dark:bg-slate-800/95 rounded-2xl shadow-2xl w-full max-w-md p-6 relative z-10 overflow-hidden border border-white/50"
   }, React.createElement("div", {
     className: "flex justify-between items-center mb-4"
@@ -1570,7 +1542,7 @@ function EditModal(_ref12) {
   }, React.createElement(Icon, {
     name: "x",
     className: "w-5 h-5 text-slate-500 dark:text-slate-400"
-  }))), React.createElement("form", {
+  }))), React.createElement(window.StudyUI.Form, {
     onSubmit: handleSave,
     className: "space-y-4"
   }, React.createElement("div", null, React.createElement("label", {
@@ -1647,7 +1619,8 @@ function SubjectSelectionModal(_ref13) {
   }, React.createElement("div", {
     className: "absolute inset-0 bg-slate-900/60 backdrop-blur-sm",
     onClick: onClose
-  }), React.createElement("div", {
+  }), React.createElement(window.StudyUI.DialogPanel, {
+    onClose: onClose,
     className: "modal-animate glass-card bg-white/95 dark:bg-slate-800/95 rounded-3xl shadow-2xl w-full max-w-2xl p-6 relative z-10 flex flex-col max-h-[80vh]"
   }, React.createElement("div", {
     className: "flex justify-between items-center mb-6"
@@ -1857,7 +1830,7 @@ function SubjectManagerModal(_ref14) {
     className: "min-h-0 flex-1 overflow-y-auto p-4 sm:p-6"
   }, React.createElement("div", {
     className: "grid grid-cols-1 md:grid-cols-[18rem_minmax(0,1fr)] gap-4 sm:gap-5 items-start"
-  }, React.createElement("form", {
+  }, React.createElement(window.StudyUI.Form, {
     onSubmit: handleAdd,
     className: "md:sticky md:top-0 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 p-4 shadow-sm"
   }, React.createElement("div", {
@@ -3760,7 +3733,7 @@ function AdminConsole(_ref24) {
     className: "text-2xl font-bold dark:text-white"
   }, "\u73ED\u7D1A\u4EE3\u78BC\u7BA1\u7406"), React.createElement("p", {
     className: "text-sm text-slate-500 -mt-2"
-  }, "\u5EFA\u7ACB\u73ED\u7D1A\u7FA4\u7D44\uFF0C\u5B78\u751F\u6191\u4EE3\u78BC\u52A0\u5165\u5F8C\uFF0C\u5373\u53EF\u63A5\u6536\u8A72\u73ED\u5C08\u5C6C\u7684\u5EE3\u64AD\u529F\u8AB2\u3002"), React.createElement("form", {
+  }, "\u5EFA\u7ACB\u73ED\u7D1A\u7FA4\u7D44\uFF0C\u5B78\u751F\u6191\u4EE3\u78BC\u52A0\u5165\u5F8C\uFF0C\u5373\u53EF\u63A5\u6536\u8A72\u73ED\u5C08\u5C6C\u7684\u5EE3\u64AD\u529F\u8AB2\u3002"), React.createElement(window.StudyUI.Form, {
     onSubmit: handleCreateClass,
     className: "flex gap-3 mt-4"
   }, React.createElement("input", {
@@ -4633,7 +4606,7 @@ function AdminConsole(_ref24) {
     className: "absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform peer-checked:translate-x-[20px] shadow-sm border border-slate-300 dark:border-slate-600"
   }))), React.createElement("div", {
     className: "p-6"
-  }, React.createElement("form", {
+  }, React.createElement(window.StudyUI.Form, {
     onSubmit: handleAddWhitelist,
     className: "flex gap-3 mb-6"
   }, React.createElement("input", {
@@ -4699,7 +4672,7 @@ function AdminConsole(_ref24) {
     className: "absolute top-[2px] left-[2px] bg-white w-6 h-6 rounded-full transition-transform peer-checked:translate-x-[20px] shadow-sm border border-slate-300 dark:border-slate-600"
   }))), React.createElement("div", {
     className: "p-6"
-  }, React.createElement("form", {
+  }, React.createElement(window.StudyUI.Form, {
     onSubmit: handleAddBlacklist,
     className: "flex gap-3 mb-6"
   }, React.createElement("input", {
@@ -4957,7 +4930,7 @@ function LegacyUserSettingsPage(_ref27) {
   }, React.createElement(Icon, {
     name: "badge-check",
     className: "w-3.5 h-3.5"
-  }), " v3.5.0 \u5168\u9801\u5DE5\u4F5C\u5340"), React.createElement("h2", {
+  }), " v3.6.0 \u5168\u9801\u5DE5\u4F5C\u5340"), React.createElement("h2", {
     className: "text-xl sm:text-2xl font-black tracking-tight truncate"
   }, "\u61C9\u7528\u7A0B\u5F0F\u8A2D\u5B9A"), React.createElement("p", {
     className: "text-sm text-indigo-100 font-bold mt-0.5 truncate"
@@ -5485,7 +5458,7 @@ function UserSettingsPage(_ref34) {
     className: `inline-block w-2 h-2 rounded-full mr-2 ${isOnline ? 'bg-emerald-300 animate-pulse' : 'bg-orange-300'}`
   }), isOnline ? '網絡已連線' : '離線模式'), React.createElement("span", {
     className: "px-3 py-2 rounded-xl bg-white/10 border border-white/15 text-xs font-black text-indigo-100"
-  }, "v3.5.0")))), React.createElement("div", {
+  }, "v3.6.0")))), React.createElement("div", {
     className: "settings-workspace"
   }, React.createElement("aside", {
     className: "settings-sidebar rounded-[1.75rem] bg-white/[0.88] dark:bg-slate-900/[0.88] border border-white/70 dark:border-slate-700 shadow-sm p-2.5"
@@ -5811,7 +5784,7 @@ function UserSettingsPage(_ref34) {
     className: "text-xs font-black text-indigo-300 tracking-wider"
   }, "E-HANDBOOK PRO"), React.createElement("div", {
     className: "text-xl font-black mt-1"
-  }, "StudyOS 3.5.0 Spark")), React.createElement("div", {
+  }, "StudyOS 3.6.0 Spark")), React.createElement("div", {
     className: "w-11 h-11 rounded-2xl bg-white/10 grid place-items-center"
   }, React.createElement(Icon, {
     name: "book-open",
@@ -7703,7 +7676,7 @@ function App() {
     className: "text-lg sm:text-xl font-black text-slate-800 dark:text-white leading-tight tracking-tight truncate"
   }, pageMeta.title, " ", React.createElement("span", {
     className: "co-version"
-  }, "3.5.0")), React.createElement("p", {
+  }, "3.6.0")), React.createElement("p", {
     className: "text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 mt-0.5 truncate"
   }, pageMeta.subtitle))), React.createElement("div", {
     className: "flex items-center gap-1.5 sm:gap-3 shrink-0 su-header-actions"
@@ -7717,7 +7690,7 @@ function App() {
     weekday: 'short'
   })), React.createElement("div", {
     className: "text-[10px] font-bold text-slate-400 mt-0.5"
-  }, "StudyOS v3.5.0 Spark")), viewMode === 'timetable' && React.createElement("button", {
+  }, "StudyOS v3.6.0 Spark")), viewMode === 'timetable' && React.createElement("button", {
     type: "button",
     onClick: () => setIsSubjectManagerOpen(true),
     "aria-label": "\u958B\u555F\u79D1\u76EE\u7BA1\u7406",
@@ -7874,7 +7847,7 @@ React.createElement("button",{type:"button",onClick:()=>openQuickView('test')},"
     className: "composer-scrim",
     "aria-hidden": "true",
     onClick: () => setIsComposerOpen(false)
-  }), React.createElement("form", {
+  }), React.createElement(window.StudyUI.Form, {
     onSubmit: handleSubmit,
     role: "dialog",
     "aria-modal": "true",

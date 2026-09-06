@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ehandbook-studyos-v3-5-0-ui1';
-const APP_SHELL = ['./spark.js?v=3.5.0-ui1','./index.html','./app.js?v=3.5.0-ui1','./collaboration.js?v=3.5.0-ui1','./collaboration.css?v=3.5.0-ui1','./core.js?v=3.5.0-ui1','./tailwind.css?v=3.5.0-ui1','./react.js','./react-dom.js','./lucide.js','./ui.js?v=3.5.0-ui1','./ui.css?v=3.5.0-ui1','./manifest.webmanifest','./icon.svg'];
+const CACHE_NAME = 'ehandbook-studyos-v3-6-0-ui1';
+const APP_SHELL = ['./spark.js?v=3.6.0-ui1','./index.html','./app.js?v=3.6.0-ui1','./collaboration.js?v=3.6.0-ui1','./collaboration.css?v=3.6.0-ui1','./core.js?v=3.6.0-ui1','./tailwind.css?v=3.6.0-ui1','./react.js','./react-dom.js','./lucide.js','./ui.js?v=3.6.0-ui1','./ui.css?v=3.6.0-ui1','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
